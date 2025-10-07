@@ -7,7 +7,7 @@
         <link rel="icon" href="{{ asset('images/logo_picto.svg') }}">
 
         {% block stylesheets %}
-            <link rel="stylesheet" href="{{ asset('styles/app.css') }}">
+            {# Les CSS sont importés via app.js (méthode AssetMapper recommandée) #}
         {% endblock %}
 
         {% block javascripts %}

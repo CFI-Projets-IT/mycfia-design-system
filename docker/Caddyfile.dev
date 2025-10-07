@@ -22,10 +22,10 @@ http://:82 {
 # Encodage des réponses
     encode gzip zstd
 
-# Gestion des fichiers PHP avec FrankenPHP
+# Gestion des fichiers PHP avec FrankenPHP (sert aussi les assets via AssetMapper)
     php_server
 
-# Serveur de fichiers statiques
+# Serveur de fichiers statiques (pour les fichiers existants seulement)
     file_server
 
 # Headers de sécurité pour développement
