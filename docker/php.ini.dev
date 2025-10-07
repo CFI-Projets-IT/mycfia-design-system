@@ -1,0 +1,61 @@
+; Configuration PHP pour DÉVELOPPEMENT
+; Optimisée pour le debugging et le développement Symfony
+
+; === MÉMOIRE ET RESSOURCES ===
+memory_limit = 512M
+max_execution_time = 30
+max_input_time = 60
+
+; === UPLOADS ===
+upload_max_filesize = 100M
+post_max_size = 100M
+max_file_uploads = 20
+
+; === DEBUGGING ET ERREURS ===
+; Affichage des erreurs activé pour le développement
+display_errors = On
+display_startup_errors = On
+log_errors = On
+error_reporting = E_ALL
+
+; Logs détaillés pour le développement
+log_errors_max_len = 1024
+html_errors = On
+
+; === SESSIONS ===
+session.gc_probability = 1
+session.gc_divisor = 1000
+session.gc_maxlifetime = 1440
+
+; === OPCACHE - DÉVELOPPEMENT ===
+; Configuration OPcache pour le développement (rechargement automatique)
+opcache.enable = 1
+opcache.enable_cli = 1
+opcache.memory_consumption = 128
+opcache.interned_strings_buffer = 8
+opcache.max_accelerated_files = 4000
+opcache.revalidate_freq = 2
+opcache.fast_shutdown = 1
+opcache.save_comments = 1
+
+; Validation des timestamps pour rechargement automatique en dev
+opcache.validate_timestamps = 1
+opcache.revalidate_freq = 0
+
+; === SYMFONY SPÉCIFIQUE ===
+; Améliore les performances avec Symfony
+realpath_cache_size = 4096K
+realpath_cache_ttl = 600
+
+; === TIMEZONE ===
+date.timezone = Europe/Paris
+
+; === AUTRES OPTIMISATIONS DEV ===
+short_open_tag = Off
+expose_php = Off
+allow_url_fopen = On
+allow_url_include = Off
+
+; Variables d'environnement
+variables_order = "GPCS"
+request_order = "GP"

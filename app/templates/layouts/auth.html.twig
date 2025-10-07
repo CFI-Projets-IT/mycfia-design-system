@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<div class="auth-layout">
+    <div class="auth-background"></div>
+
+    <div class="auth-container">
+        {% block auth_content %}{% endblock %}
+    </div>
+</div>
+{% endblock %}

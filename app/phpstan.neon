@@ -1,0 +1,12 @@
+parameters:
+    level: 6
+    paths:
+        - src
+        - tests
+    symfony:
+        containerXmlPath: var/cache/dev/App_KernelDevDebugContainer.xml
+    doctrine:
+        repositoryClass: Doctrine\ORM\EntityRepository
+    excludePaths:
+        - var/
+        - vendor/

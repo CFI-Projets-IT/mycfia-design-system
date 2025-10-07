@@ -1,0 +1,138 @@
+/**
+ * Design System myCFiia - Auth Layout
+ * Layout pour pages authentification (login)
+ */
+
+/* ====================================
+   Auth Container
+   ==================================== */
+.auth-layout {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--background-gradient);
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    padding: var(--space-xl);
+}
+
+/* Background SVG */
+.auth-layout::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url('../images/web-background.svg');
+    background-size: cover;
+    background-position: center;
+    opacity: 0.3;
+    z-index: 0;
+}
+
+/* ====================================
+   Auth Card
+   ==================================== */
+.auth-card {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 450px;
+    background: var(--glass-light);
+    backdrop-filter: blur(var(--glass-backdrop-blur));
+    -webkit-backdrop-filter: blur(var(--glass-backdrop-blur));
+    border: var(--glass-border);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-glass);
+    padding: var(--space-xxl);
+}
+
+/* ====================================
+   Auth Logo
+   ==================================== */
+.auth-logo {
+    display: flex;
+    justify-content: center;
+    margin-bottom: var(--space-xxl);
+}
+
+.auth-logo img {
+    max-width: 200px;
+    height: auto;
+}
+
+/* ====================================
+   Auth Form
+   ==================================== */
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+}
+
+.auth-form-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+}
+
+.auth-form-label {
+    font-family: var(--font-family-title);
+    font-weight: var(--font-weight-semibold);
+    font-size: var(--font-size-sm);
+    color: var(--color-white);
+}
+
+.auth-form-input {
+    padding: var(--space-md);
+    font-family: var(--font-family-content);
+    font-size: var(--font-size-md);
+    border: var(--glass-border);
+    border-radius: var(--radius-md);
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--color-white);
+    transition: all var(--transition-normal);
+}
+
+.auth-form-input::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.auth-form-input:focus {
+    outline: none;
+    background: rgba(255, 255, 255, 0.15);
+    border-color: var(--color-secondary);
+    box-shadow: 0 0 0 3px rgba(58, 191, 240, 0.2);
+}
+
+/* ====================================
+   Auth Actions
+   ==================================== */
+.auth-actions {
+    margin-top: var(--space-lg);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+}
+
+/* ====================================
+   Auth Footer
+   ==================================== */
+.auth-footer {
+    margin-top: var(--space-xxl);
+    text-align: center;
+    font-family: var(--font-family-content);
+    font-size: var(--font-size-sm);
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.auth-footer a {
+    color: var(--color-secondary);
+    text-decoration: none;
+    font-weight: var(--font-weight-semibold);
+    transition: color var(--transition-fast);
+}
+
+.auth-footer a:hover {
+    color: var(--color-white);
+}

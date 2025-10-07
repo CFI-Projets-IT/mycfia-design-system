@@ -1,0 +1,44 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<div class="app-layout">
+    {# Sidebar Navigation #}
+    <aside class="app-sidebar">
+        {% block sidebar %}
+            {% include 'components/sidebar.html.twig' %}
+        {% endblock %}
+    </aside>
+
+    {# Main Content Area #}
+    <div class="app-content">
+        {# Topbar #}
+        <header class="app-topbar">
+            {% block topbar %}
+                {% include 'components/topbar.html.twig' %}
+            {% endblock %}
+        </header>
+
+        {# Page Content #}
+        <main class="app-main">
+            {# Flash Messages #}
+            {% for label, messages in app.flashes %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ label }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            {% endfor %}
+
+            {% block main_content %}{% endblock %}
+        </main>
+
+        {# Footer #}
+        <footer class="app-footer">
+            {% block footer %}
+                <p>&copy; {{ "now"|date("Y") }} myCFiia - Tous droits réservés</p>
+            {% endblock %}
+        </footer>
+    </div>
+</div>
+{% endblock %}

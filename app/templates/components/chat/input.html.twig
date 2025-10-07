@@ -1,0 +1,42 @@
+{# Chat Input Component #}
+<div class="chat-input-wrapper">
+    <form class="chat-input-form" data-action="submit->chat#sendMessage">
+        <div class="chat-input-container">
+            <textarea
+                class="chat-input-field"
+                placeholder="Tapez votre message... (Shift+Entrée pour nouvelle ligne)"
+                rows="1"
+                data-chat-target="input"
+                data-action="keydown->chat#handleKeydown input->chat#autoResize"
+                required
+            ></textarea>
+
+            <div class="chat-input-actions">
+                <button
+                    type="button"
+                    class="btn-chat-action"
+                    title="Joindre un fichier"
+                    disabled
+                >
+                    <i class="bi bi-paperclip"></i>
+                </button>
+
+                <button
+                    type="submit"
+                    class="btn-chat-send"
+                    data-chat-target="sendButton"
+                >
+                    <i class="bi bi-send-fill"></i>
+                    <span>Envoyer</span>
+                </button>
+            </div>
+        </div>
+    </form>
+
+    <div class="chat-input-hints">
+        <small class="text-muted">
+            <i class="bi bi-info-circle"></i>
+            Utilisez <kbd>Entrée</kbd> pour envoyer ou <kbd>Shift+Entrée</kbd> pour une nouvelle ligne
+        </small>
+    </div>
+</div>

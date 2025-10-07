@@ -1,0 +1,145 @@
+{
+	# Configuration globale FrankenPHP pour production
+	frankenphp {
+		# Optimisations production
+		num_threads auto
+		max_threads auto
+	}
+
+	# Administration désactivée en production
+	admin off
+
+	# HTTPS automatique avec Let's Encrypt
+	auto_https on
+
+	# Email pour Let's Encrypt (à personnaliser)
+	email admin@yourdomain.com
+
+	# Logs de production (moins verbeux)
+	log {
+		output file /var/log/caddy/caddy.log {
+			roll_size 100MB
+			roll_keep 10
+		}
+		level WARN
+	}
+}
+
+# Application Symfony principale - HTTPS
+{$SERVER_NAME:localhost} {
+	# Dossier public Symfony
+	root * /var/www/html/public
+
+	# Encodage des réponses (optimisations production)
+	encode gzip zstd
+
+	# Gestion des fichiers PHP avec FrankenPHP optimisé
+	php_server {
+		# Configuration spécifique production
+		resolve_root_symlink false
+	}
+
+	# Serveur de fichiers statiques avec cache
+	file_server {
+		# Cache des fichiers statiques
+		@static {
+			path *.css *.js *.png *.jpg *.jpeg *.gif *.ico *.svg *.woff *.woff2 *.ttf *.eot
+		}
+		header @static {
+			Cache-Control "public, max-age=31536000, immutable"
+		}
+	}
+
+	# Headers de sécurité production
+	header {
+		# Sécurité renforcée
+		Strict-Transport-Security "max-age=63072000; includeSubDomains; preload"
+		X-Content-Type-Options "nosniff"
+		X-Frame-Options "DENY"
+		X-XSS-Protection "1; mode=block"
+		Referrer-Policy "strict-origin-when-cross-origin"
+		Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'"
+		Permissions-Policy "geolocation=(), microphone=(), camera=()"
+
+		# Masquer les informations serveur
+		-Server
+		-X-Powered-By
+	}
+
+	# Gestion des erreurs production (pages d'erreur personnalisées)
+	handle_errors {
+		@404 expression {http.error.status_code} == 404
+		@500 expression {http.error.status_code} >= 500
+
+		handle @404 {
+			respond "Page non trouvée" 404
+		}
+
+		handle @500 {
+			respond "Erreur interne du serveur" 500
+		}
+	}
+
+	# Optimisations Symfony production
+	@symfony_dev {
+		path /_profiler/* /app_dev.php*
+	}
+	handle @symfony_dev {
+		respond "Access Denied" 403
+	}
+
+	# Restriction d'accès aux fichiers sensibles
+	@sensitive {
+		path *.yml *.yaml *.env* /var/* /config/* /src/* /vendor/* /composer.* /Dockerfile* /docker-compose*
+	}
+	handle @sensitive {
+		respond "Access Denied" 403
+	}
+
+	# Logs des accès (format compact pour production)
+	log {
+		output file /var/log/caddy/access.log {
+			roll_size 50MB
+			roll_keep 5
+		}
+		format json {
+			time_format "iso8601"
+			message_key "msg"
+		}
+	}
+}
+
+# Hub Mercure pour temps réel (production sécurisée)
+{$MERCURE_DOMAIN:mercure.yourdomain.com} {
+	reverse_proxy mercure:3000
+
+	# CORS restrictif pour production
+	@cors header Origin {$CORS_ALLOWED_ORIGINS:https://yourdomain.com}
+	handle @cors {
+		header Access-Control-Allow-Origin {http.request.header.Origin}
+		header Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS"
+		header Access-Control-Allow-Headers "Authorization, Content-Type, Cache-Control"
+		header Access-Control-Allow-Credentials "true"
+	}
+
+	# Gestion des requêtes preflight avec validation d'origine
+	@options method OPTIONS
+	handle @options {
+		header Access-Control-Allow-Origin {http.request.header.Origin}
+		header Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS"
+		header Access-Control-Allow-Headers "Authorization, Content-Type, Cache-Control"
+		respond "" 204
+	}
+
+	# Headers de sécurité pour Mercure
+	header {
+		Strict-Transport-Security "max-age=63072000"
+		X-Content-Type-Options "nosniff"
+		X-Frame-Options "DENY"
+	}
+}
+
+# Redirection HTTP vers HTTPS
+http://{$SERVER_NAME:localhost} {
+	redir https://{host}{uri} permanent
+}

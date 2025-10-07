@@ -1,0 +1,129 @@
+/**
+ * Design System myCFiia - Entry Point
+ * Point d'entrée principal pour tous les styles de l'application
+ */
+
+/* ====================================
+   1. Fonts
+   ==================================== */
+@import './fonts.css';
+
+/* ====================================
+   2. Variables & Tokens
+   ==================================== */
+@import './variables.css';
+
+/* ====================================
+   3. Reset & Base Styles
+   ==================================== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+    font-family: var(--font-family-content);
+    font-size: var(--font-size-md);
+    color: var(--color-white);
+    background: var(--background-gradient);
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    line-height: 1.6;
+}
+
+/* Headings */
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-family-title);
+    font-weight: var(--font-weight-bold);
+    line-height: 1.2;
+    margin-bottom: var(--space-md);
+}
+
+h1 { font-size: var(--font-size-xxl); }
+h2 { font-size: var(--font-size-xl); }
+h3 { font-size: var(--font-size-lg); }
+h4, h5, h6 { font-size: var(--font-size-md); }
+
+/* Links */
+a {
+    color: var(--color-secondary);
+    text-decoration: none;
+    transition: color var(--transition-fast);
+}
+
+a:hover {
+    color: var(--color-white);
+}
+
+/* ====================================
+   4. Components
+   ==================================== */
+@import './components/glass-effects.css';
+@import './components/buttons.css';
+@import './components/cards.css';
+@import './components/sidebar.css';
+@import './components/topbar.css';
+@import './components/chat.css';
+
+/* ====================================
+   5. Layouts
+   ==================================== */
+@import './layouts/auth.css';
+@import './layouts/app-layout.css';
+
+/* ====================================
+   6. Utilities
+   ==================================== */
+
+/* Spacing */
+.mt-1 { margin-top: var(--space-sm); }
+.mt-2 { margin-top: var(--space-md); }
+.mt-3 { margin-top: var(--space-lg); }
+.mt-4 { margin-top: var(--space-xl); }
+
+.mb-1 { margin-bottom: var(--space-sm); }
+.mb-2 { margin-bottom: var(--space-md); }
+.mb-3 { margin-bottom: var(--space-lg); }
+.mb-4 { margin-bottom: var(--space-xl); }
+
+.p-1 { padding: var(--space-sm); }
+.p-2 { padding: var(--space-md); }
+.p-3 { padding: var(--space-lg); }
+.p-4 { padding: var(--space-xl); }
+
+/* Text */
+.text-center { text-align: center; }
+.text-left { text-align: left; }
+.text-right { text-align: right; }
+
+.text-primary { color: var(--color-primary); }
+.text-secondary { color: var(--color-secondary); }
+.text-white { color: var(--color-white); }
+
+/* Display */
+.d-none { display: none; }
+.d-block { display: block; }
+.d-flex { display: flex; }
+.d-grid { display: grid; }
+
+/* Flex utilities */
+.flex-column { flex-direction: column; }
+.flex-row { flex-direction: row; }
+.justify-center { justify-content: center; }
+.justify-between { justify-content: space-between; }
+.align-center { align-items: center; }
+.gap-1 { gap: var(--space-sm); }
+.gap-2 { gap: var(--space-md); }
+.gap-3 { gap: var(--space-lg); }
+
+/* Width */
+.w-full { width: 100%; }
+.w-auto { width: auto; }

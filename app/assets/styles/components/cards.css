@@ -1,0 +1,84 @@
+/**
+ * Design System myCFiia - Cards
+ * Composants carte avec glass effect
+ */
+
+/* ====================================
+   Card Base
+   ==================================== */
+.card {
+    background: var(--glass-light);
+    backdrop-filter: blur(var(--glass-backdrop-blur));
+    -webkit-backdrop-filter: blur(var(--glass-backdrop-blur));
+    border: var(--glass-border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-glass);
+    padding: var(--space-xl);
+    transition: all var(--transition-normal);
+}
+
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-hover);
+}
+
+/* ====================================
+   Card Header
+   ==================================== */
+.card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: var(--space-lg);
+    padding-bottom: var(--space-lg);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.card-title {
+    font-family: var(--font-family-title);
+    font-weight: var(--font-weight-bold);
+    font-size: var(--font-size-lg);
+    color: var(--color-white);
+    margin: 0;
+}
+
+/* ====================================
+   Card Body
+   ==================================== */
+.card-body {
+    font-family: var(--font-family-content);
+    font-size: var(--font-size-md);
+    color: var(--color-white);
+    line-height: 1.6;
+}
+
+/* ====================================
+   Card Footer
+   ==================================== */
+.card-footer {
+    margin-top: var(--space-lg);
+    padding-top: var(--space-lg);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    gap: var(--space-md);
+    align-items: center;
+    justify-content: flex-end;
+}
+
+/* ====================================
+   Card Variants
+   ==================================== */
+.card-primary {
+    border-color: var(--color-primary);
+}
+
+.card-transparent {
+    background: transparent;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    box-shadow: none;
+}
+
+.card-compact {
+    padding: var(--space-md);
+}

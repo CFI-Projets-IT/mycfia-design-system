@@ -1,0 +1,59 @@
+{% extends 'layouts/auth.html.twig' %}
+
+{% block title %}Connexion - myCFiia{% endblock %}
+
+{% block auth_content %}
+    <div class="auth-card">
+        <div class="auth-logo">
+            <img src="{{ asset('images/logo.svg') }}" alt="myCFiia Logo">
+        </div>
+
+        <h1 class="text-center mb-4">Connexion</h1>
+
+        {% if error %}
+            <div class="alert alert-danger mb-3">
+                {{ error.messageKey|trans(error.messageData, 'security') }}
+            </div>
+        {% endif %}
+
+        <form method="post" class="auth-form">
+            <div class="auth-form-group">
+                <label for="username" class="auth-form-label">Nom d'utilisateur</label>
+                <input
+                    type="text"
+                    id="username"
+                    name="_username"
+                    class="auth-form-input"
+                    value="{{ last_username }}"
+                    required
+                    autofocus
+                    placeholder="Entrez votre nom d'utilisateur"
+                >
+            </div>
+
+            <div class="auth-form-group">
+                <label for="password" class="auth-form-label">Mot de passe</label>
+                <input
+                    type="password"
+                    id="password"
+                    name="_password"
+                    class="auth-form-input"
+                    required
+                    placeholder="Entrez votre mot de passe"
+                >
+            </div>
+
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+            <div class="auth-actions">
+                <button type="submit" class="btn btn-primary btn-block">
+                    Se connecter
+                </button>
+            </div>
+        </form>
+
+        <div class="auth-footer">
+            <p>&copy; {{ "now"|date("Y") }} myCFiia - Tous droits réservés</p>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,70 @@
+# Configuration override pour DÉVELOPPEMENT
+# Ce fichier est automatiquement chargé par Docker Compose
+# Ajoute les services et configurations spécifiques au développement
+
+services:
+  frankenphp:
+    build:
+      target: development
+    ports:
+      - "${HTTP_PORT:-82}:82"
+      - "${PHPMYADMIN_PORT:-8082}:8082"
+      - "${MAILHOG_PORT:-8027}:8027"
+    volumes:
+      # Bind mount pour édition en temps réel
+      - ./app:/var/www/html
+      - ./docker/Caddyfile.dev:/etc/caddy/Caddyfile
+    environment:
+      # Variables pour gestion des droits
+      - DOCKER_UID=${DOCKER_UID:-1000}
+      - DOCKER_GID=${DOCKER_GID:-1000}
+      # Variables Symfony développement
+      - APP_ENV=dev
+      - APP_DEBUG=1
+      # Base de données développement
+      - DATABASE_URL=mysql://${DB_USER:-app_user}:${DB_PASSWORD:-app_password}@mariadb:3306/${DB_NAME:-app_db}?serverVersion=${MARIADB_VERSION:-11}.0.0-MariaDB&charset=utf8mb4
+    # Healthcheck personnalisé pour FrankenPHP
+    healthcheck:
+      test: ["CMD-SHELL", "php -v || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+    # Logs détaillés pour le développement
+    tty: true
+
+  # Services additionnels pour le développement
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:${PHPMYADMIN_VERSION:-latest}
+    container_name: ${PROJECT_NAME}_phpmyadmin
+    environment:
+      PMA_HOST: mariadb
+      PMA_USER: ${DB_USER:-app_user}
+      PMA_PASSWORD: ${DB_PASSWORD:-app_password}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-root}
+    depends_on:
+      mariadb:
+        condition: service_healthy
+    networks:
+      - app_network
+
+  mailhog:
+    image: mailhog/mailhog:${MAILHOG_VERSION:-latest}
+    container_name: ${PROJECT_NAME}_mailhog
+    environment:
+      # Configuration MailHog
+      MH_STORAGE: memory
+      MH_UI_BIND_ADDR: 0.0.0.0:8025
+      MH_API_BIND_ADDR: 0.0.0.0:8025
+    networks:
+      - app_network
+
+  # Configuration Mercure pour développement
+  mercure:
+    ports:
+      - "${MERCURE_PORT:-3001}:3000"
+    environment:
+      MERCURE_EXTRA_DIRECTIVES: |
+        cors_origins http://localhost:${HTTP_PORT:-82} http://127.0.0.1:${HTTP_PORT:-82} http://0.0.0.0:${HTTP_PORT:-82}
+        anonymous
+        demo

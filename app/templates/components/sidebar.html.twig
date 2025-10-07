@@ -1,0 +1,40 @@
+{# Sidebar Navigation Component #}
+<nav class="sidebar" data-controller="sidebar">
+    <div class="sidebar-brand">
+        <img src="{{ asset('images/logo_picto.svg') }}" alt="myCFiia" class="sidebar-logo">
+        <span class="sidebar-brand-text">myCFiia</span>
+    </div>
+
+    <ul class="sidebar-menu">
+        <li class="sidebar-item">
+            <a href="{{ path('app_dashboard') }}" class="sidebar-link">
+                <i class="bi bi-speedometer2"></i>
+                <span>Dashboard</span>
+            </a>
+        </li>
+        <li class="sidebar-item">
+            <a href="{{ path('app_operation_index') }}" class="sidebar-link">
+                <i class="bi bi-megaphone"></i>
+                <span>Opérations</span>
+            </a>
+        </li>
+        <li class="sidebar-item">
+            <a href="{{ path('app_stock_index') }}" class="sidebar-link">
+                <i class="bi bi-box-seam"></i>
+                <span>Stock</span>
+            </a>
+        </li>
+        <li class="sidebar-item">
+            <a href="{{ path('app_facture_index') }}" class="sidebar-link">
+                <i class="bi bi-receipt"></i>
+                <span>Factures</span>
+            </a>
+        </li>
+        <li class="sidebar-item">
+            <a href="{{ path('app_chat') }}" class="sidebar-link">
+                <i class="bi bi-chat-dots"></i>
+                <span>Chat IA</span>
+            </a>
+        </li>
+    </ul>
+</nav>
