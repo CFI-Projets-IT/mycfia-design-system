@@ -62,52 +62,50 @@
 .auth-form {
     display: flex;
     flex-direction: column;
-    gap: var(--space-lg);
+    gap: 0;
 }
 
-.auth-form-group {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-sm);
-    position: relative;
+/* Bootstrap Input Group Customization */
+.auth-form .input-group {
+    border-radius: var(--radius-md);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    background: var(--color-white);
+    overflow: hidden;
+    transition: border-color var(--transition-normal);
 }
 
-.auth-form-group i {
-    position: absolute;
-    left: 12px;
-    top: 38px;
+.auth-form .input-group:focus-within {
+    border-color: var(--color-primary);
+}
+
+.auth-form .input-group-text {
+    background: transparent;
+    border: none;
     color: var(--color-gray-dark);
+    padding: var(--space-md);
+}
+
+.auth-form .input-group-text i {
     font-size: 18px;
-    z-index: 1;
 }
 
-.auth-form-label {
-    font-family: var(--font-family-title);
-    font-weight: var(--font-weight-semibold);
-    font-size: var(--font-size-sm);
-    color: var(--color-gray-dark);
-}
-
-.auth-form-input {
-    padding: var(--space-md) var(--space-md) var(--space-md) 40px;
+.auth-form .form-control {
     font-family: var(--font-family-content);
     font-size: var(--font-size-md);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    border-radius: var(--radius-md);
-    background: var(--color-white);
+    border: none;
+    background: transparent;
     color: var(--color-black);
-    transition: all var(--transition-normal);
+    padding: var(--space-md);
+    box-shadow: none;
 }
 
-.auth-form-input::placeholder {
+.auth-form .form-control::placeholder {
     color: rgba(0, 0, 0, 0.4);
 }
 
-.auth-form-input:focus {
+.auth-form .form-control:focus {
     outline: none;
-    background: var(--color-white);
-    border-color: var(--color-primary);
-    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+    box-shadow: none;
 }
 
 /* ====================================
@@ -121,16 +119,14 @@
     align-items: center;
 }
 
-.auth-forgot-link {
-    color: var(--color-white);
+.startlink {
+    color: #705ec8;
     font-size: var(--font-size-sm);
     text-decoration: none;
-    opacity: 0.8;
-    transition: opacity var(--transition-fast);
+    transition: color var(--transition-fast);
 }
 
-.auth-forgot-link:hover {
-    opacity: 1;
+.startlink:hover {
     color: var(--color-white);
 }
 

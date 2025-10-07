@@ -17,39 +17,53 @@
         {% endif %}
 
         <form method="post" class="auth-form">
-            <div class="auth-form-group">
-                <i class="bi bi-person"></i>
-                <input
-                    type="text"
-                    id="username"
-                    name="_username"
-                    class="auth-form-input"
-                    value="{{ last_username }}"
-                    required
-                    autofocus
-                    placeholder="Identifiant"
-                >
-            </div>
+            <div class="col-9 mx-auto">
+                <div class="input-group mb-4">
+                    <div class="input-group-prepend">
+                        <div class="input-group-text">
+                            <i class="bi bi-person"></i>
+                        </div>
+                    </div>
+                    <input
+                        type="text"
+                        id="username"
+                        name="_username"
+                        class="form-control"
+                        value="{{ last_username }}"
+                        required
+                        autofocus
+                        placeholder="Identifiant"
+                    >
+                </div>
 
-            <div class="auth-form-group">
-                <i class="bi bi-lock"></i>
-                <input
-                    type="password"
-                    id="password"
-                    name="_password"
-                    class="auth-form-input"
-                    required
-                    placeholder="Mot de passe"
-                >
-            </div>
+                <div class="input-group mb-4">
+                    <div class="input-group-prepend">
+                        <div class="input-group-text">
+                            <i class="bi bi-lock"></i>
+                        </div>
+                    </div>
+                    <input
+                        type="password"
+                        id="password"
+                        name="_password"
+                        class="form-control"
+                        required
+                        placeholder="Mot de passe"
+                    >
+                </div>
 
-            <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
 
-            <div class="auth-actions">
-                <button type="submit" class="btn btn-primary btn-block">
-                    Connexion
-                </button>
-                <a href="#" class="auth-forgot-link">mot de passe ou identifiant oublié ?</a>
+                <div class="row">
+                    <div class="col-12">
+                        <button type="submit" class="btn btn-primary btn-block px-4">
+                            Connexion
+                        </button>
+                    </div>
+                    <div class="col-12 text-center pt-4">
+                        <a href="#" class="startlink">mot de passe ou identifiant oublié ?</a>
+                    </div>
+                </div>
             </div>
         </form>
 
