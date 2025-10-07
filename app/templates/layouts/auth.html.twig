@@ -2,13 +2,19 @@
 
 {% block body %}
 <div class="auth-layout">
-    {# Hexagones décoratifs #}
-    <div class="hexagon hexagon-top-left"></div>
-    <div class="hexagon hexagon-top-right"></div>
-    <div class="hexagon hexagon-middle-left hexagon-outline"></div>
-    <div class="hexagon hexagon-middle-right"></div>
-    <div class="hexagon hexagon-bottom-left"></div>
-    <div class="hexagon hexagon-bottom-right"></div>
+    {# Hexagones animés #}
+    <div class="anidiv">
+        <div><img src="{{ asset('images/svgs/hexagon.svg') }}" alt=""></div>
+        <div><img src="{{ asset('images/svgs/hexagon.svg') }}" alt=""></div>
+        <div><img src="{{ asset('images/svgs/hexagon.svg') }}" alt=""></div>
+        <div><img src="{{ asset('images/svgs/hexagon.svg') }}" alt=""></div>
+        <div><img src="{{ asset('images/svgs/hexagon.svg') }}" alt=""></div>
+        <div><img src="{{ asset('images/svgs/hexagon.svg') }}" alt=""></div>
+        <div><img src="{{ asset('images/svgs/hexagon.svg') }}" alt=""></div>
+        <div><img src="{{ asset('images/svgs/hexagon.svg') }}" alt=""></div>
+        <div><img src="{{ asset('images/svgs/hexagon.svg') }}" alt=""></div>
+        <div><img src="{{ asset('images/svgs/hexagon.svg') }}" alt=""></div>
+    </div>
 
     <div class="auth-container">
         {% block auth_content %}{% endblock %}
