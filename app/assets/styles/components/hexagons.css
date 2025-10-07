@@ -1,29 +1,22 @@
 /**
- * Design System myCFiia - Hexagones Décoratifs
- * Formes hexagonales positionnées aux 4 coins de l'écran
+ * Design System myCFiia - Cercles Décoratifs
+ * Formes circulaires positionnées sur l'écran
  */
 
 /* ====================================
-   Hexagone de base
+   Cercle de base
    ==================================== */
 .hexagon {
     position: absolute;
     width: 150px;
     height: 150px;
     background: rgba(255, 255, 255, 0.05);
-    clip-path: polygon(
-        30% 0%,
-        70% 0%,
-        100% 50%,
-        70% 100%,
-        30% 100%,
-        0% 50%
-    );
+    border-radius: 50%;
     z-index: 0;
 }
 
 /* ====================================
-   Hexagones positionnés
+   Cercles positionnés
    ==================================== */
 
 /* Coin supérieur gauche */
@@ -83,7 +76,7 @@
 }
 
 /* ====================================
-   Hexagone avec contour uniquement
+   Cercle avec contour uniquement
    ==================================== */
 .hexagon-outline {
     background: transparent;
