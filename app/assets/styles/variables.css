@@ -27,7 +27,7 @@
     /* ====================================
        Couleurs Primaires
        ==================================== */
-    --color-primary: #1D3E82;              /* Bleu CFI */
+    --color-primary: #6366F1;              /* Violet-bleu (bouton) */
     --color-secondary: #3ABFF0;            /* Bleu clair */
     --color-tertiary: #E6204C;             /* Rouge accent */
     --color-default: #2A1B3D;              /* Violet foncé */
@@ -52,12 +52,12 @@
     --color-gray-dark: #666666;
 
     /* ====================================
-       Background Radial
+       Background Gradient
        ==================================== */
-    --background-gradient: radial-gradient(
-        circle at center,
-        #003080 0%,
-        #000713 100%
+    --background-gradient: linear-gradient(
+        135deg,
+        #2E3A59 0%,
+        #5FA8D3 100%
     );
 
     /* ====================================

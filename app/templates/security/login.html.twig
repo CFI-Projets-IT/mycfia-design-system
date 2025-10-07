@@ -8,7 +8,7 @@
             <img src="{{ asset('images/logo.svg') }}" alt="myCFiia Logo">
         </div>
 
-        <h1 class="text-center mb-4">Connexion</h1>
+        <h1 class="text-center mb-4" style="color: var(--color-gray-dark);">Connectez-vous</h1>
 
         {% if error %}
             <div class="alert alert-danger mb-3">
@@ -18,7 +18,8 @@
 
         <form method="post" class="auth-form">
             <div class="auth-form-group">
-                <label for="username" class="auth-form-label">Nom d'utilisateur</label>
+                <label for="username" class="auth-form-label">E-mail</label>
+                <i class="bi bi-person"></i>
                 <input
                     type="text"
                     id="username"
@@ -27,19 +28,20 @@
                     value="{{ last_username }}"
                     required
                     autofocus
-                    placeholder="Entrez votre nom d'utilisateur"
+                    placeholder="E-mail"
                 >
             </div>
 
             <div class="auth-form-group">
                 <label for="password" class="auth-form-label">Mot de passe</label>
+                <i class="bi bi-lock"></i>
                 <input
                     type="password"
                     id="password"
                     name="_password"
                     class="auth-form-input"
                     required
-                    placeholder="Entrez votre mot de passe"
+                    placeholder="Mot de passe"
                 >
             </div>
 
@@ -47,13 +49,24 @@
 
             <div class="auth-actions">
                 <button type="submit" class="btn btn-primary btn-block">
-                    Se connecter
+                    Connexion
                 </button>
             </div>
         </form>
 
         <div class="auth-footer">
-            <p>&copy; {{ "now"|date("Y") }} myCFiia - Tous droits réservés</p>
+            <p>Vous n'avez pas de compte, prenez contact avec nous.</p>
+            <div class="auth-social-icons">
+                <a href="mailto:contact@mycfiia.com" title="Email">
+                    <i class="bi bi-envelope"></i>
+                </a>
+                <a href="https://linkedin.com" target="_blank" title="LinkedIn">
+                    <i class="bi bi-linkedin"></i>
+                </a>
+                <a href="tel:+33000000000" title="Téléphone">
+                    <i class="bi bi-telephone"></i>
+                </a>
+            </div>
         </div>
     </div>
 {% endblock %}

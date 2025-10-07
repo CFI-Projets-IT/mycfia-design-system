@@ -44,12 +44,14 @@
 
 /* Primary */
 .btn-primary {
-    background: var(--color-primary);
-    color: var(--color-white);
+    background: var(--color-primary) !important;
+    color: var(--color-white) !important;
+    border-color: var(--color-primary) !important;
 }
 
 .btn-primary:hover {
-    background: #163161;
+    background: #4F46E5 !important;
+    border-color: #4F46E5 !important;
 }
 
 /* Secondary */
