@@ -1,0 +1,69 @@
+/* ====================================
+   Theme Dark Red
+   ==================================== */
+
+body.theme-dark-red {
+    /* Fonds - Rouge bordeaux/noir */
+    --theme-bg-primary: #1a0a0e;
+    --theme-bg-secondary: #2a1419;
+
+    /* Textes */
+    --theme-text-primary: #ffffff;
+    --theme-text-secondary: #c8b0b8;
+
+    /* Elements UI */
+    --theme-border-color: #3d1f27;
+    --theme-card-bg: #2a1419;
+
+    /* Sidebar */
+    --theme-sidebar-bg: #0f0507;
+    --theme-sidebar-text: #ffffff;
+    --theme-sidebar-hover: rgba(255, 255, 255, 0.1);
+
+    /* Accent - Rouge/rose pour contraste */
+    --theme-accent: #d35f8d;
+    --theme-accent-hover: #b84a73;
+
+    /* Ombres */
+    --theme-shadow: 0 4px 6px rgba(0, 0, 0, 0.4);
+    --theme-shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.6);
+
+    background-color: var(--theme-bg-primary);
+    color: var(--theme-text-primary);
+}
+
+body.theme-dark-red .card,
+body.theme-dark-red .glass-card {
+    background-color: var(--theme-card-bg);
+    border-color: var(--theme-border-color);
+    box-shadow: var(--theme-shadow);
+}
+
+body.theme-dark-red .sidebar {
+    background-color: var(--theme-sidebar-bg);
+    color: var(--theme-sidebar-text);
+}
+
+body.theme-dark-red .btn-primary {
+    background-color: var(--theme-accent);
+    border-color: var(--theme-accent);
+}
+
+body.theme-dark-red .btn-primary:hover {
+    background-color: var(--theme-accent-hover);
+}
+
+body.theme-dark-red input,
+body.theme-dark-red textarea,
+body.theme-dark-red select {
+    background-color: var(--theme-bg-secondary);
+    color: var(--theme-text-primary);
+    border-color: var(--theme-border-color);
+}
+
+body.theme-dark-red input:focus,
+body.theme-dark-red textarea:focus,
+body.theme-dark-red select:focus {
+    background-color: var(--theme-card-bg);
+    border-color: var(--theme-accent);
+}

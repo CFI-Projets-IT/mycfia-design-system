@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}myCFiia{% endblock %}</title>
+    <link rel="icon" href="{{ asset('images/logo_picto.svg') }}" type="image/svg+xml">
+
+    {% block stylesheets %}
+        {{ importmap('app') }}
+    {% endblock %}
+</head>
+<body class="theme-{{ app.user ? app.user.theme : 'light' }}">
+    <div class="home-layout">
+        {# Sidebar gauche #}
+        <aside class="home-sidebar">
+            <div class="sidebar-header">
+                <img src="{{ asset('images/logo.svg') }}" alt="myCFiia" class="sidebar-logo">
+            </div>
+
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <h3 class="nav-section-title">
+                        <i class="bi bi-star"></i>
+                        Favoris
+                    </h3>
+                    <ul class="nav-list">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">
+                                <i class="bi bi-receipt"></i>
+                                <span>Factures</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">
+                                <i class="bi bi-list-check"></i>
+                                <span>Commandes</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">
+                                <i class="bi bi-box-seam"></i>
+                                <span>Stocks</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link">
+                                <i class="bi bi-plus-circle"></i>
+                                <span>Aide-moi à...</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+
+            <div class="sidebar-footer">
+                <button class="btn-historique">
+                    <i class="bi bi-clock-history"></i>
+                    <span>Historique</span>
+                </button>
+            </div>
+        </aside>
+
+        {# Zone principale #}
+        <main class="home-main">
+            {# Header avec logo centré et ThemeSelector #}
+            <header class="home-header">
+                <div class="header-content">
+                    <div class="header-left">
+                        {# Espace vide pour équilibrer #}
+                    </div>
+
+                    <div class="header-center">
+                        <img src="{{ asset('images/logo.svg') }}" alt="myCFiia" class="header-logo">
+                    </div>
+
+                    <div class="header-right">
+                        {{ component('ThemeSelector') }}
+                        <a href="#" class="btn btn-link text-white">
+                            <i class="bi bi-box-arrow-up-right"></i>
+                            Retour vers MyCFi
+                        </a>
+                    </div>
+                </div>
+            </header>
+
+            {# Contenu de la page #}
+            <div class="home-content">
+                {% block content %}{% endblock %}
+            </div>
+        </main>
+    </div>
+
+    {% block javascripts %}
+        {{ importmap('app') }}
+    {% endblock %}
+</body>
+</html>

@@ -1,0 +1,53 @@
+/* ====================================
+   Theme Light
+   ==================================== */
+
+body.theme-light {
+    /* Fonds */
+    --theme-bg-primary: #f5f5f7;
+    --theme-bg-secondary: #ffffff;
+
+    /* Textes */
+    --theme-text-primary: #1a1a1a;
+    --theme-text-secondary: #6b6f80;
+
+    /* Elements UI */
+    --theme-border-color: #e3e4e9;
+    --theme-card-bg: #ffffff;
+
+    /* Sidebar */
+    --theme-sidebar-bg: #1a1a2e;
+    --theme-sidebar-text: #ffffff;
+    --theme-sidebar-hover: rgba(255, 255, 255, 0.1);
+
+    /* Accent */
+    --theme-accent: #705ec8;
+    --theme-accent-hover: #5d4aa6;
+
+    /* Ombres */
+    --theme-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --theme-shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.15);
+
+    background-color: var(--theme-bg-primary);
+    color: var(--theme-text-primary);
+}
+
+body.theme-light .card,
+body.theme-light .glass-card {
+    background-color: var(--theme-card-bg);
+    border-color: var(--theme-border-color);
+}
+
+body.theme-light .sidebar {
+    background-color: var(--theme-sidebar-bg);
+    color: var(--theme-sidebar-text);
+}
+
+body.theme-light .btn-primary {
+    background-color: var(--theme-accent);
+    border-color: var(--theme-accent);
+}
+
+body.theme-light .btn-primary:hover {
+    background-color: var(--theme-accent-hover);
+}

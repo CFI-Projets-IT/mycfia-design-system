@@ -20,6 +20,8 @@ class UserFixtures extends Fixture
         $admin->setUsername('admin');
         $admin->setEmail('admin@mycfia.com');
         $admin->setRoles(['ROLE_ADMIN', 'ROLE_USER']);
+        $admin->setFirstName('Yann');
+        $admin->setTheme('light');
 
         $hashedPassword = $this->passwordHasher->hashPassword(
             $admin,

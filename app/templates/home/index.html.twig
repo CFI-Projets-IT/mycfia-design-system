@@ -1,0 +1,161 @@
+{% extends 'layouts/home.html.twig' %}
+
+{% block title %}Accueil - myCFiia{% endblock %}
+
+{% block content %}
+<div class="homepage-conversational">
+    <div class="greeting-container">
+        <h1 class="greeting-text">
+            Bonjour <span class="greeting-firstname">{{ firstName }}</span>,
+        </h1>
+        <p class="greeting-question">Comment puis-je vous aider aujourd'hui ?</p>
+    </div>
+
+    <div class="quick-access-grid">
+        <a href="#" class="quick-access-card">
+            <div class="quick-access-icon">
+                <i class="bi bi-receipt"></i>
+            </div>
+            <h3 class="quick-access-title">Factures</h3>
+            <p class="quick-access-description">Gérer vos factures</p>
+        </a>
+
+        <a href="#" class="quick-access-card">
+            <div class="quick-access-icon">
+                <i class="bi bi-list-check"></i>
+            </div>
+            <h3 class="quick-access-title">Commandes</h3>
+            <p class="quick-access-description">Suivre vos commandes</p>
+        </a>
+
+        <a href="#" class="quick-access-card">
+            <div class="quick-access-icon">
+                <i class="bi bi-box-seam"></i>
+            </div>
+            <h3 class="quick-access-title">Stocks</h3>
+            <p class="quick-access-description">Consulter vos stocks</p>
+        </a>
+
+        <a href="#" class="quick-access-card">
+            <div class="quick-access-icon">
+                <i class="bi bi-plus-circle"></i>
+            </div>
+            <h3 class="quick-access-title">Autre</h3>
+            <p class="quick-access-description">Autres demandes</p>
+        </a>
+    </div>
+</div>
+
+<style>
+    .homepage-conversational {
+        max-width: 800px;
+        margin: 0 auto;
+        text-align: center;
+    }
+
+    .greeting-container {
+        margin-bottom: 4rem;
+    }
+
+    .greeting-text {
+        font-size: 2.5rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        color: var(--theme-text-primary);
+    }
+
+    .greeting-firstname {
+        color: #d35f8d;
+        font-weight: 700;
+    }
+
+    .greeting-question {
+        font-size: 1.25rem;
+        color: var(--theme-text-secondary);
+        margin: 0;
+    }
+
+    .quick-access-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 2rem;
+        margin-top: 3rem;
+    }
+
+    .quick-access-card {
+        background-color: var(--theme-card-bg);
+        border: 1px solid var(--theme-border-color);
+        border-radius: 1rem;
+        padding: 2rem;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .quick-access-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        border-color: var(--theme-accent);
+    }
+
+    .quick-access-icon {
+        width: 80px;
+        height: 80px;
+        background: linear-gradient(135deg, var(--theme-accent), var(--theme-accent-secondary, var(--theme-accent)));
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 1rem;
+    }
+
+    .quick-access-icon i {
+        font-size: 2.5rem;
+        color: white;
+    }
+
+    .quick-access-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: var(--theme-text-primary);
+        margin: 0;
+    }
+
+    .quick-access-description {
+        font-size: 1rem;
+        color: var(--theme-text-secondary);
+        margin: 0;
+    }
+
+    @media (max-width: 768px) {
+        .greeting-text {
+            font-size: 2rem;
+        }
+
+        .greeting-question {
+            font-size: 1.1rem;
+        }
+
+        .quick-access-grid {
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+
+        .quick-access-card {
+            padding: 1.5rem;
+        }
+
+        .quick-access-icon {
+            width: 60px;
+            height: 60px;
+        }
+
+        .quick-access-icon i {
+            font-size: 2rem;
+        }
+    }
+</style>
+{% endblock %}

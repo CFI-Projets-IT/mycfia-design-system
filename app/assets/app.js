@@ -3,6 +3,10 @@ import './bootstrap.js';
 // Import CSS files (AssetMapper way - ordre important)
 import './styles/fonts.css';
 import './styles/variables.css';
+import './styles/themes/variables.css';
+import './styles/themes/light.css';
+import './styles/themes/dark-blue.css';
+import './styles/themes/dark-red.css';
 import './styles/components/glass-effects.css';
 import './styles/components/hexagons.css';
 import './styles/components/buttons.css';
@@ -12,6 +16,7 @@ import './styles/components/topbar.css';
 import './styles/components/chat.css';
 import './styles/layouts/auth.css';
 import './styles/layouts/app-layout.css';
+import './styles/layouts/home-layout.css';
 import './styles/app.css';
 
 // Bootstrap CSS

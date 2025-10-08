@@ -1,0 +1,94 @@
+<div
+    {{ attributes }}
+    class="theme-selector dropdown"
+    data-controller="theme"
+    data-theme-current-value="{{ this.currentTheme }}"
+>
+    <button
+        class="btn btn-link dropdown-toggle theme-selector-btn"
+        type="button"
+        id="themeSelectorDropdown"
+        data-bs-toggle="dropdown"
+        aria-expanded="false"
+        title="Changer de thème"
+    >
+        <i class="bi bi-palette"></i>
+    </button>
+
+    <ul class="dropdown-menu dropdown-menu-end theme-selector-menu" aria-labelledby="themeSelectorDropdown">
+        {% for theme in this.getThemes() %}
+            <li>
+                <button
+                    class="dropdown-item theme-option {% if this.currentTheme == theme.value %}active{% endif %}"
+                    type="button"
+                    data-action="live#action"
+                    data-live-action-param="switchTheme(theme='{{ theme.value }}')"
+                >
+                    <span class="theme-preview" style="background-color: {{ theme.color }};"></span>
+                    <i class="{{ theme.icon }} me-2"></i>
+                    <span>{{ theme.label }}</span>
+                    {% if this.currentTheme == theme.value %}
+                        <i class="bi bi-check-lg ms-auto"></i>
+                    {% endif %}
+                </button>
+            </li>
+        {% endfor %}
+    </ul>
+</div>
+
+<style>
+.theme-selector {
+    position: relative;
+}
+
+.theme-selector-btn {
+    color: var(--theme-text-primary, #ffffff);
+    font-size: 1.25rem;
+    padding: 0.5rem;
+    border: none;
+    background: transparent;
+    transition: opacity 0.2s ease;
+}
+
+.theme-selector-btn:hover {
+    opacity: 0.8;
+}
+
+.theme-selector-menu {
+    min-width: 200px;
+    padding: 0.5rem;
+    background-color: var(--theme-card-bg, #ffffff);
+    border: 1px solid var(--theme-border-color, #e3e4e9);
+    box-shadow: var(--theme-shadow-lg, 0 10px 25px rgba(0, 0, 0, 0.15));
+}
+
+.theme-option {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    border-radius: 0.375rem;
+    color: var(--theme-text-primary, #1a1a1a);
+    transition: background-color 0.2s ease;
+}
+
+.theme-option:hover {
+    background-color: var(--theme-bg-secondary, #f5f5f7);
+}
+
+.theme-option.active {
+    background-color: var(--theme-accent, #705ec8);
+    color: #ffffff;
+}
+
+.theme-preview {
+    width: 1.25rem;
+    height: 1.25rem;
+    border-radius: 50%;
+    margin-right: 0.75rem;
+    border: 2px solid rgba(0, 0, 0, 0.1);
+}
+
+.theme-option i.bi-check-lg {
+    margin-left: auto;
+}
+</style>

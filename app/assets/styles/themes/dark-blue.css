@@ -1,0 +1,69 @@
+/* ====================================
+   Theme Dark Blue
+   ==================================== */
+
+body.theme-dark-blue {
+    /* Fonds - Bleu marine fonce */
+    --theme-bg-primary: #0f1729;
+    --theme-bg-secondary: #1a2332;
+
+    /* Textes */
+    --theme-text-primary: #ffffff;
+    --theme-text-secondary: #b0b8c8;
+
+    /* Elements UI */
+    --theme-border-color: #2a3647;
+    --theme-card-bg: #1a2332;
+
+    /* Sidebar */
+    --theme-sidebar-bg: #0a0f1a;
+    --theme-sidebar-text: #ffffff;
+    --theme-sidebar-hover: rgba(255, 255, 255, 0.1);
+
+    /* Accent - Bleu clair pour contraste */
+    --theme-accent: #5fa8d3;
+    --theme-accent-hover: #4a8ab8;
+
+    /* Ombres */
+    --theme-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    --theme-shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.5);
+
+    background-color: var(--theme-bg-primary);
+    color: var(--theme-text-primary);
+}
+
+body.theme-dark-blue .card,
+body.theme-dark-blue .glass-card {
+    background-color: var(--theme-card-bg);
+    border-color: var(--theme-border-color);
+    box-shadow: var(--theme-shadow);
+}
+
+body.theme-dark-blue .sidebar {
+    background-color: var(--theme-sidebar-bg);
+    color: var(--theme-sidebar-text);
+}
+
+body.theme-dark-blue .btn-primary {
+    background-color: var(--theme-accent);
+    border-color: var(--theme-accent);
+}
+
+body.theme-dark-blue .btn-primary:hover {
+    background-color: var(--theme-accent-hover);
+}
+
+body.theme-dark-blue input,
+body.theme-dark-blue textarea,
+body.theme-dark-blue select {
+    background-color: var(--theme-bg-secondary);
+    color: var(--theme-text-primary);
+    border-color: var(--theme-border-color);
+}
+
+body.theme-dark-blue input:focus,
+body.theme-dark-blue textarea:focus,
+body.theme-dark-blue select:focus {
+    background-color: var(--theme-card-bg);
+    border-color: var(--theme-accent);
+}

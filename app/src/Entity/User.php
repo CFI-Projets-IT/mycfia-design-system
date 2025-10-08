@@ -31,6 +31,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'string', length: 255)]
     private string $email;
 
+    #[ORM\Column(type: 'string', length: 100, nullable: true)]
+    private ?string $firstName = null;
+
+    #[ORM\Column(type: 'string', length: 20)]
+    private string $theme = 'light';
+
     public function getId(): ?int
     {
         return $this->id;
@@ -97,5 +103,29 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function eraseCredentials(): void
     {
+    }
+
+    public function getFirstName(): ?string
+    {
+        return $this->firstName;
+    }
+
+    public function setFirstName(?string $firstName): self
+    {
+        $this->firstName = $firstName;
+
+        return $this;
+    }
+
+    public function getTheme(): string
+    {
+        return $this->theme;
+    }
+
+    public function setTheme(string $theme): self
+    {
+        $this->theme = $theme;
+
+        return $this;
     }
 }
