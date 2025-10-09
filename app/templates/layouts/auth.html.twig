@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-<div class="auth-layout">
+<div class="auth-layout d-flex min-vh-100 align-items-center justify-content-center p-5">
     {# Hexagones animés #}
     <div class="anidiv">
         <div><img src="{{ asset('images/svgs/hexagon.svg') }}" alt=""></div>
@@ -16,7 +16,7 @@
         <div><img src="{{ asset('images/svgs/hexagon.svg') }}" alt=""></div>
     </div>
 
-    <div class="auth-container">
+    <div class="container" style="max-width: 586px;">
         {% block auth_content %}{% endblock %}
     </div>
 </div>

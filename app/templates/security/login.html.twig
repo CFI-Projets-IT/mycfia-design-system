@@ -3,12 +3,12 @@
 {% block title %}Connexion - myCFiia{% endblock %}
 
 {% block auth_content %}
-    <div class="auth-card">
-        <div class="auth-logo">
-            <img src="{{ asset('images/logo.svg') }}" alt="myCFiia Logo">
+    <div class="position-relative w-100 p-4" style="z-index: 1;">
+        <div class="d-flex justify-content-center mb-4">
+            <img src="{{ asset('images/logo.svg') }}" alt="myCFiia Logo" style="width: 80%; height: auto;">
         </div>
 
-        <h4 class="auth-title">Connectez-vous</h4>
+        <h4 class="text-white text-center mb-4" style="font-size: var(--font-size-lg); font-weight: var(--font-weight-normal);">Connectez-vous</h4>
 
         {% if error %}
             <div class="alert alert-danger mb-3">
@@ -16,19 +16,18 @@
             </div>
         {% endif %}
 
-        <form method="post" class="auth-form">
+        <form method="post" class="d-flex flex-column">
             <div class="col-11 mx-auto">
                 <div class="input-group mb-4">
-                    <div class="input-group-prepend">
-                        <div class="input-group-text">
-                            <i class="bi bi-person"></i>
-                        </div>
-                    </div>
+                    <span class="input-group-text bg-light border-end-0" style="background-color: #f0f0f2 !important; border-color: #e3e4e9; border-radius: 3px;">
+                        <i class="bi bi-person"></i>
+                    </span>
                     <input
                         type="text"
                         id="username"
                         name="_username"
-                        class="form-control"
+                        class="form-control border-start-0"
+                        style="border-color: #e3e4e9; border-radius: 5px;"
                         value="{{ last_username }}"
                         required
                         autofocus
@@ -37,16 +36,15 @@
                 </div>
 
                 <div class="input-group mb-4">
-                    <div class="input-group-prepend">
-                        <div class="input-group-text">
-                            <i class="bi bi-lock"></i>
-                        </div>
-                    </div>
+                    <span class="input-group-text bg-light border-end-0" style="background-color: #f0f0f2 !important; border-color: #e3e4e9; border-radius: 3px;">
+                        <i class="bi bi-lock"></i>
+                    </span>
                     <input
                         type="password"
                         id="password"
                         name="_password"
-                        class="form-control"
+                        class="form-control border-start-0"
+                        style="border-color: #e3e4e9; border-radius: 5px;"
                         required
                         placeholder="Mot de passe"
                     >
@@ -67,9 +65,9 @@
             </div>
         </form>
 
-        <div class="auth-footer">
-            <p>Vous n'avez pas de compte, prenez contact avec nous.</p>
-            <div class="custom-btns">
+        <div class="text-center text-white mt-5" style="font-size: var(--font-size-sm);">
+            <p class="mb-3">Vous n'avez pas de compte, prenez contact avec nous.</p>
+            <div class="custom-btns d-flex justify-content-center gap-2 mt-3">
                 <a href="https://www.cfi-technologies.fr" target="_blank" class="btn" title="Site Web">
                     <i class="bi bi-globe"></i>
                 </a>

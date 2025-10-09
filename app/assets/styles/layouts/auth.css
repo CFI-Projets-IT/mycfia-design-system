@@ -1,110 +1,32 @@
 /**
  * Design System myCFiia - Auth Layout
  * Layout pour pages authentification (login)
+ *
+ * PHILOSOPHIE : Bootstrap 5 utility classes pour 95% du design
+ * Ce fichier contient UNIQUEMENT les styles vraiment custom
  */
 
 /* ====================================
-   Auth Container
+   Auth Layout - Background uniquement
    ==================================== */
 .auth-layout {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
     background: var(--background-gradient);
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
-    padding: var(--space-xl);
-}
-
-.auth-container {
-    width: 100%;
-    max-width: 586px;
 }
 
 /* ====================================
-   Auth Card
+   Form Controls - Focus state custom
    ==================================== */
-.auth-card {
-    position: relative;
-    z-index: 1;
-    width: 100%;
-    max-width: 100%;
-    background: transparent;
-    padding: 26px;
-}
-
-/* ====================================
-   Auth Logo
-   ==================================== */
-.auth-logo {
-    display: flex;
-    justify-content: center;
-    margin-bottom: var(--space-lg);
-}
-
-.auth-logo img {
-    width: 80%;
-    height: auto;
-}
-
-/* ====================================
-   Auth Title
-   ==================================== */
-.auth-title {
-    color: var(--color-white);
-    font-size: var(--font-size-lg);
-    font-weight: var(--font-weight-normal);
-    text-align: center;
-    margin-bottom: var(--space-xl);
-}
-
-/* ====================================
-   Auth Form
-   ==================================== */
-.auth-form {
-    display: flex;
-    flex-direction: column;
-    gap: 0;
-}
-
-.auth-form .col-11 {
-    max-width: 70%;
-}
-
-/* Form Controls Customization - Minimal overrides */
-.auth-form .input-group-text {
-    background-color: #f0f0f2;
-    border-color: #e3e4e9;
-    border-radius: 3px;
-}
-
-.auth-form .input-group-prepend > .input-group-text {
-    border-right: 0;
-}
-
-.auth-form .form-control {
-    border-color: #e3e4e9;
-    border-radius: 5px;
-}
-
-.auth-form .form-control:focus {
+.form-control:focus {
     border-color: var(--color-primary);
     box-shadow: none;
 }
 
 /* ====================================
-   Auth Actions
+   Links Custom
    ==================================== */
-.auth-actions {
-    margin-top: var(--space-lg);
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-md);
-    align-items: center;
-}
-
 .startlink {
     color: #705ec8;
     font-size: var(--font-size-sm);
@@ -117,42 +39,8 @@
 }
 
 /* ====================================
-   Auth Footer
+   Social Icons - Boutons circulaires
    ==================================== */
-.auth-footer {
-    margin-top: var(--space-xxl);
-    text-align: center;
-    font-family: var(--font-family-content);
-    font-size: var(--font-size-sm);
-    color: var(--color-white);
-}
-
-.auth-footer p {
-    margin-bottom: var(--space-md);
-    line-height: 1.5;
-}
-
-.auth-footer a {
-    color: var(--color-primary);
-    text-decoration: none;
-    font-weight: var(--font-weight-semibold);
-    transition: color var(--transition-fast);
-}
-
-.auth-footer a:hover {
-    color: var(--color-secondary);
-}
-
-/* ====================================
-   Social Icons
-   ==================================== */
-.custom-btns {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    margin-top: var(--space-md);
-}
-
 .custom-btns .btn {
     background: rgba(0, 0, 0, 0.1);
     border: 1px solid rgba(0, 0, 0, 0.1);
@@ -162,6 +50,9 @@
     padding: 0.5rem;
     font-size: 20px;
     color: rgba(255, 255, 255, 0.9);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .custom-btns .btn:hover {
