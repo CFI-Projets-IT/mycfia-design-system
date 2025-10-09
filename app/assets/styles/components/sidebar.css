@@ -1,0 +1,152 @@
+/* ============================================
+   SIDEBAR NAVIGATION COMPONENT
+   ============================================ */
+
+.app-sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 260px;
+    height: 100vh;
+    background: var(--glass-light);
+    backdrop-filter: blur(20px);
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+    transition: transform 0.3s ease, width 0.3s ease;
+    z-index: 1000;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+/* Sidebar Brand */
+.sidebar-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 24px 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.sidebar-logo {
+    width: 40px;
+    height: 40px;
+    transition: opacity 0.3s ease;
+}
+
+.sidebar-brand-text {
+    font-family: var(--font-family-title);
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--color-primary);
+    transition: opacity 0.3s ease;
+}
+
+/* Sidebar Menu */
+.sidebar-menu {
+    list-style: none;
+    padding: 16px 0;
+    margin: 0;
+}
+
+.sidebar-item {
+    margin-bottom: 4px;
+}
+
+.sidebar-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 20px;
+    color: var(--color-text-light);
+    text-decoration: none;
+    font-family: var(--font-family-content);
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.sidebar-link:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--color-secondary);
+    padding-left: 24px;
+}
+
+.sidebar-link.active {
+    background: var(--glass-subtle);
+    color: var(--color-primary);
+    font-weight: 600;
+    border-left: 3px solid var(--color-primary);
+}
+
+.sidebar-link i {
+    font-size: 1.2rem;
+    min-width: 24px;
+    text-align: center;
+    transition: transform 0.3s ease;
+}
+
+.sidebar-link:hover i {
+    transform: scale(1.1);
+}
+
+.sidebar-link span {
+    transition: opacity 0.3s ease;
+}
+
+/* Sidebar Collapsed State */
+.app-sidebar.collapsed {
+    width: 70px;
+}
+
+.app-sidebar.collapsed .sidebar-brand-text,
+.app-sidebar.collapsed .sidebar-link span {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.app-sidebar.collapsed .sidebar-link {
+    justify-content: center;
+    padding-left: 20px;
+}
+
+.app-sidebar.collapsed .sidebar-link:hover {
+    padding-left: 20px;
+}
+
+.app-sidebar.collapsed .sidebar-link.active {
+    border-left: none;
+    border-bottom: 3px solid var(--color-primary);
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .app-sidebar {
+        transform: translateX(-100%);
+    }
+
+    .app-sidebar:not(.collapsed) {
+        transform: translateX(0);
+    }
+
+    .app-sidebar.collapsed {
+        transform: translateX(-100%);
+        width: 260px;
+    }
+}
+
+/* Scrollbar Styling */
+.app-sidebar::-webkit-scrollbar {
+    width: 6px;
+}
+
+.app-sidebar::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.app-sidebar::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 3px;
+}
+
+.app-sidebar::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.3);
+}

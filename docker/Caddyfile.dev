@@ -1,0 +1,111 @@
+{
+# Configuration globale FrankenPHP pour développement
+    frankenphp
+    admin off
+
+# Désactiver l'auto-HTTPS pour le développement local
+    auto_https off
+    local_certs
+
+# Logs détaillés pour le développement
+    log {
+            output stdout
+            level DEBUG
+        }
+}
+
+# Application Symfony principale
+http://:82 {
+# Dossier public Symfony
+    root * /var/www/html/public
+
+# Encodage des réponses
+    encode gzip zstd
+
+# Gestion des fichiers PHP avec FrankenPHP (sert aussi les assets via AssetMapper)
+    php_server
+
+# Serveur de fichiers statiques (pour les fichiers existants seulement)
+    file_server
+
+# Headers de sécurité pour développement
+    header {
+           # Désactiver le cache en développement
+               Cache-Control "no-cache, no-store, must-revalidate"
+               Pragma "no-cache"
+               Expires "0"
+
+           # Headers de sécurité basiques
+               X-Content-Type-Options "nosniff"
+               X-Frame-Options "DENY"
+               Referrer-Policy "strict-origin-when-cross-origin"
+           }
+
+# Authentification basique pour protection développement (commenté pour faciliter le développement)
+# basic_auth / {
+# 	# Utilisateur: krystdev, Mot de passe: dev123 (généré avec htpasswd -nbB)
+# 	krystdev $2y$10$3F3s/vHKZfXRHOsJ2qXhNOcmOQlRZMKz5PQNW8zVo8Iy9KfU3jLUe
+# }
+
+# Gestion des erreurs personnalisée
+    handle_errors {
+                      respond "Erreur {http.error.status_code} - Environnement de développement" {http.error.status_code}
+                  }
+
+# Logs des requêtes pour débogage
+    log {
+            output file /var/log/caddy/access.log {
+                                                      roll_size 10MB
+                                                      roll_keep 3
+                                                  }
+            format json
+        }
+}
+
+# Interface phpMyAdmin
+http://:8082 {
+    reverse_proxy phpmyadmin:80
+
+# Protection par authentification (commenté pour faciliter le développement)
+# basic_auth / {
+# 	krystdev $2y$10$3F3s/vHKZfXRHOsJ2qXhNOcmOQlRZMKz5PQNW8zVo8Iy9KfU3jLUe
+# }
+
+# Headers spécifiques phpMyAdmin
+    header {
+               X-Frame-Options "SAMEORIGIN"
+           }
+}
+
+# Interface MailHog
+http://:8027 {
+    reverse_proxy mailhog:8025
+
+# Protection par authentification (commenté pour faciliter le développement)
+# basic_auth / {
+# 	krystdev $2y$10$3F3s/vHKZfXRHOsJ2qXhNOcmOQlRZMKz5PQNW8zVo8Iy9KfU3jLUe
+# }
+}
+
+# Hub Mercure pour temps réel (optionnel)
+http://:3001 {
+    reverse_proxy mercure:3000
+
+# Configuration CORS pour développement
+    @cors header Origin *
+    handle @cors {
+                     header Access-Control-Allow-Origin "*"
+                     header Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS"
+                     header Access-Control-Allow-Headers "Authorization, Content-Type, Cache-Control"
+                     header Access-Control-Allow-Credentials "true"
+                 }
+
+# Gestion des requêtes preflight
+    @options method OPTIONS
+    handle @options {
+                        header Access-Control-Allow-Origin "*"
+                        header Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS"
+                        header Access-Control-Allow-Headers "Authorization, Content-Type, Cache-Control"
+                        respond "" 204
+                    }
+}

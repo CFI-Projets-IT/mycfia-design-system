@@ -1,0 +1,64 @@
+/* ============================================
+   APPLICATION LAYOUT
+   Layout principal de l'application avec sidebar
+   ============================================ */
+
+.app-layout {
+    display: flex;
+    min-height: 100vh;
+    background: var(--background-gradient);
+}
+
+/* Content Area (beside sidebar) */
+.app-content {
+    flex: 1;
+    margin-left: 260px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    transition: margin-left 0.3s ease;
+}
+
+.app-sidebar.collapsed ~ .app-content {
+    margin-left: 70px;
+}
+
+/* Main Content Area */
+.app-main {
+    flex: 1;
+    padding: 24px;
+    overflow-y: auto;
+}
+
+/* Footer */
+.app-footer {
+    background: rgba(0, 0, 0, 0.3);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 16px 24px;
+    text-align: center;
+    color: var(--color-text-light);
+    font-size: 0.875rem;
+}
+
+.app-footer p {
+    margin: 0;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .app-content {
+        margin-left: 0;
+    }
+
+    .app-sidebar.collapsed ~ .app-content {
+        margin-left: 0;
+    }
+
+    .app-main {
+        padding: 16px;
+    }
+
+    .app-footer {
+        padding: 12px 16px;
+    }
+}

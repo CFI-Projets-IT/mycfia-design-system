@@ -1,0 +1,64 @@
+# Configuration Docker Compose de base
+# Compatible avec les conventions Symfony (APP_ENV=dev/prod)
+
+name: ${PROJECT_NAME}
+
+services:
+  frankenphp:
+    build:
+      context: .
+      target: ${BUILD_TARGET:-development}
+    container_name: ${PROJECT_NAME}_frankenphp
+    environment:
+      - APP_ENV=${APP_ENV:-dev}
+      - APP_DEBUG=${APP_DEBUG:-1}
+    depends_on:
+      mariadb:
+        condition: service_healthy
+    networks:
+      - app_network
+
+  mariadb:
+    image: mariadb:${MARIADB_VERSION:-11}
+    container_name: ${PROJECT_NAME}_mariadb
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-root}
+      MYSQL_DATABASE: ${DB_NAME:-app_db}
+      MYSQL_USER: ${DB_USER:-app_user}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-app_password}
+    volumes:
+      - mariadb_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mariadb-admin", "ping", "-h", "localhost", "-u", "${DB_USER:-app_user}", "-p${DB_PASSWORD:-app_password}"]
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+    networks:
+      - app_network
+
+  mercure:
+    image: dunglas/mercure:${MERCURE_VERSION:-v0.16}
+    container_name: ${PROJECT_NAME}_mercure
+    restart: unless-stopped
+    environment:
+      SERVER_NAME: ':3000'
+      MERCURE_PUBLISHER_JWT_KEY: ${MERCURE_JWT_SECRET:-!ChangeThisMercureHubJWTSecretKey!}
+      MERCURE_SUBSCRIBER_JWT_KEY: ${MERCURE_JWT_SECRET:-!ChangeThisMercureHubJWTSecretKey!}
+      MERCURE_EXTRA_DIRECTIVES: ${MERCURE_EXTRA_DIRECTIVES:-"anonymous\ndemo"}
+    volumes:
+      - mercure_data:/data
+      - mercure_config:/config
+    networks:
+      - app_network
+
+networks:
+  app_network:
+    driver: bridge
+
+volumes:
+  mariadb_data:
+    name: ${PROJECT_NAME}_mariadb_data
+  mercure_data:
+    name: ${PROJECT_NAME}_mercure_data
+  mercure_config:
+    name: ${PROJECT_NAME}_mercure_config

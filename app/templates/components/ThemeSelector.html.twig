@@ -1,0 +1,30 @@
+<div class="theme-selector dropdown">
+    <button
+        class="btn btn-link dropdown-toggle theme-selector-btn"
+        type="button"
+        id="themeSelectorDropdown"
+        data-bs-toggle="dropdown"
+        aria-expanded="false"
+        title="Changer de thème"
+    >
+        <i class="bi bi-palette"></i>
+    </button>
+
+    <ul class="dropdown-menu dropdown-menu-end theme-selector-menu" aria-labelledby="themeSelectorDropdown">
+        {% for theme in this.themes %}
+            <li>
+                <a
+                    class="dropdown-item theme-option {% if this.currentTheme == theme.value %}active{% endif %}"
+                    href="{{ path('theme_switch', {theme: theme.value}) }}"
+                >
+                    <span class="theme-preview" style="background-color: {{ theme.color }};"></span>
+                    <i class="{{ theme.icon }} me-2"></i>
+                    <span>{{ theme.label }}</span>
+                    {% if this.currentTheme == theme.value %}
+                        <i class="bi bi-check-lg ms-auto"></i>
+                    {% endif %}
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+</div>

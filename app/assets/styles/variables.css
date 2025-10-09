@@ -1,0 +1,153 @@
+/**
+ * Design System myCFiia - Variables CSS
+ * Tokens de configuration pour l'ensemble de l'application
+ */
+
+:root {
+    /* ====================================
+       Typographie
+       ==================================== */
+    --font-family-title: 'Poppins', Arial, sans-serif;
+    --font-family-content: 'Calibri', Arial, sans-serif;
+
+    /* Poids Poppins */
+    --font-weight-regular: 400;
+    --font-weight-semibold: 600;
+    --font-weight-bold: 700;
+    --font-weight-extrabold: 800;
+
+    /* Tailles */
+    --font-size-xs: 12px;
+    --font-size-sm: 14px;
+    --font-size-md: 16px;
+    --font-size-lg: 18px;
+    --font-size-xl: 24px;
+    --font-size-xxl: 32px;
+
+    /* ====================================
+       Couleurs Primaires
+       ==================================== */
+    --color-primary: #6366F1;              /* Violet-bleu (bouton) */
+    --color-secondary: #3ABFF0;            /* Bleu clair */
+    --color-tertiary: #E6204C;             /* Rouge accent */
+    --color-default: #2A1B3D;              /* Violet foncé */
+
+    /* ====================================
+       Couleurs Chat
+       ==================================== */
+    --chat-input-text: #183E82;
+    --chat-input-bg: #FFFFFF;
+    --message-user-bg: #FFFFFF;
+    --message-assistant-bg: #405D8C;
+    --message-user-text: #000000;
+    --message-assistant-text: #FFFFFF;
+
+    /* ====================================
+       Couleurs Utilitaires
+       ==================================== */
+    --color-white: #FFFFFF;
+    --color-black: #000000;
+    --color-gray-light: #F5F5F5;
+    --color-gray-medium: #CCCCCC;
+    --color-gray-dark: #666666;
+
+    /* ====================================
+       Background Gradient
+       ==================================== */
+    --background-gradient: linear-gradient(
+        40deg,
+        rgba(48, 42, 80, 1) 20%,
+        rgba(77, 68, 135, 1) 57%,
+        rgba(127, 194, 220, 1) 95%
+    );
+
+    /* ====================================
+       Glass Effects (3 niveaux)
+       ==================================== */
+    --glass-subtle: linear-gradient(
+        119deg,
+        rgba(255, 255, 255, 0.075) 0%,
+        rgba(255, 255, 255, 0.01) 100%
+    );
+
+    --glass-light: linear-gradient(
+        110deg,
+        rgba(255, 255, 255, 0.3) 0%,
+        rgba(255, 255, 255, 0.025) 100%
+    );
+
+    --glass-intense: linear-gradient(
+        92deg,
+        #FFFFFFE6 0%,
+        #FFFFFF00 100%
+    );
+
+    /* Glass borders */
+    --glass-border: 1px solid rgba(255, 255, 255, 0.3);
+    --glass-backdrop-blur: 15px;
+
+    /* ====================================
+       Espacements
+       ==================================== */
+    --space-xs: 3px;
+    --space-sm: 5px;
+    --space-md: 10px;
+    --space-lg: 15px;
+    --space-xl: 20px;
+    --space-xxl: 30px;
+
+    /* ====================================
+       Border Radius
+       ==================================== */
+    --radius-sm: 5px;
+    --radius-md: 10px;
+    --radius-lg: 15px;
+    --radius-xl: 20px;
+    --radius-full: 9999px;
+
+    /* ====================================
+       Ombres
+       ==================================== */
+    --shadow-glass: inset 2px 3px 7px rgba(0, 0, 0, 0.23),
+                    5px 6px 7px rgba(0, 0, 0, 0.1);
+
+    --shadow-message-user: inset 0px 3px 6px #00000029,
+                           3px 5px 8px #00000029;
+
+    --shadow-hover: 0 4px 15px rgba(255, 255, 255, 0.1);
+
+    /* ====================================
+       Loading States
+       ==================================== */
+    --loading-dot-size-sm: 6px;
+    --loading-dot-size-md: 8px;
+    --loading-dot-size-lg: 10px;
+    --spinner-size: 24px;
+
+    /* ====================================
+       Transitions
+       ==================================== */
+    --transition-fast: 150ms ease-in-out;
+    --transition-normal: 300ms ease-in-out;
+    --transition-slow: 500ms ease-in-out;
+
+    /* ====================================
+       Z-Index Layers
+       ==================================== */
+    --z-index-base: 1;
+    --z-index-dropdown: 100;
+    --z-index-sidebar: 500;
+    --z-index-topbar: 600;
+    --z-index-modal: 1000;
+    --z-index-toast: 1100;
+
+    /* ====================================
+       Breakpoints (pour reference JS)
+       ==================================== */
+    --breakpoint-xs: 0;
+    --breakpoint-sm: 576px;
+    --breakpoint-md: 768px;
+    --breakpoint-lg: 992px;
+    --breakpoint-xl: 1200px;
+    --breakpoint-xxl: 1400px;
+}

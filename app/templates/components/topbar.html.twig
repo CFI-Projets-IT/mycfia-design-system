@@ -1,0 +1,21 @@
+{# Topbar Component #}
+<div class="topbar" data-controller="sidebar">
+    <div class="topbar-left">
+        <button type="button" class="btn-sidebar-toggle" data-action="click->sidebar#toggle">
+            <i class="bi bi-list"></i>
+        </button>
+        <h1 class="topbar-title">{% block page_title %}Dashboard{% endblock %}</h1>
+    </div>
+
+    <div class="topbar-right">
+        <div class="topbar-user">
+            <span class="topbar-username">{{ app.user.username }}</span>
+            <div class="topbar-avatar">
+                <i class="bi bi-person-circle"></i>
+            </div>
+            <a href="{{ path('app_logout') }}" class="btn btn-sm btn-outline-danger">
+                <i class="bi bi-box-arrow-right"></i> Déconnexion
+            </a>
+        </div>
+    </div>
+</div>

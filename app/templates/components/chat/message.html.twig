@@ -1,0 +1,46 @@
+{# Chat Message Component
+   Parameters:
+   - message: { content: string, type: 'user'|'assistant', timestamp: DateTime }
+#}
+
+{% set messageClass = message.type == 'user' ? 'chat-message-user' : 'chat-message-assistant' %}
+
+<div class="chat-message {{ messageClass }}" data-message-type="{{ message.type }}">
+    <div class="chat-message-avatar">
+        {% if message.type == 'user' %}
+            <i class="bi bi-person-circle"></i>
+        {% else %}
+            <i class="bi bi-robot"></i>
+        {% endif %}
+    </div>
+
+    <div class="chat-message-content">
+        <div class="chat-message-header">
+            <span class="chat-message-author">
+                {% if message.type == 'user' %}
+                    Vous
+                {% else %}
+                    Assistant IA
+                {% endif %}
+            </span>
+            <span class="chat-message-time">
+                {{ message.timestamp|date('H:i') }}
+            </span>
+        </div>
+
+        <div class="chat-message-text">
+            {{ message.content|nl2br }}
+        </div>
+
+        {% if message.type == 'assistant' %}
+            <div class="chat-message-actions">
+                <button type="button" class="btn-message-action" title="Copier">
+                    <i class="bi bi-clipboard"></i>
+                </button>
+                <button type="button" class="btn-message-action" title="Régénérer">
+                    <i class="bi bi-arrow-clockwise"></i>
+                </button>
+            </div>
+        {% endif %}
+    </div>
+</div>

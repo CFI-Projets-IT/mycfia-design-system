@@ -1,0 +1,76 @@
+; Configuration PHP pour PRODUCTION
+; Optimisée pour les performances et la sécurité
+
+; === MÉMOIRE ET RESSOURCES ===
+memory_limit = 256M
+max_execution_time = 30
+max_input_time = 60
+
+; === UPLOADS ===
+upload_max_filesize = 50M
+post_max_size = 50M
+max_file_uploads = 20
+
+; === SÉCURITÉ ET ERREURS ===
+; Pas d'affichage d'erreurs en production
+display_errors = Off
+display_startup_errors = Off
+log_errors = On
+error_reporting = E_ALL & ~E_DEPRECATED & ~E_STRICT
+
+; Logs de production
+log_errors_max_len = 1024
+html_errors = Off
+
+; === SESSIONS SÉCURISÉES ===
+session.cookie_secure = 1
+session.cookie_httponly = 1
+session.cookie_samesite = "Strict"
+session.use_strict_mode = 1
+session.gc_probability = 1
+session.gc_divisor = 1000
+session.gc_maxlifetime = 1440
+
+; === OPCACHE - PRODUCTION ===
+; Configuration OPcache optimisée pour la production
+opcache.enable = 1
+opcache.enable_cli = 0
+opcache.memory_consumption = 256
+opcache.interned_strings_buffer = 16
+opcache.max_accelerated_files = 10000
+opcache.fast_shutdown = 1
+opcache.save_comments = 0
+
+; Pas de validation des timestamps en production pour de meilleures performances
+opcache.validate_timestamps = 0
+opcache.revalidate_freq = 2
+
+; Optimisations production
+opcache.enable_file_override = 1
+opcache.optimization_level = 0x7FFFBFFF
+opcache.blacklist_filename = ""
+
+; === SYMFONY OPTIMISATIONS PRODUCTION ===
+; Cache de chemin étendu pour de meilleures performances
+realpath_cache_size = 8192K
+realpath_cache_ttl = 7200
+
+; === TIMEZONE ===
+date.timezone = Europe/Paris
+
+; === SÉCURITÉ PRODUCTION ===
+short_open_tag = Off
+expose_php = Off
+allow_url_fopen = Off
+allow_url_include = Off
+
+; Limitation des fonctions dangereuses
+disable_functions = exec,passthru,shell_exec,system,proc_open,popen,curl_exec,curl_multi_exec,parse_ini_file,show_source
+
+; Variables d'environnement
+variables_order = "GPCS"
+request_order = "GP"
+
+; === AUTRES OPTIMISATIONS ===
+max_input_vars = 3000
+default_socket_timeout = 60

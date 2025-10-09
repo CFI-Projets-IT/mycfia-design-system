@@ -1,0 +1,23 @@
+/* ====================================
+   Quick Access Cards - Composant Homepage
+   ==================================== */
+
+/* Surcharge minimale pour le hover des cartes d'accès rapide */
+.quick-access-card {
+    min-width: 180px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.quick-access-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 62, 130, 0.1) !important;
+    border-color: var(--bs-primary) !important;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .quick-access-card {
+        min-width: auto;
+        width: 100%;
+    }
+}

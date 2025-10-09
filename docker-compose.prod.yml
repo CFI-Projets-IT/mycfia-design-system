@@ -1,0 +1,62 @@
+# Configuration override pour PRODUCTION
+# Utilisé avec: docker compose -f docker-compose.yml -f docker-compose.prod.yml
+
+services:
+  frankenphp:
+    build:
+      target: production
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"  # HTTP/3
+    volumes:
+      # Volumes nommés pour la production (pas de bind mount)
+      - app_data:/var/www/html
+      - ./docker/Caddyfile.prod:/etc/caddy/Caddyfile
+      - caddy_data:/data
+      - caddy_config:/config
+    environment:
+      # Variables Symfony production
+      - APP_ENV=prod
+      - APP_DEBUG=0
+      # Base de données production (à surcharger via .env.prod.local)
+      - DATABASE_URL=mysql://${DB_USER}:${DB_PASSWORD}@mariadb:3306/${DB_NAME}?serverVersion=${MARIADB_VERSION:-11}.0.0-MariaDB&charset=utf8mb4
+    restart: unless-stopped
+    # Pas de TTY en production
+
+  mariadb:
+    # Configuration production sécurisée
+    environment:
+      MYSQL_RANDOM_ROOT_PASSWORD: "yes"
+      # Les mots de passe sont définis via .env.prod.local
+    restart: unless-stopped
+    # Sauvegarde et logging production
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+      - --innodb-buffer-pool-size=512M
+      - --log-error=/var/lib/mysql/error.log
+      - --slow-query-log=1
+      - --slow-query-log-file=/var/lib/mysql/slow.log
+
+  mercure:
+    ports:
+      - "${MERCURE_PORT:-3001}:3000"
+    environment:
+      # Configuration Mercure production sécurisée
+      MERCURE_PUBLISHER_JWT_KEY: ${MERCURE_JWT_SECRET}
+      MERCURE_SUBSCRIBER_JWT_KEY: ${MERCURE_JWT_SECRET}
+      MERCURE_EXTRA_DIRECTIVES: |
+        cors_origins ${CORS_ALLOWED_ORIGINS:-https://yourdomain.com}
+    restart: unless-stopped
+
+  # Pas de phpMyAdmin ni MailHog en production pour la sécurité
+
+volumes:
+  # Volumes de production
+  app_data:
+    name: ${PROJECT_NAME}_app_data
+  caddy_data:
+    name: ${PROJECT_NAME}_caddy_data
+  caddy_config:
+    name: ${PROJECT_NAME}_caddy_config

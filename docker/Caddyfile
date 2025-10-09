@@ -1,0 +1,87 @@
+{
+	# Enable FrankenPHP
+	frankenphp
+    admin off
+
+    # Désactiver l'auto-HTTPS pour développement
+    auto_https off
+
+    # Configuration HTTP uniquement
+    local_certs
+}
+
+# Configuration HTTP explicite pour éviter l'auto-HTTPS
+http://0.0.0.0:82 {
+	redir http://localhost:82{uri} permanent
+}
+
+http://:82 {
+	# Le conteneur écoute sur le port 80 (HTTP). Si tu changes le port dans le docker-compose.yml (par exemple, pour éviter un conflit, 8080), change aussi ici (ex : ":8080").
+
+	root * /var/www/html/public # Le répertoire racine de ton projet. Ce chemin correspond au volume monté dans le conteneur via le docker-compose.yml.
+	# Si ton projet est dans un autre répertoire (par exemple /app), change ici également. Ex : root * /app
+	encode gzip
+
+	php_server # Caddy est configuré pour traiter les fichiers PHP via PHP-FPM, en utilisant le socket défini.
+	# Ce chemin est spécifique à la configuration de PHP dans l'image de FrankenPHP. Si tu utilises une autre version de PHP, vérifie que le socket est correct.
+
+	file_server # Active le serveur de fichiers pour servir tous les fichiers statiques comme HTML, CSS, JS, etc.
+	# Caddy sert automatiquement tous les fichiers dans le répertoire racine configuré (ici /var/www/html). Si ton application ne contient pas de fichiers statiques, tu peux commenter cette ligne.
+
+	# Ajout de l'authentification basique pour sécuriser l'accès à l'application
+	# basic_auth / {
+		# Cette directive protège l'ensemble du site, puisque "/" indique la racine. Si tu veux protéger uniquement une partie du site, modifie le chemin (ex : "/admin").
+		# krystdev $2y$05$Rj/Hdei67mJMkf0yw9/If.Q5USkWN2/ZaPOLTKFYD/IaZqcix8W6a # Utilisateur "krystdev" avec mot de passe haché.
+		# Le mot de passe est haché avec bcrypt. Pour générer un hash de mot de passe sécurisé :
+		# Commande : htpasswd -nbB username "ton-mot-de-passe"
+		# Remplace "username" par le nom d'utilisateur que tu veux (ex : admin) et "ton-mot-de-passe" par le mot de passe à protéger.
+		# Copie ensuite le hash généré à cet endroit.
+	# }
+}
+
+http://:8082 {
+	# Caddy écoute sur le port 8080 et fait office de proxy inverse pour PhpMyAdmin.
+	reverse_proxy phpmyadmin:80 # Redirige les requêtes vers le conteneur PhpMyAdmin sur son port interne (80).
+	# basic_auth / {
+		# Ajoute une authentification basique pour protéger l'accès à PhpMyAdmin.
+		# krystdev $2y$05$Rj/Hdei67mJMkf0yw9/If.Q5USkWN2/ZaPOLTKFYD/IaZqcix8W6a # Utilisateur et mot de passe haché pour l'accès à PhpMyAdmin.
+		# Génère un mot de passe haché avec la même méthode expliquée ci-dessus.
+	# }
+}
+
+http://:8027 {
+	# Caddy écoute sur le port 8025 et agit comme proxy pour MailHog.
+	reverse_proxy mailhog:8025 # Redirige les requêtes vers le conteneur MailHog sur son port interne (8025).
+	# basic_auth / {
+		# Ajoute une authentification basique pour protéger l'accès à MailHog.
+		# krystdev $2y$05$Rj/Hdei67mJMkf0yw9/If.Q5USkWN2/ZaPOLTKFYD/IaZqcix8W6a # Utilisateur et mot de passe haché pour l'accès à MailHog.
+		# Génère un mot de passe haché avec la même méthode, et remplace le hash ici.
+	# }
+}
+
+http://:3001 {
+	# Configuration Mercure Hub pour streaming temps réel
+	reverse_proxy mercure:3000 # Redirige vers le conteneur Mercure sur son port interne
+
+	# Headers CORS dynamiques pour intégration frontend (support 0.0.0.0 et localhost)
+	@cors_localhost header_regexp Host ^localhost:82$
+	@cors_0000 header_regexp Host ^0\.0\.0\.0:82$
+
+	header @cors_localhost {
+		Access-Control-Allow-Origin "http://localhost:82"
+		Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS"
+		Access-Control-Allow-Headers "Authorization, Content-Type, Cache-Control"
+		Access-Control-Allow-Credentials "true"
+	}
+
+	header @cors_0000 {
+		Access-Control-Allow-Origin "http://0.0.0.0:82"
+		Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS"
+		Access-Control-Allow-Headers "Authorization, Content-Type, Cache-Control"
+		Access-Control-Allow-Credentials "true"
+	}
+
+	# Gestion des requêtes OPTIONS (preflight)
+	@options method OPTIONS
+	respond @options 204
+}

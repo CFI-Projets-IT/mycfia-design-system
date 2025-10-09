@@ -1,0 +1,73 @@
+/**
+ * Design System myCFiia - Auth Layout
+ * Layout pour pages authentification (login)
+ *
+ * PHILOSOPHIE : Bootstrap 5 utility classes pour 95% du design
+ * Ce fichier contient UNIQUEMENT les styles vraiment custom
+ */
+
+/* ====================================
+   Auth Layout - Background uniquement
+   ==================================== */
+.auth-layout {
+    background: var(--background-gradient);
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+}
+
+/* ====================================
+   Form Controls - Focus state custom
+   ==================================== */
+.input-group .input-group-text {
+    background-color: #f0f0f2;
+    border-color: #e3e4e9;
+    border-right: 0;
+}
+
+.input-group .form-control {
+    border-color: #e3e4e9;
+    border-left: 0;
+}
+
+.form-control:focus {
+    border-color: var(--color-primary);
+    box-shadow: none;
+}
+
+/* ====================================
+   Links Custom
+   ==================================== */
+.startlink {
+    color: #705ec8;
+    font-size: var(--font-size-sm);
+    text-decoration: none;
+    transition: color var(--transition-fast);
+}
+
+.startlink:hover {
+    color: var(--color-white);
+}
+
+/* ====================================
+   Social Icons - Boutons circulaires
+   ==================================== */
+.custom-btns .btn {
+    background: rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 50%;
+    width: 3rem;
+    height: 3rem;
+    padding: 0.5rem;
+    font-size: 20px;
+    color: rgba(255, 255, 255, 0.9);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.custom-btns .btn:hover {
+    background: rgba(112, 94, 200, 0.3);
+    border-color: rgba(112, 94, 200, 0.5);
+    color: var(--color-white);
+}

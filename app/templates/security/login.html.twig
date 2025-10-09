@@ -1,0 +1,81 @@
+{% extends 'layouts/auth.html.twig' %}
+
+{% block title %}Connexion - myCFiia{% endblock %}
+
+{% block auth_content %}
+    <div class="position-relative w-100 p-4" style="z-index: 1;">
+        <div class="d-flex justify-content-center mb-4">
+            <img src="{{ asset('images/logo.svg') }}" alt="myCFiia Logo" style="width: 80%; height: auto;">
+        </div>
+
+        <h4 class="text-white text-center mb-4" style="font-size: var(--font-size-lg); font-weight: var(--font-weight-normal);">Connectez-vous</h4>
+
+        {% if error %}
+            <div class="alert alert-danger mb-3">
+                {{ error.messageKey|trans(error.messageData, 'security') }}
+            </div>
+        {% endif %}
+
+        <form method="post" class="d-flex flex-column">
+            <div class="col-11 mx-auto">
+                <div class="input-group mb-4">
+                    <span class="input-group-text">
+                        <i class="bi bi-person"></i>
+                    </span>
+                    <input
+                        type="text"
+                        id="username"
+                        name="_username"
+                        class="form-control"
+                        value="{{ last_username }}"
+                        required
+                        autofocus
+                        placeholder="Identifiant"
+                    >
+                </div>
+
+                <div class="input-group mb-4">
+                    <span class="input-group-text">
+                        <i class="bi bi-lock"></i>
+                    </span>
+                    <input
+                        type="password"
+                        id="password"
+                        name="_password"
+                        class="form-control"
+                        required
+                        placeholder="Mot de passe"
+                    >
+                </div>
+
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+                <div class="row">
+                    <div class="col-12">
+                        <button type="submit" class="btn btn-primary w-100 px-4">
+                            Connexion
+                        </button>
+                    </div>
+                    <div class="col-12 text-center pt-4">
+                        <a href="#" class="startlink">mot de passe ou identifiant oublié ?</a>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        <div class="text-center text-white mt-5" style="font-size: var(--font-size-sm);">
+            <p class="mb-3">Vous n'avez pas de compte, prenez contact avec nous.</p>
+            <div class="custom-btns d-flex justify-content-center gap-2 mt-3">
+                <a href="https://www.cfi-technologies.fr" target="_blank" class="btn" title="Site Web">
+                    <i class="bi bi-globe"></i>
+                </a>
+                <a href="https://www.linkedin.com/company/cfitechnologies" target="_blank" class="btn" title="LinkedIn">
+                    <i class="bi bi-linkedin"></i>
+                </a>
+                <a href="mailto:projets@cfitech.io" class="btn" title="Email">
+                    <i class="bi bi-at"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+{% endblock %}

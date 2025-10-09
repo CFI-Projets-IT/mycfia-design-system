@@ -1,0 +1,193 @@
+/* ====================================
+   Home Layout - Homepage Conversationnelle
+   PHILOSOPHIE : Bootstrap 5 utility classes + Offcanvas pour 95% du design
+   ==================================== */
+
+.home-layout {
+    display: flex;
+    min-height: 100vh;
+    width: 100%;
+}
+
+/* ====================================
+   Styles Custom Minimaux
+   ==================================== */
+
+/* Navigation Section - Style pill custom */
+.nav-section {
+    margin-bottom: 2rem;
+}
+
+.nav-section-title-pill {
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 1rem;
+    color: rgba(255, 255, 255, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.nav-section-title-pill:hover {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.3);
+    color: rgba(255, 255, 255, 1);
+}
+
+.nav-section-title-pill i.bi-chevron-down {
+    font-size: 0.875rem;
+    transition: transform 0.2s ease;
+}
+
+.nav-section-title-pill[aria-expanded="true"] i.bi-chevron-down {
+    transform: rotate(180deg);
+}
+
+/* Navigation Links - Hover effect custom */
+.nav-link {
+    transition: all 0.2s ease;
+}
+
+.nav-link:hover {
+    background-color: var(--theme-sidebar-hover);
+}
+
+/* Sidebar Links (footer) - Hover effect custom */
+.sidebar-link {
+    transition: all 0.2s ease;
+}
+
+.sidebar-link:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Icônes Hamburger et Fermeture - Suppression totale des styles Bootstrap */
+.sidebar-header .btn-link,
+.sidebar-header .btn-link:hover,
+.sidebar-header .btn-link:focus,
+.sidebar-header .btn-link:active {
+    background: none !important;
+    background-color: transparent !important;
+    border: none !important;
+    border-color: transparent !important;
+    box-shadow: none !important;
+    text-decoration: none !important;
+    outline: none !important;
+    padding: 0 !important;
+}
+
+/* ====================================
+   Sidebar - Rétractable (mode icônes)
+   ==================================== */
+.home-sidebar {
+    transition: width 0.3s ease;
+    overflow: hidden;
+}
+
+.home-sidebar.sidebar-collapsed {
+    width: 60px !important;
+}
+
+/* Masquer les éléments en mode rétracté */
+.home-sidebar.sidebar-collapsed span:not(.sidebar-header span),
+.home-sidebar.sidebar-collapsed .collapse,
+.home-sidebar.sidebar-collapsed .bi-chevron-down,
+.home-sidebar.sidebar-collapsed .bi-arrow-left-circle {
+    display: none !important;
+}
+
+/* Header en mode rétracté : hamburger centré */
+.home-sidebar.sidebar-collapsed .sidebar-header {
+    justify-content: center !important;
+}
+
+/* Ajuster le padding et supprimer le fond/bordure des pills en mode rétracté */
+.home-sidebar.sidebar-collapsed .nav-section-title-pill {
+    padding: 0.75rem;
+    margin-bottom: 0.5rem;
+    background: transparent !important;
+    border: none !important;
+}
+
+.home-sidebar.sidebar-collapsed .nav-link,
+.home-sidebar.sidebar-collapsed .sidebar-link {
+    padding: 0.75rem;
+}
+
+/* Note: justify-content-center est ajouté dynamiquement via Bootstrap classes en JS */
+
+.home-main {
+    transition: margin-left 0.3s ease;
+}
+
+/* ====================================
+   Main Content Area
+   ==================================== */
+.home-main {
+    margin-left: 0;
+}
+
+/* Sur desktop, décaler pour la sidebar permanente */
+@media (min-width: 992px) {
+    .home-main {
+        margin-left: 280px;
+    }
+}
+
+/* ====================================
+   Header - Utilise Bootstrap utilities (justify-content-between)
+   ==================================== */
+.home-header {
+    background-color: transparent;
+}
+
+.header-logo-picto {
+    width: 37px;
+    height: 40px;
+}
+
+.header-logo {
+    width: auto;
+    max-width: 180px;
+    height: 55px;
+}
+
+/* Adaptation des couleurs du logo selon le thème */
+/* Logo texte : blanc en SVG, donc doit être converti en bleu pour thème light */
+.theme-light .header-logo {
+    filter: brightness(0) saturate(100%) invert(23%) sepia(73%) saturate(1647%) hue-rotate(203deg) brightness(93%) contrast(94%);
+}
+
+/* Logo picto : on utilise les bons SVG directement (logo_picto.svg en light, assistant-picto.svg en dark) */
+/* Les deux SVG ont maintenant le même ratio viewBox (~0.9) pour une taille uniforme */
+
+/* ====================================
+   Content
+   ==================================== */
+.home-content {
+    flex: 1;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+@media (max-width: 768px) {
+    .header-logo {
+        max-width: 150px;
+        height: 40px;
+    }
+
+    .home-content {
+        padding: 1rem;
+    }
+}
