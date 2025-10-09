@@ -12,13 +12,25 @@
 </head>
 <body class="theme-{{ app.user ? app.user.theme : 'light' }}">
     <div class="home-layout">
-        {# Sidebar gauche #}
-        <aside class="home-sidebar">
-            <div class="sidebar-header">
-                <img src="{{ asset('images/logo.svg') }}" alt="myCFiia" class="sidebar-logo">
+        {# Bouton hamburger pour mobile (offcanvas) #}
+        <button class="btn btn-primary d-lg-none position-fixed top-0 start-0 m-3" style="z-index: 1050;" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarOffcanvas" aria-controls="sidebarOffcanvas">
+            <i class="bi bi-list fs-4"></i>
+        </button>
+
+        {# Sidebar - Fixed sur desktop, Offcanvas sur mobile #}
+        <aside class="home-sidebar d-none d-lg-flex flex-column position-fixed top-0 start-0 bottom-0" style="width: 280px; background-color: var(--theme-sidebar-bg); color: var(--theme-sidebar-text); z-index: 100;">
+            {# Header avec icônes - toujours visible #}
+            <div class="sidebar-header d-flex align-items-center justify-content-between mb-4 pb-3 px-3 pt-4">
+                <button class="btn btn-link text-white-50 p-0" type="button" onclick="toggleSidebar()" aria-label="Menu" style="font-size: 2rem;">
+                    <i class="bi bi-list"></i>
+                </button>
+                <button class="btn btn-link text-white-50 p-0" type="button" onclick="toggleSidebar()" aria-label="Fermer la sidebar" style="font-size: 2rem;">
+                    <i class="bi bi-arrow-left-circle"></i>
+                </button>
             </div>
 
-            <nav class="sidebar-nav">
+            {# Navigation - Flex 1 pour occuper l'espace disponible #}
+            <nav class="flex-grow-1 overflow-auto px-3">
                 {# Section Favoris (collapsible avec fond) #}
                 <div class="nav-section">
                     <div class="nav-section-title-pill" data-bs-toggle="collapse" data-bs-target="#favorisSection" aria-expanded="true">
@@ -29,24 +41,24 @@
                         <i class="bi bi-chevron-down"></i>
                     </div>
                     <div class="collapse show" id="favorisSection">
-                        <ul class="nav-list">
-                            <li class="nav-item">
-                                <a href="#" class="nav-link">
+                        <ul class="list-unstyled">
+                            <li class="mb-2">
+                                <a href="#" class="d-flex align-items-center gap-3 px-3 py-2 rounded text-white text-decoration-none nav-link">
                                     <span>Factures...</span>
                                 </a>
                             </li>
-                            <li class="nav-item">
-                                <a href="#" class="nav-link">
+                            <li class="mb-2">
+                                <a href="#" class="d-flex align-items-center gap-3 px-3 py-2 rounded text-white text-decoration-none nav-link">
                                     <span>Commandes...</span>
                                 </a>
                             </li>
-                            <li class="nav-item">
-                                <a href="#" class="nav-link">
+                            <li class="mb-2">
+                                <a href="#" class="d-flex align-items-center gap-3 px-3 py-2 rounded text-white text-decoration-none nav-link">
                                     <span>Stocks...</span>
                                 </a>
                             </li>
-                            <li class="nav-item">
-                                <a href="#" class="nav-link">
+                            <li class="mb-2">
+                                <a href="#" class="d-flex align-items-center gap-3 px-3 py-2 rounded text-white text-decoration-none nav-link">
                                     <span>Aide-moi à...</span>
                                 </a>
                             </li>
@@ -64,29 +76,29 @@
                         <i class="bi bi-chevron-down"></i>
                     </div>
                     <div class="collapse" id="historiqueSection">
-                        <ul class="nav-list">
-                            <li class="nav-item">
-                                <a href="#" class="nav-link nav-link-small">
+                        <ul class="list-unstyled">
+                            <li class="mb-2">
+                                <a href="#" class="d-flex align-items-center px-3 py-2 rounded text-white-50 text-decoration-none small nav-link">
                                     <span>Dernière conversation (il y a 2h)</span>
                                 </a>
                             </li>
-                            <li class="nav-item">
-                                <a href="#" class="nav-link nav-link-small">
+                            <li class="mb-2">
+                                <a href="#" class="d-flex align-items-center px-3 py-2 rounded text-white-50 text-decoration-none small nav-link">
                                     <span>Factures janvier 2025 (hier)</span>
                                 </a>
                             </li>
-                            <li class="nav-item">
-                                <a href="#" class="nav-link nav-link-small">
+                            <li class="mb-2">
+                                <a href="#" class="d-flex align-items-center px-3 py-2 rounded text-white-50 text-decoration-none small nav-link">
                                     <span>Analyse stocks (3 jours)</span>
                                 </a>
                             </li>
-                            <li class="nav-item">
-                                <a href="#" class="nav-link nav-link-small">
+                            <li class="mb-2">
+                                <a href="#" class="d-flex align-items-center px-3 py-2 rounded text-white-50 text-decoration-none small nav-link">
                                     <span>Rapport commandes (1 sem.)</span>
                                 </a>
                             </li>
-                            <li class="nav-item">
-                                <a href="#" class="nav-link nav-link-small">
+                            <li class="mb-2">
+                                <a href="#" class="d-flex align-items-center px-3 py-2 rounded text-white-50 text-decoration-none small nav-link">
                                     <span>Export données (2 sem.)</span>
                                 </a>
                             </li>
@@ -96,38 +108,152 @@
             </nav>
 
             {# Footer avec Paramètres, Mon compte, Quitter #}
-            <div class="sidebar-footer">
-                <a href="#" class="sidebar-footer-link">
-                    <i class="bi bi-gear"></i>
+            <div class="mt-auto pt-4 border-top border-white border-opacity-10 d-flex flex-column gap-2 px-3 pb-3">
+                <a href="#" class="d-flex align-items-center gap-3 px-3 py-2 rounded text-white text-decoration-none sidebar-link">
+                    <i class="bi bi-gear fs-5"></i>
                     <span>Paramètres</span>
                 </a>
-                <a href="#" class="sidebar-footer-link">
-                    <i class="bi bi-person-circle"></i>
+                <a href="#" class="d-flex align-items-center gap-3 px-3 py-2 rounded text-white text-decoration-none sidebar-link">
+                    <i class="bi bi-person-circle fs-5"></i>
                     <span>Mon compte</span>
                 </a>
-                <a href="{{ path('app_logout') }}" class="sidebar-footer-link">
-                    <i class="bi bi-box-arrow-right"></i>
+                <a href="{{ path('app_logout') }}" class="d-flex align-items-center gap-3 px-3 py-2 rounded text-white text-decoration-none sidebar-link">
+                    <i class="bi bi-box-arrow-right fs-5"></i>
                     <span>Quitter</span>
                 </a>
             </div>
         </aside>
 
-        {# Zone principale #}
-        <main class="home-main">
-            {# Header avec logo centré et ThemeSelector #}
-            <header class="home-header">
-                <div class="header-content">
-                    <div class="header-left">
-                        {# Espace vide pour équilibrer #}
+        {# Sidebar mobile - Offcanvas #}
+        <aside class="offcanvas offcanvas-start d-lg-none" tabindex="-1" id="sidebarOffcanvas" aria-labelledby="sidebarOffcanvasLabel" style="--bs-offcanvas-width: 280px; --bs-offcanvas-bg: var(--theme-sidebar-bg); --bs-offcanvas-color: var(--theme-sidebar-text);">
+            <div class="offcanvas-body d-flex flex-column p-0">
+                {# Header avec icônes #}
+                <div class="d-flex align-items-center justify-content-between mb-4 pb-3 px-3 pt-4">
+                    <button class="btn btn-link text-white-50 p-0" type="button" style="font-size: 2rem;">
+                        <i class="bi bi-list"></i>
+                    </button>
+                    <button class="btn btn-link text-white-50 p-0" type="button" data-bs-dismiss="offcanvas" aria-label="Fermer" style="font-size: 2rem;">
+                        <i class="bi bi-arrow-left-circle"></i>
+                    </button>
+                </div>
+
+                {# Navigation #}
+                <nav class="flex-grow-1 overflow-auto px-3">
+                    {# Section Favoris #}
+                    <div class="nav-section">
+                        <div class="nav-section-title-pill" data-bs-toggle="collapse" data-bs-target="#favorisSectionMobile" aria-expanded="true">
+                            <div class="d-flex align-items-center gap-2">
+                                <i class="bi bi-star"></i>
+                                <span>Favoris</span>
+                            </div>
+                            <i class="bi bi-chevron-down"></i>
+                        </div>
+                        <div class="collapse show" id="favorisSectionMobile">
+                            <ul class="list-unstyled">
+                                <li class="mb-2">
+                                    <a href="#" class="d-flex align-items-center gap-3 px-3 py-2 rounded text-white text-decoration-none nav-link">
+                                        <span>Factures...</span>
+                                    </a>
+                                </li>
+                                <li class="mb-2">
+                                    <a href="#" class="d-flex align-items-center gap-3 px-3 py-2 rounded text-white text-decoration-none nav-link">
+                                        <span>Commandes...</span>
+                                    </a>
+                                </li>
+                                <li class="mb-2">
+                                    <a href="#" class="d-flex align-items-center gap-3 px-3 py-2 rounded text-white text-decoration-none nav-link">
+                                        <span>Stocks...</span>
+                                    </a>
+                                </li>
+                                <li class="mb-2">
+                                    <a href="#" class="d-flex align-items-center gap-3 px-3 py-2 rounded text-white text-decoration-none nav-link">
+                                        <span>Aide-moi à...</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
 
-                    <div class="header-center">
+                    {# Section Historique #}
+                    <div class="nav-section">
+                        <div class="nav-section-title-pill" data-bs-toggle="collapse" data-bs-target="#historiqueSectionMobile" aria-expanded="false">
+                            <div class="d-flex align-items-center gap-2">
+                                <i class="bi bi-clock-history"></i>
+                                <span>Historique</span>
+                            </div>
+                            <i class="bi bi-chevron-down"></i>
+                        </div>
+                        <div class="collapse" id="historiqueSectionMobile">
+                            <ul class="list-unstyled">
+                                <li class="mb-2">
+                                    <a href="#" class="d-flex align-items-center px-3 py-2 rounded text-white-50 text-decoration-none small nav-link">
+                                        <span>Dernière conversation (il y a 2h)</span>
+                                    </a>
+                                </li>
+                                <li class="mb-2">
+                                    <a href="#" class="d-flex align-items-center px-3 py-2 rounded text-white-50 text-decoration-none small nav-link">
+                                        <span>Factures janvier 2025 (hier)</span>
+                                    </a>
+                                </li>
+                                <li class="mb-2">
+                                    <a href="#" class="d-flex align-items-center px-3 py-2 rounded text-white-50 text-decoration-none small nav-link">
+                                        <span>Analyse stocks (3 jours)</span>
+                                    </a>
+                                </li>
+                                <li class="mb-2">
+                                    <a href="#" class="d-flex align-items-center px-3 py-2 rounded text-white-50 text-decoration-none small nav-link">
+                                        <span>Rapport commandes (1 sem.)</span>
+                                    </a>
+                                </li>
+                                <li class="mb-2">
+                                    <a href="#" class="d-flex align-items-center px-3 py-2 rounded text-white-50 text-decoration-none small nav-link">
+                                        <span>Export données (2 sem.)</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </nav>
+
+                {# Footer #}
+                <div class="mt-auto pt-4 border-top border-white border-opacity-10 d-flex flex-column gap-2 px-3 pb-3">
+                    <a href="#" class="d-flex align-items-center gap-3 px-3 py-2 rounded text-white text-decoration-none sidebar-link">
+                        <i class="bi bi-gear fs-5"></i>
+                        <span>Paramètres</span>
+                    </a>
+                    <a href="#" class="d-flex align-items-center gap-3 px-3 py-2 rounded text-white text-decoration-none sidebar-link">
+                        <i class="bi bi-person-circle fs-5"></i>
+                        <span>Mon compte</span>
+                    </a>
+                    <a href="{{ path('app_logout') }}" class="d-flex align-items-center gap-3 px-3 py-2 rounded text-white text-decoration-none sidebar-link">
+                        <i class="bi bi-box-arrow-right fs-5"></i>
+                        <span>Quitter</span>
+                    </a>
+                </div>
+            </div>
+        </aside>
+
+        {# Zone principale - Margin left sur desktop pour sidebar permanente #}
+        <main class="flex-grow-1 d-flex flex-column home-main">
+            {# Header avec logo à gauche et actions à droite (Bootstrap) #}
+            <header class="home-header">
+                <div class="d-flex align-items-center justify-content-between px-4 py-3">
+                    {# Logo à gauche : picto + texte #}
+                    <div class="d-flex align-items-center gap-2">
+                        {# Picto adaptatif selon le thème #}
+                        {% set theme = app.user ? app.user.theme : 'light' %}
+                        {% if theme == 'light' %}
+                            <img src="{{ asset('images/logo_picto.svg') }}" alt="CFI" class="header-logo-picto">
+                        {% else %}
+                            <img src="{{ asset('images/assistant-picto.svg') }}" alt="CFI" class="header-logo-picto">
+                        {% endif %}
                         <img src="{{ asset('images/logo.svg') }}" alt="myCFiia" class="header-logo">
                     </div>
 
-                    <div class="header-right">
+                    {# Actions à droite #}
+                    <div class="d-flex align-items-center gap-3">
                         {{ component('ThemeSelector') }}
-                        <a href="#" class="btn btn-link text-white">
+                        <a href="#" class="btn btn-link text-white text-decoration-none">
                             <i class="bi bi-box-arrow-up-right"></i>
                             Retour vers MyCFi
                         </a>
@@ -144,6 +270,38 @@
 
     {% block javascripts %}
         {{ importmap('app') }}
+        <script>
+            function toggleSidebar() {
+                const sidebar = document.querySelector('.home-sidebar');
+                const main = document.querySelector('.home-main');
+
+                if (sidebar && main) {
+                    sidebar.classList.toggle('sidebar-collapsed');
+
+                    // Éléments à centrer en mode collapsed (Bootstrap classes)
+                    const sidebarLinks = sidebar.querySelectorAll('.sidebar-link');
+                    const navLinks = sidebar.querySelectorAll('.nav-link');
+                    const navPills = sidebar.querySelectorAll('.nav-section-title-pill');
+
+                    // Ajuster le margin du main selon l'état
+                    if (sidebar.classList.contains('sidebar-collapsed')) {
+                        main.style.marginLeft = '60px';
+
+                        // Ajouter justify-content-center (Bootstrap) en mode collapsed
+                        sidebarLinks.forEach(link => link.classList.add('justify-content-center'));
+                        navLinks.forEach(link => link.classList.add('justify-content-center'));
+                        navPills.forEach(pill => pill.classList.add('justify-content-center'));
+                    } else {
+                        main.style.marginLeft = '280px';
+
+                        // Retirer justify-content-center en mode ouvert
+                        sidebarLinks.forEach(link => link.classList.remove('justify-content-center'));
+                        navLinks.forEach(link => link.classList.remove('justify-content-center'));
+                        navPills.forEach(pill => pill.classList.remove('justify-content-center'));
+                    }
+                }
+            }
+        </script>
     {% endblock %}
 </body>
 </html>
