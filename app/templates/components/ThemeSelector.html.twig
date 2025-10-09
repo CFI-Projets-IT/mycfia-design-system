@@ -1,9 +1,4 @@
-<div
-    {{ attributes }}
-    class="theme-selector dropdown"
-    data-controller="theme"
-    data-theme-current-value="{{ this.currentTheme }}"
->
+<div class="theme-selector dropdown">
     <button
         class="btn btn-link dropdown-toggle theme-selector-btn"
         type="button"
@@ -16,13 +11,11 @@
     </button>
 
     <ul class="dropdown-menu dropdown-menu-end theme-selector-menu" aria-labelledby="themeSelectorDropdown">
-        {% for theme in this.getThemes() %}
+        {% for theme in this.themes %}
             <li>
-                <button
+                <a
                     class="dropdown-item theme-option {% if this.currentTheme == theme.value %}active{% endif %}"
-                    type="button"
-                    data-action="live#action"
-                    data-live-action-param="switchTheme(theme='{{ theme.value }}')"
+                    href="{{ path('theme_switch', {theme: theme.value}) }}"
                 >
                     <span class="theme-preview" style="background-color: {{ theme.color }};"></span>
                     <i class="{{ theme.icon }} me-2"></i>
@@ -30,7 +23,7 @@
                     {% if this.currentTheme == theme.value %}
                         <i class="bi bi-check-lg ms-auto"></i>
                     {% endif %}
-                </button>
+                </a>
             </li>
         {% endfor %}
     </ul>
@@ -69,6 +62,7 @@
     border-radius: 0.375rem;
     color: var(--theme-text-primary, #1a1a1a);
     transition: background-color 0.2s ease;
+    text-decoration: none;
 }
 
 .theme-option:hover {
@@ -76,7 +70,7 @@
 }
 
 .theme-option.active {
-    background-color: var(--theme-accent, #705ec8);
+    background-color: var(--theme-accent, #003e82);
     color: #ffffff;
 }
 

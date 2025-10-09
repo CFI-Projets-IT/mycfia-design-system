@@ -3,52 +3,25 @@
 namespace App\Twig\Components;
 
 use App\Entity\User;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
-use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
-use Symfony\UX\LiveComponent\Attribute\LiveAction;
-use Symfony\UX\LiveComponent\Attribute\LiveProp;
-use Symfony\UX\LiveComponent\DefaultActionTrait;
+use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 
-#[AsLiveComponent]
+#[AsTwigComponent('ThemeSelector')]
 final class ThemeSelectorComponent
 {
-    use DefaultActionTrait;
-
-    #[LiveProp(writable: true)]
-    public string $currentTheme = 'light';
-
     public function __construct(
-        private Security $security,
-        private EntityManagerInterface $entityManager
+        private readonly Security $security
     ) {
     }
 
-    public function mount(): void
+    public function getCurrentTheme(): string
     {
         $user = $this->security->getUser();
         if ($user instanceof User) {
-            $this->currentTheme = $user->getTheme();
-        }
-    }
-
-    #[LiveAction]
-    public function switchTheme(string $theme): void
-    {
-        // Valider le thème
-        $allowedThemes = ['light', 'dark-blue', 'dark-red'];
-        if (! in_array($theme, $allowedThemes, true)) {
-            return;
+            return $user->getTheme();
         }
 
-        $this->currentTheme = $theme;
-
-        // Sauvegarder dans la BDD
-        $user = $this->security->getUser();
-        if ($user instanceof User) {
-            $user->setTheme($theme);
-            $this->entityManager->flush();
-        }
+        return 'light';
     }
 
     /**

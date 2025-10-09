@@ -11,57 +11,64 @@
         <p class="greeting-question">Comment puis-je vous aider aujourd'hui ?</p>
     </div>
 
-    <div class="quick-access-grid">
+    <div class="quick-access-row">
         <a href="#" class="quick-access-card">
             <div class="quick-access-icon">
                 <i class="bi bi-receipt"></i>
             </div>
-            <h3 class="quick-access-title">Factures</h3>
-            <p class="quick-access-description">Gérer vos factures</p>
+            <div class="quick-access-content">
+                <h3 class="quick-access-title">Factures</h3>
+            </div>
         </a>
 
         <a href="#" class="quick-access-card">
             <div class="quick-access-icon">
                 <i class="bi bi-list-check"></i>
             </div>
-            <h3 class="quick-access-title">Commandes</h3>
-            <p class="quick-access-description">Suivre vos commandes</p>
+            <div class="quick-access-content">
+                <h3 class="quick-access-title">Commandes</h3>
+            </div>
         </a>
 
         <a href="#" class="quick-access-card">
             <div class="quick-access-icon">
                 <i class="bi bi-box-seam"></i>
             </div>
-            <h3 class="quick-access-title">Stocks</h3>
-            <p class="quick-access-description">Consulter vos stocks</p>
+            <div class="quick-access-content">
+                <h3 class="quick-access-title">Stocks</h3>
+            </div>
         </a>
 
         <a href="#" class="quick-access-card">
             <div class="quick-access-icon">
                 <i class="bi bi-plus-circle"></i>
             </div>
-            <h3 class="quick-access-title">Autre</h3>
-            <p class="quick-access-description">Autres demandes</p>
+            <div class="quick-access-content">
+                <h3 class="quick-access-title">Autre</h3>
+            </div>
         </a>
     </div>
 </div>
 
 <style>
     .homepage-conversational {
-        max-width: 800px;
+        max-width: 1000px;
         margin: 0 auto;
+        padding: 3rem 2rem;
         text-align: center;
     }
 
     .greeting-container {
         margin-bottom: 4rem;
+        display: inline-block;
+        text-align: start;
     }
 
     .greeting-text {
-        font-size: 2.5rem;
+        font-size: 2rem;
         font-weight: 600;
-        margin-bottom: 1rem;
-        color: var(--theme-text-primary);
+        margin-bottom: 0.5rem;
+        color: #003e82;
     }
 
     .greeting-firstname {
@@ -71,90 +78,78 @@
 
     .greeting-question {
         font-size: 1.25rem;
-        color: var(--theme-text-secondary);
+        color: #003e82;
         margin: 0;
+        font-weight: 500;
     }
 
-    .quick-access-grid {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 2rem;
-        margin-top: 3rem;
+    .quick-access-row {
+        display: flex;
+        justify-content: center;
+        gap: 1.5rem;
+        flex-wrap: wrap;
+        text-align: center;
     }
 
     .quick-access-card {
-        background-color: var(--theme-card-bg);
-        border: 1px solid var(--theme-border-color);
-        border-radius: 1rem;
-        padding: 2rem;
+        background-color: #ffffff;
+        border: 1px solid #d5d8e0;
+        border-radius: 0.5rem;
+        padding: 1rem 1.5rem;
         text-decoration: none;
-        transition: all 0.3s ease;
+        transition: all 0.2s ease;
         display: flex;
-        flex-direction: column;
         align-items: center;
         gap: 1rem;
+        min-width: 180px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
     }
 
     .quick-access-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-        border-color: var(--theme-accent);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 62, 130, 0.1);
+        border-color: #003e82;
     }
 
     .quick-access-icon {
-        width: 80px;
-        height: 80px;
-        background: linear-gradient(135deg, var(--theme-accent), var(--theme-accent-secondary, var(--theme-accent)));
-        border-radius: 50%;
+        flex-shrink: 0;
         display: flex;
         align-items: center;
         justify-content: center;
-        margin-bottom: 1rem;
     }
 
     .quick-access-icon i {
-        font-size: 2.5rem;
-        color: white;
+        font-size: 1.75rem;
+        color: #003e82;
+    }
+
+    .quick-access-content {
+        text-align: left;
     }
 
     .quick-access-title {
-        font-size: 1.5rem;
-        font-weight: 600;
-        color: var(--theme-text-primary);
-        margin: 0;
-    }
-
-    .quick-access-description {
         font-size: 1rem;
-        color: var(--theme-text-secondary);
+        font-weight: 600;
+        color: #003e82;
         margin: 0;
     }
 
     @media (max-width: 768px) {
         .greeting-text {
-            font-size: 2rem;
+            font-size: 1.75rem;
         }
 
         .greeting-question {
             font-size: 1.1rem;
         }
 
-        .quick-access-grid {
-            grid-template-columns: 1fr;
-            gap: 1.5rem;
+        .quick-access-row {
+            flex-direction: column;
+            align-items: stretch;
         }
 
         .quick-access-card {
-            padding: 1.5rem;
-        }
-
-        .quick-access-icon {
-            width: 60px;
-            height: 60px;
-        }
-
-        .quick-access-icon i {
-            font-size: 2rem;
+            min-width: auto;
         }
     }
 </style>

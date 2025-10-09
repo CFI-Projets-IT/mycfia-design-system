@@ -22,11 +22,6 @@ html {
 body {
     font-family: var(--font-family-content);
     font-size: var(--font-size-md);
-    color: var(--color-white);
-    background: var(--background-gradient);
-    background-size: cover;
-    background-position: center;
-    background-attachment: fixed;
     line-height: 1.6;
 }
 
