@@ -3,154 +3,44 @@
 {% block title %}Accueil - myCFiia{% endblock %}
 
 {% block content %}
-<div class="homepage-conversational">
-    <div class="greeting-container">
-        <h1 class="greeting-text">
-            Bonjour <span class="greeting-firstname">{{ firstName }}</span>,
-        </h1>
-        <p class="greeting-question">Comment puis-je vous aider aujourd'hui ?</p>
-    </div>
+<div class="container" style="max-width: 1000px;">
+    <div class="text-center py-5">
+        <div class="d-inline-block text-start mb-5">
+            <h1 class="fs-1 fw-semibold mb-2 text-primary">
+                Bonjour <span class="text-danger fw-bold">{{ firstName }}</span>,
+            </h1>
+            <p class="fs-4 fw-medium text-primary mb-0">Comment puis-je vous aider aujourd'hui ?</p>
+        </div>
 
-    <div class="quick-access-row">
-        <a href="#" class="quick-access-card">
-            <div class="quick-access-icon">
-                <i class="bi bi-receipt"></i>
-            </div>
-            <div class="quick-access-content">
-                <h3 class="quick-access-title">Factures</h3>
-            </div>
-        </a>
+        <div class="d-flex justify-content-center gap-3 flex-wrap">
+            <a href="#" class="card text-decoration-none shadow-sm quick-access-card">
+                <div class="card-body d-flex align-items-center gap-3 p-3">
+                    <i class="bi bi-receipt fs-2 text-primary flex-shrink-0"></i>
+                    <h3 class="fs-6 fw-semibold text-primary mb-0">Factures</h3>
+                </div>
+            </a>
 
-        <a href="#" class="quick-access-card">
-            <div class="quick-access-icon">
-                <i class="bi bi-list-check"></i>
-            </div>
-            <div class="quick-access-content">
-                <h3 class="quick-access-title">Commandes</h3>
-            </div>
-        </a>
+            <a href="#" class="card text-decoration-none shadow-sm quick-access-card">
+                <div class="card-body d-flex align-items-center gap-3 p-3">
+                    <i class="bi bi-list-check fs-2 text-primary flex-shrink-0"></i>
+                    <h3 class="fs-6 fw-semibold text-primary mb-0">Commandes</h3>
+                </div>
+            </a>
 
-        <a href="#" class="quick-access-card">
-            <div class="quick-access-icon">
-                <i class="bi bi-box-seam"></i>
-            </div>
-            <div class="quick-access-content">
-                <h3 class="quick-access-title">Stocks</h3>
-            </div>
-        </a>
+            <a href="#" class="card text-decoration-none shadow-sm quick-access-card">
+                <div class="card-body d-flex align-items-center gap-3 p-3">
+                    <i class="bi bi-box-seam fs-2 text-primary flex-shrink-0"></i>
+                    <h3 class="fs-6 fw-semibold text-primary mb-0">Stocks</h3>
+                </div>
+            </a>
 
-        <a href="#" class="quick-access-card">
-            <div class="quick-access-icon">
-                <i class="bi bi-plus-circle"></i>
-            </div>
-            <div class="quick-access-content">
-                <h3 class="quick-access-title">Autre</h3>
-            </div>
-        </a>
+            <a href="#" class="card text-decoration-none shadow-sm quick-access-card">
+                <div class="card-body d-flex align-items-center gap-3 p-3">
+                    <i class="bi bi-plus-circle fs-2 text-primary flex-shrink-0"></i>
+                    <h3 class="fs-6 fw-semibold text-primary mb-0">Autre</h3>
+                </div>
+            </a>
+        </div>
     </div>
 </div>
-
-<style>
-    .homepage-conversational {
-        max-width: 1000px;
-        margin: 0 auto;
-        padding: 3rem 2rem;
-        text-align: center;
-    }
-
-    .greeting-container {
-        margin-bottom: 4rem;
-        display: inline-block;
-        text-align: start;
-    }
-
-    .greeting-text {
-        font-size: 2rem;
-        font-weight: 600;
-        margin-bottom: 0.5rem;
-        color: #003e82;
-    }
-
-    .greeting-firstname {
-        color: #d35f8d;
-        font-weight: 700;
-    }
-
-    .greeting-question {
-        font-size: 1.25rem;
-        color: #003e82;
-        margin: 0;
-        font-weight: 500;
-    }
-
-    .quick-access-row {
-        display: flex;
-        justify-content: center;
-        gap: 1.5rem;
-        flex-wrap: wrap;
-        text-align: center;
-    }
-
-    .quick-access-card {
-        background-color: #ffffff;
-        border: 1px solid #d5d8e0;
-        border-radius: 0.5rem;
-        padding: 1rem 1.5rem;
-        text-decoration: none;
-        transition: all 0.2s ease;
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-        min-width: 180px;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-    }
-
-    .quick-access-card:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(0, 62, 130, 0.1);
-        border-color: #003e82;
-    }
-
-    .quick-access-icon {
-        flex-shrink: 0;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .quick-access-icon i {
-        font-size: 1.75rem;
-        color: #003e82;
-    }
-
-    .quick-access-content {
-        text-align: left;
-    }
-
-    .quick-access-title {
-        font-size: 1rem;
-        font-weight: 600;
-        color: #003e82;
-        margin: 0;
-    }
-
-    @media (max-width: 768px) {
-        .greeting-text {
-            font-size: 1.75rem;
-        }
-
-        .greeting-question {
-            font-size: 1.1rem;
-        }
-
-        .quick-access-row {
-            flex-direction: column;
-            align-items: stretch;
-        }
-
-        .quick-access-card {
-            min-width: auto;
-        }
-    }
-</style>
 {% endblock %}

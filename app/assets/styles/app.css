@@ -51,8 +51,11 @@ a:hover {
 
 /* ====================================
    4. Components & Layouts
-   Note: Tous importés via app.js (méthode AssetMapper)
    ==================================== */
+
+/* Components */
+@import './components/theme-selector.css';
+@import './components/quick-access.css';
 
 /* ====================================
    5. Utilities
