@@ -74,3 +74,39 @@ body.theme-light .btn-primary {
 body.theme-light .btn-primary:hover {
     background-color: var(--theme-accent-hover);
 }
+
+/* Quick Access Cards - Fond blanc, texte/ic
+
+ône bleu */
+body.theme-light .quick-access-card {
+    background: rgba(255, 255, 255, 0.95) !important;
+    border: 1px solid rgba(0, 62, 130, 0.2) !important;
+    border-radius: 8px !important;
+    transition: all 0.2s ease;
+}
+
+body.theme-light .quick-access-card:hover {
+    background: rgba(255, 255, 255, 1) !important;
+    border-color: var(--theme-accent) !important;
+    box-shadow: 0 4px 12px rgba(0, 62, 130, 0.15) !important;
+}
+
+body.theme-light .quick-access-card h3,
+body.theme-light .quick-access-card i {
+    color: var(--theme-accent) !important;
+}
+
+/* Lien Retour vers MyCFi - Style pill comme sidebar (seulement dans le header) */
+body.theme-light .home-header .btn-link {
+    background: rgba(255, 255, 255, 0.95) !important;
+    color: var(--theme-accent) !important;
+    border: 1px solid rgba(0, 62, 130, 0.2) !important;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+}
+
+body.theme-light .home-header .btn-link:hover {
+    background: rgba(255, 255, 255, 1) !important;
+    border-color: var(--theme-accent) !important;
+}

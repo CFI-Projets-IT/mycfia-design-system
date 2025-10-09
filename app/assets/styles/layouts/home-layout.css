@@ -1,5 +1,6 @@
 /* ====================================
    Home Layout - Homepage Conversationnelle
+   PHILOSOPHIE : Bootstrap 5 utility classes + Offcanvas pour 95% du design
    ==================================== */
 
 .home-layout {
@@ -9,51 +10,12 @@
 }
 
 /* ====================================
-   Sidebar
+   Styles Custom Minimaux
    ==================================== */
-.home-sidebar {
-    width: 280px;
-    background-color: var(--theme-sidebar-bg);
-    color: var(--theme-sidebar-text);
-    display: flex;
-    flex-direction: column;
-    padding: 2rem 1.5rem;
-    position: fixed;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    z-index: 100;
-}
 
-.sidebar-header {
-    margin-bottom: 3rem;
-}
-
-.sidebar-logo {
-    width: 100%;
-    max-width: 180px;
-    height: auto;
-}
-
-.sidebar-nav {
-    flex: 1;
-    overflow-y: auto;
-}
-
+/* Navigation Section - Style pill custom */
 .nav-section {
     margin-bottom: 2rem;
-}
-
-.nav-section-title {
-    font-size: 0.875rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    margin-bottom: 1rem;
-    color: rgba(255, 255, 255, 0.6);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
 }
 
 .nav-section-title-pill {
@@ -89,129 +51,123 @@
     transform: rotate(180deg);
 }
 
-.nav-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-.nav-item {
-    margin-bottom: 0.5rem;
-}
-
+/* Navigation Links - Hover effect custom */
 .nav-link {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    padding: 0.75rem 1rem;
-    border-radius: 0.5rem;
-    color: var(--theme-sidebar-text);
-    text-decoration: none;
     transition: all 0.2s ease;
 }
 
 .nav-link:hover {
     background-color: var(--theme-sidebar-hover);
-    color: var(--theme-sidebar-text);
 }
 
-.nav-link i {
-    font-size: 1.25rem;
-}
-
-.nav-link-small {
-    font-size: 0.875rem;
-    padding: 0.5rem 1rem;
-    color: rgba(255, 255, 255, 0.7);
-}
-
-.nav-link-small:hover {
-    color: rgba(255, 255, 255, 0.9);
-}
-
-.sidebar-footer {
-    margin-top: auto;
-    padding-top: 1.5rem;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-}
-
-.sidebar-footer-link {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    padding: 0.75rem 1rem;
-    border-radius: 0.5rem;
-    color: var(--theme-sidebar-text);
-    text-decoration: none;
+/* Sidebar Links (footer) - Hover effect custom */
+.sidebar-link {
     transition: all 0.2s ease;
 }
 
-.sidebar-footer-link:hover {
+.sidebar-link:hover {
     background-color: rgba(255, 255, 255, 0.1);
-    color: var(--theme-sidebar-text);
 }
 
-.sidebar-footer-link i {
-    font-size: 1.25rem;
+/* Icônes Hamburger et Fermeture - Suppression totale des styles Bootstrap */
+.sidebar-header .btn-link,
+.sidebar-header .btn-link:hover,
+.sidebar-header .btn-link:focus,
+.sidebar-header .btn-link:active {
+    background: none !important;
+    background-color: transparent !important;
+    border: none !important;
+    border-color: transparent !important;
+    box-shadow: none !important;
+    text-decoration: none !important;
+    outline: none !important;
+    padding: 0 !important;
+}
+
+/* ====================================
+   Sidebar - Rétractable (mode icônes)
+   ==================================== */
+.home-sidebar {
+    transition: width 0.3s ease;
+    overflow: hidden;
+}
+
+.home-sidebar.sidebar-collapsed {
+    width: 60px !important;
+}
+
+/* Masquer les éléments en mode rétracté */
+.home-sidebar.sidebar-collapsed span:not(.sidebar-header span),
+.home-sidebar.sidebar-collapsed .collapse,
+.home-sidebar.sidebar-collapsed .bi-chevron-down,
+.home-sidebar.sidebar-collapsed .bi-arrow-left-circle {
+    display: none !important;
+}
+
+/* Header en mode rétracté : hamburger centré */
+.home-sidebar.sidebar-collapsed .sidebar-header {
+    justify-content: center !important;
+}
+
+/* Ajuster le padding et supprimer le fond/bordure des pills en mode rétracté */
+.home-sidebar.sidebar-collapsed .nav-section-title-pill {
+    padding: 0.75rem;
+    margin-bottom: 0.5rem;
+    background: transparent !important;
+    border: none !important;
+}
+
+.home-sidebar.sidebar-collapsed .nav-link,
+.home-sidebar.sidebar-collapsed .sidebar-link {
+    padding: 0.75rem;
+}
+
+/* Note: justify-content-center est ajouté dynamiquement via Bootstrap classes en JS */
+
+.home-main {
+    transition: margin-left 0.3s ease;
 }
 
 /* ====================================
    Main Content Area
    ==================================== */
 .home-main {
-    flex: 1;
-    margin-left: 280px;
-    display: flex;
-    flex-direction: column;
+    margin-left: 0;
+}
+
+/* Sur desktop, décaler pour la sidebar permanente */
+@media (min-width: 992px) {
+    .home-main {
+        margin-left: 280px;
+    }
 }
 
 /* ====================================
-   Header
+   Header - Utilise Bootstrap utilities (justify-content-between)
    ==================================== */
 .home-header {
-    padding: 1.5rem 2rem;
     background-color: transparent;
 }
 
-.header-content {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-
-.header-left,
-.header-right {
-    flex: 1;
-}
-
-.header-center {
-    flex: 0 0 auto;
-    text-align: center;
+.header-logo-picto {
+    width: 37px;
+    height: 40px;
 }
 
 .header-logo {
     width: auto;
-    max-width: 200px;
-    height: 60px;
+    max-width: 180px;
+    height: 55px;
 }
 
-.header-right {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    gap: 1rem;
+/* Adaptation des couleurs du logo selon le thème */
+/* Logo texte : blanc en SVG, donc doit être converti en bleu pour thème light */
+.theme-light .header-logo {
+    filter: brightness(0) saturate(100%) invert(23%) sepia(73%) saturate(1647%) hue-rotate(203deg) brightness(93%) contrast(94%);
 }
 
-.header-right .btn-link {
-    font-size: 0.875rem;
-    text-decoration: none;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
+/* Logo picto : on utilise les bons SVG directement (logo_picto.svg en light, assistant-picto.svg en dark) */
+/* Les deux SVG ont maintenant le même ratio viewBox (~0.9) pour une taille uniforme */
 
 /* ====================================
    Content
@@ -225,24 +181,7 @@
     justify-content: center;
 }
 
-/* ====================================
-   Responsive
-   ==================================== */
 @media (max-width: 768px) {
-    .home-sidebar {
-        width: 100%;
-        transform: translateX(-100%);
-        transition: transform 0.3s ease;
-    }
-
-    .home-sidebar.open {
-        transform: translateX(0);
-    }
-
-    .home-main {
-        margin-left: 0;
-    }
-
     .header-logo {
         max-width: 150px;
         height: 40px;

@@ -63,15 +63,37 @@ body.theme-dark-red .glass-card {
     backdrop-filter: blur(10px);
 }
 
+/* Quick Access Cards - Style pill comme sidebar (fond semi-transparent, bordure) */
 body.theme-dark-red .quick-access-card {
-    background-color: var(--theme-card-bg) !important;
-    border-color: var(--theme-border-color) !important;
-    backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, 0.1) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    border-radius: 8px !important;
+    transition: all 0.2s ease;
 }
 
 body.theme-dark-red .quick-access-card:hover {
-    border-color: var(--theme-accent) !important;
-    box-shadow: 0 4px 12px rgba(211, 95, 141, 0.3) !important;
+    background: rgba(255, 255, 255, 0.15) !important;
+    border-color: rgba(255, 255, 255, 0.3) !important;
+}
+
+body.theme-dark-red .quick-access-card h3,
+body.theme-dark-red .quick-access-card i {
+    color: #ffffff !important;
+}
+
+/* Lien Retour vers MyCFi - Style pill comme sidebar (seulement dans le header) */
+body.theme-dark-red .home-header .btn-link {
+    background: rgba(255, 255, 255, 0.1) !important;
+    color: #ffffff !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+}
+
+body.theme-dark-red .home-header .btn-link:hover {
+    background: rgba(255, 255, 255, 0.15) !important;
+    border-color: rgba(255, 255, 255, 0.3) !important;
 }
 
 body.theme-dark-red .sidebar {
@@ -86,6 +108,11 @@ body.theme-dark-red .btn-primary {
 
 body.theme-dark-red .btn-primary:hover {
     background-color: var(--theme-accent-hover);
+}
+
+/* Texte "Bonjour NAME, Comment..." - Blanc sauf le nom (rouge) */
+body.theme-dark-red .text-primary {
+    color: #ffffff !important;
 }
 
 body.theme-dark-red input,
