@@ -19,45 +19,96 @@
             </div>
 
             <nav class="sidebar-nav">
+                {# Section Favoris (collapsible avec fond) #}
                 <div class="nav-section">
-                    <h3 class="nav-section-title">
-                        <i class="bi bi-star"></i>
-                        Favoris
-                    </h3>
-                    <ul class="nav-list">
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="bi bi-receipt"></i>
-                                <span>Factures</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="bi bi-list-check"></i>
-                                <span>Commandes</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="bi bi-box-seam"></i>
-                                <span>Stocks</span>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="bi bi-plus-circle"></i>
-                                <span>Aide-moi à...</span>
-                            </a>
-                        </li>
-                    </ul>
+                    <div class="nav-section-title-pill" data-bs-toggle="collapse" data-bs-target="#favorisSection" aria-expanded="true">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-star"></i>
+                            <span>Favoris</span>
+                        </div>
+                        <i class="bi bi-chevron-down"></i>
+                    </div>
+                    <div class="collapse show" id="favorisSection">
+                        <ul class="nav-list">
+                            <li class="nav-item">
+                                <a href="#" class="nav-link">
+                                    <span>Factures...</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="#" class="nav-link">
+                                    <span>Commandes...</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="#" class="nav-link">
+                                    <span>Stocks...</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="#" class="nav-link">
+                                    <span>Aide-moi à...</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                {# Section Historique (collapsible avec fond) #}
+                <div class="nav-section">
+                    <div class="nav-section-title-pill" data-bs-toggle="collapse" data-bs-target="#historiqueSection" aria-expanded="false">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-clock-history"></i>
+                            <span>Historique</span>
+                        </div>
+                        <i class="bi bi-chevron-down"></i>
+                    </div>
+                    <div class="collapse" id="historiqueSection">
+                        <ul class="nav-list">
+                            <li class="nav-item">
+                                <a href="#" class="nav-link nav-link-small">
+                                    <span>Dernière conversation (il y a 2h)</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="#" class="nav-link nav-link-small">
+                                    <span>Factures janvier 2025 (hier)</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="#" class="nav-link nav-link-small">
+                                    <span>Analyse stocks (3 jours)</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="#" class="nav-link nav-link-small">
+                                    <span>Rapport commandes (1 sem.)</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="#" class="nav-link nav-link-small">
+                                    <span>Export données (2 sem.)</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </nav>
 
+            {# Footer avec Paramètres, Mon compte, Quitter #}
             <div class="sidebar-footer">
-                <button class="btn-historique">
-                    <i class="bi bi-clock-history"></i>
-                    <span>Historique</span>
-                </button>
+                <a href="#" class="sidebar-footer-link">
+                    <i class="bi bi-gear"></i>
+                    <span>Paramètres</span>
+                </a>
+                <a href="#" class="sidebar-footer-link">
+                    <i class="bi bi-person-circle"></i>
+                    <span>Mon compte</span>
+                </a>
+                <a href="{{ path('app_logout') }}" class="sidebar-footer-link">
+                    <i class="bi bi-box-arrow-right"></i>
+                    <span>Quitter</span>
+                </a>
             </div>
         </aside>
 
