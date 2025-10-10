@@ -21,6 +21,7 @@ class User implements UserInterface
 
     /**
      * ID utilisateur depuis CFI (id).
+     * Un utilisateur peut changer de Division au fil du temps (dernière connexion = Division active).
      */
     #[ORM\Column(type: Types::INTEGER, unique: true)]
     private int $idCfi;

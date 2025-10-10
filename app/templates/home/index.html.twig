@@ -13,138 +13,138 @@
         </div>
 
         {# Debug Sprint S0.5 - Informations utilisateur BDD #}
-{#        <div class="card shadow-sm mb-5 text-start">#}
-{#            <div class="card-header bg-primary text-white d-flex align-items-center gap-2">#}
-{#                <i class="bi bi-database-check"></i>#}
-{#                <strong>Sprint R1/S0 – Socle & Auth</strong>#}
-{#            </div>#}
-{#            <div class="card-body">#}
-{#                <div class="row">#}
-{#                    <div class="col-md-6">#}
-{#                        <h5 class="text-primary mb-3">#}
-{#                            <i class="bi bi-person-circle me-2"></i>Utilisateur#}
-{#                        </h5>#}
-{#                        <table class="table table-sm table-hover">#}
-{#                            <tbody>#}
-{#                                <tr>#}
-{#                                    <th class="text-muted" style="width: 40%;">ID BDD</th>#}
-{#                                    <td><code class="text-success">{{ app.user.id }}</code></td>#}
-{#                                </tr>#}
-{#                                <tr>#}
-{#                                    <th class="text-muted">ID CFI</th>#}
-{#                                    <td><code class="text-info">{{ app.user.idCfi }}</code></td>#}
-{#                                </tr>#}
-{#                                <tr>#}
-{#                                    <th class="text-muted">Email</th>#}
-{#                                    <td>{{ app.user.email }}</td>#}
-{#                                </tr>#}
-{#                                <tr>#}
-{#                                    <th class="text-muted">Nom complet</th>#}
-{#                                    <td><strong>{{ app.user.fullName }}</strong></td>#}
-{#                                </tr>#}
-{#                                <tr>#}
-{#                                    <th class="text-muted">Thème</th>#}
-{#                                    <td>#}
-{#                                        <span class="badge bg-{{ app.user.theme == 'dark' ? 'dark' : 'light text-dark' }}">#}
-{#                                            {{ app.user.theme }}#}
-{#                                        </span>#}
-{#                                    </td>#}
-{#                                </tr>#}
-{#                                <tr>#}
-{#                                    <th class="text-muted">Locale</th>#}
-{#                                    <td><span class="badge bg-secondary">{{ app.user.locale }}</span></td>#}
-{#                                </tr>#}
-{#                                <tr>#}
-{#                                    <th class="text-muted">Type Option GA</th>#}
-{#                                    <td>{{ app.user.typeOptionGA ?? '—' }}</td>#}
-{#                                </tr>#}
-{#                                <tr>#}
-{#                                    <th class="text-muted">Connexions</th>#}
-{#                                    <td>#}
-{#                                        <span class="badge bg-success">{{ app.user.loginCount }} fois</span>#}
-{#                                    </td>#}
-{#                                </tr>#}
-{#                                <tr>#}
-{#                                    <th class="text-muted">Dernière connexion</th>#}
-{#                                    <td>#}
-{#                                        {% if app.user.lastLoginAt %}#}
-{#                                            <small>{{ app.user.lastLoginAt|date('d/m/Y H:i:s') }}</small>#}
-{#                                        {% else %}#}
-{#                                            —#}
-{#                                        {% endif %}#}
-{#                                    </td>#}
-{#                                </tr>#}
-{#                                <tr>#}
-{#                                    <th class="text-muted">Créé le</th>#}
-{#                                    <td><small>{{ app.user.createdAt|date('d/m/Y H:i:s') }}</small></td>#}
-{#                                </tr>#}
-{#                                <tr>#}
-{#                                    <th class="text-muted">Mis à jour le</th>#}
-{#                                    <td><small>{{ app.user.updatedAt|date('d/m/Y H:i:s') }}</small></td>#}
-{#                                </tr>#}
-{#                            </tbody>#}
-{#                        </table>#}
-{#                    </div>#}
-{#                    <div class="col-md-6">#}
-{#                        <h5 class="text-primary mb-3">#}
-{#                            <i class="bi bi-building me-2"></i>Division (Multi-Tenancy)#}
-{#                        </h5>#}
-{#                        {% if app.user.division %}#}
-{#                        <table class="table table-sm table-hover">#}
-{#                            <tbody>#}
-{#                                <tr>#}
-{#                                    <th class="text-muted" style="width: 40%;">ID BDD</th>#}
-{#                                    <td><code class="text-success">{{ app.user.division.id }}</code></td>#}
-{#                                </tr>#}
-{#                                <tr>#}
-{#                                    <th class="text-muted">ID Division CFI</th>#}
-{#                                    <td><code class="text-info">{{ app.user.division.idDivision }}</code></td>#}
-{#                                </tr>#}
-{#                                <tr>#}
-{#                                    <th class="text-muted">Nom</th>#}
-{#                                    <td><strong>{{ app.user.division.nomDivision }}</strong></td>#}
-{#                                </tr>#}
-{#                                <tr>#}
-{#                                    <th class="text-muted">Slug (Gedmo)</th>#}
-{#                                    <td>#}
-{#                                        <code class="">/{{ app.user.division.slug }}</code>#}
-{#                                    </td>#}
-{#                                </tr>#}
-{#                                <tr>#}
-{#                                    <th class="text-muted">Statut</th>#}
-{#                                    <td>#}
-{#                                        <span class="badge bg-{{ app.user.division.isActive ? 'success' : 'danger' }}">#}
-{#                                            {{ app.user.division.isActive ? 'Active' : 'Inactive' }}#}
-{#                                        </span>#}
-{#                                    </td>#}
-{#                                </tr>#}
-{#                                <tr>#}
-{#                                    <th class="text-muted">Utilisateurs</th>#}
-{#                                    <td>#}
-{#                                        <span class="badge bg-info">{{ app.user.division.users|length }} user(s)</span>#}
-{#                                    </td>#}
-{#                                </tr>#}
-{#                                <tr>#}
-{#                                    <th class="text-muted">Créée le</th>#}
-{#                                    <td><small>{{ app.user.division.createdAt|date('d/m/Y H:i:s') }}</small></td>#}
-{#                                </tr>#}
-{#                                <tr>#}
-{#                                    <th class="text-muted">Mise à jour le</th>#}
-{#                                    <td><small>{{ app.user.division.updatedAt|date('d/m/Y H:i:s') }}</small></td>#}
-{#                                </tr>#}
-{#                            </tbody>#}
-{#                        </table>#}
-{#                        {% else %}#}
-{#                        <div class="alert alert-warning">#}
-{#                            <i class="bi bi-exclamation-triangle me-2"></i>#}
-{#                            Aucune division associée#}
-{#                        </div>#}
-{#                        {% endif %}#}
+        <div class="card shadow-sm mb-5 text-start">
+            <div class="card-header bg-primary text-white d-flex align-items-center gap-2">
+                <i class="bi bi-database-check"></i>
+                <strong>Sprint R1/S0 – Socle & Auth</strong>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h5 class="text-primary mb-3">
+                            <i class="bi bi-person-circle me-2"></i>Utilisateur
+                        </h5>
+                        <table class="table table-sm table-hover">
+                            <tbody>
+                                <tr>
+                                    <th class="text-muted" style="width: 40%;">ID BDD</th>
+                                    <td><code class="text-success">{{ app.user.id }}</code></td>
+                                </tr>
+                                <tr>
+                                    <th class="text-muted">ID CFI</th>
+                                    <td><code class="text-info">{{ app.user.idCfi }}</code></td>
+                                </tr>
+                                <tr>
+                                    <th class="text-muted">Email</th>
+                                    <td>{{ app.user.email }}</td>
+                                </tr>
+                                <tr>
+                                    <th class="text-muted">Nom complet</th>
+                                    <td><strong>{{ app.user.fullName }}</strong></td>
+                                </tr>
+                                <tr>
+                                    <th class="text-muted">Thème</th>
+                                    <td>
+                                        <span class="badge bg-{{ app.user.theme == 'dark' ? 'dark' : 'light text-dark' }}">
+                                            {{ app.user.theme }}
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th class="text-muted">Locale</th>
+                                    <td><span class="badge bg-secondary">{{ app.user.locale }}</span></td>
+                                </tr>
+                                <tr>
+                                    <th class="text-muted">Type Option GA</th>
+                                    <td>{{ app.user.typeOptionGA ?? '—' }}</td>
+                                </tr>
+                                <tr>
+                                    <th class="text-muted">Connexions</th>
+                                    <td>
+                                        <span class="badge bg-success">{{ app.user.loginCount }} fois</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th class="text-muted">Dernière connexion</th>
+                                    <td>
+                                        {% if app.user.lastLoginAt %}
+                                            <small>{{ app.user.lastLoginAt|date('d/m/Y H:i:s') }}</small>
+                                        {% else %}
+                                            —
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th class="text-muted">Créé le</th>
+                                    <td><small>{{ app.user.createdAt|date('d/m/Y H:i:s') }}</small></td>
+                                </tr>
+                                <tr>
+                                    <th class="text-muted">Mis à jour le</th>
+                                    <td><small>{{ app.user.updatedAt|date('d/m/Y H:i:s') }}</small></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-md-6">
+                        <h5 class="text-primary mb-3">
+                            <i class="bi bi-building me-2"></i>Division (Multi-Tenancy)
+                        </h5>
+                        {% if app.user.division %}
+                        <table class="table table-sm table-hover">
+                            <tbody>
+                                <tr>
+                                    <th class="text-muted" style="width: 40%;">ID BDD</th>
+                                    <td><code class="text-success">{{ app.user.division.id }}</code></td>
+                                </tr>
+                                <tr>
+                                    <th class="text-muted">ID Division CFI</th>
+                                    <td><code class="text-info">{{ app.user.division.idDivision }}</code></td>
+                                </tr>
+                                <tr>
+                                    <th class="text-muted">Nom</th>
+                                    <td><strong>{{ app.user.division.nomDivision }}</strong></td>
+                                </tr>
+                                <tr>
+                                    <th class="text-muted">Slug (Gedmo)</th>
+                                    <td>
+                                        <code class="">/{{ app.user.division.slug }}</code>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th class="text-muted">Statut</th>
+                                    <td>
+                                        <span class="badge bg-{{ app.user.division.isActive ? 'success' : 'danger' }}">
+                                            {{ app.user.division.isActive ? 'Active' : 'Inactive' }}
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th class="text-muted">Utilisateurs</th>
+                                    <td>
+                                        <span class="badge bg-info">{{ app.user.division.users|length }} user(s)</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th class="text-muted">Créée le</th>
+                                    <td><small>{{ app.user.division.createdAt|date('d/m/Y H:i:s') }}</small></td>
+                                </tr>
+                                <tr>
+                                    <th class="text-muted">Mise à jour le</th>
+                                    <td><small>{{ app.user.division.updatedAt|date('d/m/Y H:i:s') }}</small></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        {% else %}
+                        <div class="alert alert-warning">
+                            <i class="bi bi-exclamation-triangle me-2"></i>
+                            Aucune division associée
+                        </div>
+                        {% endif %}
 
-{#                    </div>#}
-{#                </div>#}
-{#            </div>#}
-{#        </div>#}
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <div class="d-flex justify-content-center gap-3 flex-wrap">
             <a href="#" class="card text-decoration-none shadow-sm quick-access-card">

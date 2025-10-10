@@ -102,11 +102,21 @@ readonly class CfiUserSyncService
 
     /**
      * Upsert User depuis les données CFI.
+     *
+     * Logique simplifiée :
+     * 1. Chercher User par email (contrainte unique)
+     * 2. Si trouvé : mettre à jour toutes les données (y compris idCfi et Division si changement)
+     * 3. Sinon : créer nouveau User
+     *
+     * Note: Un utilisateur peut changer de Division au fil du temps.
+     * La dernière connexion détermine la Division active.
      */
     private function upsertUser(UtilisateurGorilliasDto $dto, Division $division): User
     {
-        $user = $this->userRepository->findByIdCfi($dto->id);
+        // 1. Chercher par email (unique)
+        $user = $this->userRepository->findByEmail($dto->email ?? '');
 
+        // 2. Création ou mise à jour
         if (! $user) {
             $this->logger->info('Création nouvel utilisateur', [
                 'idCfi' => $dto->id,
@@ -114,16 +124,29 @@ readonly class CfiUserSyncService
             ]);
 
             $user = new User();
-            $user->setIdCfi($dto->id);
             // createdAt et updatedAt gérés automatiquement par Gedmo
         } else {
-            $this->logger->debug('Mise à jour utilisateur existant', [
-                'idCfi' => $dto->id,
-                'userId' => $user->getId(),
-            ]);
+            // Détection changement de Division
+            $oldDivision = $user->getDivision();
+            if ($oldDivision && $oldDivision->getIdDivision() !== $division->getIdDivision()) {
+                $this->logger->info('Changement de Division détecté', [
+                    'userId' => $user->getId(),
+                    'email' => $dto->email,
+                    'oldIdCfi' => $user->getIdCfi(),
+                    'newIdCfi' => $dto->id,
+                    'oldDivision' => $oldDivision->getNomDivision(),
+                    'newDivision' => $division->getNomDivision(),
+                ]);
+            } else {
+                $this->logger->debug('Mise à jour utilisateur existant', [
+                    'idCfi' => $dto->id,
+                    'userId' => $user->getId(),
+                ]);
+            }
         }
 
-        // Mise à jour des données utilisateur depuis CFI
+        // 3. Mise à jour de toutes les données utilisateur depuis CFI
+        $user->setIdCfi($dto->id);
         $user->setEmail($dto->email ?? 'user-'.$dto->id.'@cfi.local');
         $user->setNom($dto->nom);
         $user->setPrenom($dto->prenom);
