@@ -18,6 +18,7 @@
 
         <form method="post" class="d-flex flex-column">
             <div class="col-11 mx-auto">
+                {# TODO Sprint S0+ : Réactiver authentification email/password quand CFI fournira l'endpoint
                 <div class="input-group mb-4">
                     <span class="input-group-text">
                         <i class="bi bi-person"></i>
@@ -47,6 +48,37 @@
                         placeholder="Mot de passe"
                     >
                 </div>
+                #}
+
+                {# Sprint S0 : Authentification via Token Gorillias #}
+                <div class="input-group mb-4">
+                    <span class="input-group-text">
+                        <i class="bi bi-key-fill"></i>
+                    </span>
+                    <input
+                        type="text"
+                        id="jetonUtilisateur"
+                        name="jetonUtilisateur"
+                        class="form-control"
+                        value="{{ last_username }}"
+                        required
+                        autofocus
+                        placeholder="ae5ac49e-3cd6-4d41-899a-782b6fb6797c"
+                        pattern="[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"
+                        title="Format UUID requis (ex: ae5ac49e-3cd6-4d41-899a-782b6fb6797c)"
+                    >
+                </div>
+
+                <div class="alert alert-info mb-4 d-flex align-items-start gap-2" style="font-size: var(--font-size-sm);">
+                    <div class="flex-grow-1">
+                        <i class="bi bi-info-circle"></i>
+                        <strong>Obtenir votre token :</strong><br>
+                        Connectez-vous sur CFI → Menu Gorillias → Copiez le token
+                    </div>
+                    <a href="https://test.cfitech.io/" target="_blank" class="btn btn-sm btn-outline-info" title="Ouvrir CFI pour générer un token">
+                        <i class="bi bi-box-arrow-up-right"></i> CFI
+                    </a>
+                </div>
 
                 <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
 
@@ -56,9 +88,11 @@
                             Connexion
                         </button>
                     </div>
+                    {# TODO Sprint S0+ : Réactiver lien mot de passe oublié
                     <div class="col-12 text-center pt-4">
                         <a href="#" class="startlink">mot de passe ou identifiant oublié ?</a>
                     </div>
+                    #}
                 </div>
             </div>
         </form>
