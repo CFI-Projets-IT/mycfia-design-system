@@ -48,7 +48,7 @@
                             <ul class="mb-2 ps-3" style="font-size: 0.9rem;">
                                 {% if isTokenExpired %}
                                     <li>Votre token CFI est valable 30 minutes</li>
-                                    <li>Générez un nouveau token sur CFI (Menu Gorillias)</li>
+                                    <li>Générez un nouveau token sur CFI</li>
                                     <li>Reconnectez-vous avec le nouveau token</li>
                                 {% elseif isAccessDenied %}
                                     <li>Vérifiez vos droits d'accès dans CFI</li>
@@ -59,7 +59,6 @@
                                     <li>Générez un nouveau token sur CFI si nécessaire</li>
                                 {% else %}
                                     <li>Vérifiez votre token Gorillias</li>
-                                    <li>Assurez-vous d'être connecté à CFI</li>
                                     <li>Réessayez dans quelques instants</li>
                                 {% endif %}
                             </ul>
@@ -196,61 +195,5 @@
 
 {% block javascripts %}
     {{ parent() }}
-    <script>
-        // Gestion du toggle entre les modes d'authentification
-        document.addEventListener('DOMContentLoaded', function() {
-            const tokenFields = document.getElementById('token-fields');
-            const credentialsFields = document.getElementById('credentials-fields');
-            const jetonInput = document.getElementById('jetonUtilisateur');
-            const emailInput = document.getElementById('email');
-            const passwordInput = document.getElementById('password');
-            const modeRadios = document.querySelectorAll('[name="mode"]');
-
-            // Fonction pour basculer entre les modes
-            function switchAuthMode(mode) {
-                if (mode === 'token') {
-                    // Afficher champs token, masquer champs credentials
-                    tokenFields.classList.remove('d-none');
-                    credentialsFields.classList.add('d-none');
-
-                    // Activer validation token, désactiver validation credentials
-                    jetonInput.setAttribute('required', 'required');
-                    emailInput.removeAttribute('required');
-                    passwordInput.removeAttribute('required');
-
-                    // Vider les champs credentials
-                    emailInput.value = '';
-                    passwordInput.value = '';
-
-                    // Focus sur le champ token
-                    jetonInput.focus();
-                } else {
-                    // Afficher champs credentials, masquer champs token
-                    tokenFields.classList.add('d-none');
-                    credentialsFields.classList.remove('d-none');
-
-                    // Activer validation credentials, désactiver validation token
-                    emailInput.setAttribute('required', 'required');
-                    passwordInput.setAttribute('required', 'required');
-                    jetonInput.removeAttribute('required');
-
-                    // Vider le champ token
-                    jetonInput.value = '';
-
-                    // Focus sur le champ email
-                    emailInput.focus();
-                }
-            }
-
-            // Écouter les changements du toggle
-            modeRadios.forEach(function(radio) {
-                radio.addEventListener('change', function(e) {
-                    switchAuthMode(e.target.value);
-                });
-            });
-
-            // Initialiser l'état au chargement (mode token par défaut)
-            switchAuthMode('token');
-        });
-    </script>
+    <script type="module" src="{{ asset('login.js') }}"></script>
 {% endblock %}
