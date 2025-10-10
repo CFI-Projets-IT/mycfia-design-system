@@ -1,0 +1,41 @@
+# English translations for user settings
+# Domain: settings
+
+# Page
+'settings.page.title': 'Settings'
+'settings.page.description': 'Customize your myCFiia experience according to your preferences.'
+
+# Sections
+'settings.section.appearance.title': 'Appearance'
+'settings.section.account.title': 'Account Information'
+
+# Fields
+'settings.field.theme.label': 'Theme'
+'settings.field.theme.light': 'Light'
+'settings.field.theme.dark_blue': 'Dark Blue'
+'settings.field.theme.dark_red': 'Dark Red'
+'settings.field.theme.help': 'Choose the interface theme that suits you best.'
+'settings.field.locale.label': 'Language'
+'settings.field.locale.french': 'French'
+'settings.field.locale.english': 'English'
+'settings.field.locale.help': 'Select the interface language.'
+'settings.field.fullname.label': 'Full Name'
+'settings.field.email.label': 'Email Address'
+'settings.field.organization.label': 'Organization'
+'settings.field.id_cfi.label': 'CFI ID'
+
+# Account info
+'settings.account.info': 'To modify your personal information (first name, last name, email), go to your CFI account.'
+'settings.account.open_cfi': 'Open CFI'
+
+# Buttons
+'settings.button.save': 'Save Changes'
+'settings.button.cancel': 'Cancel'
+
+# Messages
+'settings.update.success': 'Your preferences have been saved successfully.'
+'settings.update.error': 'An error occurred while saving your preferences. Please try again.'
+
+# Errors
+'settings.error.invalid_theme': 'The theme ''%theme%'' is not valid. Allowed themes: %allowed%.'
+'settings.error.invalid_locale': 'The language ''%locale%'' is not valid. Allowed languages: %allowed%.'

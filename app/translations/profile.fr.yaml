@@ -1,0 +1,39 @@
+# Traductions pour le profil utilisateur
+# Domaine : profile
+
+# Page
+'profile.page.title': 'Mon Compte'
+'profile.page.description': 'Consultez vos informations personnelles et vos statistiques d''utilisation.'
+
+# Sections
+'profile.section.info.title': 'Informations personnelles'
+'profile.section.stats.title': 'Statistiques d''utilisation'
+'profile.section.preferences.title': 'Préférences actuelles'
+
+# Champs
+'profile.field.fullname.label': 'Nom complet'
+'profile.field.email.label': 'Adresse email'
+'profile.field.organization.label': 'Organisation'
+'profile.field.id_cfi.label': 'ID CFI'
+
+# Statistiques
+'profile.stats.member_since.label': 'Membre depuis'
+'profile.stats.member_since.days': 'Il y a %days% jours'
+'profile.stats.last_login.label': 'Dernière connexion'
+'profile.stats.login_count.label': 'Nombre de connexions'
+'profile.stats.login_count.connections': 'connexions'
+'profile.stats.updated_at.label': 'Dernière mise à jour'
+
+# Préférences
+'profile.preferences.theme.label': 'Thème'
+'profile.preferences.theme.light': 'Clair'
+'profile.preferences.theme.dark_blue': 'Sombre Bleu'
+'profile.preferences.theme.dark_red': 'Sombre Rouge'
+'profile.preferences.locale.label': 'Langue'
+'profile.preferences.locale.french': 'Français'
+'profile.preferences.locale.english': 'English'
+
+# Boutons
+'profile.button.edit_settings': 'Modifier les paramètres'
+'profile.button.back': 'Retour à l''accueil'
+'profile.button.manage_cfi': 'Gérer mon compte CFI'

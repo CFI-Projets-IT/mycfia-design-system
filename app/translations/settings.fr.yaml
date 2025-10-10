@@ -1,0 +1,41 @@
+# Traductions pour les paramètres utilisateur
+# Domaine : settings
+
+# Page
+'settings.page.title': 'Paramètres'
+'settings.page.description': 'Personnalisez votre expérience myCFiia selon vos préférences.'
+
+# Sections
+'settings.section.appearance.title': 'Apparence'
+'settings.section.account.title': 'Informations du compte'
+
+# Champs
+'settings.field.theme.label': 'Thème'
+'settings.field.theme.light': 'Clair'
+'settings.field.theme.dark_blue': 'Sombre Bleu'
+'settings.field.theme.dark_red': 'Sombre Rouge'
+'settings.field.theme.help': 'Choisissez le thème de l''interface qui vous convient le mieux.'
+'settings.field.locale.label': 'Langue'
+'settings.field.locale.french': 'Français'
+'settings.field.locale.english': 'English'
+'settings.field.locale.help': 'Sélectionnez la langue de l''interface.'
+'settings.field.fullname.label': 'Nom complet'
+'settings.field.email.label': 'Adresse email'
+'settings.field.organization.label': 'Organisation'
+'settings.field.id_cfi.label': 'ID CFI'
+
+# Informations compte
+'settings.account.info': 'Pour modifier vos informations personnelles (nom, prénom, email), rendez-vous sur votre compte CFI.'
+'settings.account.open_cfi': 'Ouvrir CFI'
+
+# Boutons
+'settings.button.save': 'Enregistrer les modifications'
+'settings.button.cancel': 'Annuler'
+
+# Messages
+'settings.update.success': 'Vos préférences ont été enregistrées avec succès.'
+'settings.update.error': 'Une erreur est survenue lors de l''enregistrement de vos préférences. Veuillez réessayer.'
+
+# Erreurs
+'settings.error.invalid_theme': 'Le thème ''%theme%'' n''est pas valide. Thèmes autorisés : %allowed%.'
+'settings.error.invalid_locale': 'La langue ''%locale%'' n''est pas valide. Langues autorisées : %allowed%.'
