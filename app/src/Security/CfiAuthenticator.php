@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace App\Security;
 
+use App\Entity\User;
 use App\Exception\CfiApiException;
 use App\Service\Cfi\CfiAuthService;
 use App\Service\Cfi\CfiSessionService;
 use App\Service\Cfi\CfiTenantService;
+use App\Service\Cfi\CfiUserSyncService;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -29,9 +31,11 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  * 1. User soumet formulaire avec jetonUtilisateur (Token Gorillias)
  * 2. Appel API CFI /Utilisateurs/getUtilisateurGorillias
  * 3. Réception user data + jeton CFI
- * 4. Stockage jeton CFI en session (TTL 30 min)
- * 5. Création CfiUser + authentification Symfony
- * 6. Redirection vers homepage
+ * 4. Synchronisation User et Division en BDD (upsert)
+ * 5. Stockage jeton CFI en session (TTL 30 min)
+ * 6. Mise à jour tracking connexion (loginCount, lastLoginAt)
+ * 7. Authentification Symfony avec User Doctrine
+ * 8. Redirection vers homepage
  *
  * TODO Sprint S0+ : Ajouter workflow authentification email/password direct
  * Quand CFI fournira l'endpoint dédié, remplacer getUtilisateurGorillias
@@ -43,7 +47,7 @@ class CfiAuthenticator extends AbstractAuthenticator
         private readonly CfiAuthService $cfiAuthService,
         private readonly CfiSessionService $cfiSessionService,
         private readonly CfiTenantService $cfiTenantService,
-        private readonly CfiUserProvider $cfiUserProvider,
+        private readonly CfiUserSyncService $cfiUserSyncService,
         private readonly UrlGeneratorInterface $urlGenerator,
         private readonly LoggerInterface $logger,
         private readonly TranslatorInterface $translator,
@@ -92,6 +96,14 @@ class CfiAuthenticator extends AbstractAuthenticator
                 'division' => $utilisateurDto->nomDivision,
             ]);
 
+            // Synchroniser User et Division en BDD (upsert)
+            $user = $this->cfiUserSyncService->syncUserFromCfi($utilisateurDto);
+            $this->logger->info('CFI Authenticator: User synchronisé en BDD', [
+                'userId' => $user->getId(),
+                'idCfi' => $user->getIdCfi(),
+                'divisionId' => $user->getDivision()?->getId(),
+            ]);
+
             // Stocker le token CFI en session
             if (null !== $utilisateurDto->jeton) {
                 $this->cfiSessionService->setToken($utilisateurDto->jeton);
@@ -106,14 +118,14 @@ class CfiAuthenticator extends AbstractAuthenticator
             // Stocker les données utilisateur en session
             $this->cfiSessionService->setUserData($utilisateurDto->toArray());
 
-            // Créer le CfiUser pour Symfony Security
-            $cfiUser = $this->cfiUserProvider->createUserFromDto($utilisateurDto);
+            // Mettre à jour tracking connexion (loginCount, lastLoginAt)
+            $this->cfiUserSyncService->updateLoginTracking($user);
 
-            // Créer le Passport avec UserBadge et CSRF
+            // Créer le Passport avec UserBadge et CSRF (User Doctrine)
             return new SelfValidatingPassport(
                 new UserBadge(
-                    $cfiUser->getUserIdentifier(),
-                    fn () => $cfiUser
+                    $user->getUserIdentifier(),
+                    fn () => $user
                 ),
                 [
                     new CsrfTokenBadge('authenticate', $csrfToken),
@@ -143,10 +155,12 @@ class CfiAuthenticator extends AbstractAuthenticator
     {
         $user = $token->getUser();
 
-        if ($user instanceof CfiUser) {
+        if ($user instanceof User) {
             $this->logger->info('CFI Authenticator: Authentification réussie, redirection homepage', [
-                'user_id' => $user->getId(),
-                'user_email' => $user->getEmail(),
+                'userId' => $user->getId(),
+                'idCfi' => $user->getIdCfi(),
+                'email' => $user->getEmail(),
+                'loginCount' => $user->getLoginCount(),
             ]);
         }
 

@@ -1,11 +1,11 @@
 security:
     # Pas de password hasher : CFI gère les mots de passe
-    # myCfia est une application cliente sans table User locale
+    # myCfia stocke les utilisateurs en BDD (User entity) mais authentification TOUJOURS via API CFI
 
     providers:
-        # Provider personnalisé CFI
-        cfi_user_provider:
-            id: App\Security\CfiUserProvider
+        # Provider Doctrine : charge les utilisateurs depuis la BDD (User entity)
+        doctrine_user_provider:
+            id: App\Security\DoctrineUserProvider
 
     firewalls:
         dev:
@@ -14,7 +14,7 @@ security:
 
         main:
             lazy: true
-            provider: cfi_user_provider
+            provider: doctrine_user_provider
             # Authenticator personnalisé CFI (remplace form_login)
             custom_authenticators:
                 - App\Security\CfiAuthenticator
