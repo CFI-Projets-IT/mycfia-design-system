@@ -11,6 +11,8 @@ cfi:
       http: "Erreur HTTP %status_code% lors de l'appel a %url%: %content%"
       timeout: "Delai d'attente depasse lors de l'appel a l'API CFI"
       unknown: "Erreur inconnue lors de la communication avec l'API CFI"
+      token_expired: "Votre jeton CFI a expire (TTL 30 min). Veuillez vous reconnecter."
+      access_denied: "Acces refuse par l'API CFI : droits insuffisants pour acceder a cette ressource."
 
   auth:
     error:

@@ -6,7 +6,9 @@ namespace App\Security;
 
 use App\DTO\Cfi\UtilisateurGorilliasDto;
 use App\Entity\User;
+use App\Exception\CfiAccessDeniedException;
 use App\Exception\CfiApiException;
+use App\Exception\CfiTokenExpiredException;
 use App\Service\Cfi\CfiAuthService;
 use App\Service\Cfi\CfiSessionService;
 use App\Service\Cfi\CfiTenantService;
@@ -154,7 +156,27 @@ class CfiAuthenticator extends AbstractAuthenticator
                     new CsrfTokenBadge('authenticate', $csrfToken),
                 ]
             );
+        } catch (CfiTokenExpiredException $e) {
+            // 401 : Token expire ou invalide → nettoyer session et demander reconnexion
+            $this->logger->warning('CFI Authenticator: Token CFI expire ou invalide', [
+                'correlation_id' => $e->getCorrelationId(),
+                'message' => $e->getMessage(),
+            ]);
+
+            // Nettoyer la session CFI
+            $this->cfiSessionService->clear();
+
+            throw new AuthenticationException($this->translator->trans('cfi.auth.error.token_expired', [], 'security'), previous: $e);
+        } catch (CfiAccessDeniedException $e) {
+            // 403 : Acces refuse → droits insuffisants
+            $this->logger->warning('CFI Authenticator: Acces refuse par API CFI', [
+                'correlation_id' => $e->getCorrelationId(),
+                'message' => $e->getMessage(),
+            ]);
+
+            throw new AuthenticationException($this->translator->trans('cfi.auth.error.access_denied', [], 'security'), previous: $e);
         } catch (CfiApiException $e) {
+            // Autres erreurs API CFI (400, 404, 5xx, etc.)
             $this->logger->error('CFI Authenticator: Erreur API CFI', [
                 'message' => $e->getMessage(),
                 'code' => $e->getCode(),
@@ -162,6 +184,7 @@ class CfiAuthenticator extends AbstractAuthenticator
 
             throw new AuthenticationException($this->translator->trans('cfi.auth.error.authentication_failed', [], 'security'), previous: $e);
         } catch (\Exception $e) {
+            // Erreurs inattendues
             $this->logger->error('CFI Authenticator: Erreur inattendue', [
                 'message' => $e->getMessage(),
                 'exception' => $e::class,

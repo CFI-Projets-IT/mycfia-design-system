@@ -27,6 +27,8 @@ cfi:
       empty_credentials: "Email et mot de passe requis."
       invalid_email: "Format d'email invalide."
       invalid_credentials: "Email ou mot de passe incorrect."
+      token_expired: "Votre token CFI a expire (30 minutes). Veuillez vous reconnecter."
+      access_denied: "Acces refuse : vous n'avez pas les droits necessaires pour acceder a cette ressource."
 
 # Labels de formulaire de connexion
 login:
