@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller;
 
 use App\Entity\User;
@@ -17,7 +19,7 @@ class HomeController extends AbstractController
         $user = $this->getUser();
 
         return $this->render('home/index.html.twig', [
-            'firstName' => $user?->getFirstName() ?? 'Utilisateur',
+            'firstName' => $user?->getPrenom() ?? 'Utilisateur',
             'theme' => $user?->getTheme() ?? 'light',
         ]);
     }

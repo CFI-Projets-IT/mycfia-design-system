@@ -1,0 +1,43 @@
+# Traductions pour la securite et l'authentification
+# Domaine : security
+
+# Messages d'erreur d'authentification Symfony Security
+"Invalid credentials.": "Identifiants invalides."
+"Authentication credentials could not be found.": "Aucun identifiant d'authentification trouve."
+"Authentication request could not be processed due to a system problem.": "La demande d'authentification n'a pas pu etre traitee en raison d'un probleme systeme."
+"Invalid CSRF token.": "Jeton CSRF invalide."
+"Access Denied.": "Acces refuse."
+
+# Messages d'erreur personnalises CFI
+cfi_auth_failed: "Echec de l'authentification CFI. Veuillez verifier votre token Gorillias."
+cfi_token_expired: "Votre token a expire. Veuillez generer un nouveau token depuis l'interface CFI."
+cfi_api_error: "Erreur lors de la communication avec l'API CFI. Veuillez reessayer."
+cfi_invalid_clef: "La cle API CFI est invalide ou manquante."
+cfi_session_expired: "Votre session a expire. Veuillez vous reconnecter."
+
+# Messages d'erreur Authenticator CFI
+cfi:
+  user:
+    not_found: "Utilisateur %identifier% introuvable."
+  auth:
+    error:
+      invalid_token: "Token Gorillias invalide. Veuillez verifier le format UUID."
+      authentication_failed: "Echec de l'authentification CFI. Veuillez verifier votre token."
+      unexpected: "Erreur inattendue lors de l'authentification. Veuillez reessayer."
+      empty_credentials: "Email et mot de passe requis."
+      invalid_email: "Format d'email invalide."
+      invalid_credentials: "Email ou mot de passe incorrect."
+      token_expired: "Votre token CFI a expire (30 minutes). Veuillez vous reconnecter."
+      access_denied: "Acces refuse : vous n'avez pas les droits necessaires pour acceder a cette ressource."
+
+# Labels de formulaire de connexion
+login:
+  title: "Connexion myCFiA"
+  username: "Token Gorillias"
+  submit: "Se connecter"
+  help: "Obtenez votre token en vous connectant sur CFI puis en accedant au menu Gorillias"
+
+# Messages de deconnexion
+logout:
+  success: "Vous avez ete deconnecte avec succes."
+  confirm: "Etes-vous sur de vouloir vous deconnecter ?"

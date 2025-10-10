@@ -1,0 +1,70 @@
+# Traductions generales de l'application myCfia
+# Domaine : messages
+
+# === API CFI - Messages d'erreur ===
+cfi:
+  api:
+    error:
+      client: "Erreur client API CFI (HTTP %status_code%): %message%"
+      server: "Erreur serveur API CFI (HTTP %status_code%): %message%"
+      transport: "Erreur reseau lors de la connexion a l'API CFI: %message%"
+      http: "Erreur HTTP %status_code% lors de l'appel a %url%: %content%"
+      timeout: "Delai d'attente depasse lors de l'appel a l'API CFI"
+      unknown: "Erreur inconnue lors de la communication avec l'API CFI"
+      token_expired: "Votre jeton CFI a expire (TTL 30 min). Veuillez vous reconnecter."
+      access_denied: "Acces refuse par l'API CFI : droits insuffisants pour acceder a cette ressource."
+
+  auth:
+    error:
+      invalid_token: "Token Gorillias invalide ou expire"
+      invalid_clef_api: "Cle API CFI invalide"
+      authentication_failed: "Echec de l'authentification CFI"
+      token_expired: "Votre session a expire, veuillez vous reconnecter"
+      unauthorized: "Vous n'etes pas autorise a acceder a cette ressource"
+
+    success:
+      login: "Connexion reussie. Bienvenue %prenom% %nom% !"
+      logout: "Deconnexion reussie. A bientot !"
+
+    label:
+      jeton_utilisateur: "Token Gorillias"
+      submit: "Se connecter"
+      logout: "Deconnexion"
+
+    help:
+      jeton_info: "Obtenez votre token : CFI → Menu Gorillias → Copier le token"
+      session_duration: "Duree de session : 30 minutes"
+
+# === Navigation ===
+nav:
+  home: "Accueil"
+  dashboard: "Tableau de bord"
+  operations: "Operations"
+  stocks: "Stocks"
+  factures: "Factures"
+  settings: "Parametres"
+  account: "Mon compte"
+  logout: "Quitter"
+
+# === Messages generaux ===
+common:
+  welcome: "Bienvenue"
+  loading: "Chargement..."
+  error: "Erreur"
+  success: "Succes"
+  cancel: "Annuler"
+  confirm: "Confirmer"
+  save: "Enregistrer"
+  delete: "Supprimer"
+  edit: "Modifier"
+  back: "Retour"
+
+# === Homepage ===
+home:
+  greeting: "Bonjour %firstName%,"
+  question: "Comment puis-je vous aider aujourd'hui ?"
+  quick_access:
+    factures: "Factures"
+    commandes: "Commandes"
+    stocks: "Stocks"
+    autre: "Autre"

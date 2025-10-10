@@ -1,0 +1,28 @@
+# Traductions pour les validations de formulaires
+# Domaine : validators
+
+# Validations generales
+"This value should not be blank.": "Cette valeur ne doit pas etre vide."
+"This value should not be null.": "Cette valeur ne doit pas etre nulle."
+"This value is too short. It should have {{ limit }} character or more.|This value is too short. It should have {{ limit }} characters or more.": "Cette valeur est trop courte. Elle doit avoir {{ limit }} caractere ou plus.|Cette valeur est trop courte. Elle doit avoir {{ limit }} caracteres ou plus."
+"This value is too long. It should have {{ limit }} character or less.|This value is too long. It should have {{ limit }} characters or less.": "Cette valeur est trop longue. Elle doit avoir {{ limit }} caractere ou moins.|Cette valeur est trop longue. Elle doit avoir {{ limit }} caracteres ou moins."
+"This value should be {{ limit }} or more.": "Cette valeur doit etre {{ limit }} ou plus."
+"This value should be {{ limit }} or less.": "Cette valeur doit etre {{ limit }} ou moins."
+"This value is not a valid email address.": "Cette valeur n'est pas une adresse email valide."
+"This value is not a valid URL.": "Cette valeur n'est pas une URL valide."
+
+# Validations personnalisees CFI
+cfi:
+  jeton:
+    not_blank: "Le token Gorillias est obligatoire."
+    invalid_format: "Le format du token Gorillias est invalide. Format attendu : UUID (ex: 12345678-1234-1234-1234-123456789abc)."
+    too_short: "Le token Gorillias est trop court."
+    expired: "Le token Gorillias a expire. Veuillez en generer un nouveau."
+
+  clef_api:
+    not_blank: "La cle API CFI est obligatoire."
+    invalid: "La cle API CFI est invalide."
+
+  division:
+    not_blank: "L'identifiant de division est obligatoire."
+    invalid: "L'identifiant de division est invalide."
