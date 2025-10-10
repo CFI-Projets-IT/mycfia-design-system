@@ -10,6 +10,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Contracts\Translation\LocaleAwareInterface;
 
 /**
  * Applique automatiquement la locale de l'utilisateur connecté à chaque requête.
@@ -22,6 +23,7 @@ class LocaleSubscriber implements EventSubscriberInterface
 {
     public function __construct(
         private readonly TokenStorageInterface $tokenStorage,
+        private readonly LocaleAwareInterface $translator,
         private readonly LoggerInterface $logger,
         private readonly string $defaultLocale = 'fr',
     ) {
@@ -46,6 +48,7 @@ class LocaleSubscriber implements EventSubscriberInterface
         if (null === $token) {
             $this->logger->debug('LocaleSubscriber: No token, setting default locale', ['locale' => $this->defaultLocale]);
             $request->setLocale($this->defaultLocale);
+            $this->translator->setLocale($this->defaultLocale);
 
             return;
         }
@@ -61,17 +64,19 @@ class LocaleSubscriber implements EventSubscriberInterface
                 'uri' => $request->getRequestUri(),
             ]);
             $request->setLocale($userLocale);
+            $this->translator->setLocale($userLocale);
         } else {
             $this->logger->debug('LocaleSubscriber: User not instance of User, setting default locale', ['locale' => $this->defaultLocale]);
             $request->setLocale($this->defaultLocale);
+            $this->translator->setLocale($this->defaultLocale);
         }
     }
 
     public static function getSubscribedEvents(): array
     {
         return [
-            // Priorité haute (20) pour s'exécuter avant le LocaleListener de Symfony
-            KernelEvents::REQUEST => [['onKernelRequest', 20]],
+            // Priorité 7 pour s'exécuter APRÈS le firewall (priorité 8) et APRÈS l'authentification
+            KernelEvents::REQUEST => [['onKernelRequest', 7]],
         ];
     }
 }

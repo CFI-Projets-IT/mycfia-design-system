@@ -1,0 +1,30 @@
+# English translations for navigation
+# Domain: navigation
+
+# Sidebar sections
+'nav.section.favorites': 'Favorites'
+'nav.section.history': 'History'
+
+# Favorites items
+'nav.favorites.invoices': 'Invoices...'
+'nav.favorites.orders': 'Orders...'
+'nav.favorites.stocks': 'Stock...'
+'nav.favorites.help': 'Help me with...'
+
+# History items (examples)
+'nav.history.last_conversation': 'Last conversation (2h ago)'
+'nav.history.invoices_jan': 'January 2025 invoices (yesterday)'
+'nav.history.stock_analysis': 'Stock analysis (3 days)'
+'nav.history.orders_report': 'Orders report (1 week)'
+'nav.history.data_export': 'Data export (2 weeks)'
+
+# Footer links
+'nav.footer.settings': 'Settings'
+'nav.footer.profile': 'My Account'
+'nav.footer.logout': 'Logout'
+
+# Header
+'nav.header.back_to_cfi': 'Back to MyCFi'
+
+# Theme selector
+'nav.theme.change': 'Change theme'

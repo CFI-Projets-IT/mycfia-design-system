@@ -1,0 +1,48 @@
+# English translations for home page
+# Domain: home
+
+# Page
+'home.page.title': 'Home'
+
+# Greeting
+'home.greeting': 'Hello'
+'home.question': 'How can I help you today?'
+
+# Debug Sprint S0
+'home.debug.title': 'Sprint R1/S0 – Foundation & Auth'
+
+# User Section
+'home.user.section_title': 'User'
+'home.user.id_bdd': 'DB ID'
+'home.user.id_cfi': 'CFI ID'
+'home.user.email': 'Email'
+'home.user.fullname': 'Full Name'
+'home.user.theme': 'Theme'
+'home.user.locale': 'Locale'
+'home.user.type_option_ga': 'GA Option Type'
+'home.user.login_count': 'Logins'
+'home.user.login_count_times': 'times'
+'home.user.last_login': 'Last Login'
+'home.user.created_at': 'Created At'
+'home.user.updated_at': 'Updated At'
+
+# Division Section
+'home.division.section_title': 'Division (Multi-Tenancy)'
+'home.division.id_bdd': 'DB ID'
+'home.division.id_cfi': 'CFI Division ID'
+'home.division.name': 'Name'
+'home.division.slug': 'Slug (Gedmo)'
+'home.division.status': 'Status'
+'home.division.status_active': 'Active'
+'home.division.status_inactive': 'Inactive'
+'home.division.users': 'Users'
+'home.division.users_count': 'user(s)'
+'home.division.created_at': 'Created At'
+'home.division.updated_at': 'Updated At'
+'home.division.no_division': 'No associated division'
+
+# Quick Access
+'home.quick_access.invoices': 'Invoices'
+'home.quick_access.orders': 'Orders'
+'home.quick_access.stocks': 'Stocks'
+'home.quick_access.other': 'Other'
