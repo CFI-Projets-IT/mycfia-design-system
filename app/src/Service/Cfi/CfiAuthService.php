@@ -107,6 +107,84 @@ class CfiAuthService
     }
 
     /**
+     * Authentifie un utilisateur via email/password CFI (endpoint futur).
+     *
+     * Cette méthode est préparée en anticipation de l'endpoint
+     * /Utilisateurs/authenticate qui sera fourni par CFI.
+     *
+     * @param string $email    Email de l'utilisateur CFI
+     * @param string $password Mot de passe de l'utilisateur CFI
+     *
+     * @return UtilisateurGorilliasDto Donnees utilisateur + token CFI (jeton)
+     *
+     * @throws CfiApiException           Si l'authentification echoue
+     * @throws \RuntimeException         Si l'endpoint n'est pas encore disponible
+     * @throws \InvalidArgumentException Si les credentials sont invalides
+     */
+    public function authenticateWithCredentials(string $email, string $password): UtilisateurGorilliasDto
+    {
+        // Validation basique des credentials
+        if (empty($email) || empty($password)) {
+            throw new \InvalidArgumentException($this->translator->trans('cfi.auth.error.empty_credentials', [], 'security'));
+        }
+
+        if (! filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            throw new \InvalidArgumentException($this->translator->trans('cfi.auth.error.invalid_email', [], 'security'));
+        }
+
+        // TODO: Remplacer cette exception par l'appel API réel quand l'endpoint sera disponible
+        // Endpoint futur attendu : POST /Utilisateurs/authenticate
+        // Body: { email: string, password: string, clefApi: string }
+        // Response: même structure que getUtilisateurGorillias
+        throw new \RuntimeException('Authentification par email/password pas encore disponible. En attente de l\'endpoint /Utilisateurs/authenticate de CFI. Utilisez le mode Token Gorillias pour le moment.');
+
+        /*
+        // Code à activer quand l'endpoint CFI sera disponible :
+        try {
+            $this->logger->info('CFI Credentials Authentication Request', [
+                'email' => $email,
+                'endpoint' => '/Utilisateurs/authenticate',
+            ]);
+
+            $response = $this->cfiApiService->post(
+                '/Utilisateurs/authenticate',
+                [
+                    'email' => $email,
+                    'password' => $password,
+                    'clefApi' => $this->clefApi,
+                ]
+            );
+
+            $utilisateur = UtilisateurGorilliasDto::fromArray($response);
+
+            $this->logger->info('CFI Credentials Authentication Success', [
+                'user_id' => $utilisateur->id,
+                'division' => $utilisateur->nomDivision,
+                'email' => $utilisateur->email,
+            ]);
+
+            return $utilisateur;
+        } catch (CfiApiException $e) {
+            $this->logger->error('CFI Credentials Authentication Failed', [
+                'email' => $email,
+                'error' => $e->getMessage(),
+                'code' => $e->getCode(),
+            ]);
+
+            if (401 === $e->getCode()) {
+                throw new CfiApiException(
+                    $this->translator->trans('cfi.auth.error.invalid_credentials', [], 'security'),
+                    $e->getCode(),
+                    $e
+                );
+            }
+
+            throw $e;
+        }
+        */
+    }
+
+    /**
      * Verifie si un token Gorillias est au bon format (UUID).
      */
     public function isValidTokenFormat(string $token): bool

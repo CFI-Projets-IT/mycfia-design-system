@@ -24,6 +24,9 @@ cfi:
       invalid_token: "Token Gorillias invalide. Veuillez verifier le format UUID."
       authentication_failed: "Echec de l'authentification CFI. Veuillez verifier votre token."
       unexpected: "Erreur inattendue lors de l'authentification. Veuillez reessayer."
+      empty_credentials: "Email et mot de passe requis."
+      invalid_email: "Format d'email invalide."
+      invalid_credentials: "Email ou mot de passe incorrect."
 
 # Labels de formulaire de connexion
 login:

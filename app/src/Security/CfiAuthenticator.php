@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Security;
 
+use App\DTO\Cfi\UtilisateurGorilliasDto;
 use App\Entity\User;
 use App\Exception\CfiApiException;
 use App\Service\Cfi\CfiAuthService;
@@ -27,19 +28,24 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 /**
  * Authenticator personnalisé pour l'authentification via API CFI.
  *
- * Workflow :
- * 1. User soumet formulaire avec jetonUtilisateur (Token Gorillias)
+ * Supporte 2 modes d'authentification :
+ *
+ * MODE TOKEN (actuel - dev) :
+ * 1. User soumet formulaire avec jetonUtilisateur (Token Gorillias) + mode=token
  * 2. Appel API CFI /Utilisateurs/getUtilisateurGorillias
  * 3. Réception user data + jeton CFI
+ *
+ * MODE CREDENTIALS (futur - prod) :
+ * 1. User soumet formulaire avec email + password + mode=credentials
+ * 2. Appel API CFI /Utilisateurs/authenticate (endpoint en attente)
+ * 3. Réception user data + jeton CFI (même structure)
+ *
+ * WORKFLOW COMMUN (après authentification API) :
  * 4. Synchronisation User et Division en BDD (upsert)
  * 5. Stockage jeton CFI en session (TTL 30 min)
  * 6. Mise à jour tracking connexion (loginCount, lastLoginAt)
  * 7. Authentification Symfony avec User Doctrine
  * 8. Redirection vers homepage
- *
- * TODO Sprint S0+ : Ajouter workflow authentification email/password direct
- * Quand CFI fournira l'endpoint dédié, remplacer getUtilisateurGorillias
- * par l'endpoint d'authentification par credentials.
  */
 class CfiAuthenticator extends AbstractAuthenticator
 {
@@ -56,39 +62,56 @@ class CfiAuthenticator extends AbstractAuthenticator
 
     /**
      * Détermine si cet authenticator doit être utilisé pour cette requête.
+     *
+     * Supporte 2 modes :
+     * - mode=token : requiert jetonUtilisateur
+     * - mode=credentials : requiert email + password
      */
     public function supports(Request $request): ?bool
     {
-        return $request->isMethod('POST')
-            && '/login' === $request->getPathInfo()
-            && null !== $request->request->get('jetonUtilisateur');
+        if (! $request->isMethod('POST') || '/login' !== $request->getPathInfo()) {
+            return false;
+        }
+
+        $mode = $request->request->get('mode', 'token');
+
+        // Mode token : vérifier présence du jetonUtilisateur
+        if ('token' === $mode) {
+            return null !== $request->request->get('jetonUtilisateur');
+        }
+
+        // Mode credentials : vérifier présence email + password
+        if ('credentials' === $mode) {
+            return null !== $request->request->get('email')
+                && null !== $request->request->get('password');
+        }
+
+        return false;
     }
 
     /**
      * Authentifie l'utilisateur via l'API CFI.
+     *
+     * Détecte automatiquement le mode d'authentification (token vs credentials)
+     * et route vers la bonne méthode du CfiAuthService.
      */
     public function authenticate(Request $request): Passport
     {
-        $jetonUtilisateur = $request->request->get('jetonUtilisateur', '');
+        $mode = $request->request->get('mode', 'token');
         $csrfToken = $request->request->get('_csrf_token', '');
 
         $this->logger->info('CFI Authenticator: Tentative d\'authentification', [
-            'jeton_length' => strlen($jetonUtilisateur),
+            'mode' => $mode,
             'has_csrf' => ! empty($csrfToken),
         ]);
 
-        // Validation format token Gorillias
-        if (empty($jetonUtilisateur) || ! $this->cfiAuthService->isValidTokenFormat($jetonUtilisateur)) {
-            $this->logger->warning('CFI Authenticator: Token Gorillias invalide', [
-                'jeton' => substr($jetonUtilisateur, 0, 8).'...',
-            ]);
-
-            throw new AuthenticationException($this->translator->trans('cfi.auth.error.invalid_token', [], 'security'));
-        }
-
         try {
-            // Appel API CFI pour authentification
-            $utilisateurDto = $this->cfiAuthService->authenticate($jetonUtilisateur);
+            // Router vers la bonne méthode selon le mode
+            if ('token' === $mode) {
+                $utilisateurDto = $this->authenticateWithToken($request);
+            } else {
+                $utilisateurDto = $this->authenticateWithCredentials($request);
+            }
 
             $this->logger->info('CFI Authenticator: Authentification API réussie', [
                 'user_id' => $utilisateurDto->id,
@@ -182,5 +205,46 @@ class CfiAuthenticator extends AbstractAuthenticator
 
         // Redirection vers formulaire login avec erreur
         return new RedirectResponse($this->urlGenerator->generate('app_login'));
+    }
+
+    /**
+     * Authentification via Token Gorillias (mode actuel).
+     */
+    private function authenticateWithToken(Request $request): UtilisateurGorilliasDto
+    {
+        $jetonUtilisateur = $request->request->get('jetonUtilisateur', '');
+
+        // Validation format token Gorillias
+        if (empty($jetonUtilisateur) || ! $this->cfiAuthService->isValidTokenFormat($jetonUtilisateur)) {
+            $this->logger->warning('CFI Authenticator: Token Gorillias invalide', [
+                'jeton' => substr($jetonUtilisateur, 0, 8).'...',
+            ]);
+
+            throw new AuthenticationException($this->translator->trans('cfi.auth.error.invalid_token', [], 'security'));
+        }
+
+        // Appel API CFI pour authentification
+        return $this->cfiAuthService->authenticate($jetonUtilisateur);
+    }
+
+    /**
+     * Authentification via Email/Password (mode futur).
+     */
+    private function authenticateWithCredentials(Request $request): UtilisateurGorilliasDto
+    {
+        $email = $request->request->get('email', '');
+        $password = $request->request->get('password', '');
+
+        $this->logger->info('CFI Authenticator: Tentative authentification credentials', [
+            'email' => $email,
+        ]);
+
+        // Validation basique
+        if (empty($email) || empty($password)) {
+            throw new AuthenticationException($this->translator->trans('cfi.auth.error.empty_credentials', [], 'security'));
+        }
+
+        // Appel API CFI pour authentification (stub pour l'instant)
+        return $this->cfiAuthService->authenticateWithCredentials($email, $password);
     }
 }

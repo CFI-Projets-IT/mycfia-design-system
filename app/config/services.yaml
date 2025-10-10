@@ -11,6 +11,10 @@ parameters:
     cfi.token.ttl: '%env(int:CFI_TOKEN_TTL)%'
     cfi.token.refresh_threshold: '%env(int:CFI_TOKEN_REFRESH_THRESHOLD)%'
 
+    # Feature Flags - Authentification
+    # Activer le mode d'authentification email/password (false en attendant endpoint CFI)
+    cfi.auth.credentials_enabled: false
+
 services:
     # default configuration for services in *this* file
     _defaults:
