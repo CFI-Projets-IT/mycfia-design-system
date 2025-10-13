@@ -3,177 +3,165 @@
 {% block title %}{{ 'settings.page.title'|trans({}, 'settings') }} - myCFiia{% endblock %}
 
 {% block content %}
-<div class="container py-5">
-    <div class="row justify-content-center">
-        <div class="col-lg-10 col-xl-8">
-            {# Flash Messages #}
-            {% for message in app.flashes('success') %}
-                <div class="alert alert-success alert-dismissible fade show mb-4" role="alert">
-                    <i class="bi bi-check-circle me-2"></i>
-                    {{ message }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            {% endfor %}
+<div class="container" style="max-width: 1000px;">
+    <div class="text-center py-5">
+        {# Flash Messages #}
+        {% for message in app.flashes('success') %}
+            <div class="alert alert-success alert-dismissible fade show mb-4" role="alert">
+                <i class="bi bi-check-circle me-2"></i>
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
 
-            {% for message in app.flashes('error') %}
-                <div class="alert alert-danger alert-dismissible fade show mb-4" role="alert">
-                    <i class="bi bi-exclamation-triangle me-2"></i>
-                    {{ message }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            {% endfor %}
+        {% for message in app.flashes('error') %}
+            <div class="alert alert-danger alert-dismissible fade show mb-4" role="alert">
+                <i class="bi bi-exclamation-triangle me-2"></i>
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
 
-            {# En-tête #}
-            <div class="mb-5 text-center">
-                <h1 class="h2 fw-bold text-primary mb-2">
-                    <i class="bi bi-gear me-2"></i>{{ 'settings.page.title'|trans({}, 'settings') }}
-                </h1>
-                <p class="text-muted fs-5">
-                    {{ 'settings.page.description'|trans({}, 'settings') }}
-                </p>
+        {# En-tête #}
+        <div class="d-inline-block text-start mb-5">
+            <h1 class="fs-1 fw-semibold mb-2 text-primary">
+                {{ 'settings.page.title'|trans({}, 'settings') }}
+            </h1>
+            <p class="fs-4 fw-medium text-primary mb-0">{{ 'settings.page.description'|trans({}, 'settings') }}</p>
+        </div>
+
+        {# Formulaire de paramètres #}
+        <form method="post" action="{{ path('settings_update') }}">
+            {# Section Apparence #}
+            <div class="card shadow-sm mb-4 text-start">
+                <div class="card-header bg-primary text-white d-flex align-items-center gap-2">
+                    <i class="bi bi-palette"></i>
+                    <strong>{{ 'settings.section.appearance.title'|trans({}, 'settings') }}</strong>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        {# Sélecteur de thème #}
+                        <div class="col-md-6">
+                            <h5 class="text-primary mb-3">
+                                <i class="bi bi-brush me-2"></i>{{ 'settings.field.theme.label'|trans({}, 'settings') }}
+                            </h5>
+                            <div class="d-grid gap-2">
+                                <input type="radio" class="btn-check" name="theme" id="theme-light" value="light"
+                                       {% if user.theme == 'light' %}checked{% endif %} autocomplete="off">
+                                <label class="btn btn-outline-primary d-flex align-items-center justify-content-start gap-2" for="theme-light">
+                                    <i class="bi bi-sun-fill"></i>
+                                    <span>{{ 'settings.field.theme.light'|trans({}, 'settings') }}</span>
+                                </label>
+
+                                <input type="radio" class="btn-check" name="theme" id="theme-dark-blue" value="dark-blue"
+                                       {% if user.theme == 'dark-blue' %}checked{% endif %} autocomplete="off">
+                                <label class="btn btn-outline-primary d-flex align-items-center justify-content-start gap-2" for="theme-dark-blue">
+                                    <i class="bi bi-moon-stars-fill"></i>
+                                    <span>{{ 'settings.field.theme.dark_blue'|trans({}, 'settings') }}</span>
+                                </label>
+
+                                <input type="radio" class="btn-check" name="theme" id="theme-dark-red" value="dark-red"
+                                       {% if user.theme == 'dark-red' %}checked{% endif %} autocomplete="off">
+                                <label class="btn btn-outline-primary d-flex align-items-center justify-content-start gap-2" for="theme-dark-red">
+                                    <i class="bi bi-moon-fill"></i>
+                                    <span>{{ 'settings.field.theme.dark_red'|trans({}, 'settings') }}</span>
+                                </label>
+                            </div>
+                            <small class="form-text text-muted d-block mt-2">
+                                {{ 'settings.field.theme.help'|trans({}, 'settings') }}
+                            </small>
+                        </div>
+
+                        {# Sélecteur de langue #}
+                        <div class="col-md-6">
+                            <h5 class="text-primary mb-3">
+                                <i class="bi bi-translate me-2"></i>{{ 'settings.field.locale.label'|trans({}, 'settings') }}
+                            </h5>
+                            <div class="d-grid gap-2">
+                                <input type="radio" class="btn-check" name="locale" id="locale-fr" value="fr"
+                                       {% if user.locale == 'fr' %}checked{% endif %} autocomplete="off">
+                                <label class="btn btn-outline-primary d-flex align-items-center justify-content-start gap-2" for="locale-fr">
+                                    <span class="fs-5">🇫🇷</span>
+                                    <span>{{ 'settings.field.locale.french'|trans({}, 'settings') }}</span>
+                                </label>
+
+                                <input type="radio" class="btn-check" name="locale" id="locale-en" value="en"
+                                       {% if user.locale == 'en' %}checked{% endif %} autocomplete="off">
+                                <label class="btn btn-outline-primary d-flex align-items-center justify-content-start gap-2" for="locale-en">
+                                    <span class="fs-5">🇬🇧</span>
+                                    <span>{{ 'settings.field.locale.english'|trans({}, 'settings') }}</span>
+                                </label>
+                            </div>
+                            <small class="form-text text-muted d-block mt-2">
+                                {{ 'settings.field.locale.help'|trans({}, 'settings') }}
+                            </small>
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            {# Formulaire de paramètres #}
-            <form method="post" action="{{ path('settings_update') }}">
-                <div class="row g-4 mb-4">
-                    {# Colonne Apparence #}
-                    <div class="col-md-6">
-                        <div class="card h-100 shadow-sm border-0">
-                            <div class="card-header bg-primary text-white d-flex align-items-center gap-2">
-                                <i class="bi bi-palette fs-5"></i>
-                                <strong>{{ 'settings.section.appearance.title'|trans({}, 'settings') }}</strong>
-                            </div>
-                            <div class="card-body">
-                                {# Sélecteur de thème #}
-                                <div class="mb-4">
-                                    <label class="form-label fw-semibold text-primary">
-                                        <i class="bi bi-brush me-2"></i>{{ 'settings.field.theme.label'|trans({}, 'settings') }}
-                                    </label>
-                                    <div class="d-grid gap-2">
-                                        <input type="radio" class="btn-check" name="theme" id="theme-light" value="light"
-                                               {% if user.theme == 'light' %}checked{% endif %} autocomplete="off">
-                                        <label class="btn btn-outline-primary d-flex align-items-center justify-content-start gap-2" for="theme-light">
-                                            <i class="bi bi-sun-fill"></i>
-                                            <span>{{ 'settings.field.theme.light'|trans({}, 'settings') }}</span>
-                                        </label>
+            {# Section Informations du compte #}
+            <div class="card shadow-sm mb-4 text-start">
+                <div class="card-header bg-primary text-white d-flex align-items-center gap-2">
+                    <i class="bi bi-info-circle"></i>
+                    <strong>{{ 'settings.section.account.title'|trans({}, 'settings') }}</strong>
+                </div>
+                <div class="card-body">
+                    <table class="table table-sm table-hover">
+                        <tbody>
+                            <tr>
+                                <th class="text-muted" style="width: 40%;">
+                                    <i class="bi bi-person me-2"></i>{{ 'settings.field.fullname.label'|trans({}, 'settings') }}
+                                </th>
+                                <td><strong>{{ user.fullName }}</strong></td>
+                            </tr>
+                            <tr>
+                                <th class="text-muted">
+                                    <i class="bi bi-envelope me-2"></i>{{ 'settings.field.email.label'|trans({}, 'settings') }}
+                                </th>
+                                <td>{{ user.email }}</td>
+                            </tr>
+                            <tr>
+                                <th class="text-muted">
+                                    <i class="bi bi-building me-2"></i>{{ 'settings.field.organization.label'|trans({}, 'settings') }}
+                                </th>
+                                <td>
+                                    {% if user.division %}
+                                        <strong>{{ user.division.nomDivision }}</strong>
+                                    {% else %}
+                                        <span class="text-muted">-</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            <tr>
+                                <th class="text-muted">
+                                    <i class="bi bi-key me-2"></i>{{ 'settings.field.id_cfi.label'|trans({}, 'settings') }}
+                                </th>
+                                <td><code class="text-info">{{ user.idCfi }}</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
 
-                                        <input type="radio" class="btn-check" name="theme" id="theme-dark-blue" value="dark-blue"
-                                               {% if user.theme == 'dark-blue' %}checked{% endif %} autocomplete="off">
-                                        <label class="btn btn-outline-primary d-flex align-items-center justify-content-start gap-2" for="theme-dark-blue">
-                                            <i class="bi bi-moon-stars-fill"></i>
-                                            <span>{{ 'settings.field.theme.dark_blue'|trans({}, 'settings') }}</span>
-                                        </label>
-
-                                        <input type="radio" class="btn-check" name="theme" id="theme-dark-red" value="dark-red"
-                                               {% if user.theme == 'dark-red' %}checked{% endif %} autocomplete="off">
-                                        <label class="btn btn-outline-primary d-flex align-items-center justify-content-start gap-2" for="theme-dark-red">
-                                            <i class="bi bi-moon-fill"></i>
-                                            <span>{{ 'settings.field.theme.dark_red'|trans({}, 'settings') }}</span>
-                                        </label>
-                                    </div>
-                                    <small class="form-text text-muted d-block mt-2">
-                                        {{ 'settings.field.theme.help'|trans({}, 'settings') }}
-                                    </small>
-                                </div>
-
-                                {# Sélecteur de langue #}
-                                <div>
-                                    <label class="form-label fw-semibold text-primary">
-                                        <i class="bi bi-translate me-2"></i>{{ 'settings.field.locale.label'|trans({}, 'settings') }}
-                                    </label>
-                                    <div class="d-grid gap-2">
-                                        <input type="radio" class="btn-check" name="locale" id="locale-fr" value="fr"
-                                               {% if user.locale == 'fr' %}checked{% endif %} autocomplete="off">
-                                        <label class="btn btn-outline-primary d-flex align-items-center justify-content-start gap-2" for="locale-fr">
-                                            <span class="fs-5">🇫🇷</span>
-                                            <span>{{ 'settings.field.locale.french'|trans({}, 'settings') }}</span>
-                                        </label>
-
-                                        <input type="radio" class="btn-check" name="locale" id="locale-en" value="en"
-                                               {% if user.locale == 'en' %}checked{% endif %} autocomplete="off">
-                                        <label class="btn btn-outline-primary d-flex align-items-center justify-content-start gap-2" for="locale-en">
-                                            <span class="fs-5">🇬🇧</span>
-                                            <span>{{ 'settings.field.locale.english'|trans({}, 'settings') }}</span>
-                                        </label>
-                                    </div>
-                                    <small class="form-text text-muted d-block mt-2">
-                                        {{ 'settings.field.locale.help'|trans({}, 'settings') }}
-                                    </small>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    {# Colonne Informations du compte #}
-                    <div class="col-md-6">
-                        <div class="card h-100 shadow-sm border-0">
-                            <div class="card-header bg-secondary text-white d-flex align-items-center gap-2">
-                                <i class="bi bi-info-circle fs-5"></i>
-                                <strong>{{ 'settings.section.account.title'|trans({}, 'settings') }}</strong>
-                            </div>
-                            <div class="card-body">
-                                <table class="table table-sm table-hover mb-0">
-                                    <tbody>
-                                        <tr>
-                                            <td class="text-muted fw-semibold">
-                                                <i class="bi bi-person me-2"></i>{{ 'settings.field.fullname.label'|trans({}, 'settings') }}
-                                            </td>
-                                            <td class="text-end">
-                                                <strong class="text-primary">{{ user.fullName }}</strong>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="text-muted fw-semibold">
-                                                <i class="bi bi-envelope me-2"></i>{{ 'settings.field.email.label'|trans({}, 'settings') }}
-                                            </td>
-                                            <td class="text-end">{{ user.email }}</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="text-muted fw-semibold">
-                                                <i class="bi bi-building me-2"></i>{{ 'settings.field.organization.label'|trans({}, 'settings') }}
-                                            </td>
-                                            <td class="text-end">
-                                                <span class="badge bg-info">{{ user.division ? user.division.nomDivision : '-' }}</span>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="text-muted fw-semibold">
-                                                <i class="bi bi-key me-2"></i>{{ 'settings.field.id_cfi.label'|trans({}, 'settings') }}
-                                            </td>
-                                            <td class="text-end">
-                                                <code class="text-info">{{ user.idCfi }}</code>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-
-                                <div class="alert alert-info mb-0 mt-4">
-                                    <div class="d-flex gap-2">
-                                        <i class="bi bi-lightbulb-fill flex-shrink-0"></i>
-                                        <div class="small">
-                                            {{ 'settings.account.info'|trans({}, 'settings') }}
-                                            <a href="https://test.cfitech.io/" target="_blank" class="alert-link d-block mt-2">
-                                                <i class="bi bi-box-arrow-up-right me-1"></i>{{ 'settings.account.open_cfi'|trans({}, 'settings') }}
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                    <div class="alert alert-info mt-4">
+                        <i class="bi bi-lightbulb-fill me-2"></i>
+                        {{ 'settings.account.info'|trans({}, 'settings') }}
+                        <a href="https://test.cfitech.io/" target="_blank" class="alert-link d-block mt-2">
+                            <i class="bi bi-box-arrow-up-right me-1"></i>{{ 'settings.account.open_cfi'|trans({}, 'settings') }}
+                        </a>
                     </div>
                 </div>
+            </div>
 
-                {# Boutons d'action #}
-                <div class="d-flex gap-3 justify-content-between mt-4">
-                    <a href="{{ path('home_index') }}" class="btn btn-outline-secondary btn-lg">
-                        <i class="bi bi-arrow-left me-2"></i>{{ 'settings.button.cancel'|trans({}, 'settings') }}
-                    </a>
-                    <button type="submit" class="btn btn-primary btn-lg">
-                        <i class="bi bi-check-circle me-2"></i>{{ 'settings.button.save'|trans({}, 'settings') }}
-                    </button>
-                </div>
-            </form>
-        </div>
+            {# Boutons d'action #}
+            <div class="d-flex justify-content-center gap-3 flex-wrap">
+                <a href="{{ path('home_index') }}" class="btn btn-outline-secondary btn-lg">
+                    <i class="bi bi-arrow-left me-2"></i>{{ 'settings.button.cancel'|trans({}, 'settings') }}
+                </a>
+                <button type="submit" class="btn btn-primary btn-lg">
+                    <i class="bi bi-check-circle me-2"></i>{{ 'settings.button.save'|trans({}, 'settings') }}
+                </button>
+            </div>
+        </form>
     </div>
 </div>
 {% endblock %}

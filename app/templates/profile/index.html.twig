@@ -3,202 +3,177 @@
 {% block title %}{{ 'profile.page.title'|trans({}, 'profile') }} - myCFiia{% endblock %}
 
 {% block content %}
-<div class="container py-5">
-    <div class="row justify-content-center">
-        <div class="col-lg-10 col-xl-8">
-            {# En-tête #}
-            <div class="mb-5 text-center">
-                <h1 class="h2 fw-bold text-primary mb-2">
-                    <i class="bi bi-person-circle me-2"></i>{{ 'profile.page.title'|trans({}, 'profile') }}
-                </h1>
-                <p class="text-muted fs-5">
-                    {{ 'profile.page.description'|trans({}, 'profile') }}
-                </p>
+<div class="container" style="max-width: 1000px;">
+    <div class="text-center py-5">
+        {# En-tête #}
+        <div class="d-inline-block text-start mb-5">
+            <h1 class="fs-1 fw-semibold mb-2 text-primary">
+                {{ 'profile.page.title'|trans({}, 'profile') }}
+            </h1>
+            <p class="fs-4 fw-medium text-primary mb-0">{{ 'profile.page.description'|trans({}, 'profile') }}</p>
+        </div>
+
+        {# Informations personnelles et préférences #}
+        <div class="card shadow-sm mb-4 text-start">
+            <div class="card-header bg-primary text-white d-flex align-items-center gap-2">
+                <i class="bi bi-person-badge"></i>
+                <strong>{{ 'profile.section.info.title'|trans({}, 'profile') }}</strong>
             </div>
-
-            <div class="row g-4 mb-4">
-                {# Colonne Informations personnelles #}
-                <div class="col-lg-6">
-                    <div class="card h-100 shadow-sm border-0">
-                        <div class="card-header bg-primary text-white d-flex align-items-center gap-2">
-                            <i class="bi bi-person-badge fs-5"></i>
-                            <strong>{{ 'profile.section.info.title'|trans({}, 'profile') }}</strong>
-                        </div>
-                        <div class="card-body">
-                            <table class="table table-sm table-hover mb-0">
-                                <tbody>
-                                    <tr>
-                                        <td class="text-muted fw-semibold">
-                                            <i class="bi bi-person me-2"></i>{{ 'profile.field.fullname.label'|trans({}, 'profile') }}
-                                        </td>
-                                        <td class="text-end">
-                                            <strong class="text-primary fs-5">{{ user.fullName }}</strong>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="text-muted fw-semibold">
-                                            <i class="bi bi-envelope me-2"></i>{{ 'profile.field.email.label'|trans({}, 'profile') }}
-                                        </td>
-                                        <td class="text-end">{{ user.email }}</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="text-muted fw-semibold">
-                                            <i class="bi bi-building me-2"></i>{{ 'profile.field.organization.label'|trans({}, 'profile') }}
-                                        </td>
-                                        <td class="text-end">
-                                            {% if user.division %}
-                                                <span class="badge bg-info">{{ user.division.nomDivision }}</span>
-                                            {% else %}
-                                                <span class="text-muted">-</span>
-                                            {% endif %}
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="text-muted fw-semibold">
-                                            <i class="bi bi-key me-2"></i>{{ 'profile.field.id_cfi.label'|trans({}, 'profile') }}
-                                        </td>
-                                        <td class="text-end">
-                                            <code class="text-info">{{ user.idCfi }}</code>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
+            <div class="card-body">
+                <div class="row">
+                    {# Colonne gauche : Informations personnelles #}
+                    <div class="col-md-6">
+                        <h5 class="text-primary mb-3">
+                            <i class="bi bi-person-circle me-2"></i>{{ 'profile.field.fullname.label'|trans({}, 'profile') }}
+                        </h5>
+                        <table class="table table-sm table-hover">
+                            <tbody>
+                                <tr>
+                                    <th class="text-muted" style="width: 40%;">{{ 'profile.field.fullname.label'|trans({}, 'profile') }}</th>
+                                    <td><strong>{{ user.fullName }}</strong></td>
+                                </tr>
+                                <tr>
+                                    <th class="text-muted">{{ 'profile.field.email.label'|trans({}, 'profile') }}</th>
+                                    <td>{{ user.email }}</td>
+                                </tr>
+                                <tr>
+                                    <th class="text-muted">{{ 'profile.field.organization.label'|trans({}, 'profile') }}</th>
+                                    <td>
+                                        {% if user.division %}
+                                            <strong>{{ user.division.nomDivision }}</strong>
+                                        {% else %}
+                                            <span class="text-muted">-</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th class="text-muted">{{ 'profile.field.id_cfi.label'|trans({}, 'profile') }}</th>
+                                    <td><code class="text-info">{{ user.idCfi }}</code></td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
-                </div>
 
-                {# Colonne Préférences #}
-                <div class="col-lg-6">
-                    <div class="card h-100 shadow-sm border-0">
-                        <div class="card-header bg-info text-white d-flex align-items-center gap-2">
-                            <i class="bi bi-sliders fs-5"></i>
-                            <strong>{{ 'profile.section.preferences.title'|trans({}, 'profile') }}</strong>
+                    {# Colonne droite : Préférences #}
+                    <div class="col-md-6">
+                        <h5 class="text-primary mb-3">
+                            <i class="bi bi-sliders me-2"></i>{{ 'profile.section.preferences.title'|trans({}, 'profile') }}
+                        </h5>
+
+                        <div class="mb-4">
+                            <div class="text-muted small fw-semibold mb-2">
+                                <i class="bi bi-brush me-2"></i>{{ 'profile.preferences.theme.label'|trans({}, 'profile') }}
+                            </div>
+                            <div class="d-flex align-items-center gap-2">
+                                {% if user.theme == 'light' %}
+                                    <i class="bi bi-sun-fill text-warning fs-4"></i>
+                                    <span>{{ 'profile.preferences.theme.light'|trans({}, 'profile') }}</span>
+                                {% elseif user.theme == 'dark-blue' %}
+                                    <i class="bi bi-moon-stars-fill text-primary fs-4"></i>
+                                    <span>{{ 'profile.preferences.theme.dark_blue'|trans({}, 'profile') }}</span>
+                                {% elseif user.theme == 'dark-red' %}
+                                    <i class="bi bi-moon-fill text-danger fs-4"></i>
+                                    <span>{{ 'profile.preferences.theme.dark_red'|trans({}, 'profile') }}</span>
+                                {% endif %}
+                            </div>
                         </div>
-                        <div class="card-body">
-                            <div class="mb-4">
-                                <div class="text-muted small fw-semibold mb-2">
-                                    <i class="bi bi-brush me-2"></i>{{ 'profile.preferences.theme.label'|trans({}, 'profile') }}
-                                </div>
-                                <div class="d-flex align-items-center gap-2">
-                                    {% if user.theme == 'light' %}
-                                        <i class="bi bi-sun-fill text-warning fs-4"></i>
-                                        <span class="badge bg-warning text-dark">{{ 'profile.preferences.theme.light'|trans({}, 'profile') }}</span>
-                                    {% elseif user.theme == 'dark-blue' %}
-                                        <i class="bi bi-moon-stars-fill text-primary fs-4"></i>
-                                        <span class="badge bg-primary">{{ 'profile.preferences.theme.dark_blue'|trans({}, 'profile') }}</span>
-                                    {% elseif user.theme == 'dark-red' %}
-                                        <i class="bi bi-moon-fill text-danger fs-4"></i>
-                                        <span class="badge bg-danger">{{ 'profile.preferences.theme.dark_red'|trans({}, 'profile') }}</span>
-                                    {% endif %}
-                                </div>
-                            </div>
 
-                            <div class="mb-4">
-                                <div class="text-muted small fw-semibold mb-2">
-                                    <i class="bi bi-translate me-2"></i>{{ 'profile.preferences.locale.label'|trans({}, 'profile') }}
-                                </div>
-                                <div class="d-flex align-items-center gap-2">
-                                    {% if user.locale == 'fr' %}
-                                        <span class="fs-4">🇫🇷</span>
-                                        <span class="badge bg-secondary">{{ 'profile.preferences.locale.french'|trans({}, 'profile') }}</span>
-                                    {% else %}
-                                        <span class="fs-4">🇬🇧</span>
-                                        <span class="badge bg-secondary">{{ 'profile.preferences.locale.english'|trans({}, 'profile') }}</span>
-                                    {% endif %}
-                                </div>
+                        <div class="mb-4">
+                            <div class="text-muted small fw-semibold mb-2">
+                                <i class="bi bi-translate me-2"></i>{{ 'profile.preferences.locale.label'|trans({}, 'profile') }}
                             </div>
+                            <div class="d-flex align-items-center gap-2">
+                                {% if user.locale == 'fr' %}
+                                    <span class="fs-4">🇫🇷</span>
+                                    <span>{{ 'profile.preferences.locale.french'|trans({}, 'profile') }}</span>
+                                {% else %}
+                                    <span class="fs-4">🇬🇧</span>
+                                    <span>{{ 'profile.preferences.locale.english'|trans({}, 'profile') }}</span>
+                                {% endif %}
+                            </div>
+                        </div>
 
-                            <div class="text-center mt-4">
-                                <a href="{{ path('settings_index') }}" class="btn btn-outline-primary">
-                                    <i class="bi bi-gear me-2"></i>{{ 'profile.button.edit_settings'|trans({}, 'profile') }}
-                                </a>
-                            </div>
+                        <div>
+                            <a href="{{ path('settings_index') }}" class="btn btn-outline-primary">
+                                <i class="bi bi-gear me-2"></i>{{ 'profile.button.edit_settings'|trans({}, 'profile') }}
+                            </a>
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
 
-            {# Statistiques d'utilisation #}
-            <div class="card shadow-sm border-0 mb-4">
-                <div class="card-header bg-secondary text-white d-flex align-items-center gap-2">
-                    <i class="bi bi-graph-up fs-5"></i>
-                    <strong>{{ 'profile.section.stats.title'|trans({}, 'profile') }}</strong>
-                </div>
-                <div class="card-body">
-                    <div class="row g-3">
-                        {# Membre depuis #}
-                        <div class="col-md-6 col-lg-3">
-                            <div class="d-flex align-items-center gap-3 p-3 bg-light rounded h-100">
-                                <div class="text-primary fs-1">
-                                    <i class="bi bi-calendar-check"></i>
-                                </div>
-                                <div>
-                                    <div class="text-muted small">{{ 'profile.stats.member_since.label'|trans({}, 'profile') }}</div>
-                                    <div class="fw-bold">{{ user.createdAt|date('d/m/Y') }}</div>
-                                    <div class="text-muted small">{{ 'profile.stats.member_since.days'|trans({'%days%': "now"|date('U') - user.createdAt.timestamp|date('U')|abs / 86400|round(0, 'floor')}, 'profile') }}</div>
-                                </div>
+        {# Statistiques d'utilisation #}
+        <div class="card shadow-sm mb-4 text-start">
+            <div class="card-header bg-primary text-white d-flex align-items-center gap-2">
+                <i class="bi bi-graph-up"></i>
+                <strong>{{ 'profile.section.stats.title'|trans({}, 'profile') }}</strong>
+            </div>
+            <div class="card-body">
+                <div class="row g-3">
+                    {# Membre depuis #}
+                    <div class="col-md-6 col-lg-3">
+                        <div class="d-flex align-items-center gap-3">
+                            <i class="bi bi-calendar-check text-primary fs-2"></i>
+                            <div>
+                                <div class="text-muted small">{{ 'profile.stats.member_since.label'|trans({}, 'profile') }}</div>
+                                <div class="fw-semibold">{{ user.createdAt|date('d/m/Y') }}</div>
+                                <div class="text-muted small">{{ 'profile.stats.member_since.days'|trans({'%days%': "now"|date('U') - user.createdAt.timestamp|date('U')|abs / 86400|round(0, 'floor')}, 'profile') }}</div>
                             </div>
                         </div>
+                    </div>
 
-                        {# Dernière connexion #}
-                        <div class="col-md-6 col-lg-3">
-                            <div class="d-flex align-items-center gap-3 p-3 bg-light rounded h-100">
-                                <div class="text-success fs-1">
-                                    <i class="bi bi-clock-history"></i>
-                                </div>
-                                <div>
-                                    <div class="text-muted small">{{ 'profile.stats.last_login.label'|trans({}, 'profile') }}</div>
-                                    {% if user.lastLoginAt %}
-                                        <div class="fw-bold">{{ user.lastLoginAt|date('d/m/Y') }}</div>
-                                        <div class="text-muted small">{{ user.lastLoginAt|date('H:i') }}</div>
-                                    {% else %}
-                                        <div class="text-muted">-</div>
-                                    {% endif %}
-                                </div>
+                    {# Dernière connexion #}
+                    <div class="col-md-6 col-lg-3">
+                        <div class="d-flex align-items-center gap-3">
+                            <i class="bi bi-clock-history text-success fs-2"></i>
+                            <div>
+                                <div class="text-muted small">{{ 'profile.stats.last_login.label'|trans({}, 'profile') }}</div>
+                                {% if user.lastLoginAt %}
+                                    <div class="fw-semibold">{{ user.lastLoginAt|date('d/m/Y') }}</div>
+                                    <div class="text-muted small">{{ user.lastLoginAt|date('H:i') }}</div>
+                                {% else %}
+                                    <div class="text-muted">-</div>
+                                {% endif %}
                             </div>
                         </div>
+                    </div>
 
-                        {# Nombre de connexions #}
-                        <div class="col-md-6 col-lg-3">
-                            <div class="d-flex align-items-center gap-3 p-3 bg-light rounded h-100">
-                                <div class="text-info fs-1">
-                                    <i class="bi bi-bar-chart-line"></i>
-                                </div>
-                                <div>
-                                    <div class="text-muted small">{{ 'profile.stats.login_count.label'|trans({}, 'profile') }}</div>
-                                    <div class="fw-bold fs-4">{{ user.loginCount }}</div>
-                                    <div class="text-muted small">{{ 'profile.stats.login_count.connections'|trans({}, 'profile') }}</div>
-                                </div>
+                    {# Nombre de connexions #}
+                    <div class="col-md-6 col-lg-3">
+                        <div class="d-flex align-items-center gap-3">
+                            <i class="bi bi-bar-chart-line text-info fs-2"></i>
+                            <div>
+                                <div class="text-muted small">{{ 'profile.stats.login_count.label'|trans({}, 'profile') }}</div>
+                                <div class="fw-semibold fs-4 text-success">{{ user.loginCount }}</div>
+                                <div class="text-muted small">{{ 'profile.stats.login_count.connections'|trans({}, 'profile') }}</div>
                             </div>
                         </div>
+                    </div>
 
-                        {# Dernière mise à jour #}
-                        <div class="col-md-6 col-lg-3">
-                            <div class="d-flex align-items-center gap-3 p-3 bg-light rounded h-100">
-                                <div class="text-warning fs-1">
-                                    <i class="bi bi-pencil-square"></i>
-                                </div>
-                                <div>
-                                    <div class="text-muted small">{{ 'profile.stats.updated_at.label'|trans({}, 'profile') }}</div>
-                                    <div class="fw-bold">{{ user.updatedAt|date('d/m/Y') }}</div>
-                                    <div class="text-muted small">{{ user.updatedAt|date('H:i') }}</div>
-                                </div>
+                    {# Dernière mise à jour #}
+                    <div class="col-md-6 col-lg-3">
+                        <div class="d-flex align-items-center gap-3">
+                            <i class="bi bi-pencil-square text-primary fs-2"></i>
+                            <div>
+                                <div class="text-muted small">{{ 'profile.stats.updated_at.label'|trans({}, 'profile') }}</div>
+                                <div class="fw-semibold">{{ user.updatedAt|date('d/m/Y') }}</div>
+                                <div class="text-muted small">{{ user.updatedAt|date('H:i') }}</div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
 
-            {# Boutons d'action #}
-            <div class="d-flex gap-3 justify-content-between">
-                <a href="{{ path('home_index') }}" class="btn btn-outline-secondary btn-lg">
-                    <i class="bi bi-arrow-left me-2"></i>{{ 'profile.button.back'|trans({}, 'profile') }}
-                </a>
-
-                <a href="https://test.cfitech.io/" target="_blank" class="btn btn-outline-info btn-lg">
-                    <i class="bi bi-box-arrow-up-right me-2"></i>{{ 'profile.button.manage_cfi'|trans({}, 'profile') }}
-                </a>
-            </div>
+        {# Boutons d'action #}
+        <div class="d-flex justify-content-center gap-3 flex-wrap">
+            <a href="{{ path('home_index') }}" class="btn btn-outline-secondary btn-lg">
+                <i class="bi bi-arrow-left me-2"></i>{{ 'profile.button.back'|trans({}, 'profile') }}
+            </a>
+            <a href="https://test.cfitech.io/" target="_blank" class="btn btn-outline-primary btn-lg">
+                <i class="bi bi-box-arrow-up-right me-2"></i>{{ 'profile.button.manage_cfi'|trans({}, 'profile') }}
+            </a>
         </div>
     </div>
 </div>
