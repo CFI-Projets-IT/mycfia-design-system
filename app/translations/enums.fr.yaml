@@ -1,0 +1,35 @@
+# Traductions françaises des Enums
+
+# Campaign Type
+campaign_type.sms: "SMS"
+campaign_type.email: "E-mail"
+campaign_type.mail: "Courrier postal"
+campaign_type.social: "Réseaux sociaux"
+
+# Campaign Status
+campaign_status.draft: "Brouillon"
+campaign_status.active: "Active"
+campaign_status.paused: "En pause"
+campaign_status.completed: "Terminée"
+
+# Message Type
+message_type.sms: "SMS"
+message_type.email: "E-mail"
+message_type.mail: "Courrier postal"
+message_type.social: "Réseaux sociaux"
+
+# Message Status
+message_status.pending: "En attente"
+message_status.sent: "Envoyé"
+message_status.delivered: "Délivré"
+message_status.failed: "Échec"
+message_status.bounced: "Rejeté"
+
+# Conversation Status
+conversation_status.active: "Active"
+conversation_status.archived: "Archivée"
+
+# AI Message Role
+ai_message_role.user: "Utilisateur"
+ai_message_role.assistant: "Assistant IA"
+ai_message_role.system: "Système"

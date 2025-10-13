@@ -1,0 +1,35 @@
+# English translations for Enums
+
+# Campaign Type
+campaign_type.sms: "SMS"
+campaign_type.email: "Email"
+campaign_type.mail: "Postal Mail"
+campaign_type.social: "Social Media"
+
+# Campaign Status
+campaign_status.draft: "Draft"
+campaign_status.active: "Active"
+campaign_status.paused: "Paused"
+campaign_status.completed: "Completed"
+
+# Message Type
+message_type.sms: "SMS"
+message_type.email: "Email"
+message_type.mail: "Postal Mail"
+message_type.social: "Social Media"
+
+# Message Status
+message_status.pending: "Pending"
+message_status.sent: "Sent"
+message_status.delivered: "Delivered"
+message_status.failed: "Failed"
+message_status.bounced: "Bounced"
+
+# Conversation Status
+conversation_status.active: "Active"
+conversation_status.archived: "Archived"
+
+# AI Message Role
+ai_message_role.user: "User"
+ai_message_role.assistant: "AI Assistant"
+ai_message_role.system: "System"
