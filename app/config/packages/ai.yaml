@@ -1,0 +1,14 @@
+ai:
+    platform:
+        mistral:
+            api_key: '%env(MISTRAL_API_KEY)%'
+
+    agent:
+        chat_operations:
+            platform: 'ai.platform.mistral'
+            model:
+                class: 'Symfony\AI\Platform\Bridge\Mistral\Mistral'
+                name: 'mistral-large-latest'
+            prompt: '@ai/prompts/chat_operations.md.twig'
+            track_token_usage: true
+            tools: []

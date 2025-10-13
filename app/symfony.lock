@@ -92,6 +92,9 @@
             "ref": "e805aba9eff5372e2d149a9ff56566769e22819d"
         }
     },
+    "symfony/ai-bundle": {
+        "version": "dev-main"
+    },
     "symfony/asset-mapper": {
         "version": "7.3",
         "recipe": {

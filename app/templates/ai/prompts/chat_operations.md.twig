@@ -1,0 +1,22 @@
+{# templates/ai/prompts/chat_operations.md.twig #}
+{% extends 'ai/prompts/base.md.twig' %}
+
+{% block context %}
+## CONTEXTE UTILISATEUR
+
+- **Division** : {{ division.nom }}
+- **ID Division** : {{ division.idCfi }}
+- **Période active** : {{ 'now'|date('Y-m-d H:i') }}
+- **Spécialisation** : Données **Opérations** et **Stocks**
+{% endblock %}
+
+{% block tools %}
+## OUTILS DISPONIBLES
+
+{% for tool in tools %}
+- **{{ tool.name }}** : {{ tool.description }}
+{% if tool.parameters is defined %}
+  Paramètres : {{ tool.parameters|join(', ') }}
+{% endif %}
+{% endfor %}
+{% endblock %}
