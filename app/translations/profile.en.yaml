@@ -1,0 +1,39 @@
+# English translations for user profile
+# Domain: profile
+
+# Page
+'profile.page.title': 'My Account'
+'profile.page.description': 'View your personal information and usage statistics.'
+
+# Sections
+'profile.section.info.title': 'Personal Information'
+'profile.section.stats.title': 'Usage Statistics'
+'profile.section.preferences.title': 'Current Preferences'
+
+# Fields
+'profile.field.fullname.label': 'Full Name'
+'profile.field.email.label': 'Email Address'
+'profile.field.organization.label': 'Organization'
+'profile.field.id_cfi.label': 'CFI ID'
+
+# Statistics
+'profile.stats.member_since.label': 'Member Since'
+'profile.stats.member_since.days': '%days% days ago'
+'profile.stats.last_login.label': 'Last Login'
+'profile.stats.login_count.label': 'Login Count'
+'profile.stats.login_count.connections': 'connections'
+'profile.stats.updated_at.label': 'Last Updated'
+
+# Preferences
+'profile.preferences.theme.label': 'Theme'
+'profile.preferences.theme.light': 'Light'
+'profile.preferences.theme.dark_blue': 'Dark Blue'
+'profile.preferences.theme.dark_red': 'Dark Red'
+'profile.preferences.locale.label': 'Language'
+'profile.preferences.locale.french': 'French'
+'profile.preferences.locale.english': 'English'
+
+# Buttons
+'profile.button.edit_settings': 'Edit Settings'
+'profile.button.back': 'Back to Home'
+'profile.button.manage_cfi': 'Manage My CFI Account'

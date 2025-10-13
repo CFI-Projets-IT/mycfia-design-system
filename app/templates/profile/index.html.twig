@@ -1,0 +1,169 @@
+{% extends 'layouts/home.html.twig' %}
+
+{% block title %}{{ 'profile.page.title'|trans({}, 'profile') }} - myCFiia{% endblock %}
+
+{% block content %}
+<div class="container" style="max-width: 1000px;">
+    <div class="text-center py-5">
+        {# En-tête #}
+        <div class="d-inline-block text-start mb-5">
+            <h1 class="fs-1 fw-semibold mb-2 text-primary">
+                {{ 'profile.page.title'|trans({}, 'profile') }}
+            </h1>
+            <p class="fs-4 fw-medium text-primary mb-0">{{ 'profile.page.description'|trans({}, 'profile') }}</p>
+        </div>
+
+        <div class="row g-4 mb-4">
+            {# Colonne gauche - Informations personnelles #}
+            <div class="col-lg-6">
+                <div class="card shadow-sm h-100 text-start">
+                    <div class="card-header glass-primary text-primary d-flex align-items-center gap-2">
+                        <i class="bi bi-person-circle"></i>
+                        <strong>{{ 'profile.section.info.title'|trans({}, 'profile') }}</strong>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-sm table-hover">
+                            <tbody>
+                                <tr>
+                                    <th class="text-muted" style="width: 40%;">{{ 'profile.field.fullname.label'|trans({}, 'profile') }}</th>
+                                    <td><strong>{{ user.fullName }}</strong></td>
+                                </tr>
+                                <tr>
+                                    <th class="text-muted">{{ 'profile.field.email.label'|trans({}, 'profile') }}</th>
+                                    <td>{{ user.email }}</td>
+                                </tr>
+                                <tr>
+                                    <th class="text-muted">{{ 'profile.field.organization.label'|trans({}, 'profile') }}</th>
+                                    <td>
+                                        {% if user.division %}
+                                            <strong>{{ user.division.nomDivision }}</strong>
+                                        {% else %}
+                                            -
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th class="text-muted">{{ 'profile.field.id_cfi.label'|trans({}, 'profile') }}</th>
+                                    <td><code class="text-info">{{ user.idCfi }}</code></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            {# Colonne droite - Préférences #}
+            <div class="col-lg-6">
+                <div class="card shadow-sm h-100 text-start">
+                    <div class="card-header glass-primary text-primary d-flex align-items-center gap-2">
+                        <i class="bi bi-sliders"></i>
+                        <strong>{{ 'profile.section.preferences.title'|trans({}, 'profile') }}</strong>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex justify-content-center gap-3 flex-wrap">
+                            <div class="card text-decoration-none shadow-sm quick-access-card quick-access-card-compact">
+                                <div class="card-body d-flex align-items-center gap-3 p-3">
+                                    {% if user.theme == 'light' %}
+                                        <i class="bi bi-sun-fill text-primary flex-shrink-0"></i>
+                                    {% elseif user.theme == 'dark-blue' %}
+                                        <i class="bi bi-moon-stars-fill text-primary flex-shrink-0"></i>
+                                    {% elseif user.theme == 'dark-red' %}
+                                        <i class="bi bi-moon-fill text-primary flex-shrink-0"></i>
+                                    {% endif %}
+                                    <h3 class="fw-semibold text-primary mb-0">
+                                        {% if user.theme == 'light' %}
+                                            {{ 'profile.preferences.theme.light'|trans({}, 'profile') }}
+                                        {% elseif user.theme == 'dark-blue' %}
+                                            {{ 'profile.preferences.theme.dark_blue'|trans({}, 'profile') }}
+                                        {% elseif user.theme == 'dark-red' %}
+                                            {{ 'profile.preferences.theme.dark_red'|trans({}, 'profile') }}
+                                        {% endif %}
+                                    </h3>
+                                </div>
+                            </div>
+
+                            <div class="card text-decoration-none shadow-sm quick-access-card quick-access-card-compact">
+                                <div class="card-body d-flex align-items-center gap-3 p-3">
+                                    {% if user.locale == 'fr' %}
+                                        <span class="flex-shrink-0">🇫🇷</span>
+                                    {% else %}
+                                        <span class="flex-shrink-0">🇬🇧</span>
+                                    {% endif %}
+                                    <h3 class="fw-semibold text-primary mb-0">
+                                        {% if user.locale == 'fr' %}
+                                            {{ 'profile.preferences.locale.french'|trans({}, 'profile') }}
+                                        {% else %}
+                                            {{ 'profile.preferences.locale.english'|trans({}, 'profile') }}
+                                        {% endif %}
+                                    </h3>
+                                </div>
+                            </div>
+
+                            <a href="{{ path('settings_index') }}" class="card text-decoration-none shadow-sm quick-access-card quick-access-card-compact">
+                                <div class="card-body d-flex align-items-center gap-3 p-3">
+                                    <i class="bi bi-gear text-primary flex-shrink-0"></i>
+                                    <h3 class="fw-semibold text-primary mb-0">{{ 'profile.button.edit_settings'|trans({}, 'profile') }}</h3>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {# Section Statistiques d'utilisation - Pleine largeur #}
+        <div class="card shadow-sm mb-4 text-start">
+            <div class="card-header glass-primary text-primary d-flex align-items-center gap-2">
+                <i class="bi bi-graph-up"></i>
+                <strong>{{ 'profile.section.stats.title'|trans({}, 'profile') }}</strong>
+            </div>
+            <div class="card-body">
+                <div class="d-flex justify-content-center gap-3 flex-wrap">
+                    <div class="card text-decoration-none shadow-sm quick-access-card quick-access-card-compact">
+                        <div class="card-body p-3 text-center">
+                            <small class="d-block mb-2 opacity-75" style="font-size: 0.65rem;">{{ 'profile.stats.member_since.label'|trans({}, 'profile') }}</small>
+                            <h3 class="fw-semibold text-primary mb-0" style="font-size: 0.9rem;">{{ user.createdAt|date('d/m/Y') }}</h3>
+                            <small class="d-block opacity-75" style="font-size: 0.6rem;">{{ 'profile.stats.member_since.days'|trans({'%days%': ((("now"|date('U')) - user.createdAt.timestamp) / 86400)|round(0, 'floor')}, 'profile') }}</small>
+                        </div>
+                    </div>
+
+                    <div class="card text-decoration-none shadow-sm quick-access-card quick-access-card-compact">
+                        <div class="card-body p-3 text-center">
+                            <small class="d-block mb-2 opacity-75" style="font-size: 0.65rem;">{{ 'profile.stats.last_login.label'|trans({}, 'profile') }}</small>
+                            {% if user.lastLoginAt %}
+                                <h3 class="fw-semibold text-primary mb-0" style="font-size: 0.9rem;">{{ user.lastLoginAt|date('d/m/Y') }}</h3>
+                                <small class="d-block opacity-75" style="font-size: 0.6rem;">{{ user.lastLoginAt|date('H:i') }}</small>
+                            {% else %}
+                                <h3 class="fw-semibold text-primary mb-0" style="font-size: 0.9rem;">-</h3>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="card text-decoration-none shadow-sm quick-access-card quick-access-card-compact">
+                        <div class="card-body p-3 text-center">
+                            <small class="d-block mb-2 opacity-75" style="font-size: 0.65rem;">{{ 'profile.stats.login_count.label'|trans({}, 'profile') }}</small>
+                            <h3 class="fw-semibold text-primary mb-0" style="font-size: 0.9rem;">{{ user.loginCount }}</h3>
+                            <small class="d-block opacity-75" style="font-size: 0.6rem;">{{ 'profile.stats.login_count.connections'|trans({}, 'profile') }}</small>
+                        </div>
+                    </div>
+
+                    <div class="card text-decoration-none shadow-sm quick-access-card quick-access-card-compact">
+                        <div class="card-body p-3 text-center">
+                            <small class="d-block mb-2 opacity-75" style="font-size: 0.65rem;">{{ 'profile.stats.updated_at.label'|trans({}, 'profile') }}</small>
+                            <h3 class="fw-semibold text-primary mb-0" style="font-size: 0.9rem;">{{ user.updatedAt|date('d/m/Y') }}</h3>
+                            <small class="d-block opacity-75" style="font-size: 0.6rem;">{{ user.updatedAt|date('H:i') }}</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {# Boutons d'action #}
+        <div class="d-flex justify-content-center gap-3 flex-wrap mt-4">
+            <a href="{{ path('home_index') }}" class="btn btn-outline-secondary btn-lg">
+                <i class="bi bi-arrow-left me-2"></i>{{ 'profile.button.back'|trans({}, 'profile') }}
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

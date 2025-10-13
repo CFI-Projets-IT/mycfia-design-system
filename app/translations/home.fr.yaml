@@ -1,0 +1,48 @@
+# Traductions pour la page d'accueil
+# Domaine : home
+
+# Page
+'home.page.title': 'Accueil'
+
+# Salutation
+'home.greeting': 'Bonjour'
+'home.question': 'Comment puis-je vous aider aujourd''hui ?'
+
+# Debug Sprint S0
+'home.debug.title': 'Sprint R1/S0 – Socle & Auth'
+
+# Section Utilisateur
+'home.user.section_title': 'Utilisateur'
+'home.user.id_bdd': 'ID BDD'
+'home.user.id_cfi': 'ID CFI'
+'home.user.email': 'Email'
+'home.user.fullname': 'Nom complet'
+'home.user.theme': 'Thème'
+'home.user.locale': 'Locale'
+'home.user.type_option_ga': 'Type Option GA'
+'home.user.login_count': 'Connexions'
+'home.user.login_count_times': 'fois'
+'home.user.last_login': 'Dernière connexion'
+'home.user.created_at': 'Créé le'
+'home.user.updated_at': 'Mis à jour le'
+
+# Section Division
+'home.division.section_title': 'Division (Multi-Tenancy)'
+'home.division.id_bdd': 'ID BDD'
+'home.division.id_cfi': 'ID Division CFI'
+'home.division.name': 'Nom'
+'home.division.slug': 'Slug (Gedmo)'
+'home.division.status': 'Statut'
+'home.division.status_active': 'Active'
+'home.division.status_inactive': 'Inactive'
+'home.division.users': 'Utilisateurs'
+'home.division.users_count': 'user(s)'
+'home.division.created_at': 'Créée le'
+'home.division.updated_at': 'Mise à jour le'
+'home.division.no_division': 'Aucune division associée'
+
+# Accès rapide
+'home.quick_access.invoices': 'Factures'
+'home.quick_access.orders': 'Commandes'
+'home.quick_access.stocks': 'Stocks'
+'home.quick_access.other': 'Autre'
