@@ -13,6 +13,7 @@ use App\Service\Cfi\CfiAuthService;
 use App\Service\Cfi\CfiSessionService;
 use App\Service\Cfi\CfiTenantService;
 use App\Service\Cfi\CfiUserSyncService;
+use App\Service\PasswordHasherService;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -56,6 +57,7 @@ class CfiAuthenticator extends AbstractAuthenticator
         private readonly CfiSessionService $cfiSessionService,
         private readonly CfiTenantService $cfiTenantService,
         private readonly CfiUserSyncService $cfiUserSyncService,
+        private readonly PasswordHasherService $passwordHasher,
         private readonly UrlGeneratorInterface $urlGenerator,
         private readonly LoggerInterface $logger,
         private readonly TranslatorInterface $translator,
@@ -251,7 +253,7 @@ class CfiAuthenticator extends AbstractAuthenticator
     }
 
     /**
-     * Authentification via Email/Password (mode futur).
+     * Authentification via Email/Password.
      */
     private function authenticateWithCredentials(Request $request): UtilisateurGorilliasDto
     {
@@ -267,7 +269,15 @@ class CfiAuthenticator extends AbstractAuthenticator
             throw new AuthenticationException($this->translator->trans('cfi.auth.error.empty_credentials', [], 'security'));
         }
 
-        // Appel API CFI pour authentification (stub pour l'instant)
-        return $this->cfiAuthService->authenticateWithCredentials($email, $password);
+        // Hasher le mot de passe avec SHA-512 et clé de salage CFI
+        $hashedPassword = $this->passwordHasher->hashPassword($password);
+
+        $this->logger->debug('CFI Authenticator: Mot de passe hashé', [
+            'email' => $email,
+            'hash_length' => strlen($hashedPassword),
+        ]);
+
+        // Appel API CFI pour authentification avec password hashé
+        return $this->cfiAuthService->authenticateWithCredentials($email, $hashedPassword);
     }
 }

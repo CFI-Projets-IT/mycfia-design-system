@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Service\Cfi;
 
 use App\DTO\Cfi\GetUtilisateurByClefDto;
+use App\DTO\Cfi\GetUtilisateurByLoginMDP;
 use App\DTO\Cfi\UtilisateurGorilliasDto;
 use App\Exception\CfiApiException;
 use Psr\Log\LoggerInterface;
@@ -107,54 +108,71 @@ class CfiAuthService
     }
 
     /**
-     * Authentifie un utilisateur via email/password CFI (endpoint futur).
+     * Authentifie un utilisateur via email/password CFI.
      *
-     * Cette méthode est préparée en anticipation de l'endpoint
-     * /Utilisateurs/authenticate qui sera fourni par CFI.
+     * Utilise l'endpoint /Utilisateurs/getUtilisateurMyCFiA avec identifiant et mot de passe hashé.
      *
-     * @param string $email    Email de l'utilisateur CFI
-     * @param string $password Mot de passe de l'utilisateur CFI
+     * @param string $identifiant Identifiant de l'utilisateur (email ou login CFI)
+     * @param string $password    Mot de passe hashé en SHA-512 (128 caractères hexadécimaux)
      *
      * @return UtilisateurGorilliasDto Donnees utilisateur + token CFI (jeton)
      *
      * @throws CfiApiException           Si l'authentification echoue
-     * @throws \RuntimeException         Si l'endpoint n'est pas encore disponible
      * @throws \InvalidArgumentException Si les credentials sont invalides
      */
-    public function authenticateWithCredentials(string $email, string $password): UtilisateurGorilliasDto
+    public function authenticateWithCredentials(string $identifiant, string $password): UtilisateurGorilliasDto
     {
-        // Validation basique des credentials
-        if (empty($email) || empty($password)) {
+        // Validation basique
+        if (empty($identifiant) || empty($password)) {
             throw new \InvalidArgumentException($this->translator->trans('cfi.auth.error.empty_credentials', [], 'security'));
         }
 
-        if (! filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            throw new \InvalidArgumentException($this->translator->trans('cfi.auth.error.invalid_email', [], 'security'));
+        // Validation format hash SHA-512 (128 caractères hexadécimaux)
+        if (! preg_match('/^[a-f0-9]{128}$/', $password)) {
+            throw new \InvalidArgumentException($this->translator->trans('cfi.auth.error.invalid_password_hash', [], 'security'));
         }
 
-        // TODO: Remplacer cette exception par l'appel API réel quand l'endpoint sera disponible
-        // Endpoint futur attendu : POST /Utilisateurs/authenticate
-        // Body: { email: string, password: string, clefApi: string }
-        // Response: même structure que getUtilisateurGorillias
-        throw new \RuntimeException('Authentification par email/password pas encore disponible. En attente de l\'endpoint /Utilisateurs/authenticate de CFI. Utilisez le mode Token Gorillias pour le moment.');
+        // 1. Créer le DTO de requête
+        $requestDto = new GetUtilisateurByLoginMDP();
+        $requestDto->identifiant = $identifiant;
+        $requestDto->mdp = $password;
+        $requestDto->clefApi = $this->clefApi;
 
-        /*
-        // Code à activer quand l'endpoint CFI sera disponible :
+        // 2. Valider le DTO
+        $errors = $this->validator->validate($requestDto);
+        if (count($errors) > 0) {
+            $firstError = $errors[0];
+            $message = $this->translator->trans(
+                (string) $firstError->getMessage(),
+                [],
+                'validators'
+            );
+
+            $this->logger->error('CFI Credentials Validation Error', [
+                'identifiant' => $identifiant,
+                'error' => $message,
+            ]);
+
+            throw new \InvalidArgumentException($message);
+        }
+
+        // 3. Appeler l'API CFI
         try {
             $this->logger->info('CFI Credentials Authentication Request', [
-                'email' => $email,
-                'endpoint' => '/Utilisateurs/authenticate',
+                'identifiant' => $identifiant,
+                'endpoint' => '/Utilisateurs/getUtilisateurMyCFiA',
             ]);
 
             $response = $this->cfiApiService->post(
-                '/Utilisateurs/authenticate',
+                '/Utilisateurs/getUtilisateurMyCFiA',
                 [
-                    'email' => $email,
-                    'password' => $password,
+                    'identifiant' => $identifiant,
+                    'mdp' => $password,
                     'clefApi' => $this->clefApi,
                 ]
             );
 
+            // 4. Mapper la réponse vers le DTO
             $utilisateur = UtilisateurGorilliasDto::fromArray($response);
 
             $this->logger->info('CFI Credentials Authentication Success', [
@@ -165,23 +183,21 @@ class CfiAuthService
 
             return $utilisateur;
         } catch (CfiApiException $e) {
+            // Erreur API CFI - logger et relancer
             $this->logger->error('CFI Credentials Authentication Failed', [
-                'email' => $email,
+                'identifiant' => $identifiant,
                 'error' => $e->getMessage(),
                 'code' => $e->getCode(),
             ]);
 
+            // Traduire le message d'erreur si c'est une erreur 401 (Unauthorized)
             if (401 === $e->getCode()) {
-                throw new CfiApiException(
-                    $this->translator->trans('cfi.auth.error.invalid_credentials', [], 'security'),
-                    $e->getCode(),
-                    $e
-                );
+                throw new CfiApiException($this->translator->trans('cfi.auth.error.invalid_credentials', [], 'security'), $e->getCode(), $e);
             }
 
+            // Relancer l'exception originale pour les autres codes
             throw $e;
         }
-        */
     }
 
     /**
