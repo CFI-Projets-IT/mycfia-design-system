@@ -106,6 +106,18 @@ body.theme-light .btn-check:checked + .quick-access-card {
     transform: translateY(-3px) scale(1.03) !important;
 }
 
+body.theme-light input.btn-check:checked + label.quick-access-card h3,
+body.theme-light .btn-check:checked + .quick-access-card h3 {
+    font-size: 0.875rem !important;
+}
+
+body.theme-light input.btn-check:checked + label.quick-access-card i,
+body.theme-light input.btn-check:checked + label.quick-access-card span,
+body.theme-light .btn-check:checked + .quick-access-card i,
+body.theme-light .btn-check:checked + .quick-access-card span {
+    font-size: 1.5rem !important;
+}
+
 /* Lien Retour vers MyCFi - Style pill comme sidebar (seulement dans le header) */
 body.theme-light .home-header .btn-link {
     background: rgba(255, 255, 255, 0.95) !important;
