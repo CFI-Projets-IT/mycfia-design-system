@@ -32,118 +32,109 @@
 
         {# Formulaire de paramètres #}
         <form method="post" action="{{ path('settings_update') }}">
-            {# Sélecteur de thème #}
-            <div class="mb-4">
-                <h2 class="fs-5 fw-semibold text-primary mb-3 text-start">
-                    <i class="bi bi-brush me-2"></i>{{ 'settings.field.theme.label'|trans({}, 'settings') }}
-                </h2>
-                <div class="d-flex justify-content-center gap-3 flex-wrap">
-                    <input type="radio" class="btn-check" name="theme" id="theme-light" value="light"
-                           {% if user.theme == 'light' %}checked{% endif %} autocomplete="off">
-                    <label class="card text-decoration-none shadow-sm" for="theme-light" style="min-width: 180px; cursor: pointer;">
-                        <div class="card-body d-flex align-items-center gap-3 p-3">
-                            <i class="bi bi-sun-fill fs-2 text-primary flex-shrink-0"></i>
-                            <h3 class="fs-6 fw-semibold text-primary mb-0">{{ 'settings.field.theme.light'|trans({}, 'settings') }}</h3>
-                        </div>
-                    </label>
-
-                    <input type="radio" class="btn-check" name="theme" id="theme-dark-blue" value="dark-blue"
-                           {% if user.theme == 'dark-blue' %}checked{% endif %} autocomplete="off">
-                    <label class="card text-decoration-none shadow-sm" for="theme-dark-blue" style="min-width: 180px; cursor: pointer;">
-                        <div class="card-body d-flex align-items-center gap-3 p-3">
-                            <i class="bi bi-moon-stars-fill fs-2 text-primary flex-shrink-0"></i>
-                            <h3 class="fs-6 fw-semibold text-primary mb-0">{{ 'settings.field.theme.dark_blue'|trans({}, 'settings') }}</h3>
-                        </div>
-                    </label>
-
-                    <input type="radio" class="btn-check" name="theme" id="theme-dark-red" value="dark-red"
-                           {% if user.theme == 'dark-red' %}checked{% endif %} autocomplete="off">
-                    <label class="card text-decoration-none shadow-sm" for="theme-dark-red" style="min-width: 180px; cursor: pointer;">
-                        <div class="card-body d-flex align-items-center gap-3 p-3">
-                            <i class="bi bi-moon-fill fs-2 text-primary flex-shrink-0"></i>
-                            <h3 class="fs-6 fw-semibold text-primary mb-0">{{ 'settings.field.theme.dark_red'|trans({}, 'settings') }}</h3>
-                        </div>
-                    </label>
+            {# Section Apparence #}
+            <div class="card shadow-sm mb-4 text-start">
+                <div class="card-header bg-primary text-white d-flex align-items-center gap-2">
+                    <i class="bi bi-palette"></i>
+                    <strong>{{ 'settings.section.appearance.title'|trans({}, 'settings') }}</strong>
                 </div>
-            </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5 class="text-primary mb-3">
+                                <i class="bi bi-brush me-2"></i>{{ 'settings.field.theme.label'|trans({}, 'settings') }}
+                            </h5>
+                            <div class="d-flex justify-content-center gap-3 flex-wrap">
+                                <input type="radio" class="btn-check" name="theme" id="theme-light" value="light"
+                                       {% if user.theme == 'light' %}checked{% endif %} autocomplete="off">
+                                <label class="card text-decoration-none shadow-sm quick-access-card" for="theme-light" style="min-width: 180px; cursor: pointer;">
+                                    <div class="card-body d-flex align-items-center gap-3 p-3">
+                                        <i class="bi bi-sun-fill fs-2 text-primary flex-shrink-0"></i>
+                                        <h3 class="fs-6 fw-semibold text-primary mb-0">{{ 'settings.field.theme.light'|trans({}, 'settings') }}</h3>
+                                    </div>
+                                </label>
 
-            {# Sélecteur de langue #}
-            <div class="mb-4">
-                <h2 class="fs-5 fw-semibold text-primary mb-3 text-start">
-                    <i class="bi bi-translate me-2"></i>{{ 'settings.field.locale.label'|trans({}, 'settings') }}
-                </h2>
-                <div class="d-flex justify-content-center gap-3 flex-wrap">
-                    <input type="radio" class="btn-check" name="locale" id="locale-fr" value="fr"
-                           {% if user.locale == 'fr' %}checked{% endif %} autocomplete="off">
-                    <label class="card text-decoration-none shadow-sm" for="locale-fr" style="min-width: 180px; cursor: pointer;">
-                        <div class="card-body d-flex align-items-center gap-3 p-3">
-                            <span class="fs-2 flex-shrink-0">🇫🇷</span>
-                            <h3 class="fs-6 fw-semibold text-primary mb-0">{{ 'settings.field.locale.french'|trans({}, 'settings') }}</h3>
+                                <input type="radio" class="btn-check" name="theme" id="theme-dark-blue" value="dark-blue"
+                                       {% if user.theme == 'dark-blue' %}checked{% endif %} autocomplete="off">
+                                <label class="card text-decoration-none shadow-sm quick-access-card" for="theme-dark-blue" style="min-width: 180px; cursor: pointer;">
+                                    <div class="card-body d-flex align-items-center gap-3 p-3">
+                                        <i class="bi bi-moon-stars-fill fs-2 text-primary flex-shrink-0"></i>
+                                        <h3 class="fs-6 fw-semibold text-primary mb-0">{{ 'settings.field.theme.dark_blue'|trans({}, 'settings') }}</h3>
+                                    </div>
+                                </label>
+
+                                <input type="radio" class="btn-check" name="theme" id="theme-dark-red" value="dark-red"
+                                       {% if user.theme == 'dark-red' %}checked{% endif %} autocomplete="off">
+                                <label class="card text-decoration-none shadow-sm quick-access-card" for="theme-dark-red" style="min-width: 180px; cursor: pointer;">
+                                    <div class="card-body d-flex align-items-center gap-3 p-3">
+                                        <i class="bi bi-moon-fill fs-2 text-primary flex-shrink-0"></i>
+                                        <h3 class="fs-6 fw-semibold text-primary mb-0">{{ 'settings.field.theme.dark_red'|trans({}, 'settings') }}</h3>
+                                    </div>
+                                </label>
+                            </div>
                         </div>
-                    </label>
 
-                    <input type="radio" class="btn-check" name="locale" id="locale-en" value="en"
-                           {% if user.locale == 'en' %}checked{% endif %} autocomplete="off">
-                    <label class="card text-decoration-none shadow-sm" for="locale-en" style="min-width: 180px; cursor: pointer;">
-                        <div class="card-body d-flex align-items-center gap-3 p-3">
-                            <span class="fs-2 flex-shrink-0">🇬🇧</span>
-                            <h3 class="fs-6 fw-semibold text-primary mb-0">{{ 'settings.field.locale.english'|trans({}, 'settings') }}</h3>
-                        </div>
-                    </label>
-                </div>
-            </div>
+                        <div class="col-md-6">
+                            <h5 class="text-primary mb-3">
+                                <i class="bi bi-translate me-2"></i>{{ 'settings.field.locale.label'|trans({}, 'settings') }}
+                            </h5>
+                            <div class="d-flex justify-content-center gap-3 flex-wrap">
+                                <input type="radio" class="btn-check" name="locale" id="locale-fr" value="fr"
+                                       {% if user.locale == 'fr' %}checked{% endif %} autocomplete="off">
+                                <label class="card text-decoration-none shadow-sm quick-access-card" for="locale-fr" style="min-width: 180px; cursor: pointer;">
+                                    <div class="card-body d-flex align-items-center gap-3 p-3">
+                                        <span class="fs-2 flex-shrink-0">🇫🇷</span>
+                                        <h3 class="fs-6 fw-semibold text-primary mb-0">{{ 'settings.field.locale.french'|trans({}, 'settings') }}</h3>
+                                    </div>
+                                </label>
 
-            {# Informations du compte #}
-            <div class="mb-5">
-                <h2 class="fs-5 fw-semibold text-primary mb-3 text-start">
-                    <i class="bi bi-person-circle me-2"></i>{{ 'settings.section.account.title'|trans({}, 'settings') }}
-                </h2>
-                <div class="d-flex justify-content-center gap-3 flex-wrap">
-                    <div class="card text-decoration-none shadow-sm" style="min-width: 180px;">
-                        <div class="card-body d-flex align-items-center gap-3 p-3">
-                            <i class="bi bi-person fs-2 text-primary flex-shrink-0"></i>
-                            <div class="text-start">
-                                <small class="text-muted d-block">{{ 'settings.field.fullname.label'|trans({}, 'settings') }}</small>
-                                <h3 class="fs-6 fw-semibold text-primary mb-0">{{ user.fullName }}</h3>
+                                <input type="radio" class="btn-check" name="locale" id="locale-en" value="en"
+                                       {% if user.locale == 'en' %}checked{% endif %} autocomplete="off">
+                                <label class="card text-decoration-none shadow-sm quick-access-card" for="locale-en" style="min-width: 180px; cursor: pointer;">
+                                    <div class="card-body d-flex align-items-center gap-3 p-3">
+                                        <span class="fs-2 flex-shrink-0">🇬🇧</span>
+                                        <h3 class="fs-6 fw-semibold text-primary mb-0">{{ 'settings.field.locale.english'|trans({}, 'settings') }}</h3>
+                                    </div>
+                                </label>
                             </div>
                         </div>
                     </div>
+                </div>
+            </div>
 
-                    <div class="card text-decoration-none shadow-sm" style="min-width: 180px;">
-                        <div class="card-body d-flex align-items-center gap-3 p-3">
-                            <i class="bi bi-envelope fs-2 text-primary flex-shrink-0"></i>
-                            <div class="text-start">
-                                <small class="text-muted d-block">{{ 'settings.field.email.label'|trans({}, 'settings') }}</small>
-                                <h3 class="fs-6 fw-semibold text-primary mb-0">{{ user.email }}</h3>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="card text-decoration-none shadow-sm" style="min-width: 180px;">
-                        <div class="card-body d-flex align-items-center gap-3 p-3">
-                            <i class="bi bi-building fs-2 text-primary flex-shrink-0"></i>
-                            <div class="text-start">
-                                <small class="text-muted d-block">{{ 'settings.field.organization.label'|trans({}, 'settings') }}</small>
-                                <h3 class="fs-6 fw-semibold text-primary mb-0">
+            {# Section Informations du compte #}
+            <div class="card shadow-sm mb-5 text-start">
+                <div class="card-header bg-primary text-white d-flex align-items-center gap-2">
+                    <i class="bi bi-person-circle"></i>
+                    <strong>{{ 'settings.section.account.title'|trans({}, 'settings') }}</strong>
+                </div>
+                <div class="card-body">
+                    <table class="table table-sm table-hover">
+                        <tbody>
+                            <tr>
+                                <th class="text-muted" style="width: 40%;">{{ 'settings.field.fullname.label'|trans({}, 'settings') }}</th>
+                                <td><strong>{{ user.fullName }}</strong></td>
+                            </tr>
+                            <tr>
+                                <th class="text-muted">{{ 'settings.field.email.label'|trans({}, 'settings') }}</th>
+                                <td>{{ user.email }}</td>
+                            </tr>
+                            <tr>
+                                <th class="text-muted">{{ 'settings.field.organization.label'|trans({}, 'settings') }}</th>
+                                <td>
                                     {% if user.division %}
-                                        {{ user.division.nomDivision }}
+                                        <strong>{{ user.division.nomDivision }}</strong>
                                     {% else %}
                                         -
                                     {% endif %}
-                                </h3>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="card text-decoration-none shadow-sm" style="min-width: 180px;">
-                        <div class="card-body d-flex align-items-center gap-3 p-3">
-                            <i class="bi bi-key fs-2 text-primary flex-shrink-0"></i>
-                            <div class="text-start">
-                                <small class="text-muted d-block">{{ 'settings.field.id_cfi.label'|trans({}, 'settings') }}</small>
-                                <h3 class="fs-6 fw-semibold text-primary mb-0"><code class="text-info">{{ user.idCfi }}</code></h3>
-                            </div>
-                        </div>
-                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th class="text-muted">{{ 'settings.field.id_cfi.label'|trans({}, 'settings') }}</th>
+                                <td><code class="text-info">{{ user.idCfi }}</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
 
