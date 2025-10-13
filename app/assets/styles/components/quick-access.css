@@ -8,6 +8,29 @@
     transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
 }
 
+/* Cartes de sélection settings - version compacte */
+.quick-access-card-compact {
+    min-width: 140px;
+    cursor: pointer;
+}
+
+.quick-access-card-compact .card-body {
+    padding: 0.5rem !important;
+    gap: 0.5rem !important;
+}
+
+.quick-access-card-compact i {
+    font-size: 1.5rem !important;
+}
+
+.quick-access-card-compact span {
+    font-size: 1.5rem !important;
+}
+
+.quick-access-card-compact h3 {
+    font-size: 0.875rem !important;
+}
+
 .quick-access-card:hover {
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(0, 62, 130, 0.1) !important;

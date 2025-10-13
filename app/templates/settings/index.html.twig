@@ -47,28 +47,28 @@
                             <div class="d-flex justify-content-center gap-3 flex-wrap">
                                 <input type="radio" class="btn-check" name="theme" id="theme-light" value="light"
                                        {% if user.theme == 'light' %}checked{% endif %} autocomplete="off">
-                                <label class="card text-decoration-none shadow-sm quick-access-card" for="theme-light" style="min-width: 180px; cursor: pointer;">
+                                <label class="card text-decoration-none shadow-sm quick-access-card quick-access-card-compact" for="theme-light">
                                     <div class="card-body d-flex align-items-center gap-3 p-3">
-                                        <i class="bi bi-sun-fill fs-2 text-primary flex-shrink-0"></i>
-                                        <h3 class="fs-6 fw-semibold text-primary mb-0">{{ 'settings.field.theme.light'|trans({}, 'settings') }}</h3>
+                                        <i class="bi bi-sun-fill text-primary flex-shrink-0"></i>
+                                        <h3 class="fw-semibold text-primary mb-0">{{ 'settings.field.theme.light'|trans({}, 'settings') }}</h3>
                                     </div>
                                 </label>
 
                                 <input type="radio" class="btn-check" name="theme" id="theme-dark-blue" value="dark-blue"
                                        {% if user.theme == 'dark-blue' %}checked{% endif %} autocomplete="off">
-                                <label class="card text-decoration-none shadow-sm quick-access-card" for="theme-dark-blue" style="min-width: 180px; cursor: pointer;">
+                                <label class="card text-decoration-none shadow-sm quick-access-card quick-access-card-compact" for="theme-dark-blue">
                                     <div class="card-body d-flex align-items-center gap-3 p-3">
-                                        <i class="bi bi-moon-stars-fill fs-2 text-primary flex-shrink-0"></i>
-                                        <h3 class="fs-6 fw-semibold text-primary mb-0">{{ 'settings.field.theme.dark_blue'|trans({}, 'settings') }}</h3>
+                                        <i class="bi bi-moon-stars-fill text-primary flex-shrink-0"></i>
+                                        <h3 class="fw-semibold text-primary mb-0">{{ 'settings.field.theme.dark_blue'|trans({}, 'settings') }}</h3>
                                     </div>
                                 </label>
 
                                 <input type="radio" class="btn-check" name="theme" id="theme-dark-red" value="dark-red"
                                        {% if user.theme == 'dark-red' %}checked{% endif %} autocomplete="off">
-                                <label class="card text-decoration-none shadow-sm quick-access-card" for="theme-dark-red" style="min-width: 180px; cursor: pointer;">
+                                <label class="card text-decoration-none shadow-sm quick-access-card quick-access-card-compact" for="theme-dark-red">
                                     <div class="card-body d-flex align-items-center gap-3 p-3">
-                                        <i class="bi bi-moon-fill fs-2 text-primary flex-shrink-0"></i>
-                                        <h3 class="fs-6 fw-semibold text-primary mb-0">{{ 'settings.field.theme.dark_red'|trans({}, 'settings') }}</h3>
+                                        <i class="bi bi-moon-fill text-primary flex-shrink-0"></i>
+                                        <h3 class="fw-semibold text-primary mb-0">{{ 'settings.field.theme.dark_red'|trans({}, 'settings') }}</h3>
                                     </div>
                                 </label>
                             </div>
@@ -81,19 +81,19 @@
                             <div class="d-flex justify-content-center gap-3 flex-wrap">
                                 <input type="radio" class="btn-check" name="locale" id="locale-fr" value="fr"
                                        {% if user.locale == 'fr' %}checked{% endif %} autocomplete="off">
-                                <label class="card text-decoration-none shadow-sm quick-access-card" for="locale-fr" style="min-width: 180px; cursor: pointer;">
+                                <label class="card text-decoration-none shadow-sm quick-access-card quick-access-card-compact" for="locale-fr">
                                     <div class="card-body d-flex align-items-center gap-3 p-3">
-                                        <span class="fs-2 flex-shrink-0">🇫🇷</span>
-                                        <h3 class="fs-6 fw-semibold text-primary mb-0">{{ 'settings.field.locale.french'|trans({}, 'settings') }}</h3>
+                                        <span class="flex-shrink-0">🇫🇷</span>
+                                        <h3 class="fw-semibold text-primary mb-0">{{ 'settings.field.locale.french'|trans({}, 'settings') }}</h3>
                                     </div>
                                 </label>
 
                                 <input type="radio" class="btn-check" name="locale" id="locale-en" value="en"
                                        {% if user.locale == 'en' %}checked{% endif %} autocomplete="off">
-                                <label class="card text-decoration-none shadow-sm quick-access-card" for="locale-en" style="min-width: 180px; cursor: pointer;">
+                                <label class="card text-decoration-none shadow-sm quick-access-card quick-access-card-compact" for="locale-en">
                                     <div class="card-body d-flex align-items-center gap-3 p-3">
-                                        <span class="fs-2 flex-shrink-0">🇬🇧</span>
-                                        <h3 class="fs-6 fw-semibold text-primary mb-0">{{ 'settings.field.locale.english'|trans({}, 'settings') }}</h3>
+                                        <span class="flex-shrink-0">🇬🇧</span>
+                                        <h3 class="fw-semibold text-primary mb-0">{{ 'settings.field.locale.english'|trans({}, 'settings') }}</h3>
                                     </div>
                                 </label>
                             </div>
