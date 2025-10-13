@@ -81,6 +81,16 @@ body.theme-dark-red .quick-access-card i {
     color: #ffffff !important;
 }
 
+/* État sélectionné pour les radio buttons dans les settings */
+body.theme-dark-red input.btn-check:checked + label.quick-access-card,
+body.theme-dark-red .btn-check:checked + .quick-access-card {
+    border: 3px solid #d35f8d !important;
+    background: rgba(211, 95, 141, 0.25) !important;
+    box-shadow: 0 0 0 5px rgba(211, 95, 141, 0.3),
+                0 6px 16px rgba(211, 95, 141, 0.4) !important;
+    transform: translateY(-3px) scale(1.03) !important;
+}
+
 /* Lien Retour vers MyCFi - Style pill comme sidebar (seulement dans le header) */
 body.theme-dark-red .home-header .btn-link {
     background: rgba(255, 255, 255, 0.1) !important;
