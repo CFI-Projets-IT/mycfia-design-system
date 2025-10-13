@@ -77,8 +77,18 @@ body.theme-dark-blue .quick-access-card:hover {
 }
 
 body.theme-dark-blue .quick-access-card h3,
-body.theme-dark-blue .quick-access-card i {
+body.theme-dark-blue .quick-access-card i,
+body.theme-dark-blue .quick-access-card small {
     color: #ffffff !important;
+}
+
+body.theme-dark-blue .quick-access-card-compact h3 {
+    font-size: 0.75rem !important;
+}
+
+body.theme-dark-blue .quick-access-card-compact i,
+body.theme-dark-blue .quick-access-card-compact span {
+    font-size: 1.1rem !important;
 }
 
 /* État sélectionné pour les radio buttons dans les settings */
@@ -88,19 +98,19 @@ body.theme-dark-blue .btn-check:checked + .quick-access-card {
     background: rgba(95, 168, 211, 0.25) !important;
     box-shadow: 0 0 0 5px rgba(95, 168, 211, 0.3),
                 0 6px 16px rgba(95, 168, 211, 0.4) !important;
-    transform: translateY(-3px) scale(1.03) !important;
+    transform: translateY(-3px) !important;
 }
 
 body.theme-dark-blue input.btn-check:checked + label.quick-access-card h3,
 body.theme-dark-blue .btn-check:checked + .quick-access-card h3 {
-    font-size: 0.875rem !important;
+    font-size: 0.75rem !important;
 }
 
 body.theme-dark-blue input.btn-check:checked + label.quick-access-card i,
 body.theme-dark-blue input.btn-check:checked + label.quick-access-card span,
 body.theme-dark-blue .btn-check:checked + .quick-access-card i,
 body.theme-dark-blue .btn-check:checked + .quick-access-card span {
-    font-size: 1.5rem !important;
+    font-size: 1.1rem !important;
 }
 
 /* Lien Retour vers MyCFi - Style pill comme sidebar (seulement dans le header) */

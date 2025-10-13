@@ -32,19 +32,58 @@
 
         {# Formulaire de paramètres #}
         <form method="post" action="{{ path('settings_update') }}">
-            {# Section Apparence #}
-            <div class="card shadow-sm mb-4 text-start">
-                <div class="card-header glass-primary text-primary d-flex align-items-center gap-2">
-                    <i class="bi bi-palette"></i>
-                    <strong>{{ 'settings.section.appearance.title'|trans({}, 'settings') }}</strong>
+            <div class="row g-4">
+                {# Colonne gauche - Informations du compte #}
+                <div class="col-lg-6">
+                    <div class="card shadow-sm h-100 text-start">
+                        <div class="card-header glass-primary text-primary d-flex align-items-center gap-2">
+                            <i class="bi bi-person-circle"></i>
+                            <strong>{{ 'settings.section.account.title'|trans({}, 'settings') }}</strong>
+                        </div>
+                        <div class="card-body">
+                            <table class="table table-sm table-hover">
+                                <tbody>
+                                    <tr>
+                                        <th class="text-muted" style="width: 40%;">{{ 'settings.field.fullname.label'|trans({}, 'settings') }}</th>
+                                        <td><strong>{{ user.fullName }}</strong></td>
+                                    </tr>
+                                    <tr>
+                                        <th class="text-muted">{{ 'settings.field.email.label'|trans({}, 'settings') }}</th>
+                                        <td>{{ user.email }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th class="text-muted">{{ 'settings.field.organization.label'|trans({}, 'settings') }}</th>
+                                        <td>
+                                            {% if user.division %}
+                                                <strong>{{ user.division.nomDivision }}</strong>
+                                            {% else %}
+                                                -
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th class="text-muted">{{ 'settings.field.id_cfi.label'|trans({}, 'settings') }}</th>
+                                        <td><code class="text-info">{{ user.idCfi }}</code></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-6">
+
+                {# Colonne droite - Apparence #}
+                <div class="col-lg-6">
+                    <div class="card shadow-sm text-start h-100">
+                        <div class="card-header glass-primary text-primary d-flex align-items-center gap-2">
+                            <i class="bi bi-palette"></i>
+                            <strong>{{ 'settings.section.appearance.title'|trans({}, 'settings') }}</strong>
+                        </div>
+                        <div class="card-body">
+                            {# Thème #}
                             <h5 class="text-primary mb-3">
                                 <i class="bi bi-brush me-2"></i>{{ 'settings.field.theme.label'|trans({}, 'settings') }}
                             </h5>
-                            <div class="d-flex justify-content-center gap-3 flex-wrap">
+                            <div class="d-flex justify-content-start gap-3 flex-wrap mb-4">
                                 <input type="radio" class="btn-check" name="theme" id="theme-light" value="light"
                                        {% if user.theme == 'light' %}checked{% endif %} autocomplete="off">
                                 <label class="card text-decoration-none shadow-sm quick-access-card quick-access-card-compact" for="theme-light">
@@ -72,13 +111,12 @@
                                     </div>
                                 </label>
                             </div>
-                        </div>
 
-                        <div class="col-md-6">
+                            {# Langue #}
                             <h5 class="text-primary mb-3">
                                 <i class="bi bi-translate me-2"></i>{{ 'settings.field.locale.label'|trans({}, 'settings') }}
                             </h5>
-                            <div class="d-flex justify-content-center gap-3 flex-wrap">
+                            <div class="d-flex justify-content-start gap-3 flex-wrap">
                                 <input type="radio" class="btn-check" name="locale" id="locale-fr" value="fr"
                                        {% if user.locale == 'fr' %}checked{% endif %} autocomplete="off">
                                 <label class="card text-decoration-none shadow-sm quick-access-card quick-access-card-compact" for="locale-fr">
@@ -102,46 +140,10 @@
                 </div>
             </div>
 
-            {# Section Informations du compte #}
-            <div class="card shadow-sm mb-5 text-start">
-                <div class="card-header glass-primary text-primary d-flex align-items-center gap-2">
-                    <i class="bi bi-person-circle"></i>
-                    <strong>{{ 'settings.section.account.title'|trans({}, 'settings') }}</strong>
-                </div>
-                <div class="card-body">
-                    <table class="table table-sm table-hover">
-                        <tbody>
-                            <tr>
-                                <th class="text-muted" style="width: 40%;">{{ 'settings.field.fullname.label'|trans({}, 'settings') }}</th>
-                                <td><strong>{{ user.fullName }}</strong></td>
-                            </tr>
-                            <tr>
-                                <th class="text-muted">{{ 'settings.field.email.label'|trans({}, 'settings') }}</th>
-                                <td>{{ user.email }}</td>
-                            </tr>
-                            <tr>
-                                <th class="text-muted">{{ 'settings.field.organization.label'|trans({}, 'settings') }}</th>
-                                <td>
-                                    {% if user.division %}
-                                        <strong>{{ user.division.nomDivision }}</strong>
-                                    {% else %}
-                                        -
-                                    {% endif %}
-                                </td>
-                            </tr>
-                            <tr>
-                                <th class="text-muted">{{ 'settings.field.id_cfi.label'|trans({}, 'settings') }}</th>
-                                <td><code class="text-info">{{ user.idCfi }}</code></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
             {# Boutons d'action #}
-            <div class="d-flex justify-content-center gap-3 flex-wrap">
+            <div class="d-flex justify-content-center gap-3 flex-wrap mt-4">
                 <a href="{{ path('home_index') }}" class="btn btn-outline-secondary btn-lg">
-                    <i class="bi bi-arrow-left me-2"></i>{{ 'settings.button.cancel'|trans({}, 'settings') }}
+                    <i class="bi bi-arrow-left me-2"></i>{{ 'profile.button.back'|trans({}, 'profile') }}
                 </a>
                 <button type="submit" class="btn btn-primary btn-lg">
                     <i class="bi bi-check-circle me-2"></i>{{ 'settings.button.save'|trans({}, 'settings') }}
