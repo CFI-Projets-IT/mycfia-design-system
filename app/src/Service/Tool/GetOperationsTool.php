@@ -106,8 +106,8 @@ final readonly class GetOperationsTool
             $this->aiLogger->logToolCall(
                 user: $user,
                 toolName: 'get_operations',
-                input: ['type' => $type, 'dateDebut' => $dateDebut, 'dateFin' => $dateFin, 'statut' => $statut],
-                output: ['count' => count($formattedOperations)],
+                params: ['type' => $type, 'dateDebut' => $dateDebut, 'dateFin' => $dateFin, 'statut' => $statut],
+                result: ['count' => count($formattedOperations)],
                 durationMs: $durationMs
             );
 

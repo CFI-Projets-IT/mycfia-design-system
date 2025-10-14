@@ -93,8 +93,8 @@ final readonly class GetOperationStatsTool
             $this->aiLogger->logToolCall(
                 user: $user,
                 toolName: 'get_operation_stats',
-                input: ['dateDebut' => $dateDebut, 'dateFin' => $dateFin, 'groupBy' => $groupBy],
-                output: ['count' => count($operations), 'stats_keys' => array_keys($stats)],
+                params: ['dateDebut' => $dateDebut, 'dateFin' => $dateFin, 'groupBy' => $groupBy],
+                result: ['count' => count($operations), 'stats_keys' => array_keys($stats)],
                 durationMs: $durationMs
             );
 

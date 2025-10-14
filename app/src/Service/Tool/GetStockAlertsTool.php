@@ -97,8 +97,8 @@ final readonly class GetStockAlertsTool
             $this->aiLogger->logToolCall(
                 user: $user,
                 toolName: 'get_stock_alerts',
-                input: [],
-                output: ['count' => count($formattedAlerts)],
+                params: [],
+                result: ['count' => count($formattedAlerts)],
                 durationMs: $durationMs
             );
 

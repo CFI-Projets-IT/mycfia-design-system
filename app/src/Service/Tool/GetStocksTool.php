@@ -103,8 +103,8 @@ final readonly class GetStocksTool
             $this->aiLogger->logToolCall(
                 user: $user,
                 toolName: 'get_stocks',
-                input: ['reference' => $reference, 'enAlerte' => $enAlerte],
-                output: ['count' => count($formattedStocks), 'nb_alertes' => $nbAlertes],
+                params: ['reference' => $reference, 'enAlerte' => $enAlerte],
+                result: ['count' => count($formattedStocks), 'nb_alertes' => $nbAlertes],
                 durationMs: $durationMs
             );
 

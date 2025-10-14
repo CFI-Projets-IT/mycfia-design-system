@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Service\Cfi;
 
+use App\DTO\Cfi\TenantDto;
 use App\DTO\Cfi\UtilisateurGorilliasDto;
+use App\Entity\User;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -57,6 +59,46 @@ class CfiTenantService
     public function getCurrentTenantOrNull(): ?int
     {
         return $this->sessionService->getCurrentTenant();
+    }
+
+    /**
+     * Récupérer le tenant actuel avec toutes ses données.
+     *
+     * Construit un TenantDto depuis les informations utilisateur CFI
+     * stockées dans la session Symfony.
+     *
+     * @param User $user Utilisateur authentifié
+     *
+     * @return TenantDto|null Tenant avec données complètes ou null si non trouvé
+     */
+    public function getTenantActuel(User $user): ?TenantDto
+    {
+        $tenantId = $this->getCurrentTenantOrNull();
+
+        if (null === $tenantId) {
+            $this->logger->warning('CfiTenantService: Aucun tenant actif en session', [
+                'user_id' => $user->getId(),
+            ]);
+
+            return null;
+        }
+
+        // Récupérer les données utilisateur CFI depuis la session
+        $utilisateurData = $this->sessionService->getUserData();
+
+        if (null === $utilisateurData) {
+            $this->logger->error('CfiTenantService: Données utilisateur CFI introuvables en session', [
+                'user_id' => $user->getId(),
+                'tenant_id' => $tenantId,
+            ]);
+
+            return null;
+        }
+
+        // Construire TenantDto depuis UtilisateurGorilliasDto
+        $utilisateur = UtilisateurGorilliasDto::fromArray($utilisateurData);
+
+        return TenantDto::fromUtilisateur($utilisateur);
     }
 
     /**
