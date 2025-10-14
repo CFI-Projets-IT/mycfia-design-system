@@ -11,6 +11,7 @@ use App\Service\Api\OperationApiService;
 use Psr\Log\LoggerInterface;
 use Symfony\AI\Agent\Toolbox\Attribute\AsTool;
 use Symfony\Component\DependencyInjection\Attribute\AsTaggedItem;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Tool IA pour récupérer les opérations marketing depuis CFI.
@@ -36,6 +37,7 @@ final readonly class GetOperationsTool
         private UserAuthenticationService $authService,
         private AiLoggerService $aiLogger,
         private LoggerInterface $logger,
+        private TranslatorInterface $translator,
     ) {
     }
 
@@ -59,7 +61,7 @@ final readonly class GetOperationsTool
 
         try {
             // Récupérer utilisateur et tenant via le trait
-            $auth = $this->getUserAndTenant($this->authService);
+            $auth = $this->getUserAndTenant($this->authService, $this->translator);
             if (isset($auth['error'])) {
                 return $auth['error'];
             }
@@ -120,12 +122,17 @@ final readonly class GetOperationsTool
                 ],
             ];
         } catch (\Exception $e) {
+            // Log détaillé pour développeurs (technique)
             $this->logger->error('GetOperationsTool: Erreur lors de la récupération des opérations', [
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString(),
+                'params' => ['type' => $type, 'dateDebut' => $dateDebut, 'dateFin' => $dateFin, 'statut' => $statut],
             ]);
 
-            return $this->errorResponse('Erreur lors de la récupération des opérations : '.$e->getMessage());
+            // Message traduit générique pour utilisateur final (via agent IA)
+            $userMessage = $this->translator->trans('operations.error.fetch_failed', [], 'tools');
+
+            return $this->errorResponse($userMessage);
         }
     }
 

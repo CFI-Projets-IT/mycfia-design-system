@@ -11,6 +11,7 @@ use App\Service\Api\StockApiService;
 use Psr\Log\LoggerInterface;
 use Symfony\AI\Agent\Toolbox\Attribute\AsTool;
 use Symfony\Component\DependencyInjection\Attribute\AsTaggedItem;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Tool IA pour récupérer l'état des stocks depuis CFI.
@@ -35,6 +36,7 @@ final readonly class GetStocksTool
         private UserAuthenticationService $authService,
         private AiLoggerService $aiLogger,
         private LoggerInterface $logger,
+        private TranslatorInterface $translator,
     ) {
     }
 
@@ -54,7 +56,7 @@ final readonly class GetStocksTool
 
         try {
             // Récupérer utilisateur et tenant via le trait
-            $auth = $this->getUserAndTenant($this->authService);
+            $auth = $this->getUserAndTenant($this->authService, $this->translator);
             if (isset($auth['error'])) {
                 return $auth['error'];
             }
@@ -118,12 +120,17 @@ final readonly class GetStocksTool
                 ],
             ];
         } catch (\Exception $e) {
+            // Log détaillé pour développeurs (technique)
             $this->logger->error('GetStocksTool: Erreur lors de la récupération des stocks', [
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString(),
+                'params' => ['reference' => $reference, 'enAlerte' => $enAlerte],
             ]);
 
-            return $this->errorResponse('Erreur lors de la récupération des stocks : '.$e->getMessage());
+            // Message traduit générique pour utilisateur final (via agent IA)
+            $userMessage = $this->translator->trans('stocks.error.fetch_failed', [], 'tools');
+
+            return $this->errorResponse($userMessage);
         }
     }
 

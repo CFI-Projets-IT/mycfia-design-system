@@ -7,6 +7,7 @@ namespace App\Service\Tool;
 use App\DTO\Cfi\TenantDto;
 use App\Entity\User;
 use App\Security\UserAuthenticationService;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Trait pour gérer l'authentification et la récupération du tenant dans les tools IA.
@@ -29,16 +30,20 @@ trait AuthenticatedToolTrait
      * - Un tenant (division) est actif pour cet utilisateur
      *
      * @param UserAuthenticationService $authService Service d'authentification centralisé
+     * @param TranslatorInterface       $translator  Service de traduction pour messages i18n
      *
      * @return array{user: User, tenant: TenantDto}|array{error: array} Utilisateur et tenant, ou erreur formatée
      */
-    protected function getUserAndTenant(UserAuthenticationService $authService): array
+    protected function getUserAndTenant(UserAuthenticationService $authService, TranslatorInterface $translator): array
     {
         // Récupérer utilisateur et tenant via service centralisé
         $context = $authService->getUserWithTenant();
 
         if (null === $context) {
-            return ['error' => $this->errorResponse('Utilisateur non authentifié ou division non trouvée')];
+            // Message traduit pour l'utilisateur final (via agent IA)
+            $userMessage = $translator->trans('auth.error.not_authenticated', [], 'tools');
+
+            return ['error' => $this->errorResponse($userMessage)];
         }
 
         return $context;
@@ -49,7 +54,7 @@ trait AuthenticatedToolTrait
      *
      * Cette méthode doit être implémentée par chaque tool qui utilise le trait.
      *
-     * @param string $message Message d'erreur
+     * @param string $message Message d'erreur traduit pour l'utilisateur final
      *
      * @return array{success: bool, error: string} Réponse d'erreur standardisée
      */

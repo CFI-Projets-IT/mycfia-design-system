@@ -1,0 +1,44 @@
+# Traductions pour les Tools IA (Agent conversationnel)
+# Domaine : tools
+# Messages destinés à l'utilisateur final via l'agent IA
+
+# === Erreurs d'authentification ===
+auth:
+  error:
+    not_authenticated: "Vous devez être connecté pour accéder à cette fonctionnalité."
+    tenant_not_found: "Aucune division n'est associée à votre compte."
+
+# === Tools Opérations Marketing ===
+operations:
+  error:
+    fetch_failed: "Impossible de récupérer les opérations marketing. Veuillez réessayer."
+    stats_failed: "Impossible de calculer les statistiques des opérations. Veuillez réessayer."
+    invalid_date_range: "La période sélectionnée est invalide."
+    no_data: "Aucune opération trouvée pour les critères spécifiés."
+
+  success:
+    fetched: "%count% opération(s) récupérée(s) avec succès."
+    stats_calculated: "Statistiques calculées pour %count% opération(s)."
+
+# === Tools Stocks ===
+stocks:
+  error:
+    fetch_failed: "Impossible de récupérer l'état des stocks. Veuillez réessayer."
+    alerts_failed: "Impossible de récupérer les alertes de stock. Veuillez réessayer."
+    not_found: "Le stock demandé n'a pas été trouvé."
+    no_alerts: "Aucune alerte de stock actuellement."
+
+  success:
+    fetched: "%count% stock(s) récupéré(s) avec succès."
+    alerts_fetched: "%count% alerte(s) de stock identifiée(s)."
+
+# === Messages génériques pour tous les tools ===
+common:
+  error:
+    generic: "Une erreur est survenue. Veuillez réessayer ou contacter le support."
+    api_unavailable: "Le service est temporairement indisponible. Veuillez réessayer dans quelques instants."
+    timeout: "La requête a pris trop de temps. Veuillez réessayer."
+    validation_failed: "Les données fournies sont invalides."
+
+  success:
+    operation_completed: "Opération effectuée avec succès."

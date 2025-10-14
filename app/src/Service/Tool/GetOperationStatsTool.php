@@ -11,6 +11,7 @@ use App\Service\Api\OperationApiService;
 use Psr\Log\LoggerInterface;
 use Symfony\AI\Agent\Toolbox\Attribute\AsTool;
 use Symfony\Component\DependencyInjection\Attribute\AsTaggedItem;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Tool IA pour calculer des statistiques sur les opérations.
@@ -37,6 +38,7 @@ final readonly class GetOperationStatsTool
         private UserAuthenticationService $authService,
         private AiLoggerService $aiLogger,
         private LoggerInterface $logger,
+        private TranslatorInterface $translator,
     ) {
     }
 
@@ -58,7 +60,7 @@ final readonly class GetOperationStatsTool
 
         try {
             // Récupérer utilisateur et tenant via le trait
-            $auth = $this->getUserAndTenant($this->authService);
+            $auth = $this->getUserAndTenant($this->authService, $this->translator);
             if (isset($auth['error'])) {
                 return $auth['error'];
             }
@@ -108,12 +110,17 @@ final readonly class GetOperationStatsTool
                 ],
             ];
         } catch (\Exception $e) {
+            // Log détaillé pour développeurs (technique)
             $this->logger->error('GetOperationStatsTool: Erreur lors du calcul des statistiques', [
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString(),
+                'params' => ['dateDebut' => $dateDebut, 'dateFin' => $dateFin, 'groupBy' => $groupBy],
             ]);
 
-            return $this->errorResponse('Erreur lors du calcul des statistiques : '.$e->getMessage());
+            // Message traduit générique pour utilisateur final (via agent IA)
+            $userMessage = $this->translator->trans('operations.error.stats_failed', [], 'tools');
+
+            return $this->errorResponse($userMessage);
         }
     }
 
