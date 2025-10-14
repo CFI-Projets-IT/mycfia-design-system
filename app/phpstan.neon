@@ -28,3 +28,7 @@ parameters:
         # Ignorer les erreurs AiPromptService (types dynamiques pour tools)
         - '#Method App\\Service\\AiPromptService::renderPrompt\(\) has parameter \$tools with no value type#'
         - '#Method App\\Service\\AiPromptService::formatToolsForPrompt\(\) has parameter \$tools with no value type#'
+        # Ignorer les erreurs ChatService (AgentInterface sera disponible en runtime depuis Symfony AI Bundle dev-main)
+        - '#Parameter \$chatAgent of method App\\Service\\ChatService::__construct\(\) has invalid type Symfony\\AI\\AgentInterface#'
+        - '#Property App\\Service\\ChatService::\$chatAgent has unknown class Symfony\\AI\\AgentInterface as its type#'
+        - '#Property App\\Service\\ChatService::\$chatAgent is never read, only written#'

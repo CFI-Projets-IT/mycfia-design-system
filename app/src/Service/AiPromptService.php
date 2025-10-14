@@ -149,8 +149,6 @@ final readonly class AiPromptService
         $name = preg_replace('/Tool$/', '', $className);
 
         // Convertir CamelCase en snake_case
-        $name = strtolower(preg_replace('/(?<!^)[A-Z]/', '_$0', $name ?? ''));
-
-        return $name ?? '';
+        return strtolower(preg_replace('/(?<!^)[A-Z]/', '_$0', $name ?? '') ?? '');
     }
 }
