@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Service\Tool;
 
 use App\DTO\Cfi\LigneOperationDto;
+use App\Entity\User;
 use App\Service\AiLoggerService;
 use App\Service\Api\OperationApiService;
 use App\Service\Cfi\CfiTenantService;
@@ -59,7 +60,7 @@ final readonly class GetOperationStatsTool
         try {
             // Récupérer utilisateur et tenant
             $user = $this->security->getUser();
-            if (null === $user) {
+            if (null === $user || ! $user instanceof User) {
                 return $this->errorResponse('Utilisateur non authentifié');
             }
 

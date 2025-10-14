@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Service\Tool;
 
 use App\DTO\Cfi\StockDto;
+use App\Entity\User;
 use App\Service\AiLoggerService;
 use App\Service\Api\StockApiService;
 use App\Service\Cfi\CfiTenantService;
@@ -55,7 +56,7 @@ final readonly class GetStocksTool
         try {
             // Récupérer utilisateur et tenant
             $user = $this->security->getUser();
-            if (null === $user) {
+            if (null === $user || ! $user instanceof User) {
                 return $this->errorResponse('Utilisateur non authentifié');
             }
 
