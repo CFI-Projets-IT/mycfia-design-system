@@ -11,6 +11,11 @@ parameters:
     cfi.token.ttl: '%env(int:CFI_TOKEN_TTL)%'
     cfi.token.refresh_threshold: '%env(int:CFI_TOKEN_REFRESH_THRESHOLD)%'
 
+    # Mercure Hub Configuration (Sprint S1+)
+    # URL du hub Mercure pour le streaming temps réel
+    # Défaut vide pour MVP Sprint S1 (mode sync uniquement)
+    mercure.default_hub: '%env(default::MERCURE_PUBLIC_URL)%'
+
     # Feature Flags - Authentification
     # Activer le mode d'authentification email/password (false en attendant endpoint CFI)
     cfi.auth.credentials_enabled: false

@@ -9,7 +9,9 @@ use App\Entity\User;
 use App\Exception\ChatException;
 use App\Service\Cfi\CfiTenantService;
 use Psr\Log\LoggerInterface;
-use Symfony\AI\AgentInterface;
+use Symfony\AI\Agent\AgentInterface;
+use Symfony\AI\Platform\Message\Message;
+use Symfony\AI\Platform\Message\MessageBag;
 use Symfony\Component\DependencyInjection\Attribute\Target;
 
 /**
@@ -31,7 +33,7 @@ use Symfony\Component\DependencyInjection\Attribute\Target;
 final readonly class ChatService
 {
     public function __construct(
-        #[Target('chat_operations')]
+        #[Target('chatOperationsAgent')]
         private AgentInterface $chatAgent,
         private AiPromptService $promptService,
         private CfiTenantService $tenantService,
@@ -81,20 +83,25 @@ final readonly class ChatService
                 'prompt_length' => strlen($systemPrompt),
             ]);
 
-            // 3. Appeler l'agent IA
-            // TODO Sprint S1+: Implémenter appel réel via AgentInterface
-            // Format attendu : $response = $this->chatAgent->process($systemPrompt, $question);
-            $agentResponse = $this->mockAgentResponse($question);
+            // 3. Appeler l'agent IA avec MessageBag
+            $messages = new MessageBag(
+                Message::forSystem($systemPrompt),
+                Message::ofUser($question),
+            );
+
+            $result = $this->chatAgent->call($messages);
 
             // 4. Parser la réponse
             $durationMs = (int) ((microtime(true) - $startTime) * 1000);
 
             $chatResponse = ChatResponse::fromAgentResponse(
-                agentResponse: $agentResponse,
+                agentResponse: $result->getContent(),
                 metadata: [
                     'user_id' => $user->getId(),
                     'tenant_id' => $tenantId,
                     'timestamp' => (new \DateTime())->format('Y-m-d H:i:s'),
+                    'model' => $result->getMetadata()->get('model'),
+                    'token_usage' => $result->getMetadata()->get('token_usage'),
                 ],
                 durationMs: $durationMs,
             );
@@ -163,16 +170,5 @@ final readonly class ChatService
             Tool\GetOperationStatsTool::class,
             Tool\GetStockAlertsTool::class,
         ];
-    }
-
-    /**
-     * Simuler une réponse d'agent IA pour tests (phase MVP).
-     *
-     * TODO Sprint S1+: Supprimer après intégration AgentInterface complète.
-     */
-    private function mockAgentResponse(string $question): string
-    {
-        return "Réponse simulée de l'agent IA pour la question : \"{$question}\". "
-            .'Cette réponse sera remplacée par un appel réel à Mistral via AgentInterface.';
     }
 }

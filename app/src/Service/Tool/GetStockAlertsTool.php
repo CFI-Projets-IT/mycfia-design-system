@@ -42,9 +42,11 @@ final readonly class GetStockAlertsTool
     /**
      * Récupérer les stocks en alerte uniquement.
      *
+     * @param int|null $limit Limiter le nombre de résultats retournés (défaut: tous)
+     *
      * @return array{count: int, alerts: array, metadata: array}
      */
-    public function __invoke(): array
+    public function __invoke(?int $limit = null): array
     {
         $startTime = microtime(true);
 
@@ -89,14 +91,20 @@ final readonly class GetStockAlertsTool
             // Trier par niveau d'alerte (critique en premier)
             usort($formattedAlerts, fn ($a, $b) => $b['deficit'] <=> $a['deficit']);
 
+            // Appliquer la limite si spécifiée
+            $totalCount = count($formattedAlerts);
+            if (null !== $limit && $limit > 0) {
+                $formattedAlerts = array_slice($formattedAlerts, 0, $limit);
+            }
+
             $durationMs = (int) ((microtime(true) - $startTime) * 1000);
 
             // Log tool call
             $this->aiLogger->logToolCall(
                 user: $user,
                 toolName: 'get_stock_alerts',
-                params: [],
-                result: ['count' => count($formattedAlerts)],
+                params: ['limit' => $limit],
+                result: ['count' => count($formattedAlerts), 'total' => $totalCount],
                 durationMs: $durationMs
             );
 
