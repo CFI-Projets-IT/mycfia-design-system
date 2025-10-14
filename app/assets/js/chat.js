@@ -36,7 +36,7 @@ let elements = {};
 // 3. Initialisation
 // ====================================
 
-document.addEventListener('DOMContentLoaded', () => {
+function initializeChatInterface() {
     console.log('[Chat] Initialisation...');
 
     // Récupérer les éléments DOM
@@ -51,6 +51,18 @@ document.addEventListener('DOMContentLoaded', () => {
         exportChat: document.getElementById('exportChat'),
         quickQuestions: document.querySelectorAll('.quick-question'),
     };
+
+    // Vérifier si on est sur une page avec le chat
+    if (!elements.chatForm) {
+        console.log('[Chat] Interface chat non trouvée, skip initialisation');
+        return;
+    }
+
+    // Éviter les initialisations multiples en vérifiant une propriété sur l'élément
+    if (elements.chatForm.dataset.chatInitialized === 'true') {
+        console.log('[Chat] Déjà initialisé, skip');
+        return;
+    }
 
     // Récupérer les données depuis le template
     const chatData = document.getElementById('chatData');
@@ -72,8 +84,16 @@ document.addEventListener('DOMContentLoaded', () => {
     // Auto-resize du textarea
     setupTextareaAutoResize();
 
+    // Marquer comme initialisé
+    elements.chatForm.dataset.chatInitialized = 'true';
     console.log('[Chat] Initialisation terminée');
-});
+}
+
+// Écouter les événements de chargement (DOMContentLoaded + Turbo)
+document.addEventListener('DOMContentLoaded', initializeChatInterface);
+document.addEventListener('turbo:load', initializeChatInterface);
+document.addEventListener('turbo:render', initializeChatInterface);
+document.addEventListener('turbo:frame-load', initializeChatInterface);
 
 // ====================================
 // 4. Event Listeners

@@ -17,10 +17,21 @@
                     <i class="bi bi-robot fs-3 text-primary"></i>
                 </div>
                 <div>
-                    <h1 class="h5 mb-0 fw-semibold text-primary">Assistant IA myCFiia</h1>
+                    <h1 class="h5 mb-0 fw-semibold text-primary">
+                        Assistant IA -
+                        {% if context == 'factures' %}
+                            <span class="badge bg-info">Factures</span>
+                        {% elseif context == 'commandes' %}
+                            <span class="badge bg-success">Commandes</span>
+                        {% elseif context == 'stocks' %}
+                            <span class="badge bg-warning">Stocks</span>
+                        {% else %}
+                            <span class="badge bg-primary">Général</span>
+                        {% endif %}
+                    </h1>
                     <p class="small text-muted mb-0">
                         <i class="bi bi-circle-fill text-success" style="font-size: 0.5rem;"></i>
-                        En ligne
+                        En ligne - Contexte {{ context|capitalize }}
                     </p>
                 </div>
             </div>
@@ -52,13 +63,39 @@
                     </div>
                     <div class="message-text">
                         <p class="mb-2">Bonjour <strong>{{ app.user.fullName }}</strong> ! 👋</p>
-                        <p class="mb-3">Je suis votre assistant IA pour myCFiia. Je peux vous aider à :</p>
-                        <ul class="mb-3">
-                            <li>📊 Consulter vos <strong>opérations marketing</strong> (SMS, Email, Courrier)</li>
-                            <li>📦 Vérifier l'état de vos <strong>stocks</strong> et les alertes</li>
-                            <li>📈 Analyser vos <strong>statistiques</strong> et performances</li>
-                            <li>❓ Répondre à vos questions sur vos données CFI</li>
-                        </ul>
+                        {% if context == 'factures' %}
+                            <p class="mb-3">Je suis votre assistant spécialisé <strong>Factures</strong>. Je peux vous aider à :</p>
+                            <ul class="mb-3">
+                                <li>📊 Consulter vos <strong>factures clients</strong> (courrier et email)</li>
+                                <li>💰 Suivre les <strong>paiements</strong> et factures impayées</li>
+                                <li>📈 Analyser vos <strong>statistiques de facturation</strong></li>
+                                <li>📅 Rechercher par période ou référence</li>
+                            </ul>
+                        {% elseif context == 'commandes' %}
+                            <p class="mb-3">Je suis votre assistant spécialisé <strong>Commandes</strong>. Je peux vous aider à :</p>
+                            <ul class="mb-3">
+                                <li>📦 Consulter vos <strong>commandes clients</strong></li>
+                                <li>🚚 Suivre les <strong>livraisons</strong> et statuts</li>
+                                <li>📈 Analyser vos <strong>statistiques de commandes</strong></li>
+                                <li>🔍 Rechercher commandes par client ou référence</li>
+                            </ul>
+                        {% elseif context == 'stocks' %}
+                            <p class="mb-3">Je suis votre assistant spécialisé <strong>Stocks</strong>. Je peux vous aider à :</p>
+                            <ul class="mb-3">
+                                <li>📦 Vérifier l'état de vos <strong>stocks</strong></li>
+                                <li>⚠️ Identifier les <strong>alertes de réapprovisionnement</strong></li>
+                                <li>📊 Consulter les quantités disponibles par référence</li>
+                                <li>🔍 Rechercher stocks critiques ou faibles</li>
+                            </ul>
+                        {% else %}
+                            <p class="mb-3">Je suis votre assistant <strong>Généraliste</strong>. Je peux vous aider à :</p>
+                            <ul class="mb-3">
+                                <li>📊 Consulter vos <strong>opérations marketing</strong> (SMS, Email, Courrier)</li>
+                                <li>📦 Vérifier l'état de vos <strong>stocks</strong> et les alertes</li>
+                                <li>📈 Analyser vos <strong>statistiques</strong> et performances</li>
+                                <li>❓ Répondre à vos questions transverses sur vos données CFI</li>
+                            </ul>
+                        {% endif %}
                         <p class="mb-0 text-muted small">
                             <i class="bi bi-lightbulb"></i>
                             <em>Posez-moi une question, je suis connecté à vos données en temps réel !</em>
@@ -98,19 +135,51 @@
                 </button>
             </form>
 
-            {# Suggestions de questions #}
+            {# Suggestions de questions contextuelles #}
             <div class="mt-3" id="quickQuestions">
                 <div class="d-flex flex-wrap gap-2">
                     <span class="small text-muted me-2">Suggestions :</span>
-                    <button type="button" class="btn btn-sm btn-outline-secondary quick-question" data-question="Combien d'opérations SMS ce mois-ci ?">
-                        <i class="bi bi-chat-dots"></i> SMS du mois
-                    </button>
-                    <button type="button" class="btn btn-sm btn-outline-secondary quick-question" data-question="Quels sont les stocks en alerte ?">
-                        <i class="bi bi-exclamation-triangle"></i> Alertes stocks
-                    </button>
-                    <button type="button" class="btn btn-sm btn-outline-secondary quick-question" data-question="Statistiques des opérations par type">
-                        <i class="bi bi-bar-chart"></i> Stats opérations
-                    </button>
+                    {% if context == 'factures' %}
+                        <button type="button" class="btn btn-sm btn-outline-info quick-question" data-question="Dernières factures ce mois ?">
+                            <i class="bi bi-receipt"></i> Factures du mois
+                        </button>
+                        <button type="button" class="btn btn-sm btn-outline-info quick-question" data-question="Factures impayées ?">
+                            <i class="bi bi-exclamation-circle"></i> Impayées
+                        </button>
+                        <button type="button" class="btn btn-sm btn-outline-info quick-question" data-question="Total facturé en janvier 2025 ?">
+                            <i class="bi bi-bar-chart"></i> Stats janvier
+                        </button>
+                    {% elseif context == 'commandes' %}
+                        <button type="button" class="btn btn-sm btn-outline-success quick-question" data-question="Dernières commandes clients ?">
+                            <i class="bi bi-box-seam"></i> Dernières commandes
+                        </button>
+                        <button type="button" class="btn btn-sm btn-outline-success quick-question" data-question="Commandes en cours de traitement">
+                            <i class="bi bi-hourglass-split"></i> En cours
+                        </button>
+                        <button type="button" class="btn btn-sm btn-outline-success quick-question" data-question="Statistiques commandes ce mois">
+                            <i class="bi bi-graph-up"></i> Stats mois
+                        </button>
+                    {% elseif context == 'stocks' %}
+                        <button type="button" class="btn btn-sm btn-outline-warning quick-question" data-question="État des stocks actuels ?">
+                            <i class="bi bi-boxes"></i> État stocks
+                        </button>
+                        <button type="button" class="btn btn-sm btn-outline-warning quick-question" data-question="Stocks nécessitant un réapprovisionnement ?">
+                            <i class="bi bi-exclamation-triangle"></i> Alertes
+                        </button>
+                        <button type="button" class="btn btn-sm btn-outline-warning quick-question" data-question="Stocks en situation critique ?">
+                            <i class="bi bi-dash-circle"></i> Critiques
+                        </button>
+                    {% else %}
+                        <button type="button" class="btn btn-sm btn-outline-primary quick-question" data-question="Combien d'opérations SMS ce mois-ci ?">
+                            <i class="bi bi-chat-dots"></i> SMS du mois
+                        </button>
+                        <button type="button" class="btn btn-sm btn-outline-primary quick-question" data-question="Quels sont les stocks en alerte ?">
+                            <i class="bi bi-exclamation-triangle"></i> Alertes stocks
+                        </button>
+                        <button type="button" class="btn btn-sm btn-outline-primary quick-question" data-question="Activité commerciale cette semaine ?">
+                            <i class="bi bi-bar-chart"></i> Activité semaine
+                        </button>
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -129,10 +198,11 @@
 
 {# Données pour JavaScript #}
 <div id="chatData"
+     data-context="{{ context }}"
      data-conversation-id="{{ conversationId }}"
      data-mercure-url="{{ mercureUrl }}"
-     data-message-url="{{ path('chat_message') }}"
-     data-stream-url="{{ path('chat_stream') }}"
+     data-message-url="{{ path('chat_message', {context: context}) }}"
+     data-stream-url="{{ path('chat_stream', {context: context}) }}"
      style="display: none;">
 </div>
 {% endblock %}

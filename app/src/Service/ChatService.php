@@ -15,53 +15,73 @@ use Symfony\AI\Platform\Message\MessageBag;
 use Symfony\Component\DependencyInjection\Attribute\Target;
 
 /**
- * Service orchestrateur pour le chat IA conversationnel.
+ * Service orchestrateur pour le chat IA conversationnel multi-contexte.
  *
  * Responsabilités :
  * - Injection du prompt dynamique via AiPromptService
  * - Appel de l'agent IA avec contexte utilisateur
+ * - Routage dynamique vers l'agent spécialisé selon le contexte
  * - Gestion des erreurs et timeouts
  * - Support du streaming Mercure (méthode streamQuestion)
  * - Logging complet pour traçabilité
  *
  * Architecture :
- * - Injection AgentInterface ciblée (#[Target('chat_operations')])
+ * - 4 AgentInterface injectés via #[Target] (factures, commandes, stocks, general)
+ * - Routage dynamique via getAgentByContext()
  * - AiPromptService pour rendu du prompt système
  * - CfiTenantService pour contexte Division
  * - AiLoggerService pour traçabilité des appels
+ *
+ * Contextes supportés :
+ * - factures : Agent spécialisé factures (chat_factures)
+ * - commandes : Agent spécialisé commandes (chat_commandes)
+ * - stocks : Agent spécialisé stocks (chat_stocks)
+ * - general : Agent généraliste (chat_general)
  */
 final readonly class ChatService
 {
     public function __construct(
-        #[Target('chatOperationsAgent')]
-        private AgentInterface $chatAgent,
+        #[Target('chatFacturesAgent')]
+        private AgentInterface $facturesAgent,
+        #[Target('chatCommandesAgent')]
+        private AgentInterface $commandesAgent,
+        #[Target('chatStocksAgent')]
+        private AgentInterface $stocksAgent,
+        #[Target('chatGeneralAgent')]
+        private AgentInterface $generalAgent,
         private AiPromptService $promptService,
         private CfiTenantService $tenantService,
         private AiLoggerService $aiLogger,
+        private ToolCallCollector $toolCallCollector,
         private LoggerInterface $logger,
     ) {
     }
 
     /**
-     * Traiter une question utilisateur via l'agent IA.
+     * Traiter une question utilisateur via l'agent IA spécialisé selon le contexte.
      *
      * Workflow :
      * 1. Valider contexte utilisateur (tenant actif)
-     * 2. Rendre le prompt système dynamique avec contexte
-     * 3. Appeler l'agent IA avec prompt + question
-     * 4. Parser la réponse et extraire métadonnées
-     * 5. Logger l'appel pour traçabilité
+     * 2. Sélectionner l'agent spécialisé selon le contexte
+     * 3. Rendre le prompt système dynamique avec contexte
+     * 4. Appeler l'agent IA avec prompt + question
+     * 5. Parser la réponse et extraire métadonnées
+     * 6. Logger l'appel pour traçabilité
      *
      * @param string $question Question textuelle de l'utilisateur
      * @param User   $user     Utilisateur authentifié
+     * @param string $context  Contexte du chat (factures|commandes|stocks|general), défaut: general
      *
      * @return ChatResponse Réponse structurée de l'agent
      *
      * @throws ChatException Si contexte invalide, agent échoue ou timeout
      */
-    public function processQuestion(string $question, User $user): ChatResponse
+    public function processQuestion(string $question, User $user, string $context = 'general'): ChatResponse
     {
         $startTime = microtime(true);
+
+        // Réinitialiser le collecteur pour cette nouvelle question
+        $this->toolCallCollector->reset();
 
         try {
             // 1. Valider contexte utilisateur
@@ -70,29 +90,37 @@ final readonly class ChatService
                 throw ChatException::invalidContext('Aucune division active pour cet utilisateur');
             }
 
-            // 2. Rendre le prompt système dynamique
+            // 2. Sélectionner l'agent spécialisé selon le contexte
+            $agent = $this->getAgentByContext($context);
+            $templateName = $this->getTemplateByContext($context);
+
+            // 3. Rendre le prompt système dynamique
             $systemPrompt = $this->promptService->renderPrompt(
-                template: 'ai/prompts/chat_operations.md.twig',
+                template: $templateName,
                 user: $user,
-                tools: $this->getRegisteredTools(),
+                tools: $this->getRegisteredTools($context),
             );
 
             $this->logger->info('ChatService: Prompt système rendu', [
                 'user_id' => $user->getId(),
                 'tenant_id' => $tenantId,
+                'context' => $context,
                 'prompt_length' => strlen($systemPrompt),
             ]);
 
-            // 3. Appeler l'agent IA avec MessageBag
+            // 4. Appeler l'agent IA avec MessageBag
             $messages = new MessageBag(
                 Message::forSystem($systemPrompt),
                 Message::ofUser($question),
             );
 
-            $result = $this->chatAgent->call($messages);
+            $result = $agent->call($messages);
 
             // 4. Parser la réponse
             $durationMs = (int) ((microtime(true) - $startTime) * 1000);
+
+            // Récupérer les tools utilisés pendant l'exécution
+            $toolsUsed = $this->toolCallCollector->getToolsUsed();
 
             $chatResponse = ChatResponse::fromAgentResponse(
                 agentResponse: $result->getContent(),
@@ -104,19 +132,21 @@ final readonly class ChatService
                     'token_usage' => $result->getMetadata()->get('token_usage'),
                 ],
                 durationMs: $durationMs,
+                toolsUsed: $toolsUsed,
             );
 
             // 5. Logger l'appel
             $this->aiLogger->logToolCall(
                 user: $user,
-                toolName: 'chat_operations',
-                params: ['question' => $question],
+                toolName: sprintf('chat_%s', $context),
+                params: ['question' => $question, 'context' => $context],
                 result: ['answer_length' => strlen($chatResponse->answer)],
                 durationMs: $durationMs,
             );
 
             $this->logger->info('ChatService: Question traitée avec succès', [
                 'user_id' => $user->getId(),
+                'context' => $context,
                 'duration_ms' => $durationMs,
                 'tools_used' => count($chatResponse->toolsUsed),
             ]);
@@ -136,7 +166,7 @@ final readonly class ChatService
     }
 
     /**
-     * Traiter une question en mode streaming Mercure (SSE).
+     * Traiter une question en mode streaming Mercure (SSE) dans un contexte spécifique.
      *
      * TODO Sprint S1+: Implémenter support streaming complet avec :
      * - Génération UUID v4 pour message_id
@@ -146,29 +176,82 @@ final readonly class ChatService
      *
      * @param string $question Question textuelle de l'utilisateur
      * @param User   $user     Utilisateur authentifié
+     * @param string $context  Contexte du chat (factures|commandes|stocks|general), défaut: general
      *
      * @return string Message ID (UUID v4) pour suivi du stream
      *
      * @throws ChatException Si streaming échoue
      */
-    public function streamQuestion(string $question, User $user): string
+    public function streamQuestion(string $question, User $user, string $context = 'general'): string
     {
         throw ChatException::streamingFailed('Support streaming non implémenté - Sprint S1+');
     }
 
     /**
-     * Récupérer la liste des tools enregistrés pour l'agent.
+     * Sélectionner l'agent IA spécialisé selon le contexte.
+     *
+     * @param string $context Contexte du chat (factures|commandes|stocks|general)
+     *
+     * @return AgentInterface Agent IA injecté correspondant au contexte
+     *
+     * @throws ChatException Si contexte invalide
+     */
+    private function getAgentByContext(string $context): AgentInterface
+    {
+        return match ($context) {
+            'factures' => $this->facturesAgent,
+            'commandes' => $this->commandesAgent,
+            'stocks' => $this->stocksAgent,
+            'general' => $this->generalAgent,
+            default => throw ChatException::invalidContext(sprintf('Contexte "%s" invalide. Contextes autorisés : factures, commandes, stocks, general', $context)),
+        };
+    }
+
+    /**
+     * Récupérer le template Twig du prompt selon le contexte.
+     *
+     * @param string $context Contexte du chat (factures|commandes|stocks|general)
+     *
+     * @return string Nom du template Twig (ex: ai/prompts/chat_factures.md.twig)
+     */
+    private function getTemplateByContext(string $context): string
+    {
+        return match ($context) {
+            'factures' => 'ai/prompts/chat_factures.md.twig',
+            'commandes' => 'ai/prompts/chat_commandes.md.twig',
+            'stocks' => 'ai/prompts/chat_stocks.md.twig',
+            'general' => 'ai/prompts/chat_general.md.twig',
+            default => 'ai/prompts/chat_general.md.twig', // Fallback sécurisé
+        };
+    }
+
+    /**
+     * Récupérer la liste des tools enregistrés pour le contexte spécifié.
+     *
+     * @param string $context Contexte du chat (factures|commandes|stocks|general)
      *
      * @return array<int, class-string>
      */
-    private function getRegisteredTools(): array
+    private function getRegisteredTools(string $context): array
     {
-        // TODO Sprint S1+: Récupérer dynamiquement depuis configuration ai.yaml
-        return [
-            Tool\GetOperationsTool::class,
-            Tool\GetStocksTool::class,
-            Tool\GetOperationStatsTool::class,
-            Tool\GetStockAlertsTool::class,
-        ];
+        return match ($context) {
+            'factures' => [
+                Tool\GetFacturesTool::class, // Tool spécialisé factures (type="mail" forcé)
+            ],
+            'commandes' => [
+                Tool\GetCommandesTool::class, // Tool spécialisé commandes (type!=mail)
+            ],
+            'stocks' => [
+                Tool\GetStocksTool::class,
+                Tool\GetStockAlertsTool::class,
+            ],
+            'general' => [
+                Tool\GetOperationsTool::class, // Tool générique pour tous types
+                Tool\GetStocksTool::class,
+                Tool\GetOperationStatsTool::class,
+                Tool\GetStockAlertsTool::class,
+            ],
+            default => [], // Aucun tool pour contexte invalide
+        };
     }
 }

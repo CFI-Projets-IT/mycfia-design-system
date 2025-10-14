@@ -58,21 +58,23 @@ final readonly class ChatResponse
      * @param mixed                $agentResponse Réponse brute de AgentInterface
      * @param array<string, mixed> $metadata      Métadonnées contextuelles (user, division, timestamp)
      * @param int                  $durationMs    Durée du traitement (ms)
+     * @param array<int, string>   $toolsUsed     Liste des tools appelés (fournie par ToolCallCollector)
      */
     public static function fromAgentResponse(
         mixed $agentResponse,
         array $metadata = [],
         int $durationMs = 0,
+        array $toolsUsed = [],
     ): self {
-        // TODO Sprint S1+: Parser la réponse agent pour extraire toolsUsed et proofCards
-        // Format attendu : { "answer": "...", "tool_calls": [...], "metadata": {...} }
+        // TODO Sprint S1+: Parser la réponse agent pour extraire proofCards
+        // Les toolsUsed sont maintenant capturés via ToolCallCollector (real-time)
 
         $answer = is_string($agentResponse) ? $agentResponse : 'Réponse invalide de l\'agent';
 
         return new self(
             answer: $answer,
             metadata: $metadata,
-            toolsUsed: [],
+            toolsUsed: $toolsUsed,
             proofCards: [],
             durationMs: $durationMs,
             messageId: null,

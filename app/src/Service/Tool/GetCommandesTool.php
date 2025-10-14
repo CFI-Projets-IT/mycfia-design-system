@@ -15,21 +15,27 @@ use Symfony\Component\DependencyInjection\Attribute\AsTaggedItem;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
- * Tool IA pour récupérer les opérations marketing depuis CFI.
+ * Tool IA spécialisé pour récupérer les COMMANDES depuis CFI.
  *
- * Permet à l'agent IA de consulter les lignes d'opérations avec filtres :
- * - Type opération (sms, email, mail, all)
- * - Période (dateDebut, dateFin)
- * - Statut
+ * Version spécialisée de GetOperationsTool focalisée sur les commandes
+ * (opérations de type SMS, Email, et autres types hors factures).
  *
- * Retour structuré avec métadonnées pour "cartes preuve".
+ * Responsabilités :
+ * - Récupérer TOUTES les opérations sauf factures (type != "mail")
+ * - Retour structuré avec métadonnées CFI
+ * - Cache 5 minutes via OperationApiService
+ *
+ * Différence avec GetOperationsTool :
+ * - Appelle avec type=null pour récupérer tous types
+ * - Description optimisée pour contexte commandes
+ * - Nom métier "commandes" plutôt que "opérations"
  */
 #[AsTool(
-    name: 'get_operations',
-    description: 'Récupère les opérations marketing (SMS, Email, Courrier) avec filtres optionnels. Retourne les détails complets avec sources CFI et métadonnées.'
+    name: 'get_commandes',
+    description: 'Récupère les commandes marketing (SMS, Email, toutes campagnes) avec filtres optionnels. Retourne les détails complets avec sources CFI et métadonnées.'
 )]
-#[AsTaggedItem(priority: 100)]
-final readonly class GetOperationsTool
+#[AsTaggedItem(priority: 95)]
+final readonly class GetCommandesTool
 {
     use AuthenticatedToolTrait;
 
@@ -44,25 +50,25 @@ final readonly class GetOperationsTool
     }
 
     /**
-     * Récupérer les opérations marketing avec filtres.
+     * Récupérer les commandes avec filtres.
      *
-     * @param string      $type      Type d'opération : 'sms', 'email', 'mail', 'all' (défaut: 'all')
      * @param string|null $dateDebut Date de début (format YYYY-MM-DD)
      * @param string|null $dateFin   Date de fin (format YYYY-MM-DD)
      * @param string|null $statut    Statut de l'opération
+     * @param string|null $type      Type spécifique (sms, email, ou null pour tous)
      *
-     * @return array{count: int, operations: array, metadata: array}
+     * @return array{count: int, commandes: array, metadata: array}
      */
     public function __invoke(
-        string $type = 'all',
         ?string $dateDebut = null,
         ?string $dateFin = null,
         ?string $statut = null,
+        ?string $type = null,
     ): array {
         $startTime = microtime(true);
 
         // Enregistrer l'appel du tool
-        $this->toolCallCollector->addToolCall('get_operations');
+        $this->toolCallCollector->addToolCall('get_commandes');
 
         try {
             // Récupérer utilisateur et tenant via le trait
@@ -75,16 +81,25 @@ final readonly class GetOperationsTool
             $idDivision = $tenant->getIdCfi();
 
             // Appel API CFI via service (avec cache 5min)
+            // Type=null pour récupérer tous types (sms, email, etc.)
             $operations = $this->operationApi->getLignesOperations(
                 idDivision: $idDivision,
-                type: 'all' === $type ? null : $type,
+                type: $type, // Null par défaut = tous types
                 dateDebut: $dateDebut,
                 dateFin: $dateFin,
                 statut: $statut,
             );
 
+            // Filtrer pour exclure les factures (type="mail") si nécessaire
+            if (null === $type) {
+                $operations = array_filter(
+                    $operations,
+                    fn (LigneOperationDto $op) => 'mail' !== strtolower($op->type)
+                );
+            }
+
             // Formatter données pour l'agent IA
-            $formattedOperations = array_map(
+            $formattedCommandes = array_map(
                 fn (LigneOperationDto $op) => [
                     'id' => $op->id,
                     'nom' => $op->nom,
@@ -108,19 +123,20 @@ final readonly class GetOperationsTool
             // Log tool call
             $this->aiLogger->logToolCall(
                 user: $user,
-                toolName: 'get_operations',
+                toolName: 'get_commandes',
                 params: ['type' => $type, 'dateDebut' => $dateDebut, 'dateFin' => $dateFin, 'statut' => $statut],
-                result: ['count' => count($formattedOperations)],
+                result: ['count' => count($formattedCommandes)],
                 durationMs: $durationMs
             );
 
             return [
                 'success' => true,
-                'count' => count($formattedOperations),
-                'operations' => $formattedOperations,
+                'count' => count($formattedCommandes),
+                'commandes' => $formattedCommandes,
                 'metadata' => [
                     'source' => 'CFI API',
                     'endpoint' => '/Campagnes/getLignesCampagnes',
+                    'type_filter' => $type ?? 'all (hors factures)',
                     'cache_ttl' => '5 minutes',
                     'division' => $tenant->getNom(),
                     'duration_ms' => $durationMs,
@@ -128,7 +144,7 @@ final readonly class GetOperationsTool
             ];
         } catch (\Exception $e) {
             // Log détaillé pour développeurs (technique)
-            $this->logger->error('GetOperationsTool: Erreur lors de la récupération des opérations', [
+            $this->logger->error('GetCommandesTool: Erreur lors de la récupération des commandes', [
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString(),
                 'params' => ['type' => $type, 'dateDebut' => $dateDebut, 'dateFin' => $dateFin, 'statut' => $statut],
@@ -152,7 +168,7 @@ final readonly class GetOperationsTool
             'success' => false,
             'error' => $message,
             'count' => 0,
-            'operations' => [],
+            'commandes' => [],
         ];
     }
 }

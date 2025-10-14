@@ -8,6 +8,7 @@ use App\DTO\Cfi\StockDto;
 use App\Security\UserAuthenticationService;
 use App\Service\AiLoggerService;
 use App\Service\Api\StockApiService;
+use App\Service\ToolCallCollector;
 use Psr\Log\LoggerInterface;
 use Symfony\AI\Agent\Toolbox\Attribute\AsTool;
 use Symfony\Component\DependencyInjection\Attribute\AsTaggedItem;
@@ -35,6 +36,7 @@ final readonly class GetStocksTool
         private StockApiService $stockApi,
         private UserAuthenticationService $authService,
         private AiLoggerService $aiLogger,
+        private ToolCallCollector $toolCallCollector,
         private LoggerInterface $logger,
         private TranslatorInterface $translator,
     ) {
@@ -53,6 +55,9 @@ final readonly class GetStocksTool
         ?bool $enAlerte = null,
     ): array {
         $startTime = microtime(true);
+
+        // Enregistrer l'appel du tool
+        $this->toolCallCollector->addToolCall('get_stocks');
 
         try {
             // Récupérer utilisateur et tenant via le trait

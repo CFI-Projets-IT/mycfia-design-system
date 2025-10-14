@@ -8,6 +8,7 @@ use App\DTO\Cfi\LigneOperationDto;
 use App\Security\UserAuthenticationService;
 use App\Service\AiLoggerService;
 use App\Service\Api\OperationApiService;
+use App\Service\ToolCallCollector;
 use Psr\Log\LoggerInterface;
 use Symfony\AI\Agent\Toolbox\Attribute\AsTool;
 use Symfony\Component\DependencyInjection\Attribute\AsTaggedItem;
@@ -37,6 +38,7 @@ final readonly class GetOperationStatsTool
         private OperationApiService $operationApi,
         private UserAuthenticationService $authService,
         private AiLoggerService $aiLogger,
+        private ToolCallCollector $toolCallCollector,
         private LoggerInterface $logger,
         private TranslatorInterface $translator,
     ) {
@@ -57,6 +59,9 @@ final readonly class GetOperationStatsTool
         string $groupBy = 'type',
     ): array {
         $startTime = microtime(true);
+
+        // Enregistrer l'appel du tool
+        $this->toolCallCollector->addToolCall('get_operation_stats');
 
         try {
             // Récupérer utilisateur et tenant via le trait
