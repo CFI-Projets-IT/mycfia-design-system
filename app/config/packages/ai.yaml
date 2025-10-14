@@ -11,4 +11,8 @@ ai:
                 name: 'mistral-large-latest'
             prompt: '@ai/prompts/chat_operations.md.twig'
             track_token_usage: true
-            tools: []
+            tools:
+                - 'App\Service\Tool\GetOperationsTool'
+                - 'App\Service\Tool\GetStocksTool'
+                - 'App\Service\Tool\GetOperationStatsTool'
+                - 'App\Service\Tool\GetStockAlertsTool'
