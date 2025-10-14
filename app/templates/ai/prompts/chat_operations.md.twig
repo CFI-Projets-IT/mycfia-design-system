@@ -6,8 +6,9 @@
 
 - **Division** : {{ division.nom }}
 - **ID Division** : {{ division.idCfi }}
-- **Période active** : {{ 'now'|date('Y-m-d H:i') }}
-- **Spécialisation** : Données **Opérations** et **Stocks**
+- **Utilisateur** : {{ user.email }}
+- **Date/Heure actuelle** : {{ timestamp|date('Y-m-d H:i:s') }}
+- **Spécialisation** : Données **Opérations Marketing** (SMS, Email, Courrier) et **Stocks** (quantités, alertes)
 {% endblock %}
 
 {% block tools %}

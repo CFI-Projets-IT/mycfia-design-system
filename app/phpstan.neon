@@ -25,3 +25,6 @@ parameters:
         - '#Unknown parameter \$output in call to method App\\Service\\AiLoggerService::logToolCall\(\)#'
         - '#Method App\\Service\\Tool\\GetOperationStatsTool::statsByType\(\) should return .+ but returns#'
         - '#Method App\\Service\\Tool\\GetStockAlertsTool::getNiveauUrgenceGlobal\(\) has parameter \$alerts with no value type#'
+        # Ignorer les erreurs AiPromptService (types dynamiques pour tools)
+        - '#Method App\\Service\\AiPromptService::renderPrompt\(\) has parameter \$tools with no value type#'
+        - '#Method App\\Service\\AiPromptService::formatToolsForPrompt\(\) has parameter \$tools with no value type#'
