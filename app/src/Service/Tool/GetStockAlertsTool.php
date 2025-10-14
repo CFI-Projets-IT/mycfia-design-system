@@ -9,8 +9,8 @@ use App\Service\AiLoggerService;
 use App\Service\Api\StockApiService;
 use App\Service\Cfi\CfiTenantService;
 use Psr\Log\LoggerInterface;
-use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\AI\Toolbox\Attribute\AsTool;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\DependencyInjection\Attribute\AsTaggedItem;
 
 /**
