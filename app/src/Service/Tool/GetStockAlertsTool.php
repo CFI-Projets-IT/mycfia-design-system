@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Service\Tool;
 
 use App\DTO\Cfi\StockDto;
-use App\Entity\User;
 use App\Service\AiLoggerService;
 use App\Service\Api\StockApiService;
 use App\Service\Cfi\CfiTenantService;
@@ -29,6 +28,8 @@ use Symfony\Component\DependencyInjection\Attribute\AsTaggedItem;
 #[AsTaggedItem(priority: 85)]
 final readonly class GetStockAlertsTool
 {
+    use AuthenticatedToolTrait;
+
     public function __construct(
         private StockApiService $stockApi,
         private CfiTenantService $tenantService,
@@ -48,17 +49,13 @@ final readonly class GetStockAlertsTool
         $startTime = microtime(true);
 
         try {
-            // Récupérer utilisateur et tenant
-            $user = $this->security->getUser();
-            if (null === $user || ! $user instanceof User) {
-                return $this->errorResponse('Utilisateur non authentifié');
+            // Récupérer utilisateur et tenant via le trait
+            $auth = $this->getUserAndTenant($this->security, $this->tenantService);
+            if (isset($auth['error'])) {
+                return $auth['error'];
             }
 
-            $tenant = $this->tenantService->getTenantActuel($user);
-            if (null === $tenant) {
-                return $this->errorResponse('Division non trouvée');
-            }
-
+            ['user' => $user, 'tenant' => $tenant] = $auth;
             $idDivision = $tenant->getIdCfi();
 
             // Appel API CFI via service (avec cache 5min) - Filtrer alertes uniquement
