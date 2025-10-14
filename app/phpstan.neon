@@ -11,8 +11,6 @@ parameters:
         - var/
         - vendor/
     ignoreErrors:
-        # Ignorer l'attribut #[AsTool] de Symfony AI Bundle (dev-main) - sera disponible en runtime
-        - '#Attribute class Symfony\\AI\\Toolbox\\Attribute\\AsTool does not exist#'
         # Ignorer les erreurs de type pour les return types des tools (structure dynamique IA)
         - '#Method App\\Service\\Tool\\.+::__invoke\(\) return type has no value type specified in iterable type array#'
         - '#Method App\\Service\\Tool\\.+::__invoke\(\) should return .+ but returns .+#'

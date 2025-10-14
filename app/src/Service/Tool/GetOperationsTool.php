@@ -9,7 +9,7 @@ use App\Service\AiLoggerService;
 use App\Service\Api\OperationApiService;
 use App\Service\Cfi\CfiTenantService;
 use Psr\Log\LoggerInterface;
-use Symfony\AI\Toolbox\Attribute\AsTool;
+use Symfony\AI\Agent\Toolbox\Attribute\AsTool;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\DependencyInjection\Attribute\AsTaggedItem;
 
