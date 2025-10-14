@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\Entity\User;
+use App\Security\UserAuthenticationService;
 use App\Service\ChatService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -30,6 +30,11 @@ use Symfony\Component\Uid\Uuid;
 #[Route('/chat', name: 'chat_')]
 final class ChatController extends AbstractController
 {
+    public function __construct(
+        private readonly UserAuthenticationService $authService,
+    ) {
+    }
+
     /**
      * Page principale du chat IA.
      *
@@ -79,8 +84,9 @@ final class ChatController extends AbstractController
         }
 
         try {
-            $user = $this->getUser();
-            if (null === $user || ! $user instanceof User) {
+            // Authentification via service centralisé
+            $user = $this->authService->getAuthenticatedUser();
+            if (null === $user) {
                 return $this->json(['error' => 'Utilisateur non authentifié'], Response::HTTP_UNAUTHORIZED);
             }
 
@@ -127,8 +133,9 @@ final class ChatController extends AbstractController
         }
 
         try {
-            $user = $this->getUser();
-            if (null === $user || ! $user instanceof User) {
+            // Authentification via service centralisé
+            $user = $this->authService->getAuthenticatedUser();
+            if (null === $user) {
                 return $this->json(['error' => 'Utilisateur non authentifié'], Response::HTTP_UNAUTHORIZED);
             }
 

@@ -5,12 +5,11 @@ declare(strict_types=1);
 namespace App\Service\Tool;
 
 use App\DTO\Cfi\StockDto;
+use App\Security\UserAuthenticationService;
 use App\Service\AiLoggerService;
 use App\Service\Api\StockApiService;
-use App\Service\Cfi\CfiTenantService;
 use Psr\Log\LoggerInterface;
 use Symfony\AI\Agent\Toolbox\Attribute\AsTool;
-use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\DependencyInjection\Attribute\AsTaggedItem;
 
 /**
@@ -33,9 +32,8 @@ final readonly class GetStocksTool
 
     public function __construct(
         private StockApiService $stockApi,
-        private CfiTenantService $tenantService,
+        private UserAuthenticationService $authService,
         private AiLoggerService $aiLogger,
-        private Security $security,
         private LoggerInterface $logger,
     ) {
     }
@@ -56,7 +54,7 @@ final readonly class GetStocksTool
 
         try {
             // Récupérer utilisateur et tenant via le trait
-            $auth = $this->getUserAndTenant($this->security, $this->tenantService);
+            $auth = $this->getUserAndTenant($this->authService);
             if (isset($auth['error'])) {
                 return $auth['error'];
             }

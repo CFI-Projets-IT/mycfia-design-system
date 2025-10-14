@@ -6,14 +6,17 @@ namespace App\Service\Tool;
 
 use App\DTO\Cfi\TenantDto;
 use App\Entity\User;
-use App\Service\Cfi\CfiTenantService;
-use Symfony\Bundle\SecurityBundle\Security;
+use App\Security\UserAuthenticationService;
 
 /**
  * Trait pour gérer l'authentification et la récupération du tenant dans les tools IA.
  *
  * Centralise la logique de validation utilisateur et tenant pour éviter
  * la duplication de code dans tous les tools nécessitant une authentification.
+ *
+ * Architecture : Utilise UserAuthenticationService (pattern Strategy)
+ * pour centraliser la logique d'authentification partagée entre
+ * Controllers et Tools IA.
  */
 trait AuthenticatedToolTrait
 {
@@ -25,29 +28,20 @@ trait AuthenticatedToolTrait
      * - L'utilisateur est de type User (pas seulement UserInterface)
      * - Un tenant (division) est actif pour cet utilisateur
      *
-     * @param Security         $security      Service de sécurité Symfony
-     * @param CfiTenantService $tenantService Service de gestion multi-tenant
+     * @param UserAuthenticationService $authService Service d'authentification centralisé
      *
      * @return array{user: User, tenant: TenantDto}|array{error: array} Utilisateur et tenant, ou erreur formatée
      */
-    protected function getUserAndTenant(Security $security, CfiTenantService $tenantService): array
+    protected function getUserAndTenant(UserAuthenticationService $authService): array
     {
-        // Récupérer utilisateur authentifié
-        $user = $security->getUser();
-        if (null === $user || ! $user instanceof User) {
-            return ['error' => $this->errorResponse('Utilisateur non authentifié')];
+        // Récupérer utilisateur et tenant via service centralisé
+        $context = $authService->getUserWithTenant();
+
+        if (null === $context) {
+            return ['error' => $this->errorResponse('Utilisateur non authentifié ou division non trouvée')];
         }
 
-        // Récupérer tenant actuel
-        $tenant = $tenantService->getTenantActuel($user);
-        if (null === $tenant) {
-            return ['error' => $this->errorResponse('Division non trouvée')];
-        }
-
-        return [
-            'user' => $user,
-            'tenant' => $tenant,
-        ];
+        return $context;
     }
 
     /**
