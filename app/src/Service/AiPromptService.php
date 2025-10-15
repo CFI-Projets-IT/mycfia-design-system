@@ -32,9 +32,10 @@ final readonly class AiPromptService
     /**
      * Rendre un prompt IA avec contexte dynamique.
      *
-     * @param string $template Chemin du template Twig (ex: 'ai/prompts/chat_operations.md.twig')
-     * @param User   $user     Utilisateur courant
-     * @param array  $tools    Liste des tools disponibles pour l'agent (optionnel)
+     * @param string   $template Chemin du template Twig (ex: 'ai/prompts/chat_operations.md.twig')
+     * @param User     $user     Utilisateur courant
+     * @param array    $tools    Liste des tools disponibles pour l'agent (optionnel)
+     * @param int|null $tenantId ID du tenant (optionnel - si null, récupéré depuis session)
      *
      * @return string Prompt rendu avec contexte injecté
      *
@@ -42,20 +43,21 @@ final readonly class AiPromptService
      * @throws \Twig\Error\RuntimeError
      * @throws \Twig\Error\SyntaxError
      */
-    public function renderPrompt(string $template, User $user, array $tools = []): string
+    public function renderPrompt(string $template, User $user, array $tools = [], ?int $tenantId = null): string
     {
         $startTime = microtime(true);
 
         try {
-            // Récupérer tenant actuel
-            $tenantId = $this->tenantService->getCurrentTenantOrNull();
+            // Récupérer tenant actuel avec son nom complet
+            // Utilise AsyncExecutionContext si disponible (contexte async), sinon session (contexte sync)
+            $tenant = $this->tenantService->getTenantActuel($user);
 
             // Construire contexte pour le template
             $context = [
                 'user' => $user,
                 'division' => [
-                    'idCfi' => $tenantId,
-                    'nom' => $this->getTenantName($tenantId),
+                    'idCfi' => $tenant?->idCfi,
+                    'nom' => null !== $tenant ? $tenant->nom : 'Non défini',
                 ],
                 'tools' => $this->formatToolsForPrompt($tools),
                 'timestamp' => new \DateTime(),
@@ -69,7 +71,8 @@ final readonly class AiPromptService
             $this->logger->info('AiPromptService: Prompt rendu avec succès', [
                 'template' => $template,
                 'user_id' => $user->getId(),
-                'tenant_id' => $tenantId,
+                'tenant_id' => $tenant?->idCfi,
+                'tenant_nom' => $tenant?->nom,
                 'duration_ms' => $durationMs,
                 'prompt_length' => strlen($prompt),
             ]);
@@ -84,22 +87,6 @@ final readonly class AiPromptService
 
             throw $e;
         }
-    }
-
-    /**
-     * Récupérer le nom du tenant depuis l'ID.
-     *
-     * TODO Sprint S1+: Implémenter cache ou service de récupération nom Division
-     * Pour l'instant, retourne un placeholder.
-     */
-    private function getTenantName(?int $tenantId): string
-    {
-        if (null === $tenantId) {
-            return 'Non défini';
-        }
-
-        // TODO: Récupérer le nom réel depuis Division ou session
-        return "Division #{$tenantId}";
     }
 
     /**
