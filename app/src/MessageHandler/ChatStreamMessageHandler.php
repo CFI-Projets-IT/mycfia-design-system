@@ -125,50 +125,59 @@ final readonly class ChatStreamMessageHandler
                 Message::ofUser($message->question),
             );
 
-            // 7. Stream agent IA chunk par chunk (option 'stream' => true)
-            $result = $agent->call($messages, ['stream' => true]);
+            // 7. Appel NON-STREAMING pour récupérer métadonnées complètes
+            // TokenOutputProcessor (services.yaml) capture automatiquement model + token_usage
+            $result = $agent->call($messages); // Pas d'option ['stream' => true]
 
-            $fullResponse = '';
-            foreach ($result->getContent() as $chunk) {
-                $fullResponse .= $chunk;
+            // 8. Récupérer réponse complète et métadonnées
+            $fullResponse = $result->getContent();
+            $resultMetadata = $result->getMetadata();
+
+            // DEBUG : Logger métadonnées capturées (model + token_usage)
+            $this->logger->info('ChatStreamMessageHandler: Métadonnées capturées', [
+                'metadata_keys' => array_keys($resultMetadata->all()),
+                'model' => $resultMetadata->get('model'),
+                'token_usage' => $resultMetadata->get('token_usage'),
+            ]);
+
+            // 9. Simuler streaming en découpant la réponse en chunks
+            // Publier progressivement via Mercure pour conserver l'UX de streaming
+            // ⚠️ Utiliser mb_substr() pour respecter les caractères UTF-8 multi-bytes (©, é, etc.)
+            $chunkSize = 50; // Taille des chunks en caractères (pas en octets)
+            $responseLength = mb_strlen($fullResponse, 'UTF-8');
+
+            for ($offset = 0; $offset < $responseLength; $offset += $chunkSize) {
+                $chunk = mb_substr($fullResponse, $offset, $chunkSize, 'UTF-8');
 
                 // Publier chaque chunk via Mercure
                 $this->streamPublisher->publishChunk($message->conversationId, $message->messageId, $chunk);
+
+                // Optionnel : Délai léger pour simuler streaming naturel
+                usleep(30000); // 30ms entre chaque chunk
             }
 
-            // IMPORTANT : Les métadonnées ne sont disponibles qu'APRÈS avoir consommé tous les chunks
-            $resultMetadata = $result->getMetadata();
-
-            // DEBUG : Logger TOUTES les métadonnées disponibles
-            $this->logger->info('ChatStreamMessageHandler: DEBUG - Métadonnées disponibles', [
-                'metadata_keys' => $resultMetadata ? array_keys($resultMetadata->all()) : [],
-                'all_metadata' => $resultMetadata?->all(),
-                'model_direct' => $resultMetadata?->get('model'),
-                'token_usage_direct' => $resultMetadata?->get('token_usage'),
-            ]);
-
-            // 8. Calculer durée et métadonnées
+            // 10. Calculer durée et métadonnées
             $durationMs = (int) ((microtime(true) - $startTime) * 1000);
             $toolsUsed = $this->toolCallCollector->getToolsUsed();
 
-            // 9. Publier événement "complete" avec métadonnées (incluant model et token_usage)
+            // 11. Publier événement "complete" avec métadonnées (incluant model et token_usage)
             $this->streamPublisher->publishComplete($message->conversationId, $message->messageId, [
                 'user_id' => $user->getId(),
                 'tenant_id' => $tenantId,
                 'context' => $message->context,
                 'duration_ms' => $durationMs,
                 'tools_used' => $toolsUsed,
-                'answer_length' => strlen($fullResponse),
+                'answer_length' => mb_strlen($fullResponse, 'UTF-8'),
                 'model' => $resultMetadata->get('model'),
                 'token_usage' => $resultMetadata->get('token_usage'),
             ]);
 
-            // 10. Logger l'appel
+            // 12. Logger l'appel
             $this->aiLogger->logToolCall(
                 user: $user,
                 toolName: sprintf('chat_%s_stream', $message->context),
                 params: ['question' => $message->question, 'context' => $message->context, 'conversation_id' => $message->conversationId],
-                result: ['answer_length' => strlen($fullResponse), 'tools_used' => $toolsUsed],
+                result: ['answer_length' => mb_strlen($fullResponse, 'UTF-8'), 'tools_used' => $toolsUsed],
                 durationMs: $durationMs,
             );
 

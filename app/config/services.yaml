@@ -34,6 +34,19 @@ services:
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
 
+    # Symfony AI - Token Usage Tracking
+    # Active TokenOutputProcessor de Mistral pour capturer token_usage
+    # Fonctionne UNIQUEMENT en mode non-streaming (voir Bridge/Mistral/TokenOutputProcessor.php:27-30)
+    Symfony\AI\Platform\Bridge\Mistral\TokenOutputProcessor:
+        tags:
+            - { name: 'ai.output_processor', priority: 100 }
+
+    # OutputProcessor personnalisé pour capturer le champ "model" (non capturé par TokenOutputProcessor)
+    # Priorité 200 pour s'exécuter APRÈS TokenOutputProcessor
+    App\Service\Ai\MistralMetadataProcessor:
+        tags:
+            - { name: 'ai.output_processor', priority: 200 }
+
     # CFI API Service Configuration
     App\Service\Cfi\CfiApiService:
         arguments:
@@ -48,3 +61,7 @@ services:
         arguments:
             $tokenTtl: '%cfi.token.ttl%'
             $tokenRefreshThreshold: '%cfi.token.refresh_threshold%'
+
+    App\Controller\ChatController:
+        arguments:
+            $mercurePublicUrl: '%mercure.default_hub%'
