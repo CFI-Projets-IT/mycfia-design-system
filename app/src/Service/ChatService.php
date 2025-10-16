@@ -253,10 +253,9 @@ final readonly class ChatService
 
             // DEBUG : Logger les métadonnées pour diagnostic
             $this->logger->info('ChatService: Métadonnées streaming récupérées', [
-                'metadata_available' => $resultMetadata !== null,
-                'model' => $resultMetadata?->get('model'),
-                'token_usage' => $resultMetadata?->get('token_usage'),
-                'all_metadata' => $resultMetadata?->all(),
+                'model' => $resultMetadata->get('model'),
+                'token_usage' => $resultMetadata->get('token_usage'),
+                'all_metadata' => $resultMetadata->all(),
             ]);
 
             // 8. Calculer durée et métadonnées

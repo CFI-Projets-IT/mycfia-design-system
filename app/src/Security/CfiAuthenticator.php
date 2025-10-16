@@ -15,6 +15,7 @@ use App\Service\Cfi\CfiTenantService;
 use App\Service\Cfi\CfiUserSyncService;
 use App\Service\PasswordHasherService;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -59,6 +60,7 @@ class CfiAuthenticator extends AbstractAuthenticator
         private readonly CfiUserSyncService $cfiUserSyncService,
         private readonly PasswordHasherService $passwordHasher,
         private readonly UrlGeneratorInterface $urlGenerator,
+        #[Autowire(service: 'monolog.logger.auth')]
         private readonly LoggerInterface $logger,
         private readonly TranslatorInterface $translator,
     ) {

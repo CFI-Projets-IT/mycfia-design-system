@@ -6,6 +6,7 @@ namespace App\Security;
 
 use App\DTO\Cfi\UtilisateurGorilliasDto;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
@@ -21,6 +22,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class CfiUserProvider implements UserProviderInterface
 {
     public function __construct(
+        #[Autowire(service: 'monolog.logger.auth')]
         private readonly LoggerInterface $logger,
         private readonly TranslatorInterface $translator,
     ) {

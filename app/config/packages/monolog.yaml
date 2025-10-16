@@ -1,15 +1,49 @@
 monolog:
     channels:
         - deprecation # Deprecations are logged in the dedicated "deprecation" channel when it exists
+        - auth        # Authentification CFI (CfiAuthenticator, UserAuthenticationService)
+        - chat        # Chat IA et streaming (ChatService, ChatController, ChatStreamMessageHandler)
+        - cfi_api     # Appels API CFI (CfiApiService, CfiTenantService, CfiSessionService)
+        - messenger   # Messages async Symfony Messenger
 
 when@dev:
     monolog:
         handlers:
+            # Fichier principal (tous les logs sauf channels spécifiques)
             main:
                 type: stream
                 path: "%kernel.logs_dir%/%kernel.environment%.log"
                 level: debug
-                channels: ["!event"]
+                channels: ["!event", "!auth", "!chat", "!cfi_api", "!messenger"]
+
+            # Logs d'authentification CFI
+            auth:
+                type: stream
+                path: "%kernel.logs_dir%/auth.log"
+                level: info
+                channels: ["auth"]
+
+            # Logs du chat IA et streaming
+            chat:
+                type: stream
+                path: "%kernel.logs_dir%/chat.log"
+                level: debug
+                channels: ["chat"]
+
+            # Logs des appels API CFI
+            cfi_api:
+                type: stream
+                path: "%kernel.logs_dir%/cfi_api.log"
+                level: debug
+                channels: ["cfi_api"]
+
+            # Logs Messenger (messages async)
+            messenger:
+                type: stream
+                path: "%kernel.logs_dir%/messenger.log"
+                level: info
+                channels: ["messenger"]
+
             # uncomment to get logging in your browser
             # you may have to allow bigger header sizes in your Web server configuration
             #firephp:

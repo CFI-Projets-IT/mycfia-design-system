@@ -6,6 +6,7 @@ namespace App\Security;
 
 use App\DTO\Cfi\TenantDto;
 use App\Entity\User;
+use App\Service\AsyncExecutionContext;
 use App\Service\Cfi\CfiTenantService;
 use Symfony\Bundle\SecurityBundle\Security;
 
@@ -31,16 +32,28 @@ final readonly class UserAuthenticationService
     public function __construct(
         private Security $security,
         private CfiTenantService $tenantService,
+        private AsyncExecutionContext $asyncContext,
     ) {
     }
 
     /**
      * Récupérer l'utilisateur authentifié avec validation de type.
      *
+     * Stratégie de résolution :
+     * 1. Si contexte async disponible → utiliser utilisateur injecté
+     * 2. Sinon, fallback vers Security (contexte synchrone)
+     *
      * @return User|null Utilisateur authentifié de type User, ou null si non authentifié
      */
     public function getAuthenticatedUser(): ?User
     {
+        // Contexte asynchrone : utilisateur injecté manuellement
+        $asyncUser = $this->asyncContext->getUser();
+        if (null !== $asyncUser) {
+            return $asyncUser;
+        }
+
+        // Contexte synchrone : récupérer depuis Security (session HTTP)
         $user = $this->security->getUser();
 
         if (null === $user || ! $user instanceof User) {

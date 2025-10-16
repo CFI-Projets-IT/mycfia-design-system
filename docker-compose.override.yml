@@ -60,9 +60,11 @@ services:
       - app_network
 
   # Configuration Mercure pour développement
+  # Note: Port mapping désactivé - Mercure accessible via proxy FrankenPHP sur port 82
+  # URL: http://0.0.0.0:82/.well-known/mercure (plus de problème CORS/Same-Origin)
   mercure:
-    ports:
-      - "${MERCURE_PORT:-3001}:3000"
+    # ports:
+    #   - "${MERCURE_PORT:-3001}:80"  # Désactivé - utiliser proxy Caddy
     environment:
       MERCURE_EXTRA_DIRECTIVES: |
         cors_origins http://localhost:${HTTP_PORT:-82} http://127.0.0.1:${HTTP_PORT:-82} http://0.0.0.0:${HTTP_PORT:-82}

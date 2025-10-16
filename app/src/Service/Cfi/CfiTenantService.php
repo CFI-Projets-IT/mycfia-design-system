@@ -7,7 +7,9 @@ namespace App\Service\Cfi;
 use App\DTO\Cfi\TenantDto;
 use App\DTO\Cfi\UtilisateurGorilliasDto;
 use App\Entity\User;
+use App\Service\AsyncExecutionContext;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 /**
  * Service de gestion multi-tenant CFI.
@@ -19,6 +21,8 @@ class CfiTenantService
 {
     public function __construct(
         private readonly CfiSessionService $sessionService,
+        private readonly AsyncExecutionContext $asyncContext,
+        #[Autowire(service: 'monolog.logger.cfi_api')]
         private readonly LoggerInterface $logger,
     ) {
     }
@@ -65,7 +69,11 @@ class CfiTenantService
      * Récupérer le tenant actuel avec toutes ses données.
      *
      * Construit un TenantDto depuis les informations utilisateur CFI
-     * stockées dans la session Symfony.
+     * stockées dans la session Symfony ou le contexte asynchrone.
+     *
+     * Stratégie de résolution :
+     * 1. Si contexte async disponible → utiliser tenant injecté
+     * 2. Sinon, fallback vers session HTTP (contexte synchrone)
      *
      * @param User $user Utilisateur authentifié
      *
@@ -73,6 +81,13 @@ class CfiTenantService
      */
     public function getTenantActuel(User $user): ?TenantDto
     {
+        // Contexte asynchrone : tenant injecté manuellement
+        $asyncTenant = $this->asyncContext->getTenant();
+        if (null !== $asyncTenant) {
+            return $asyncTenant;
+        }
+
+        // Contexte synchrone : récupérer depuis session HTTP
         $tenantId = $this->getCurrentTenantOrNull();
 
         if (null === $tenantId) {

@@ -4,12 +4,16 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Message\ChatStreamMessage;
 use App\Security\UserAuthenticationService;
+use App\Service\Cfi\CfiSessionService;
+use App\Service\Cfi\CfiTenantService;
 use App\Service\ChatService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Uid\Uuid;
 
@@ -46,6 +50,10 @@ final class ChatController extends AbstractController
 
     public function __construct(
         private readonly UserAuthenticationService $authService,
+        private readonly CfiTenantService $tenantService,
+        private readonly CfiSessionService $cfiSession,
+        private readonly string $mercurePublicUrl,
+        private readonly MessageBusInterface $messageBus,
     ) {
     }
 
@@ -85,8 +93,7 @@ final class ChatController extends AbstractController
         return $this->render('chat/index.html.twig', [
             'context' => $context,
             'conversationId' => $conversationId,
-            // TODO Sprint S1+: Ajouter URL Mercure depuis configuration
-            'mercureUrl' => (string) $this->getParameter('mercure.default_hub'),
+            'mercureUrl' => $this->mercurePublicUrl,
         ]);
     }
 
@@ -154,14 +161,13 @@ final class ChatController extends AbstractController
      * - Publication via Mercure Hub
      * - Support des erreurs en cours de stream
      *
-     * @param Request     $request     Requête HTTP contenant la question (JSON)
-     * @param string      $context     Contexte du chat (factures|commandes|stocks|general)
-     * @param ChatService $chatService Service orchestrateur chat
+     * @param Request $request Requête HTTP contenant la question (JSON)
+     * @param string  $context Contexte du chat (factures|commandes|stocks|general)
      *
      * @return JsonResponse Status de démarrage du streaming
      */
     #[Route('/{context}/stream', name: 'stream', methods: ['POST'])]
-    public function streamMessage(Request $request, string $context, ChatService $chatService): JsonResponse
+    public function streamMessage(Request $request, string $context): JsonResponse
     {
         // Validation du contexte
         if (! in_array($context, self::ALLOWED_CONTEXTS, true)) {
@@ -186,9 +192,34 @@ final class ChatController extends AbstractController
                 return $this->json(['error' => 'Utilisateur non authentifié'], Response::HTTP_UNAUTHORIZED);
             }
 
-            // Démarrer le streaming (retourne message_id pour suivi)
-            $messageId = $chatService->streamQuestion($question, $user, $context);
+            // Récupérer le tenantId depuis le service CFI (contexte synchrone)
+            $tenantId = $this->tenantService->getCurrentTenantOrNull();
+            if (null === $tenantId) {
+                return $this->json(['error' => 'Aucune division active'], Response::HTTP_FORBIDDEN);
+            }
 
+            // Récupérer le token CFI depuis la session (nécessaire pour authentification API en async)
+            $cfiToken = $this->cfiSession->getToken();
+            if (null === $cfiToken) {
+                return $this->json(['error' => 'Session CFI expirée'], Response::HTTP_UNAUTHORIZED);
+            }
+
+            // Générer un messageId unique pour ce streaming
+            $messageId = Uuid::v4()->toString();
+
+            // Dispatcher le message de streaming de manière asynchrone
+            // Le handler ChatStreamMessageHandler exécutera le streaming en arrière-plan
+            $this->messageBus->dispatch(new ChatStreamMessage(
+                question: $question,
+                userId: (int) $user->getId(),
+                tenantId: $tenantId,
+                context: $context,
+                conversationId: $conversationId,
+                messageId: $messageId,
+                cfiToken: $cfiToken,
+            ));
+
+            // Retourner immédiatement la réponse sans attendre le streaming
             return $this->json([
                 'success' => true,
                 'status' => 'streaming_started',

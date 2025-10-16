@@ -6,7 +6,7 @@ namespace App\Service\Api;
 
 use App\DTO\Cfi\LigneOperationDto;
 use App\Service\Cfi\CfiApiService;
-use App\Service\Cfi\CfiSessionService;
+use App\Service\Cfi\CfiTokenContext;
 use Psr\Log\LoggerInterface;
 use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\Cache\ItemInterface;
@@ -25,7 +25,7 @@ final readonly class OperationApiService
 
     public function __construct(
         private CfiApiService $cfiApi,
-        private CfiSessionService $cfiSession,
+        private CfiTokenContext $cfiTokenContext,
         private CacheInterface $cache,
         private LoggerInterface $logger,
     ) {
@@ -57,10 +57,10 @@ final readonly class OperationApiService
                 'id_division' => $idDivision,
             ]);
 
-            // Récupérer le token d'authentification
-            $jeton = $this->cfiSession->getToken();
+            // Récupérer le token d'authentification (contexte sync ou async)
+            $jeton = $this->cfiTokenContext->getToken();
             if (null === $jeton) {
-                $this->logger->error('OperationApiService: Token CFI manquant');
+                $this->logger->error('OperationApiService: Token CFI manquant ou expiré');
 
                 return [];
             }

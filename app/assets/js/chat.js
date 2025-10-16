@@ -75,6 +75,8 @@ function initializeChatInterface() {
         console.log('[Chat] Configuration chargée:', {
             conversationId: state.conversationId,
             messageUrl: state.messageUrl,
+            streamUrl: state.streamUrl,
+            mercureUrl: state.mercureUrl,
         });
     }
 
@@ -159,6 +161,146 @@ async function handleFormSubmit(e) {
     // Désactiver l'envoi pendant le traitement
     setLoading(true);
 
+    // Utiliser le streaming si Mercure est configuré
+    if (state.mercureUrl && state.streamUrl) {
+        await handleStreamingSubmit(question);
+    } else {
+        // Fallback vers mode synchrone si Mercure non disponible
+        await handleSyncSubmit(question);
+    }
+}
+
+/**
+ * Envoyer une question en mode streaming avec Mercure SSE
+ */
+async function handleStreamingSubmit(question) {
+    try {
+        // 1. Démarrer le streaming via l'API
+        const response = await fetch(state.streamUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            credentials: 'same-origin', // Envoyer les cookies de session pour l'authentification
+            body: JSON.stringify({
+                question,
+                conversationId: state.conversationId,
+            }),
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+
+        const data = await response.json();
+
+        if (data.error) {
+            throw new Error(data.error);
+        }
+
+        console.log('[Chat] Streaming started:', data);
+
+        // 2. Se connecter au flux Mercure SSE
+        const mercureUrl = new URL(state.mercureUrl);
+        mercureUrl.searchParams.append('topic', `chat/${state.conversationId}`);
+
+        const finalUrl = mercureUrl.toString();
+        console.log('[Chat] EventSource URL:', finalUrl);
+        console.log('[Chat] Creating EventSource...');
+
+        const eventSource = new EventSource(finalUrl);
+
+        console.log('[Chat] EventSource created, readyState:', eventSource.readyState);
+        console.log('[Chat] EventSource.CONNECTING:', EventSource.CONNECTING);
+        console.log('[Chat] EventSource.OPEN:', EventSource.OPEN);
+        console.log('[Chat] EventSource.CLOSED:', EventSource.CLOSED);
+
+        let currentMessageElement = null;
+        let fullAnswer = '';
+        let metadata = {};
+        let toolsUsed = [];
+
+        eventSource.onopen = () => {
+            console.log('[Chat] EventSource OPENED! readyState:', eventSource.readyState);
+        };
+
+        eventSource.onmessage = (event) => {
+            console.log('[Chat] EventSource onmessage fired!');
+            const eventData = JSON.parse(event.data);
+            console.log('[Chat] Mercure event:', eventData);
+
+            switch (eventData.type) {
+                case 'start':
+                    // Créer l'élément message qui sera rempli progressivement
+                    currentMessageElement = createStreamingMessageElement();
+                    elements.chatMessages.appendChild(currentMessageElement);
+                    scrollToBottom();
+                    break;
+
+                case 'chunk':
+                    // Ajouter le chunk au message
+                    fullAnswer += eventData.chunk;
+                    if (currentMessageElement) {
+                        updateStreamingMessage(currentMessageElement, fullAnswer);
+                        scrollToBottom();
+                    }
+                    break;
+
+                case 'complete':
+                    // Finaliser le message avec les métadonnées
+                    metadata = eventData.metadata || {};
+                    toolsUsed = metadata.tools_used || [];
+
+                    if (currentMessageElement) {
+                        finalizeStreamingMessage(currentMessageElement, fullAnswer, metadata, toolsUsed);
+                    }
+
+                    // Sauvegarder dans l'historique
+                    state.messageHistory.push({
+                        question,
+                        answer: fullAnswer,
+                        metadata,
+                        toolsUsed,
+                        timestamp: new Date().toISOString(),
+                    });
+
+                    console.log('[Chat] Streaming complete');
+
+                    // Fermer la connexion Mercure
+                    eventSource.close();
+                    setLoading(false);
+                    break;
+
+                case 'error':
+                    console.error('[Chat] Streaming error:', eventData.error);
+                    addErrorMessage(eventData.error);
+                    eventSource.close();
+                    setLoading(false);
+                    break;
+            }
+        };
+
+        eventSource.onerror = (error) => {
+            console.error('[Chat] EventSource ERROR!');
+            console.error('[Chat] error object:', error);
+            console.error('[Chat] readyState:', eventSource.readyState);
+            console.error('[Chat] url:', eventSource.url);
+            addErrorMessage('Erreur de connexion au streaming');
+            eventSource.close();
+            setLoading(false);
+        };
+
+    } catch (error) {
+        console.error('[Chat] Streaming submit error:', error);
+        addErrorMessage(`Erreur : ${error.message}`);
+        setLoading(false);
+    }
+}
+
+/**
+ * Envoyer une question en mode synchrone (fallback)
+ */
+async function handleSyncSubmit(question) {
     try {
         // Envoyer la question à l'API
         const response = await fetch(state.messageUrl, {
@@ -166,6 +308,7 @@ async function handleFormSubmit(e) {
             headers: {
                 'Content-Type': 'application/json',
             },
+            credentials: 'same-origin', // Envoyer les cookies de session pour l'authentification
             body: JSON.stringify({ question }),
         });
 
@@ -285,6 +428,72 @@ function addErrorMessage(text) {
 
     elements.chatMessages.insertAdjacentHTML('beforeend', messageHtml);
     scrollToBottom();
+}
+
+/**
+ * Créer un élément de message vide pour le streaming progressif
+ */
+function createStreamingMessageElement() {
+    const messageDiv = document.createElement('div');
+    messageDiv.className = 'chat-message assistant-message mb-4';
+    messageDiv.dataset.messageType = 'assistant-streaming';
+    messageDiv.innerHTML = `
+        <div class="d-flex gap-3">
+            <div class="message-avatar flex-shrink-0">
+                <i class="bi bi-robot"></i>
+            </div>
+            <div class="message-content flex-grow-1">
+                <div class="message-header mb-2">
+                    <span class="fw-semibold text-primary">Assistant IA</span>
+                    <span class="small text-muted ms-2">${getCurrentTime()}</span>
+                    <span class="badge bg-info ms-2">
+                        <i class="bi bi-three-dots"></i> En cours...
+                    </span>
+                </div>
+                <div class="message-text" data-streaming-content>
+                    <span class="text-muted"><i class="bi bi-hourglass-split"></i> Réflexion en cours...</span>
+                </div>
+            </div>
+        </div>
+    `;
+    return messageDiv;
+}
+
+/**
+ * Mettre à jour le contenu d'un message en cours de streaming
+ */
+function updateStreamingMessage(messageElement, text) {
+    const contentDiv = messageElement.querySelector('[data-streaming-content]');
+    if (contentDiv) {
+        contentDiv.innerHTML = formatMessage(text) + '<span class="streaming-cursor">|</span>';
+    }
+}
+
+/**
+ * Finaliser un message streamé avec les métadonnées
+ */
+function finalizeStreamingMessage(messageElement, text, metadata = {}, toolsUsed = []) {
+    const contentDiv = messageElement.querySelector('[data-streaming-content]');
+    const badgeDiv = messageElement.querySelector('.badge.bg-info');
+
+    if (badgeDiv) {
+        badgeDiv.remove();
+    }
+
+    const toolsHtml = toolsUsed.length > 0 ? `
+        <div class="mt-2 pt-2 border-top">
+            <small class="text-muted">
+                <i class="bi bi-tools"></i>
+                <strong>Outils utilisés :</strong> ${toolsUsed.join(', ')}
+            </small>
+        </div>
+    ` : '';
+
+    if (contentDiv) {
+        contentDiv.innerHTML = formatMessage(text) + toolsHtml;
+    }
+
+    messageElement.dataset.messageType = 'assistant';
 }
 
 // ====================================

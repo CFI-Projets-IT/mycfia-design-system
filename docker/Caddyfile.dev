@@ -22,6 +22,19 @@ http://:82 {
 # Encodage des réponses
     encode gzip zstd
 
+# Proxy Mercure SSE - Route /.well-known/mercure vers le hub Mercure
+# Solution recommandée pour éviter les problèmes CORS/Same-Origin avec EventSource
+    handle /.well-known/mercure {
+        reverse_proxy mercure:80 {
+            # Headers pour SSE (Server-Sent Events)
+            header_up X-Forwarded-Host {host}
+            header_up X-Forwarded-Proto {scheme}
+
+            # Timeouts longs pour les connexions SSE persistantes
+            flush_interval -1
+        }
+    }
+
 # Gestion des fichiers PHP avec FrankenPHP (sert aussi les assets via AssetMapper)
     php_server
 
@@ -87,25 +100,9 @@ http://:8027 {
 # }
 }
 
-# Hub Mercure pour temps réel (optionnel)
-http://:3001 {
-    reverse_proxy mercure:3000
-
-# Configuration CORS pour développement
-    @cors header Origin *
-    handle @cors {
-                     header Access-Control-Allow-Origin "*"
-                     header Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS"
-                     header Access-Control-Allow-Headers "Authorization, Content-Type, Cache-Control"
-                     header Access-Control-Allow-Credentials "true"
-                 }
-
-# Gestion des requêtes preflight
-    @options method OPTIONS
-    handle @options {
-                        header Access-Control-Allow-Origin "*"
-                        header Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS"
-                        header Access-Control-Allow-Headers "Authorization, Content-Type, Cache-Control"
-                        respond "" 204
-                    }
-}
+# Hub Mercure - Accès direct (DÉSACTIVÉ - utiliser proxy via port 82)
+# Le proxy Mercure est maintenant routé via http://:82/.well-known/mercure
+# Ce bloc est conservé pour référence mais peut être commenté/supprimé
+# http://:3001 {
+#     reverse_proxy mercure:80
+# }
