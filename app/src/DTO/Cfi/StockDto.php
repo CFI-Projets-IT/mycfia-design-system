@@ -6,15 +6,28 @@ namespace App\DTO\Cfi;
 
 final readonly class StockDto
 {
+    /**
+     * DTO Stock - Format CFI API.
+     *
+     * Structure conforme au Swagger CFI :
+     * - id (int32) : OBLIGATOIRE
+     * - idDivision (int32) : OBLIGATOIRE
+     * - Tous les autres champs : NULLABLE
+     * - qte et stockMinimum : DOUBLE (pas int !)
+     */
     public function __construct(
         public int $id,
-        public string $reference,
-        public string $designation,
-        public int $quantite,
-        public ?int $quantiteMin = null,
-        public ?int $quantiteMax = null,
-        public ?string $unite = null,
-        public ?\DateTimeInterface $dateDerniereMAJ = null,
+        public int $idDivision,
+        public ?string $nom = null,
+        public ?string $codeClient = null,
+        public ?string $refStockage = null,
+        public ?float $qte = null,
+        public ?float $stockMinimum = null,
+        public ?float $hauteurCm = null,
+        public ?float $largeurCm = null,
+        public ?float $profondeurCm = null,
+        public ?float $poidsG = null,
+        public ?string $commentaire = null,
     ) {
     }
 
@@ -25,20 +38,34 @@ final readonly class StockDto
      */
     public static function fromApiData(array $data): self
     {
+        // Validation : id et idDivision sont obligatoires
+        if (! isset($data['id'])) {
+            throw new \InvalidArgumentException('Stock data must have an id');
+        }
+        if (! isset($data['idDivision'])) {
+            throw new \InvalidArgumentException('Stock data must have an idDivision');
+        }
+
         return new self(
             id: (int) $data['id'],
-            reference: (string) $data['reference'],
-            designation: (string) $data['designation'],
-            quantite: (int) $data['quantite'],
-            quantiteMin: isset($data['quantiteMin']) ? (int) $data['quantiteMin'] : null,
-            quantiteMax: isset($data['quantiteMax']) ? (int) $data['quantiteMax'] : null,
-            unite: $data['unite'] ?? null,
-            dateDerniereMAJ: isset($data['dateDerniereMAJ']) ? new \DateTime($data['dateDerniereMAJ']) : null,
+            idDivision: (int) $data['idDivision'],
+            nom: $data['nom'] ?? null,
+            codeClient: $data['codeClient'] ?? null,
+            refStockage: $data['refStockage'] ?? null,
+            qte: isset($data['qte']) ? (float) $data['qte'] : null,
+            stockMinimum: isset($data['stockMinimum']) ? (float) $data['stockMinimum'] : null,
+            hauteurCm: isset($data['hauteurCm']) ? (float) $data['hauteurCm'] : null,
+            largeurCm: isset($data['largeurCm']) ? (float) $data['largeurCm'] : null,
+            profondeurCm: isset($data['profondeurCm']) ? (float) $data['profondeurCm'] : null,
+            poidsG: isset($data['poidsG']) ? (float) $data['poidsG'] : null,
+            commentaire: $data['commentaire'] ?? null,
         );
     }
 
     /**
      * Convertir le DTO en tableau pour l'agent IA.
+     *
+     * Noms simplifiés pour l'IA (mapping vers français).
      *
      * @return array<string, mixed>
      */
@@ -46,26 +73,32 @@ final readonly class StockDto
     {
         return [
             'id' => $this->id,
-            'reference' => $this->reference,
-            'designation' => $this->designation,
-            'quantite' => $this->quantite,
-            'quantiteMin' => $this->quantiteMin,
-            'quantiteMax' => $this->quantiteMax,
-            'unite' => $this->unite,
-            'dateDerniereMAJ' => $this->dateDerniereMAJ?->format('Y-m-d H:i:s'),
+            'idDivision' => $this->idDivision,
+            'reference' => $this->refStockage ?? sprintf('STOCK-%d', $this->id),
+            'designation' => $this->nom ?? '',
+            'quantite' => $this->qte,
+            'quantiteMin' => $this->stockMinimum,
+            'unite' => $this->codeClient,
+            'dimensions' => [
+                'hauteurCm' => $this->hauteurCm,
+                'largeurCm' => $this->largeurCm,
+                'profondeurCm' => $this->profondeurCm,
+            ],
+            'poidsG' => $this->poidsG,
+            'commentaire' => $this->commentaire,
             'isEnAlerte' => $this->isEnAlerte(),
         ];
     }
 
     /**
-     * Vérifier si le stock est en alerte (quantité < quantiteMin).
+     * Vérifier si le stock est en alerte (quantité < stockMinimum).
      */
     public function isEnAlerte(): bool
     {
-        if (null === $this->quantiteMin) {
+        if (null === $this->stockMinimum || null === $this->qte) {
             return false;
         }
 
-        return $this->quantite < $this->quantiteMin;
+        return $this->qte < $this->stockMinimum;
     }
 }

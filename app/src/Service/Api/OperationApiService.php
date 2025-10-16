@@ -87,13 +87,24 @@ final readonly class OperationApiService
             $response = $this->cfiApi->post(self::ENDPOINT, $body, $jeton);
 
             // Mapper les données brutes vers DTOs
+            // IMPORTANT : CFI retourne un tableau direct, pas {data: [...]}
             $operations = [];
-            if (isset($response['data']) && is_array($response['data'])) {
-                foreach ($response['data'] as $item) {
-                    if (! is_array($item)) {
-                        continue;
-                    }
+            $dataArray = isset($response['data']) && is_array($response['data']) ? $response['data'] : $response;
+
+            foreach ($dataArray as $item) {
+                if (! is_array($item)) {
+                    continue;
+                }
+
+                try {
                     $operations[] = LigneOperationDto::fromApiData($item);
+                } catch (\Exception $e) {
+                    $this->logger->warning('OperationApiService: Erreur mapping opération', [
+                        'item' => $item,
+                        'error' => $e->getMessage(),
+                    ]);
+
+                    continue;
                 }
             }
 

@@ -117,13 +117,34 @@ final readonly class ChatService
                 Message::ofUser($question),
             );
 
+            // LOG : Avant appel agent
+            $this->logger->info('ChatService: AVANT appel agent', [
+                'context' => $context,
+                'agent' => get_class($agent),
+                'registered_tools' => array_map(fn ($tool) => basename(str_replace('\\', '/', $tool)), $this->getRegisteredTools($context)),
+            ]);
+
             $result = $agent->call($messages);
+
+            // LOG : Après appel agent
+            $this->logger->info('ChatService: APRÈS appel agent', [
+                'context' => $context,
+                'result_content_length' => strlen($result->getContent()),
+                'result_metadata' => $result->getMetadata()->all(),
+            ]);
 
             // 4. Parser la réponse
             $durationMs = (int) ((microtime(true) - $startTime) * 1000);
 
             // Récupérer les tools utilisés pendant l'exécution
             $toolsUsed = $this->toolCallCollector->getToolsUsed();
+
+            // LOG : Tools collectés
+            $this->logger->info('ChatService: Tools collectés après appel', [
+                'context' => $context,
+                'tools_used' => $toolsUsed,
+                'tools_count' => count($toolsUsed),
+            ]);
 
             $chatResponse = ChatResponse::fromAgentResponse(
                 agentResponse: $result->getContent(),

@@ -107,7 +107,7 @@ final readonly class GetOperationStatsTool
                 'group_by' => $groupBy,
                 'stats' => $stats,
                 'metadata' => [
-                    'source' => 'CFI API /Campagnes/getLignesCampagnes',
+                    'source' => 'CFI API /Operations/getLignesOperations',
                     'cache_ttl' => '5 minutes',
                     'division' => $tenant->getNom(),
                     'duration_ms' => $durationMs,

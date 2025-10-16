@@ -76,24 +76,17 @@ final readonly class GetStocksTool
                 enAlerte: $enAlerte,
             );
 
-            // Formatter données pour l'agent IA
+            // Formatter données pour l'agent IA (utilise toArray() pour mapping)
             $formattedStocks = array_map(
-                fn (StockDto $stock) => [
-                    'id' => $stock->id,
-                    'reference' => $stock->reference,
-                    'designation' => $stock->designation,
-                    'quantite' => $stock->quantite,
-                    'quantiteMin' => $stock->quantiteMin,
-                    'quantiteMax' => $stock->quantiteMax,
-                    'unite' => $stock->unite,
-                    'dateDerniereMAJ' => $stock->dateDerniereMAJ?->format('Y-m-d H:i:s'),
-                    'isEnAlerte' => $stock->isEnAlerte(),
-                    'metadata' => [
+                function (StockDto $stock) {
+                    $data = $stock->toArray();
+                    $data['metadata'] = [
                         'source' => 'CFI API /Stocks/getStocks',
-                        'dateMAJ' => $stock->dateDerniereMAJ?->format('Y-m-d H:i:s') ?? 'N/A',
                         'link' => "/stocks/{$stock->id}",
-                    ],
-                ],
+                    ];
+
+                    return $data;
+                },
                 $stocks
             );
 

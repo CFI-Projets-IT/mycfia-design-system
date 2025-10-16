@@ -6,7 +6,7 @@ namespace App\Service\Api;
 
 use App\DTO\Cfi\StockDto;
 use App\Service\Cfi\CfiApiService;
-use App\Service\Cfi\CfiSessionService;
+use App\Service\Cfi\CfiTokenContext;
 use Psr\Log\LoggerInterface;
 use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\Cache\ItemInterface;
@@ -25,7 +25,7 @@ final readonly class StockApiService
 
     public function __construct(
         private CfiApiService $cfiApi,
-        private CfiSessionService $cfiSession,
+        private CfiTokenContext $cfiTokenContext,
         private CacheInterface $cache,
         private LoggerInterface $logger,
     ) {
@@ -55,10 +55,10 @@ final readonly class StockApiService
                 'id_division' => $idDivision,
             ]);
 
-            // Récupérer le token d'authentification
-            $jeton = $this->cfiSession->getToken();
+            // Récupérer le token d'authentification (contexte sync ou async)
+            $jeton = $this->cfiTokenContext->getToken();
             if (null === $jeton) {
-                $this->logger->error('StockApiService: Token CFI manquant');
+                $this->logger->error('StockApiService: Token CFI manquant ou expiré');
 
                 return [];
             }
@@ -76,12 +76,16 @@ final readonly class StockApiService
             $response = $this->cfiApi->post(self::ENDPOINT, $body, $jeton);
 
             // Mapper les données brutes vers DTOs
+            // IMPORTANT : CFI retourne un tableau direct, pas {data: [...]}
             $stocks = [];
-            if (isset($response['data']) && is_array($response['data'])) {
-                foreach ($response['data'] as $item) {
-                    if (! is_array($item)) {
-                        continue;
-                    }
+            $dataArray = isset($response['data']) && is_array($response['data']) ? $response['data'] : $response;
+
+            foreach ($dataArray as $item) {
+                if (! is_array($item)) {
+                    continue;
+                }
+
+                try {
                     $stock = StockDto::fromApiData($item);
 
                     // Filtrer par alerte si demandé (filtrage côté application)
@@ -90,6 +94,13 @@ final readonly class StockApiService
                     }
 
                     $stocks[] = $stock;
+                } catch (\Exception $e) {
+                    $this->logger->warning('StockApiService: Erreur mapping stock', [
+                        'item' => $item,
+                        'error' => $e->getMessage(),
+                    ]);
+
+                    continue;
                 }
             }
 

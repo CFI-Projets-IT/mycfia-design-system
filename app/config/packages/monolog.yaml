@@ -2,7 +2,8 @@ monolog:
     channels:
         - deprecation # Deprecations are logged in the dedicated "deprecation" channel when it exists
         - auth        # Authentification CFI (CfiAuthenticator, UserAuthenticationService)
-        - chat        # Chat IA et streaming (ChatService, ChatController, ChatStreamMessageHandler)
+        - chat        # Chat IA uniquement (ChatService, Tools IA)
+        - streaming   # Streaming Mercure SSE (ChatStreamPublisher)
         - cfi_api     # Appels API CFI (CfiApiService, CfiTenantService, CfiSessionService)
         - messenger   # Messages async Symfony Messenger
 
@@ -14,7 +15,7 @@ when@dev:
                 type: stream
                 path: "%kernel.logs_dir%/%kernel.environment%.log"
                 level: debug
-                channels: ["!event", "!auth", "!chat", "!cfi_api", "!messenger"]
+                channels: ["!event", "!auth", "!chat", "!streaming", "!cfi_api", "!messenger"]
 
             # Logs d'authentification CFI
             auth:
@@ -23,12 +24,19 @@ when@dev:
                 level: info
                 channels: ["auth"]
 
-            # Logs du chat IA et streaming
+            # Logs du chat IA (ChatService, Tools uniquement)
             chat:
                 type: stream
                 path: "%kernel.logs_dir%/chat.log"
                 level: debug
                 channels: ["chat"]
+
+            # Logs du streaming Mercure (ChatStreamPublisher)
+            streaming:
+                type: stream
+                path: "%kernel.logs_dir%/streaming.log"
+                level: info  # INFO uniquement (pas DEBUG = pas de chunks)
+                channels: ["streaming"]
 
             # Logs des appels API CFI
             cfi_api:

@@ -20,19 +20,22 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  * Utilise l'endpoint CFI /Facturations/getFacturations pour récupérer
  * les vraies factures avec détails complets (montants HT/TTC, lignes, types).
  *
+ * Modes d'utilisation :
+ * - MODE LISTE : Sans idFacture → Liste résumée des factures (économie tokens)
+ * - MODE DÉTAIL : Avec idFacture → Détails complets d'une facture spécifique avec toutes ses lignes
+ *
  * Responsabilités :
  * - Récupérer facturations mensuelles avec filtres temporels
  * - Retour structuré avec métadonnées CFI
  * - Cache 5 minutes via FacturationApiService
  *
  * Structure retournée :
- * - Facturations mensuelles (id, mois, date mise à disposition)
- * - Factures individuelles (montants, adresse, commande, demandeur)
- * - Lignes de détail (libellé, quantité, montant, TVA)
+ * - MODE LISTE : Résumé factures (id, montants, nb_lignes)
+ * - MODE DÉTAIL : Facture complète avec lignes détaillées (libellé, quantité, montant, TVA)
  */
 #[AsTool(
     name: 'get_factures',
-    description: 'Récupère les factures CFI avec détails complets (montants HT/TTC, lignes de facturation). Filtrage par période. Retourne les facturations mensuelles avec toutes les factures et lignes associées.'
+    description: 'Récupère les factures CFI avec 2 modes : liste résumée (défaut) ou détails complets d\'une facture spécifique. Mode liste = filtrage par période. Mode détail = idFacture pour obtenir toutes les lignes de facturation.'
 )]
 #[AsTaggedItem(priority: 95)]
 final readonly class GetFacturesTool
@@ -50,16 +53,22 @@ final readonly class GetFacturesTool
     }
 
     /**
-     * Récupérer les factures avec filtres temporels.
+     * Récupérer les factures avec filtres temporels ou détails d'une facture spécifique.
+     *
+     * Modes :
+     * - MODE LISTE : dateDebut/dateFin → Liste résumée des factures
+     * - MODE DÉTAIL : idFacture → Détails complets avec lignes de facturation
      *
      * @param string|null $dateDebut Date de début (format ISO 8601, ex: 2024-10-14T00:00:00Z ou YYYY-MM-DD)
      * @param string|null $dateFin   Date de fin (format ISO 8601, ex: 2025-10-14T23:59:59Z ou YYYY-MM-DD)
+     * @param int|null    $idFacture ID de la facture spécifique pour obtenir détails complets (ex: 12577, 13033). Si fourni, retourne détails avec lignes complètes.
      *
-     * @return array{success: bool, count: int, facturations: array, metadata: array}
+     * @return array<string, mixed>
      */
     public function __invoke(
         ?string $dateDebut = null,
         ?string $dateFin = null,
+        ?int $idFacture = null,
     ): array {
         $startTime = microtime(true);
 
@@ -87,7 +96,12 @@ final readonly class GetFacturesTool
                 fin: $fin,
             );
 
-            // Formatter données pour l'agent IA
+            // MODE DÉTAIL : Si idFacture est fourni, retourner détails complets de cette facture
+            if (null !== $idFacture) {
+                return $this->getFactureDetails($facturations, $idFacture, $user, $tenant, $startTime, $dateDebut, $dateFin);
+            }
+
+            // MODE LISTE : Formatter données pour l'agent IA (résumé sans lignes détaillées)
             $formattedFacturations = array_map(
                 fn (FactureDto $facturation) => [
                     'id' => $facturation->id,
@@ -161,6 +175,109 @@ final readonly class GetFacturesTool
             'error' => $message,
             'count' => 0,
             'facturations' => [],
+        ];
+    }
+
+    /**
+     * Récupérer les détails complets d'une facture spécifique avec toutes ses lignes.
+     *
+     * MODE DÉTAIL : Parcourt toutes les facturations pour trouver la facture demandée
+     * et retourne ses informations complètes avec lignes de facturation détaillées.
+     *
+     * @param array<int, FactureDto> $facturations Liste des facturations CFI
+     * @param int                    $idFacture    ID de la facture recherchée
+     * @param mixed                  $user         Utilisateur authentifié
+     * @param mixed                  $tenant       Tenant actuel
+     * @param float                  $startTime    Timestamp début de l'appel
+     * @param string|null            $dateDebut    Date début pour contexte
+     * @param string|null            $dateFin      Date fin pour contexte
+     *
+     * @return array<string, mixed>
+     */
+    private function getFactureDetails(
+        array $facturations,
+        int $idFacture,
+        mixed $user,
+        mixed $tenant,
+        float $startTime,
+        ?string $dateDebut,
+        ?string $dateFin
+    ): array {
+        // Parcourir toutes les facturations pour trouver la facture
+        foreach ($facturations as $facturation) {
+            foreach ($facturation->factures as $facture) {
+                if ($facture->id === $idFacture) {
+                    $durationMs = (int) ((microtime(true) - $startTime) * 1000);
+
+                    // Log tool call mode détail
+                    $this->aiLogger->logToolCall(
+                        user: $user,
+                        toolName: 'get_factures',
+                        params: ['idFacture' => $idFacture, 'dateDebut' => $dateDebut, 'dateFin' => $dateFin],
+                        result: ['mode' => 'detail', 'nb_lignes' => count($facture->lignes)],
+                        durationMs: $durationMs
+                    );
+
+                    return [
+                        'success' => true,
+                        'facture' => [
+                            'id' => $facture->id,
+                            'nomCommande' => $facture->nomCommande,
+                            'demandeur' => $facture->demandeur,
+                            'adresse' => $facture->adresse,
+                            'montantHT' => $facture->montantHT,
+                            'montantTTC' => $facture->montantTTC,
+                            'idTypeCout' => $facture->idTypeCout,
+                            'idTypePaiement' => $facture->idTypePaiement,
+                            'idDelaiPaiement' => $facture->idDelaiPaiement,
+                            'nb_lignes' => count($facture->lignes),
+                            'lignes' => array_map(
+                                fn ($ligne) => [
+                                    'id' => $ligne->id,
+                                    'libelle' => $ligne->libelle,
+                                    'quantite' => $ligne->qte,
+                                    'montantHT' => $ligne->montantHT,
+                                    'tauxTVA' => $ligne->tauxTVA,
+                                    'montantTTC' => round($ligne->montantHT * (1 + $ligne->tauxTVA / 100), 2),
+                                ],
+                                $facture->lignes
+                            ),
+                        ],
+                        'facturation' => [
+                            'id' => $facturation->id,
+                            'moisFacturation' => $facturation->moisFacturation->format('Y-m'),
+                            'dateMiseADispo' => $facturation->dateMiseADispo->format('Y-m-d'),
+                        ],
+                        'metadata' => [
+                            'source' => 'CFI API',
+                            'endpoint' => '/Facturations/getFacturations',
+                            'mode' => 'detail',
+                            'cache_ttl' => '5 minutes',
+                            'division' => $tenant->getNom(),
+                            'duration_ms' => $durationMs,
+                        ],
+                    ];
+                }
+            }
+        }
+
+        // Facture non trouvée
+        $durationMs = (int) ((microtime(true) - $startTime) * 1000);
+
+        $this->logger->warning('GetFacturesTool: Facture non trouvée', [
+            'idFacture' => $idFacture,
+            'dateDebut' => $dateDebut,
+            'dateFin' => $dateFin,
+        ]);
+
+        return [
+            'success' => false,
+            'error' => "Facture #{$idFacture} non trouvée dans la période spécifiée",
+            'metadata' => [
+                'source' => 'CFI API',
+                'mode' => 'detail',
+                'duration_ms' => $durationMs,
+            ],
         ];
     }
 

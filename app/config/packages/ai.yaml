@@ -19,7 +19,7 @@ ai:
             tools:
                 - service: 'App\Service\Tool\GetFacturesTool'
                   name: 'get_factures'
-                  description: 'Récupère les factures (courrier papier) envoyées avec filtres optionnels. Type "mail" automatiquement appliqué. Retourne les détails complets avec sources CFI et métadonnées.'
+                  description: 'Récupère les factures CFI. Utiliser "id" pour recherche spécifique (ex: "12577" pour ID facture, "PO39982" pour commande). Sans id, retourne liste des factures sur période dateDebut/dateFin. Retourne les détails complets avec sources CFI et métadonnées.'
 
         # Agent spécialisé COMMANDES
         # Contexte : Commandes clients, suivi fournisseurs

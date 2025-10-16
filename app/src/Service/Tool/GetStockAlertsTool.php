@@ -71,25 +71,19 @@ final readonly class GetStockAlertsTool
                 enAlerte: true,
             );
 
-            // Formatter données pour l'agent IA
+            // Formatter données pour l'agent IA (utilise toArray() pour mapping)
             $formattedAlerts = array_map(
-                fn (StockDto $stock) => [
-                    'id' => $stock->id,
-                    'reference' => $stock->reference,
-                    'designation' => $stock->designation,
-                    'quantite' => $stock->quantite,
-                    'quantiteMin' => $stock->quantiteMin,
-                    'quantiteMax' => $stock->quantiteMax,
-                    'unite' => $stock->unite,
-                    'dateDerniereMAJ' => $stock->dateDerniereMAJ?->format('Y-m-d H:i:s'),
-                    'deficit' => ($stock->quantiteMin ?? 0) - $stock->quantite,
-                    'niveau_alerte' => $this->getNiveauAlerte($stock),
-                    'metadata' => [
+                function (StockDto $stock) {
+                    $data = $stock->toArray();
+                    $data['deficit'] = ($stock->stockMinimum ?? 0) - ($stock->qte ?? 0);
+                    $data['niveau_alerte'] = $this->getNiveauAlerte($stock);
+                    $data['metadata'] = [
                         'source' => 'CFI API /Stocks/getStocks',
-                        'dateMAJ' => $stock->dateDerniereMAJ?->format('Y-m-d H:i:s') ?? 'N/A',
                         'link' => "/stocks/{$stock->id}",
-                    ],
-                ],
+                    ];
+
+                    return $data;
+                },
                 $stocks
             );
 
@@ -145,12 +139,12 @@ final readonly class GetStockAlertsTool
      */
     private function getNiveauAlerte(StockDto $stock): string
     {
-        if (null === $stock->quantiteMin) {
+        if (null === $stock->stockMinimum || null === $stock->qte) {
             return 'N/A';
         }
 
-        $deficit = $stock->quantiteMin - $stock->quantite;
-        $pourcentage = $stock->quantiteMin > 0 ? ($deficit / $stock->quantiteMin) * 100 : 0;
+        $deficit = $stock->stockMinimum - $stock->qte;
+        $pourcentage = $stock->stockMinimum > 0 ? ($deficit / $stock->stockMinimum) * 100 : 0;
 
         return match (true) {
             $pourcentage >= 50 => 'Critique',

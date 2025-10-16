@@ -29,7 +29,7 @@ final readonly class ChatStreamPublisher
 {
     public function __construct(
         private HubInterface $hub,
-        #[Autowire(service: 'monolog.logger.chat')]
+        #[Autowire(service: 'monolog.logger.streaming')]
         private LoggerInterface $logger,
     ) {
     }

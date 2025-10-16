@@ -95,7 +95,7 @@ final readonly class GetOperationsTool
                     'nbEnvoyes' => $op->nbEnvoyes,
                     'idEtatOperation' => $op->idEtatOperation,
                     'metadata' => [
-                        'source' => 'CFI API /Campagnes/getLignesCampagnes',
+                        'source' => 'CFI API /Operations/getLignesOperations',
                         'dateMAJ' => $op->dateCreation->format('Y-m-d H:i:s'),
                         'link' => "/operations/{$op->id}",
                     ],
@@ -120,7 +120,7 @@ final readonly class GetOperationsTool
                 'operations' => $formattedOperations,
                 'metadata' => [
                     'source' => 'CFI API',
-                    'endpoint' => '/Campagnes/getLignesCampagnes',
+                    'endpoint' => '/Operations/getLignesOperations',
                     'cache_ttl' => '5 minutes',
                     'division' => $tenant->getNom(),
                     'duration_ms' => $durationMs,
