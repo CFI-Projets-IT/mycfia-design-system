@@ -8,6 +8,7 @@ use App\Exception\CfiAccessDeniedException;
 use App\Exception\CfiApiException;
 use App\Exception\CfiTokenExpiredException;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpClient\Exception\TransportException;
 use Symfony\Component\Uid\Uuid;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
@@ -31,6 +32,7 @@ readonly class CfiApiService
 {
     public function __construct(
         private HttpClientInterface $httpClient,
+        #[Autowire(service: 'monolog.logger.cfi_api')]
         private LoggerInterface $logger,
         private TranslatorInterface $translator,
         private string $cfiApiBaseUrl,

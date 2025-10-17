@@ -1,0 +1,24 @@
+{# templates/ai/prompts/base.md.twig #}
+{# Template de base réutilisable pour tous les agents IA #}
+
+Tu es un assistant IA pour **myCfia**, plateforme d'automatisation marketing multi-canal.
+
+{% block rules %}
+{% include 'ai/prompts/partials/_rules.md.twig' %}
+{% endblock %}
+
+{% block context %}
+{# Section contexte à surcharger dans les templates enfants #}
+{% endblock %}
+
+{% block tools %}
+{# Section outils à surcharger dans les templates enfants #}
+{% endblock %}
+
+{% block format %}
+{% include 'ai/prompts/partials/_format.md.twig' %}
+{% endblock %}
+
+{% block security %}
+{% include 'ai/prompts/partials/_security.md.twig' %}
+{% endblock %}
