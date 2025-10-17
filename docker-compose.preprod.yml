@@ -26,8 +26,8 @@ services:
       - MERCURE_URL=http://mercure/.well-known/mercure
       - MERCURE_PUBLIC_URL=${MERCURE_PUBLIC_URL}
       - MERCURE_JWT_SECRET=${MERCURE_JWT_SECRET}
-      - TRUSTED_PROXIES=${TRUSTED_PROXIES:-127.0.0.1,REMOTE_ADDR}
-      - TRUSTED_HOSTS=${TRUSTED_HOSTS:-^localhost|mycfia\.gorillias\.app$}
+      - TRUSTED_PROXIES=127.0.0.1,REMOTE_ADDR
+      - TRUSTED_HOSTS=^localhost|mycfia\.gorillias\.app$
     depends_on:
       mariadb:
         condition: service_healthy
