@@ -1,0 +1,44 @@
+# Translations for AI Tools (Conversational agent)
+# Domain: tools
+# Messages intended for end users via AI agent
+
+# === Authentication errors ===
+auth:
+  error:
+    not_authenticated: "You must be logged in to access this feature."
+    tenant_not_found: "No division is associated with your account."
+
+# === Marketing Operations Tools ===
+operations:
+  error:
+    fetch_failed: "Unable to retrieve marketing operations. Please try again."
+    stats_failed: "Unable to calculate operation statistics. Please try again."
+    invalid_date_range: "The selected period is invalid."
+    no_data: "No operations found for the specified criteria."
+
+  success:
+    fetched: "%count% operation(s) retrieved successfully."
+    stats_calculated: "Statistics calculated for %count% operation(s)."
+
+# === Stock Tools ===
+stocks:
+  error:
+    fetch_failed: "Unable to retrieve stock status. Please try again."
+    alerts_failed: "Unable to retrieve stock alerts. Please try again."
+    not_found: "The requested stock was not found."
+    no_alerts: "No stock alerts at this time."
+
+  success:
+    fetched: "%count% stock(s) retrieved successfully."
+    alerts_fetched: "%count% stock alert(s) identified."
+
+# === Generic messages for all tools ===
+common:
+  error:
+    generic: "An error occurred. Please try again or contact support."
+    api_unavailable: "The service is temporarily unavailable. Please try again in a few moments."
+    timeout: "The request took too long. Please try again."
+    validation_failed: "The provided data is invalid."
+
+  success:
+    operation_completed: "Operation completed successfully."

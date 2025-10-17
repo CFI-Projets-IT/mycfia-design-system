@@ -9,6 +9,7 @@ use App\DTO\Cfi\GetUtilisateurByLoginMDP;
 use App\DTO\Cfi\UtilisateurGorilliasDto;
 use App\Exception\CfiApiException;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -24,6 +25,7 @@ class CfiAuthService
         private readonly CfiApiService $cfiApiService,
         private readonly ValidatorInterface $validator,
         private readonly TranslatorInterface $translator,
+        #[Autowire(service: 'monolog.logger.auth')]
         private readonly LoggerInterface $logger,
         private readonly string $clefApi,
     ) {

@@ -12,6 +12,9 @@ services:
     environment:
       - APP_ENV=${APP_ENV:-dev}
       - APP_DEBUG=${APP_DEBUG:-1}
+      - MERCURE_URL=${MERCURE_URL:-http://mercure/.well-known/mercure}
+      - MERCURE_PUBLIC_URL=${MERCURE_PUBLIC_URL:-http://localhost:3000/.well-known/mercure}
+      - MERCURE_JWT_SECRET=${MERCURE_JWT_SECRET:-!ChangeThisMercureHubJWTSecretKey!}
     depends_on:
       mariadb:
         condition: service_healthy
@@ -41,13 +44,42 @@ services:
     container_name: ${PROJECT_NAME}_mercure
     restart: unless-stopped
     environment:
-      SERVER_NAME: ':3000'
+      SERVER_NAME: ':80'
       MERCURE_PUBLISHER_JWT_KEY: ${MERCURE_JWT_SECRET:-!ChangeThisMercureHubJWTSecretKey!}
       MERCURE_SUBSCRIBER_JWT_KEY: ${MERCURE_JWT_SECRET:-!ChangeThisMercureHubJWTSecretKey!}
-      MERCURE_EXTRA_DIRECTIVES: ${MERCURE_EXTRA_DIRECTIVES:-"anonymous\ndemo"}
+    # Active le mode développement avec anonymous + debug UI
+    command: /usr/bin/caddy run --config /etc/caddy/dev.Caddyfile
+    ports:
+      - "${MERCURE_PORT:-3001}:80"
     volumes:
       - mercure_data:/data
       - mercure_config:/config
+    networks:
+      - app_network
+
+  messenger_worker:
+    build:
+      context: .
+      target: ${BUILD_TARGET:-development}
+    container_name: ${PROJECT_NAME}_messenger_worker
+    entrypoint: ["/usr/local/bin/entrypoint-worker.sh"]
+    command: ["php", "/var/www/html/bin/console", "messenger:consume", "async", "--time-limit=3600", "-vv"]
+    working_dir: /var/www/html
+    environment:
+      - APP_ENV=${APP_ENV:-dev}
+      - APP_DEBUG=${APP_DEBUG:-1}
+      - MERCURE_URL=${MERCURE_URL:-http://mercure/.well-known/mercure}
+      - MERCURE_PUBLIC_URL=${MERCURE_PUBLIC_URL:-http://localhost:3000/.well-known/mercure}
+      - MERCURE_JWT_SECRET=${MERCURE_JWT_SECRET:-!ChangeThisMercureHubJWTSecretKey!}
+    depends_on:
+      mariadb:
+        condition: service_healthy
+      frankenphp:
+        condition: service_started
+    volumes:
+      - ./app:/var/www/html
+      - ./docker/entrypoint-worker.sh:/usr/local/bin/entrypoint-worker.sh:ro
+    restart: unless-stopped
     networks:
       - app_network
 

@@ -1,0 +1,23 @@
+{# templates/ai/prompts/chat_operations.md.twig #}
+{% extends 'ai/prompts/base.md.twig' %}
+
+{% block context %}
+## CONTEXTE UTILISATEUR
+
+- **Division** : {{ division.nom }}
+- **ID Division** : {{ division.idCfi }}
+- **Utilisateur** : {{ user.email }}
+- **Date/Heure actuelle** : {{ timestamp|date('Y-m-d H:i:s') }}
+- **Spécialisation** : Données **Opérations Marketing** (SMS, Email, Courrier) et **Stocks** (quantités, alertes)
+{% endblock %}
+
+{% block tools %}
+## OUTILS DISPONIBLES
+
+{% for tool in tools %}
+- **{{ tool.name }}** : {{ tool.description }}
+{% if tool.parameters is defined %}
+  Paramètres : {{ tool.parameters|join(', ') }}
+{% endif %}
+{% endfor %}
+{% endblock %}

@@ -1,0 +1,85 @@
+ai:
+    platform:
+        mistral:
+            api_key: '%env(MISTRAL_API_KEY)%'
+
+    agent:
+        # Agent spécialisé FACTURES
+        # Contexte : Factures clients, paiements, relances (type courrier/mail uniquement)
+        # Tool : get_factures (tool dédié avec type="mail" forcé)
+        chat_factures:
+            platform: 'ai.platform.mistral'
+            model:
+                class: 'Symfony\AI\Platform\Bridge\Mistral\Mistral'
+                name: 'mistral-large-latest'
+            prompt:
+                text: '@ai/prompts/chat_factures.md.twig'
+                include_tools: true  # CRITIQUE : Force injection définitions tools dans le prompt
+            track_token_usage: true
+            tools:
+                - service: 'App\Service\Tool\GetFacturesTool'
+                  name: 'get_factures'
+                  description: 'Récupère les factures CFI. Utiliser "id" pour recherche spécifique (ex: "12577" pour ID facture, "PO39982" pour commande). Sans id, retourne liste des factures sur période dateDebut/dateFin. Retourne les détails complets avec sources CFI et métadonnées.'
+
+        # Agent spécialisé COMMANDES
+        # Contexte : Commandes clients, suivi fournisseurs
+        # Tool : get_commandes (tool dédié sans factures)
+        chat_commandes:
+            platform: 'ai.platform.mistral'
+            model:
+                class: 'Symfony\AI\Platform\Bridge\Mistral\Mistral'
+                name: 'mistral-large-latest'
+            prompt:
+                text: '@ai/prompts/chat_commandes.md.twig'
+                include_tools: true  # CRITIQUE : Force injection définitions tools dans le prompt
+            track_token_usage: true
+            tools:
+                - service: 'App\Service\Tool\GetCommandesTool'
+                  name: 'get_commandes'
+                  description: 'Récupère les commandes marketing (SMS, Email, toutes campagnes) avec filtres optionnels. Retourne les détails complets avec sources CFI et métadonnées.'
+
+        # Agent spécialisé STOCKS
+        # Contexte : État des stocks, alertes de réapprovisionnement
+        # Tools : get_stocks + get_stock_alerts (2 tools complémentaires)
+        chat_stocks:
+            platform: 'ai.platform.mistral'
+            model:
+                class: 'Symfony\AI\Platform\Bridge\Mistral\Mistral'
+                name: 'mistral-large-latest'
+            prompt:
+                text: '@ai/prompts/chat_stocks.md.twig'
+                include_tools: true  # CRITIQUE : Force injection définitions tools dans le prompt
+            track_token_usage: true
+            tools:
+                - service: 'App\Service\Tool\GetStocksTool'
+                  name: 'get_stocks'
+                  description: 'Récupère l''état des stocks (quantités, références, alertes) avec filtres optionnels. Retourne les détails complets avec sources CFI et métadonnées.'
+                - service: 'App\Service\Tool\GetStockAlertsTool'
+                  name: 'get_stock_alerts'
+                  description: 'Identifie les stocks en alerte (quantité < quantiteMin). Retourne uniquement les stocks nécessitant une attention urgente avec sources CFI et métadonnées.'
+
+        # Agent généraliste (TOUS LES TOOLS)
+        # Contexte : Questions transverses, synthèses multi-domaines
+        # Tools : Tous les tools disponibles (4/4)
+        chat_general:
+            platform: 'ai.platform.mistral'
+            model:
+                class: 'Symfony\AI\Platform\Bridge\Mistral\Mistral'
+                name: 'mistral-large-latest'
+            prompt:
+                text: '@ai/prompts/chat_general.md.twig'
+                include_tools: true  # CRITIQUE : Force injection définitions tools dans le prompt
+            track_token_usage: true
+            tools:
+                - service: 'App\Service\Tool\GetOperationsTool'
+                  name: 'get_operations'
+                  description: 'Récupère les opérations marketing (SMS, Email, Courrier) avec filtres optionnels. Retourne les détails complets avec sources CFI et métadonnées.'
+                - service: 'App\Service\Tool\GetStocksTool'
+                  name: 'get_stocks'
+                  description: 'Récupère l''état des stocks (quantités, références, alertes) avec filtres optionnels. Retourne les détails complets avec sources CFI et métadonnées.'
+                - service: 'App\Service\Tool\GetOperationStatsTool'
+                  name: 'get_operation_stats'
+                  description: 'Calcule des statistiques agrégées sur les opérations (par type, statut, période). Retourne les métriques avec sources CFI et métadonnées.'
+                - service: 'App\Service\Tool\GetStockAlertsTool'
+                  name: 'get_stock_alerts'
+                  description: 'Identifie les stocks en alerte (quantité < quantiteMin). Retourne uniquement les stocks nécessitant une attention urgente avec sources CFI et métadonnées.'
