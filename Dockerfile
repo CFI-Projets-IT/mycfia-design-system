@@ -28,7 +28,8 @@ RUN install-php-extensions \
     opcache \
     bcmath \
     dom \
-    xml
+    xml \
+    curl
 
 # Installer Composer (gestionnaire de dépendances PHP)
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
