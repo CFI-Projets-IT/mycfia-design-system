@@ -61,11 +61,13 @@ date.timezone = Europe/Paris
 ; === SÉCURITÉ PRODUCTION ===
 short_open_tag = Off
 expose_php = Off
-allow_url_fopen = Off
+; allow_url_fopen nécessaire pour HttpClient Symfony (requêtes API)
+allow_url_fopen = On
 allow_url_include = Off
 
 ; Limitation des fonctions dangereuses
-disable_functions = exec,passthru,shell_exec,system,proc_open,popen,curl_exec,curl_multi_exec,parse_ini_file,show_source
+; curl_exec et curl_multi_exec retirés pour permettre les requêtes HTTP
+disable_functions = exec,passthru,shell_exec,system,proc_open,popen,parse_ini_file,show_source
 
 ; Variables d'environnement
 variables_order = "GPCS"
