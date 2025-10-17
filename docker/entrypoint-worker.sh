@@ -73,12 +73,13 @@ fi
 # Démarrage du worker Messenger
 echo "🎯 Lancement du Messenger Worker"
 
-# En développement, exécuter en tant que root car les volumes sont déjà avec les bons droits
-# En production, utiliser gosu pour la sécurité
-if [ "$APP_ENV" = "dev" ]; then
-    echo "🔓 Exécution en mode dev (utilisateur root avec volume partagé)"
-    exec "$@"
-else
-    echo "🔒 Exécution en mode prod (utilisateur www-data isolé)"
+# Décider d'utiliser gosu ou non selon la variable USE_GOSU
+# - USE_GOSU=1 (preprod/prod): exécute avec gosu www-data pour la sécurité
+# - USE_GOSU=0 ou absent (dev local): exécute directement (volumes bind-mount)
+if [ "${USE_GOSU:-0}" = "1" ]; then
+    echo "🔒 Exécution isolée avec gosu www-data (preprod/prod)"
     exec gosu www-data "$@"
+else
+    echo "🔓 Exécution directe avec volume partagé (dev local)"
+    exec "$@"
 fi
