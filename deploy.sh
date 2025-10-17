@@ -233,7 +233,7 @@ setup_environment() {
                 exit 1
             fi
 
-            export APP_ENV=prod
+            export APP_ENV=dev
             ;;
 
         "test")

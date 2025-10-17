@@ -19,8 +19,8 @@ services:
       - SERVER_NAME=:82  # Écouter sur port 82 (HTTP uniquement)
       - SERVER_ROOT=app/public  # Chemin vers public Symfony
       - CADDY_GLOBAL_OPTIONS=auto_https off
-      - APP_ENV=prod
-      - APP_DEBUG=0
+      - APP_ENV=dev
+      - APP_DEBUG=1
       - APP_SECRET=${APP_SECRET}
       - DATABASE_URL=mysql://${DB_USER}:${DB_PASSWORD}@mariadb:3306/${DB_NAME}?serverVersion=${MARIADB_VERSION:-11}.0.0-MariaDB&charset=utf8mb4
       - MERCURE_URL=http://mercure/.well-known/mercure
@@ -87,8 +87,8 @@ services:
       # Même volume que frankenphp
       - ${PREPROD_CODE_PATH:-.}:/var/www/html
     environment:
-      - APP_ENV=prod
-      - APP_DEBUG=0
+      - APP_ENV=dev
+      - APP_DEBUG=1
       - APP_SECRET=${APP_SECRET}
       - DATABASE_URL=mysql://${DB_USER}:${DB_PASSWORD}@mariadb:3306/${DB_NAME}?serverVersion=${MARIADB_VERSION:-11}.0.0-MariaDB&charset=utf8mb4
       - MERCURE_URL=http://mercure/.well-known/mercure
