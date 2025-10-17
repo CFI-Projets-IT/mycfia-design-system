@@ -3,7 +3,9 @@ framework:
     secret: '%env(APP_SECRET)%'
 
     # Configuration pour reverse proxy (nginx/Apache)
-    trusted_proxies: '%env(TRUSTED_PROXIES)%'
+    # En dev local : vide (pas de reverse proxy)
+    # En preprod/prod : IP du reverse proxy (configurée dans docker-compose)
+    trusted_proxies: '%env(default::TRUSTED_PROXIES)%'
     # Faire confiance aux headers X-Forwarded-* envoyés par nginx
     trusted_headers: ['x-forwarded-for', 'x-forwarded-host', 'x-forwarded-proto', 'x-forwarded-port', 'x-forwarded-prefix']
 
