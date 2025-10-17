@@ -89,6 +89,7 @@ USAGE:
 ENVIRONNEMENTS:
     dev, development    Environnement de développement local
     prod, production    Environnement de production
+    preprod            Environnement de préproduction
     test               Environnement de test
 
 OPTIONS:
@@ -202,6 +203,39 @@ setup_environment() {
             done
             ;;
 
+        "preprod")
+            log_info "Configuration environnement PREPROD"
+
+            ENV_FILE=".env"
+            COMPOSE_FILES="-f docker-compose.yml -f docker-compose.preprod.yml"
+
+            # Vérifier les variables de preprod
+            if [ ! -f "$SCRIPT_DIR/.env.preprod.local" ]; then
+                log_error "Fichier .env.preprod.local requis pour preprod"
+                log_error "Créez ce fichier depuis .env.preprod.example"
+                exit 1
+            fi
+
+            # Variables obligatoires preprod
+            local required_vars=("PREPROD_CODE_PATH" "APP_SECRET" "DB_PASSWORD" "MERCURE_JWT_SECRET")
+            for var in "${required_vars[@]}"; do
+                if ! grep -q "^$var=" "$SCRIPT_DIR/.env.preprod.local" 2>/dev/null; then
+                    log_error "Variable $var manquante dans .env.preprod.local"
+                    exit 1
+                fi
+            done
+
+            # Vérifier que PREPROD_CODE_PATH existe
+            PREPROD_CODE_PATH=$(grep "^PREPROD_CODE_PATH=" "$SCRIPT_DIR/.env.preprod.local" | cut -d= -f2)
+            if [ -n "$PREPROD_CODE_PATH" ] && [ ! -d "$PREPROD_CODE_PATH" ]; then
+                log_error "Le répertoire $PREPROD_CODE_PATH n'existe pas"
+                log_error "Clonez d'abord le dépôt Git : git clone <repo> $PREPROD_CODE_PATH"
+                exit 1
+            fi
+
+            export APP_ENV=prod
+            ;;
+
         "test")
             log_info "Configuration environnement TEST"
             ENV_FILE=".env"
@@ -211,7 +245,7 @@ setup_environment() {
 
         *)
             log_error "Environnement inconnu: $env"
-            log_error "Environnements disponibles: dev, prod, test"
+            log_error "Environnements disponibles: dev, prod, preprod, test"
             exit 1
             ;;
     esac
@@ -271,6 +305,15 @@ show_connection_info() {
         echo "   ⚡ Mercure:       http://localhost:$mercure_port"
         echo ""
         echo "   👤 Authentification: krystdev / dev123"
+    elif [ "$APP_ENV" = "prod" ] && [[ "$COMPOSE_FILES" == *"preprod"* ]]; then
+        echo "   📱 Application:    http://127.0.0.1:8081 (localhost uniquement)"
+        echo "   🗄️  phpMyAdmin:    http://127.0.0.1:8082 (localhost uniquement)"
+        echo "   ⚡ Mercure:       http://127.0.0.1:3081 (localhost uniquement)"
+        echo ""
+        echo "   ⚠️  Services accessibles uniquement depuis le serveur"
+        echo "   🌐 Reverse proxy requis pour accès public HTTPS"
+        echo ""
+        echo "   💡 Switch de branch rapide : ./scripts/preprod-switch.sh <branch>"
     else
         echo "   📱 Application:    https://votre-domaine.com"
         echo "   ⚡ Mercure:       https://mercure.votre-domaine.com"
@@ -307,7 +350,7 @@ ACTION=""
 
 while [[ $# -gt 0 ]]; do
     case $1 in
-        dev|development|prod|production|test)
+        dev|development|prod|production|preprod|test)
             ENVIRONMENT=$1
             shift
             ;;
