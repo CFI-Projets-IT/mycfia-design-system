@@ -73,5 +73,12 @@ fi
 # Démarrage du worker Messenger
 echo "🎯 Lancement du Messenger Worker"
 
-# Exécuter la commande passée en argument en tant que www-data
-exec gosu www-data "$@"
+# En développement, exécuter en tant que root car les volumes sont déjà avec les bons droits
+# En production, utiliser gosu pour la sécurité
+if [ "$APP_ENV" = "dev" ]; then
+    echo "🔓 Exécution en mode dev (utilisateur root avec volume partagé)"
+    exec "$@"
+else
+    echo "🔒 Exécution en mode prod (utilisateur www-data isolé)"
+    exec gosu www-data "$@"
+fi
