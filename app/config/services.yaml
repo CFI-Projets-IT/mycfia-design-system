@@ -65,3 +65,8 @@ services:
     App\Controller\ChatController:
         arguments:
             $mercurePublicUrl: '%mercure.default_hub%'
+
+    # Service de génération JWT Mercure pour authentification EventSource
+    App\Service\MercureJwtGenerator:
+        arguments:
+            $mercureJwtSecret: '%env(MERCURE_JWT_SECRET)%'

@@ -9,6 +9,7 @@ use App\Security\UserAuthenticationService;
 use App\Service\Cfi\CfiSessionService;
 use App\Service\Cfi\CfiTenantService;
 use App\Service\ChatService;
+use App\Service\MercureJwtGenerator;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -54,7 +55,7 @@ final class ChatController extends AbstractController
         private readonly CfiSessionService $cfiSession,
         private readonly string $mercurePublicUrl,
         private readonly MessageBusInterface $messageBus,
-        private readonly \Lcobucci\JWT\Configuration $jwtConfiguration,
+        private readonly MercureJwtGenerator $mercureJwtGenerator,
     ) {
     }
 
@@ -92,12 +93,9 @@ final class ChatController extends AbstractController
         }
 
         // Générer un JWT Mercure pour autoriser l'abonnement au topic de cette conversation
-        $mercureJwt = $this->jwtConfiguration->builder()
-            ->withClaim('mercure', [
-                'subscribe' => [sprintf('chat/%s', $conversationId)],
-            ])
-            ->getToken($this->jwtConfiguration->signer(), $this->jwtConfiguration->signingKey())
-            ->toString();
+        $mercureJwt = $this->mercureJwtGenerator->generateSubscriberToken([
+            sprintf('chat/%s', $conversationId),
+        ]);
 
         return $this->render('chat/index.html.twig', [
             'context' => $context,
