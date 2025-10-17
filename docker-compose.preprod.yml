@@ -26,7 +26,7 @@ services:
       - MERCURE_URL=http://mercure/.well-known/mercure
       - MERCURE_PUBLIC_URL=${MERCURE_PUBLIC_URL}
       - MERCURE_JWT_SECRET=${MERCURE_JWT_SECRET}
-      - TRUSTED_PROXIES=127.0.0.1,172.21.0.0/16
+      - TRUSTED_PROXIES=127.0.0.1,172.25.0.0/16
       - TRUSTED_HOSTS=^localhost|mycfia\.gorillias\.app$
     depends_on:
       mariadb:
