@@ -54,6 +54,7 @@ final class ChatController extends AbstractController
         private readonly CfiSessionService $cfiSession,
         private readonly string $mercurePublicUrl,
         private readonly MessageBusInterface $messageBus,
+        private readonly \Lcobucci\JWT\Configuration $jwtConfiguration,
     ) {
     }
 
@@ -90,10 +91,19 @@ final class ChatController extends AbstractController
             $request->getSession()->set($sessionKey, $conversationId);
         }
 
+        // Générer un JWT Mercure pour autoriser l'abonnement au topic de cette conversation
+        $mercureJwt = $this->jwtConfiguration->builder()
+            ->withClaim('mercure', [
+                'subscribe' => [sprintf('chat/%s', $conversationId)],
+            ])
+            ->getToken($this->jwtConfiguration->signer(), $this->jwtConfiguration->signingKey())
+            ->toString();
+
         return $this->render('chat/index.html.twig', [
             'context' => $context,
             'conversationId' => $conversationId,
             'mercureUrl' => $this->mercurePublicUrl,
+            'mercureJwt' => $mercureJwt,
         ]);
     }
 

@@ -22,6 +22,7 @@ const state = {
     messageUrl: null,
     streamUrl: null,
     mercureUrl: null,
+    mercureJwt: null,
     isLoading: false,
     messageHistory: [],
 };
@@ -71,12 +72,14 @@ function initializeChatInterface() {
         state.messageUrl = chatData.dataset.messageUrl;
         state.streamUrl = chatData.dataset.streamUrl;
         state.mercureUrl = chatData.dataset.mercureUrl;
+        state.mercureJwt = chatData.dataset.mercureJwt;
 
         console.log('[Chat] Configuration chargée:', {
             conversationId: state.conversationId,
             messageUrl: state.messageUrl,
             streamUrl: state.streamUrl,
             mercureUrl: state.mercureUrl,
+            mercureJwt: state.mercureJwt ? 'présent' : 'absent',
         });
     }
 
@@ -203,6 +206,11 @@ async function handleStreamingSubmit(question) {
         // 2. Se connecter au flux Mercure SSE
         const mercureUrl = new URL(state.mercureUrl);
         mercureUrl.searchParams.append('topic', `chat/${state.conversationId}`);
+
+        // Ajouter le JWT d'autorisation Mercure
+        if (state.mercureJwt) {
+            mercureUrl.searchParams.append('authorization', state.mercureJwt);
+        }
 
         const finalUrl = mercureUrl.toString();
         console.log('[Chat] EventSource URL:', finalUrl);
