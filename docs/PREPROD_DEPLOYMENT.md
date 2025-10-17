@@ -126,10 +126,12 @@ MERCURE_JWT_SECRET=$(openssl rand -base64 32)
 MERCURE_PUBLIC_URL=https://preprod.example.com/.well-known/mercure
 CORS_ALLOWED_ORIGINS=https://preprod.example.com
 
-# Credentials CFI (API de test)
+# Credentials CFI (API de test) - Utilise une clé API, pas username/password
 CFI_API_BASE_URL=https://test.cfitech.io/API
-CFI_USERNAME=votre-username
-CFI_PASSWORD=votre-password
+CFI_API_CLEF=votre-clé-api-cfi
+CFI_API_TIMEOUT=30
+CFI_TOKEN_TTL=1800
+CFI_TOKEN_REFRESH_THRESHOLD=1500
 
 # Mistral AI
 MISTRAL_API_KEY=votre-clé-mistral
@@ -426,11 +428,11 @@ cat backup.sql | docker compose -f docker-compose.yml -f docker-compose.preprod.
 ### Cache Symfony
 
 ```bash
-# Clear cache
-docker compose -f docker-compose.yml -f docker-compose.preprod.yml exec frankenphp php app/bin/console cache:clear --env=prod
+# Clear cache (preprod utilise APP_ENV=dev avec APP_DEBUG=1)
+docker compose -f docker-compose.yml -f docker-compose.preprod.yml exec frankenphp php app/bin/console cache:clear
 
 # Warmup cache
-docker compose -f docker-compose.yml -f docker-compose.preprod.yml exec frankenphp php app/bin/console cache:warmup --env=prod
+docker compose -f docker-compose.yml -f docker-compose.preprod.yml exec frankenphp php app/bin/console cache:warmup
 ```
 
 ---
@@ -561,6 +563,58 @@ curl http://IP_SERVEUR_PUBLIC:8081
 curl https://preprod.example.com
 # Doit retourner : HTTP 200 OK
 ```
+
+---
+
+## Configuration PHP Critique
+
+### ⚠️ Problèmes Corrigés (Historique)
+
+Lors du développement de cette infrastructure, plusieurs problèmes critiques ont été identifiés et corrigés dans `docker/php.ini.prod` :
+
+#### 1. Extensions curl désactivées
+
+**Problème** : `curl_exec` et `curl_multi_exec` étaient dans `disable_functions`, empêchant Symfony HttpClient de fonctionner.
+
+**Solution appliquée** :
+```ini
+# Ancienne configuration (CASSÉE)
+disable_functions = exec,passthru,shell_exec,system,proc_open,popen,curl_exec,curl_multi_exec,parse_ini_file,show_source
+
+# Nouvelle configuration (CORRIGÉE)
+disable_functions = exec,passthru,shell_exec,system,proc_open,popen,parse_ini_file,show_source
+```
+
+#### 2. allow_url_fopen désactivé
+
+**Problème** : `allow_url_fopen = Off` empêchait NativeHttpClient de fonctionner (fallback de CurlHttpClient).
+
+**Solution appliquée** :
+```ini
+# allow_url_fopen nécessaire pour HttpClient Symfony (requêtes API)
+allow_url_fopen = On
+```
+
+#### 3. Mode Debug pour Preprod
+
+**Important** : L'environnement preprod utilise `APP_ENV=dev` avec `APP_DEBUG=1` pour faciliter le débogage lors de la recette client.
+
+**Configuration dans `.env.preprod.local` et `docker-compose.preprod.yml`** :
+```env
+APP_ENV=dev
+APP_DEBUG=1
+```
+
+Cela permet :
+- ✅ Messages d'erreur détaillés (stack traces complètes)
+- ✅ Profiler Symfony accessible (/_profiler)
+- ✅ Cache Symfony désactivé (changements immédiats)
+
+#### 4. phpMyAdmin disponible
+
+**Accès** : http://127.0.0.1:8082 (localhost uniquement)
+
+Ajouté au service `docker-compose.preprod.yml` pour faciliter la gestion de la base de données en recette.
 
 ---
 
