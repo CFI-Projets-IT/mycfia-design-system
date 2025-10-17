@@ -4,7 +4,7 @@ framework:
 
     # Configuration pour reverse proxy (nginx/Apache)
     trusted_proxies: '%env(TRUSTED_PROXIES)%'
-    trusted_headers: ['x-forwarded-for', 'x-forwarded-host', 'x-forwarded-proto', 'x-forwarded-port']
+    trusted_headers: !php/const Symfony\Component\HttpFoundation\Request::HEADER_X_FORWARDED_ALL
 
     # Note that the session will be started ONLY if you read or write from it.
     session: true
