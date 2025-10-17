@@ -4,8 +4,8 @@ framework:
 
     # Configuration pour reverse proxy (nginx/Apache)
     trusted_proxies: '%env(TRUSTED_PROXIES)%'
-    # trusted_headers: 31 = tous les headers X-Forwarded (FOR+HOST+PROTO+PORT+PREFIX)
-    trusted_headers: 31
+    # Faire confiance aux headers X-Forwarded-* envoyés par nginx
+    trusted_headers: ['x-forwarded-for', 'x-forwarded-host', 'x-forwarded-proto', 'x-forwarded-port', 'x-forwarded-prefix']
 
     # Note that the session will be started ONLY if you read or write from it.
     session: true
