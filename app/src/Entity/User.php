@@ -27,10 +27,10 @@ class User implements UserInterface
     private int $idCfi;
 
     /**
-     * Email de l'utilisateur.
+     * Email de l'utilisateur (nullable car certains users n'ont qu'un identifiant CFI).
      */
-    #[ORM\Column(length: 180, unique: true)]
-    private string $email;
+    #[ORM\Column(length: 180, unique: true, nullable: true)]
+    private ?string $email = null;
 
     /**
      * Nom de famille.
@@ -110,7 +110,8 @@ class User implements UserInterface
 
     public function getUserIdentifier(): string
     {
-        return $this->email;
+        // Utiliser email si disponible, sinon idCfi comme fallback
+        return $this->email ?? (string) $this->idCfi;
     }
 
     /**
@@ -137,7 +138,7 @@ class User implements UserInterface
     {
         $parts = array_filter([$this->prenom, $this->nom]);
 
-        return implode(' ', $parts) ?: $this->email;
+        return implode(' ', $parts) ?: ($this->email ?? 'User #'.$this->idCfi);
     }
 
     /**
@@ -171,12 +172,12 @@ class User implements UserInterface
         return $this;
     }
 
-    public function getEmail(): string
+    public function getEmail(): ?string
     {
         return $this->email;
     }
 
-    public function setEmail(string $email): static
+    public function setEmail(?string $email): static
     {
         $this->email = $email;
 

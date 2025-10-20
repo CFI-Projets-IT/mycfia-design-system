@@ -87,7 +87,7 @@
 
                     <input type="radio" class="btn-check" name="mode" id="mode-credentials" value="credentials" autocomplete="off">
                     <label class="btn btn-outline-light" for="mode-credentials">
-                        <i class="bi bi-person-lock me-2"></i>Email + Mot de passe
+                        <i class="bi bi-person-lock me-2"></i>Identifiant + Mot de passe
                     </label>
                 </div>
 
@@ -126,15 +126,15 @@
                 <div id="credentials-fields" class="auth-mode-fields d-none">
                     <div class="input-group mb-3">
                         <span class="input-group-text">
-                            <i class="bi bi-envelope-fill"></i>
+                            <i class="bi bi-person-badge"></i>
                         </span>
                         <input
-                            type="email"
-                            id="email"
-                            name="email"
+                            type="text"
+                            id="username"
+                            name="username"
                             class="form-control"
-                            placeholder="votre.email@exemple.com"
-                            autocomplete="email"
+                            placeholder="Votre identifiant CFI"
+                            autocomplete="username"
                         >
                     </div>
 
@@ -155,7 +155,7 @@
                     <div class="alert alert-info mb-4" style="font-size: var(--font-size-sm);">
                         <i class="bi bi-info-circle"></i>
                         <strong>Authentification CFI :</strong><br>
-                        Utilisez votre email et mot de passe CFI habituels.
+                        Utilisez votre identifiant et mot de passe CFI habituels.
                     </div>
                 </div>
 

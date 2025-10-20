@@ -3,7 +3,7 @@
  *
  * Toggle entre les modes d'authentification :
  * - Mode Token Gorillias (actuel)
- * - Mode Email/Password (futur)
+ * - Mode Identifiant/Password (futur)
  *
  * IMPORTANT : Les éléments DOM sont récupérés dynamiquement à chaque interaction
  * pour gérer le cas où la page est rechargée avec une erreur de formulaire.
@@ -21,10 +21,10 @@
             const tokenFields = document.getElementById('token-fields');
             const credentialsFields = document.getElementById('credentials-fields');
             const jetonInput = document.getElementById('jetonUtilisateur');
-            const emailInput = document.getElementById('email');
+            const usernameInput = document.getElementById('username');
             const passwordInput = document.getElementById('password');
 
-            if (!tokenFields || !credentialsFields || !jetonInput || !emailInput || !passwordInput) {
+            if (!tokenFields || !credentialsFields || !jetonInput || !usernameInput || !passwordInput) {
                 return;
             }
 
@@ -35,11 +35,11 @@
 
                 // Activer validation token, désactiver validation credentials
                 jetonInput.setAttribute('required', 'required');
-                emailInput.removeAttribute('required');
+                usernameInput.removeAttribute('required');
                 passwordInput.removeAttribute('required');
 
                 // Vider les champs credentials
-                emailInput.value = '';
+                usernameInput.value = '';
                 passwordInput.value = '';
             } else {
                 // Afficher champs credentials, masquer champs token
@@ -47,7 +47,7 @@
                 credentialsFields.classList.remove('d-none');
 
                 // Activer validation credentials, désactiver validation token
-                emailInput.setAttribute('required', 'required');
+                usernameInput.setAttribute('required', 'required');
                 passwordInput.setAttribute('required', 'required');
                 jetonInput.removeAttribute('required');
 

@@ -86,9 +86,9 @@ class CfiAuthenticator extends AbstractAuthenticator
             return null !== $request->request->get('jetonUtilisateur');
         }
 
-        // Mode credentials : vérifier présence email + password
+        // Mode credentials : vérifier présence username + password
         if ('credentials' === $mode) {
-            return null !== $request->request->get('email')
+            return null !== $request->request->get('username')
                 && null !== $request->request->get('password');
         }
 
@@ -255,19 +255,19 @@ class CfiAuthenticator extends AbstractAuthenticator
     }
 
     /**
-     * Authentification via Email/Password.
+     * Authentification via Identifiant/Password.
      */
     private function authenticateWithCredentials(Request $request): UtilisateurGorilliasDto
     {
-        $email = $request->request->get('email', '');
+        $username = $request->request->get('username', '');
         $password = $request->request->get('password', '');
 
         $this->logger->info('CFI Authenticator: Tentative authentification credentials', [
-            'email' => $email,
+            'username' => $username,
         ]);
 
         // Validation basique
-        if (empty($email) || empty($password)) {
+        if (empty($username) || empty($password)) {
             throw new AuthenticationException($this->translator->trans('cfi.auth.error.empty_credentials', [], 'security'));
         }
 
@@ -275,11 +275,11 @@ class CfiAuthenticator extends AbstractAuthenticator
         $hashedPassword = $this->passwordHasher->hashPassword($password);
 
         $this->logger->debug('CFI Authenticator: Mot de passe hashé', [
-            'email' => $email,
+            'username' => $username,
             'hash_length' => strlen($hashedPassword),
         ]);
 
         // Appel API CFI pour authentification avec password hashé
-        return $this->cfiAuthService->authenticateWithCredentials($email, $hashedPassword);
+        return $this->cfiAuthService->authenticateWithCredentials($username, $hashedPassword);
     }
 }
