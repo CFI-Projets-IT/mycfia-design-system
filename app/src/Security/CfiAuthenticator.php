@@ -75,7 +75,19 @@ class CfiAuthenticator extends AbstractAuthenticator
      */
     public function supports(Request $request): ?bool
     {
+        // DEBUG TEMPORAIRE - À RETIRER APRÈS INVESTIGATION
+        $this->logger->info('CFI Authenticator supports() DEBUG', [
+            'method' => $request->getMethod(),
+            'pathInfo' => $request->getPathInfo(),
+            'uri' => $request->getRequestUri(),
+            'mode' => $request->request->get('mode'),
+            'has_username' => null !== $request->request->get('username'),
+            'has_password' => null !== $request->request->get('password'),
+            'has_jetonUtilisateur' => null !== $request->request->get('jetonUtilisateur'),
+        ]);
+
         if (! $request->isMethod('POST') || '/login' !== $request->getPathInfo()) {
+            $this->logger->warning('CFI Authenticator: supports() returned FALSE - method or path mismatch');
             return false;
         }
 
@@ -83,15 +95,20 @@ class CfiAuthenticator extends AbstractAuthenticator
 
         // Mode token : vérifier présence du jetonUtilisateur
         if ('token' === $mode) {
-            return null !== $request->request->get('jetonUtilisateur');
+            $result = null !== $request->request->get('jetonUtilisateur');
+            $this->logger->info('CFI Authenticator: supports() mode=token', ['result' => $result]);
+            return $result;
         }
 
         // Mode credentials : vérifier présence username + password
         if ('credentials' === $mode) {
-            return null !== $request->request->get('username')
+            $result = null !== $request->request->get('username')
                 && null !== $request->request->get('password');
+            $this->logger->info('CFI Authenticator: supports() mode=credentials', ['result' => $result]);
+            return $result;
         }
 
+        $this->logger->warning('CFI Authenticator: supports() returned FALSE - unknown mode', ['mode' => $mode]);
         return false;
     }
 
