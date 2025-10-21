@@ -1,0 +1,45 @@
+{#
+  Composant Navigation Tabs Chat
+
+  Usage :
+  {{ component('ChatNavTabs', { context: 'factures' }) }}
+
+  Paramètres :
+  - context (string) : Contexte actif (factures|commandes|stocks|general)
+#}
+
+{% set tabs = [
+    {
+        key: 'factures',
+        label: 'Factures',
+        icon: 'bi-receipt'
+    },
+    {
+        key: 'commandes',
+        label: 'Commandes',
+        icon: 'bi-list-check'
+    },
+    {
+        key: 'stocks',
+        label: 'Stocks',
+        icon: 'bi-box-seam'
+    },
+    {
+        key: 'general',
+        label: 'Autre',
+        icon: 'bi-question-circle'
+    }
+] %}
+
+<nav class="chat-nav-tabs">
+    <div class="chat-nav-tabs-container">
+        {% for tab in tabs %}
+            <a href="{{ path('chat_index', {context: tab.key}) }}"
+               class="chat-nav-tab {{ context == tab.key ? 'active' : '' }}"
+               {% if context == tab.key %}aria-current="page"{% endif %}>
+                <i class="bi {{ tab.icon }}"></i>
+                <span>{{ tab.label }}</span>
+            </a>
+        {% endfor %}
+    </div>
+</nav>

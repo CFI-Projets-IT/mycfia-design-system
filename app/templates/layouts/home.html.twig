@@ -261,6 +261,9 @@
                 </div>
             </header>
 
+            {# Navigation contextuelle (chat uniquement) #}
+            {% block navigation %}{% endblock %}
+
             {# Contenu de la page #}
             <div class="home-content">
                 {% block content %}{% endblock %}
