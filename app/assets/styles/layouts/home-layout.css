@@ -186,6 +186,11 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center; /* Par défaut centré pour la page d'accueil */
+}
+
+/* Page chat : contenu aligné en haut pour le scroll des messages */
+.home-content.chat-page {
     justify-content: flex-start;
 }
 
