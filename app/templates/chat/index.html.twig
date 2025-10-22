@@ -5,6 +5,8 @@
 {% block stylesheets %}
     {{ parent() }}
     <link rel="stylesheet" href="{{ asset('styles/components/chat-nav-tabs.css') }}">
+    <link rel="stylesheet" href="{{ asset('styles/components/chat-messages.css') }}">
+    <link rel="stylesheet" href="{{ asset('styles/components/chat-input.css') }}">
     <link rel="stylesheet" href="{{ asset('styles/chat.css') }}">
 {% endblock %}
 
@@ -36,7 +38,10 @@
    - app.user.fullName   → Nom complet de l'utilisateur
    ================================================================================== #}
 
-{# TODO: Structure HTML immersive ici #}
+{# Zone des messages - Vide au démarrage, messages ajoutés dynamiquement par chat.js #}
+<div id="chatMessages" class="chat-messages-container">
+    {# Les messages seront insérés ici dynamiquement via JavaScript #}
+</div>
 
 {# ==================================================================================
    DONNÉES JAVASCRIPT - ABSOLUMENT CRITIQUE - NE JAMAIS SUPPRIMER
@@ -49,7 +54,15 @@
      data-mercure-jwt="{{ mercureJwt }}"
      data-message-url="{{ path('chat_message', {context: context}) }}"
      data-stream-url="{{ path('chat_stream', {context: context}) }}"
+     data-assistant-logo="{{ asset('images/assistant-picto.svg') }}"
      style="display: none;">
+</div>
+{% endblock %}
+
+{% block sticky_bottom %}
+{# CONTAINER 3 : Input fixe en bas #}
+<div class="sticky-bottom-container">
+    {{ component('ChatInput', { context: context }) }}
 </div>
 {% endblock %}
 
