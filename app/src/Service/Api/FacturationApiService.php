@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Service\Api;
 
+use App\DTO\Cfi\FactureDetailDto;
 use App\DTO\Cfi\FactureDto;
 use App\Service\Cfi\CfiApiService;
 use App\Service\Cfi\CfiTokenContext;
@@ -153,6 +154,68 @@ final readonly class FacturationApiService
         ];
 
         return implode('.', $parts);
+    }
+
+    /**
+     * Récupérer une facture spécifique par son ID.
+     *
+     * Endpoint : POST /Facturations/getFacture
+     * Sécurité : CFI vérifie automatiquement le droit 'factures_Visu'
+     *
+     * Pas de cache : Donnée spécifique, requête rapide
+     *
+     * @param int $idFacture ID de la facture à récupérer
+     *
+     * @return FactureDetailDto|null Facture trouvée ou null si inexistante/pas de droit
+     */
+    public function getFacture(int $idFacture): ?FactureDetailDto
+    {
+        $startTime = microtime(true);
+
+        $this->logger->info('FacturationApiService: Récupération facture spécifique', [
+            'id_facture' => $idFacture,
+        ]);
+
+        // Récupérer le token d'authentification (contexte sync ou async)
+        $jeton = $this->cfiTokenContext->getToken();
+        if (null === $jeton) {
+            $this->logger->error('FacturationApiService: Token CFI manquant ou expiré', [
+                'duration_ms' => (microtime(true) - $startTime) * 1000,
+            ]);
+
+            return null;
+        }
+
+        // Construire le corps de la requête
+        $body = [
+            'idFacture' => $idFacture,
+        ];
+
+        try {
+            // Appel API CFI
+            $response = $this->cfiApi->post('/Facturations/getFacture', $body, $jeton);
+
+            // La réponse est directement un FactureDetailDto (pas un tableau de facturations)
+            $facture = FactureDetailDto::fromApiData($response);
+
+            $this->logger->info('FacturationApiService: Facture récupérée avec succès', [
+                'id_facture' => $idFacture,
+                'montant_ttc' => $facture->montantTTC,
+                'nb_lignes' => count($facture->lignes),
+                'duration_ms' => (microtime(true) - $startTime) * 1000,
+            ]);
+
+            return $facture;
+        } catch (\Exception $e) {
+            // Gestion des erreurs (400 = pas de droit factures_Visu ou facture inexistante)
+            $this->logger->error('FacturationApiService: Erreur récupération facture', [
+                'id_facture' => $idFacture,
+                'error' => $e->getMessage(),
+                'duration_ms' => (microtime(true) - $startTime) * 1000,
+            ]);
+
+            return null;
+        }
     }
 
     /**
