@@ -65,6 +65,8 @@ final readonly class ChatStreamMessageHandler
         private EntityManagerInterface $entityManager,
         #[Autowire(service: 'monolog.logger.chat')]
         private LoggerInterface $logger,
+        #[Autowire(service: 'monolog.logger.llm')]
+        private LoggerInterface $llmLogger,
     ) {
     }
 
@@ -127,11 +129,35 @@ final readonly class ChatStreamMessageHandler
 
             // 7. Appel NON-STREAMING pour récupérer métadonnées complètes
             // TokenOutputProcessor (services.yaml) capture automatiquement model + token_usage
+            $llmStartTime = microtime(true);
             $result = $agent->call($messages); // Pas d'option ['stream' => true]
+            $llmDurationMs = (microtime(true) - $llmStartTime) * 1000;
 
             // 8. Récupérer réponse complète et métadonnées
             $fullResponse = $result->getContent();
             $resultMetadata = $result->getMetadata();
+
+            // Extraire token_usage
+            $tokenUsage = $resultMetadata->get('token_usage');
+            $promptTokens = $tokenUsage->promptTokens ?? 0;
+            $completionTokens = $tokenUsage->completionTokens ?? 0;
+            $totalTokens = $tokenUsage->totalTokens ?? 0;
+
+            // KPI LLM : Logger temps génération + tokens utilisés
+            $this->llmLogger->info('LLM Call', [
+                'model' => $resultMetadata->get('model') ?? 'unknown',
+                'duration_ms' => $llmDurationMs,
+                'prompt_tokens' => $promptTokens,
+                'completion_tokens' => $completionTokens,
+                'total_tokens' => $totalTokens,
+                'user_id' => $user->getId(),
+                'tenant_id' => $tenantId,
+                'context' => $message->context,
+                'conversation_id' => $message->conversationId,
+                'message_id' => $message->messageId,
+                'question_length' => mb_strlen($message->question, 'UTF-8'),
+                'answer_length' => mb_strlen($fullResponse, 'UTF-8'),
+            ]);
 
             // DEBUG : Logger métadonnées capturées (model + token_usage)
             $this->logger->info('ChatStreamMessageHandler: Métadonnées capturées', [
