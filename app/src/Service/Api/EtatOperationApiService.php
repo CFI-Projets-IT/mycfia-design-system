@@ -45,17 +45,24 @@ final readonly class EtatOperationApiService
      */
     public function getEtatsOperations(): array
     {
-        return $this->cache->get(self::CACHE_KEY, function (ItemInterface $item): array {
+        $startTime = microtime(true);
+
+        $beta = null;
+
+        $etats = $this->cache->get(self::CACHE_KEY, function (ItemInterface $item) use ($startTime): array {
             $item->expiresAfter(self::CACHE_TTL);
 
             $this->logger->info('EtatOperationApiService: Cache MISS - Appel API CFI', [
                 'cache_key' => $item->getKey(),
+                'cache_status' => 'MISS',
             ]);
 
             // Récupérer le token d'authentification
             $jeton = $this->cfiSession->getToken();
             if (null === $jeton) {
-                $this->logger->error('EtatOperationApiService: Token CFI manquant');
+                $this->logger->error('EtatOperationApiService: Token CFI manquant', [
+                    'duration_ms' => (microtime(true) - $startTime) * 1000,
+                ]);
 
                 return [];
             }
@@ -76,10 +83,24 @@ final readonly class EtatOperationApiService
 
             $this->logger->info('EtatOperationApiService: Récupération réussie', [
                 'nb_etats' => count($etats),
+                'duration_ms' => (microtime(true) - $startTime) * 1000,
+                'cache_status' => 'MISS',
             ]);
 
             return $etats;
-        });
+        }, INF, $beta);
+
+        // Logger cache HIT si applicable
+        if ($beta) {
+            $this->logger->info('EtatOperationApiService: Cache HIT', [
+                'cache_key' => self::CACHE_KEY,
+                'nb_etats' => count($etats),
+                'duration_ms' => (microtime(true) - $startTime) * 1000,
+                'cache_status' => 'HIT',
+            ]);
+        }
+
+        return $etats;
     }
 
     /**

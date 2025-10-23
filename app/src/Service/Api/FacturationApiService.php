@@ -58,21 +58,28 @@ final readonly class FacturationApiService
         ?string $debut = null,
         ?string $fin = null,
     ): array {
+        $startTime = microtime(true);
+
         // Générer clé cache unique basée sur les filtres
         $cacheKey = $this->buildCacheKey($idDivision, $debut, $fin);
 
-        return $this->cache->get($cacheKey, function (ItemInterface $item) use ($idDivision, $debut, $fin): array {
+        $beta = null;
+
+        $factures = $this->cache->get($cacheKey, function (ItemInterface $item) use ($idDivision, $debut, $fin, $startTime): array {
             $item->expiresAfter(self::CACHE_TTL);
 
             $this->logger->info('FacturationApiService: Cache MISS - Appel API CFI', [
                 'cache_key' => $item->getKey(),
                 'id_division' => $idDivision,
+                'cache_status' => 'MISS',
             ]);
 
             // Récupérer le token d'authentification (contexte sync ou async)
             $jeton = $this->cfiTokenContext->getToken();
             if (null === $jeton) {
-                $this->logger->error('FacturationApiService: Token CFI manquant ou expiré');
+                $this->logger->error('FacturationApiService: Token CFI manquant ou expiré', [
+                    'duration_ms' => (microtime(true) - $startTime) * 1000,
+                ]);
 
                 return [];
             }
@@ -102,10 +109,25 @@ final readonly class FacturationApiService
             $this->logger->info('FacturationApiService: Récupération réussie', [
                 'id_division' => $idDivision,
                 'nb_facturations' => count($factures),
+                'duration_ms' => (microtime(true) - $startTime) * 1000,
+                'cache_status' => 'MISS',
             ]);
 
             return $factures;
-        });
+        }, INF, $cacheHit);
+
+        // Logger cache HIT si applicable
+        if ($cacheHit) {
+            $this->logger->info('FacturationApiService: Cache HIT', [
+                'cache_key' => $cacheKey,
+                'id_division' => $idDivision,
+                'nb_facturations' => count($factures),
+                'duration_ms' => (microtime(true) - $startTime) * 1000,
+                'cache_status' => 'HIT',
+            ]);
+        }
+
+        return $factures;
     }
 
     /**

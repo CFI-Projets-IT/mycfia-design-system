@@ -48,21 +48,28 @@ final readonly class StockApiService
         ?string $reference = null,
         ?bool $enAlerte = null,
     ): array {
+        $startTime = microtime(true);
+
         // Générer clé cache unique basée sur les filtres
         $cacheKey = $this->buildCacheKey($idDivision, $reference, $enAlerte);
 
-        return $this->cache->get($cacheKey, function (ItemInterface $item) use ($idDivision, $reference, $enAlerte): array {
+        $beta = null;
+
+        $stocks = $this->cache->get($cacheKey, function (ItemInterface $item) use ($idDivision, $reference, $enAlerte, $startTime): array {
             $item->expiresAfter(self::CACHE_TTL);
 
             $this->logger->info('StockApiService: Cache MISS - Appel API CFI', [
                 'cache_key' => $item->getKey(),
                 'id_division' => $idDivision,
+                'cache_status' => 'MISS',
             ]);
 
             // Récupérer le token d'authentification (contexte sync ou async)
             $jeton = $this->cfiTokenContext->getToken();
             if (null === $jeton) {
-                $this->logger->error('StockApiService: Token CFI manquant ou expiré');
+                $this->logger->error('StockApiService: Token CFI manquant ou expiré', [
+                    'duration_ms' => (microtime(true) - $startTime) * 1000,
+                ]);
 
                 return [];
             }
@@ -111,10 +118,25 @@ final readonly class StockApiService
             $this->logger->info('StockApiService: Récupération réussie', [
                 'id_division' => $idDivision,
                 'nb_stocks' => count($stocks),
+                'duration_ms' => (microtime(true) - $startTime) * 1000,
+                'cache_status' => 'MISS',
             ]);
 
             return $stocks;
-        });
+        }, INF, $beta);
+
+        // Logger cache HIT si applicable
+        if ($beta) {
+            $this->logger->info('StockApiService: Cache HIT', [
+                'cache_key' => $cacheKey,
+                'id_division' => $idDivision,
+                'nb_stocks' => count($stocks),
+                'duration_ms' => (microtime(true) - $startTime) * 1000,
+                'cache_status' => 'HIT',
+            ]);
+        }
+
+        return $stocks;
     }
 
     /**

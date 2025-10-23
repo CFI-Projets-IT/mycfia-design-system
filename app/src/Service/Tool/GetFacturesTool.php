@@ -140,6 +140,16 @@ final readonly class GetFacturesTool
                 durationMs: $durationMs
             );
 
+            // Log KPI pour monitoring
+            $this->logger->info('Tool executed successfully', [
+                'tool_name' => 'get_factures',
+                'mode' => 'LISTE', // MODE LISTE : $idFacture est toujours null ici (sinon return ligne 105)
+                'duration_ms' => $durationMs,
+                'result_count' => count($formattedFacturations),
+                'user_id' => $user->getId(),
+                'division_id' => $idDivision,
+            ]);
+
             return [
                 'success' => true,
                 'count' => count($formattedFacturations),
@@ -153,8 +163,12 @@ final readonly class GetFacturesTool
                 ],
             ];
         } catch (\Exception $e) {
+            $durationMs = (int) ((microtime(true) - $startTime) * 1000);
+
             // Log détaillé pour développeurs (technique)
-            $this->logger->error('GetFacturesTool: Erreur lors de la récupération des factures', [
+            $this->logger->error('Tool execution failed', [
+                'tool_name' => 'get_factures',
+                'duration_ms' => $durationMs,
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString(),
                 'params' => ['dateDebut' => $dateDebut, 'dateFin' => $dateFin],
