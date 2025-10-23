@@ -23,6 +23,7 @@ const state = {
     streamUrl: null,
     mercureUrl: null,
     mercureJwt: null,
+    assistantLogo: null,
     isLoading: false,
     messageHistory: [],
 };
@@ -73,14 +74,16 @@ function initializeChatInterface() {
         state.streamUrl = chatData.dataset.streamUrl;
         state.mercureUrl = chatData.dataset.mercureUrl;
         state.mercureJwt = chatData.dataset.mercureJwt;
+        state.assistantLogo = chatData.dataset.assistantLogo;
 
-        console.log('[Chat] Configuration chargée:', {
-            conversationId: state.conversationId,
-            messageUrl: state.messageUrl,
-            streamUrl: state.streamUrl,
-            mercureUrl: state.mercureUrl,
-            mercureJwt: state.mercureJwt ? 'présent' : 'absent',
-        });
+        // console.log('[Chat] Configuration chargée:', {
+        //     conversationId: state.conversationId,
+        //     messageUrl: state.messageUrl,
+        //     streamUrl: state.streamUrl,
+        //     mercureUrl: state.mercureUrl,
+        //     mercureJwt: state.mercureJwt ? 'présent' : 'absent',
+        //     assistantLogo: state.assistantLogo,
+        // });
     }
 
     // Initialiser les event listeners
@@ -133,7 +136,7 @@ function initEventListeners() {
     elements.chatInput?.addEventListener('keydown', (e) => {
         if (e.key === 'Enter' && !e.shiftKey) {
             e.preventDefault();
-            if (!elements.sendButton.disabled) {
+            if (elements.sendButton && !elements.sendButton.disabled) {
                 elements.chatForm.dispatchEvent(new Event('submit'));
             }
         }
@@ -165,11 +168,18 @@ async function handleFormSubmit(e) {
     setLoading(true);
 
     // Utiliser le streaming si Mercure est configuré
-    if (state.mercureUrl && state.streamUrl) {
-        await handleStreamingSubmit(question);
-    } else {
-        // Fallback vers mode synchrone si Mercure non disponible
-        await handleSyncSubmit(question);
+    try {
+        if (state.mercureUrl && state.streamUrl) {
+            console.log('[Chat] Mode streaming activé');
+            await handleStreamingSubmit(question);
+        } else {
+            console.log('[Chat] Mode synchrone (Mercure non configuré)');
+            await handleSyncSubmit(question);
+        }
+    } catch (error) {
+        console.error('[Chat] Erreur lors de l\'envoi:', error);
+        addErrorMessage(`Erreur d'envoi : ${error.message}`);
+        setLoading(false);
     }
 }
 
@@ -213,15 +223,15 @@ async function handleStreamingSubmit(question) {
         }
 
         const finalUrl = mercureUrl.toString();
-        console.log('[Chat] EventSource URL:', finalUrl);
-        console.log('[Chat] Creating EventSource...');
+        // console.log('[Chat] EventSource URL:', finalUrl);
+        // console.log('[Chat] Creating EventSource...');
 
         const eventSource = new EventSource(finalUrl);
 
-        console.log('[Chat] EventSource created, readyState:', eventSource.readyState);
-        console.log('[Chat] EventSource.CONNECTING:', EventSource.CONNECTING);
-        console.log('[Chat] EventSource.OPEN:', EventSource.OPEN);
-        console.log('[Chat] EventSource.CLOSED:', EventSource.CLOSED);
+        // console.log('[Chat] EventSource created, readyState:', eventSource.readyState);
+        // console.log('[Chat] EventSource.CONNECTING:', EventSource.CONNECTING);
+        // console.log('[Chat] EventSource.OPEN:', EventSource.OPEN);
+        // console.log('[Chat] EventSource.CLOSED:', EventSource.CLOSED);
 
         let currentMessageElement = null;
         let fullAnswer = '';
@@ -229,13 +239,13 @@ async function handleStreamingSubmit(question) {
         let toolsUsed = [];
 
         eventSource.onopen = () => {
-            console.log('[Chat] EventSource OPENED! readyState:', eventSource.readyState);
+            // console.log('[Chat] EventSource OPENED! readyState:', eventSource.readyState);
         };
 
         eventSource.onmessage = (event) => {
-            console.log('[Chat] EventSource onmessage fired!');
+            // console.log('[Chat] EventSource onmessage fired!');
             const eventData = JSON.parse(event.data);
-            console.log('[Chat] Mercure event:', eventData);
+            // console.log('[Chat] Mercure event:', eventData);
 
             switch (eventData.type) {
                 case 'start':
@@ -357,21 +367,16 @@ async function handleSyncSubmit(question) {
 // ====================================
 
 function addUserMessage(text) {
+    // Utiliser la structure du composant ChatMessageUser
     const messageHtml = `
-        <div class="chat-message user-message mb-4" data-message-type="user">
-            <div class="d-flex gap-3 flex-row-reverse">
-                <div class="message-avatar flex-shrink-0">
-                    <i class="bi bi-person-fill"></i>
+        <div class="chat-message chat-message-user">
+            <div class="chat-message-content">
+                <div class="chat-message-bubble">
+                    ${escapeHtml(text)}
                 </div>
-                <div class="message-content flex-grow-1">
-                    <div class="message-header mb-2 text-end">
-                        <span class="fw-semibold">Vous</span>
-                        <span class="small text-muted ms-2">${getCurrentTime()}</span>
-                    </div>
-                    <div class="message-text">
-                        ${escapeHtml(text)}
-                    </div>
-                </div>
+            </div>
+            <div class="chat-message-avatar">
+                <i class="bi bi-person-fill"></i>
             </div>
         </div>
     `;
@@ -381,30 +386,14 @@ function addUserMessage(text) {
 }
 
 function addAssistantMessage(text, metadata = {}, toolsUsed = []) {
-    const toolsHtml = toolsUsed.length > 0 ? `
-        <div class="mt-2 pt-2 border-top">
-            <small class="text-muted">
-                <i class="bi bi-tools"></i>
-                <strong>Outils utilisés :</strong> ${toolsUsed.join(', ')}
-            </small>
-        </div>
-    ` : '';
-
+    // Utiliser la structure du composant ChatMessageAssistant
+    const logoUrl = state.assistantLogo || '/assets/images/assistant-picto.svg';
     const messageHtml = `
-        <div class="chat-message assistant-message mb-4" data-message-type="assistant">
-            <div class="d-flex gap-3">
-                <div class="message-avatar flex-shrink-0">
-                    <i class="bi bi-robot"></i>
-                </div>
-                <div class="message-content flex-grow-1">
-                    <div class="message-header mb-2">
-                        <span class="fw-semibold text-primary">Assistant IA</span>
-                        <span class="small text-muted ms-2">${getCurrentTime()}</span>
-                    </div>
-                    <div class="message-text">
-                        ${formatMessage(text)}
-                        ${toolsHtml}
-                    </div>
+        <div class="chat-message chat-message-assistant">
+            <div class="chat-message-bubble">
+                <img src="${logoUrl}" alt="IA" class="chat-message-logo">
+                <div class="chat-message-text">
+                    ${formatMessage(text)}
                 </div>
             </div>
         </div>
@@ -442,25 +431,15 @@ function addErrorMessage(text) {
  * Créer un élément de message vide pour le streaming progressif
  */
 function createStreamingMessageElement() {
+    const logoUrl = state.assistantLogo || '/assets/images/assistant-picto.svg';
     const messageDiv = document.createElement('div');
-    messageDiv.className = 'chat-message assistant-message mb-4';
+    messageDiv.className = 'chat-message chat-message-assistant';
     messageDiv.dataset.messageType = 'assistant-streaming';
     messageDiv.innerHTML = `
-        <div class="d-flex gap-3">
-            <div class="message-avatar flex-shrink-0">
-                <i class="bi bi-robot"></i>
-            </div>
-            <div class="message-content flex-grow-1">
-                <div class="message-header mb-2">
-                    <span class="fw-semibold text-primary">Assistant IA</span>
-                    <span class="small text-muted ms-2">${getCurrentTime()}</span>
-                    <span class="badge bg-info ms-2">
-                        <i class="bi bi-three-dots"></i> En cours...
-                    </span>
-                </div>
-                <div class="message-text" data-streaming-content>
-                    <span class="text-muted"><i class="bi bi-hourglass-split"></i> Réflexion en cours...</span>
-                </div>
+        <div class="chat-message-bubble">
+            <img src="${logoUrl}" alt="IA" class="chat-message-logo">
+            <div class="chat-message-text" data-streaming-content>
+                <span style="opacity: 0.7;"><i class="bi bi-hourglass-split"></i> Réflexion en cours...</span>
             </div>
         </div>
     `;
@@ -482,23 +461,9 @@ function updateStreamingMessage(messageElement, text) {
  */
 function finalizeStreamingMessage(messageElement, text, metadata = {}, toolsUsed = []) {
     const contentDiv = messageElement.querySelector('[data-streaming-content]');
-    const badgeDiv = messageElement.querySelector('.badge.bg-info');
-
-    if (badgeDiv) {
-        badgeDiv.remove();
-    }
-
-    const toolsHtml = toolsUsed.length > 0 ? `
-        <div class="mt-2 pt-2 border-top">
-            <small class="text-muted">
-                <i class="bi bi-tools"></i>
-                <strong>Outils utilisés :</strong> ${toolsUsed.join(', ')}
-            </small>
-        </div>
-    ` : '';
 
     if (contentDiv) {
-        contentDiv.innerHTML = formatMessage(text) + toolsHtml;
+        contentDiv.innerHTML = formatMessage(text);
     }
 
     messageElement.dataset.messageType = 'assistant';
@@ -525,18 +490,20 @@ function handleInputChange() {
     const length = value.length;
     const maxLength = 500;
 
-    // Mettre à jour le compteur
-    elements.charCount.textContent = `${length} / ${maxLength}`;
+    // Mettre à jour le compteur (si présent)
+    if (elements.charCount) {
+        elements.charCount.textContent = `${length} / ${maxLength}`;
+
+        // Limiter la longueur
+        if (length > maxLength) {
+            elements.charCount.classList.add('text-danger');
+        } else {
+            elements.charCount.classList.remove('text-danger');
+        }
+    }
 
     // Activer/désactiver le bouton d'envoi
     elements.sendButton.disabled = length === 0 || length > maxLength || state.isLoading;
-
-    // Limiter la longueur
-    if (length > maxLength) {
-        elements.charCount.classList.add('text-danger');
-    } else {
-        elements.charCount.classList.remove('text-danger');
-    }
 }
 
 function setupTextareaAutoResize() {
@@ -554,9 +521,20 @@ function setupTextareaAutoResize() {
 }
 
 function scrollToBottom() {
-    elements.chatMessages.scrollTo({
-        top: elements.chatMessages.scrollHeight,
-        behavior: 'smooth',
+    console.log('[Chat] scrollToBottom called');
+    console.log('[Chat] chatMessages element:', elements.chatMessages);
+    console.log('[Chat] scrollHeight BEFORE:', elements.chatMessages.scrollHeight);
+    console.log('[Chat] scrollTop BEFORE:', elements.chatMessages.scrollTop);
+
+    // Utiliser requestAnimationFrame pour s'assurer que le DOM est mis à jour
+    requestAnimationFrame(() => {
+        // Double RAF pour garantir que le layout est recalculé
+        requestAnimationFrame(() => {
+            console.log('[Chat] Inside double RAF');
+            console.log('[Chat] scrollHeight AFTER RAF:', elements.chatMessages.scrollHeight);
+            elements.chatMessages.scrollTop = elements.chatMessages.scrollHeight;
+            console.log('[Chat] scrollTop AFTER assignment:', elements.chatMessages.scrollTop);
+        });
     });
 }
 
