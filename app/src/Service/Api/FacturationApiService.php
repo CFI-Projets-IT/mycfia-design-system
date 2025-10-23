@@ -8,6 +8,7 @@ use App\DTO\Cfi\FactureDto;
 use App\Service\Cfi\CfiApiService;
 use App\Service\Cfi\CfiTokenContext;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\Cache\ItemInterface;
 
@@ -22,6 +23,8 @@ use Symfony\Contracts\Cache\ItemInterface;
  * - Récupérer les factures CFI avec filtres temporels
  * - Mapper les données vers FactureDto
  * - Gérer cache et authentification
+ *
+ * Logging : Canal dédié 'api_services' (pas 'cfi_api')
  */
 final readonly class FacturationApiService
 {
@@ -33,6 +36,7 @@ final readonly class FacturationApiService
         private CfiApiService $cfiApi,
         private CfiTokenContext $cfiTokenContext,
         private CacheInterface $cache,
+        #[Autowire(service: 'monolog.logger.api_services')]
         private LoggerInterface $logger,
     ) {
     }

@@ -12,6 +12,7 @@ use App\Service\ToolCallCollector;
 use Psr\Log\LoggerInterface;
 use Symfony\AI\Agent\Toolbox\Attribute\AsTool;
 use Symfony\Component\DependencyInjection\Attribute\AsTaggedItem;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -32,6 +33,8 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  * Structure retournée :
  * - MODE LISTE : Résumé factures (id, montants, nb_lignes)
  * - MODE DÉTAIL : Facture complète avec lignes détaillées (libellé, quantité, montant, TVA)
+ *
+ * Logging : Canal dédié 'tools' (pas 'chat')
  */
 #[AsTool(
     name: 'get_factures',
@@ -47,6 +50,7 @@ final readonly class GetFacturesTool
         private UserAuthenticationService $authService,
         private AiLoggerService $aiLogger,
         private ToolCallCollector $toolCallCollector,
+        #[Autowire(service: 'monolog.logger.tools')]
         private LoggerInterface $logger,
         private TranslatorInterface $translator,
     ) {

@@ -8,6 +8,7 @@ use App\DTO\Cfi\EtatOperationDto;
 use App\Service\Cfi\CfiApiService;
 use App\Service\Cfi\CfiSessionService;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\Cache\ItemInterface;
 
@@ -16,6 +17,8 @@ use Symfony\Contracts\Cache\ItemInterface;
  *
  * Cache : 1 heure (données de référence rarement modifiées)
  * Pas de filtrage tenant (données globales)
+ *
+ * Logging : Canal dédié 'api_services' (pas 'cfi_api')
  */
 final readonly class EtatOperationApiService
 {
@@ -27,6 +30,7 @@ final readonly class EtatOperationApiService
         private CfiApiService $cfiApi,
         private CfiSessionService $cfiSession,
         private CacheInterface $cache,
+        #[Autowire(service: 'monolog.logger.api_services')]
         private LoggerInterface $logger,
     ) {
     }

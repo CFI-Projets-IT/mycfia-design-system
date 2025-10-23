@@ -8,6 +8,7 @@ use App\DTO\Cfi\StockDto;
 use App\Service\Cfi\CfiApiService;
 use App\Service\Cfi\CfiTokenContext;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\Cache\ItemInterface;
 
@@ -16,6 +17,8 @@ use Symfony\Contracts\Cache\ItemInterface;
  *
  * Cache : 5 minutes (données fréquemment modifiées)
  * Filtrage automatique par tenant (idDivision)
+ *
+ * Logging : Canal dédié 'api_services' (pas 'cfi_api')
  */
 final readonly class StockApiService
 {
@@ -27,6 +30,7 @@ final readonly class StockApiService
         private CfiApiService $cfiApi,
         private CfiTokenContext $cfiTokenContext,
         private CacheInterface $cache,
+        #[Autowire(service: 'monolog.logger.api_services')]
         private LoggerInterface $logger,
     ) {
     }
