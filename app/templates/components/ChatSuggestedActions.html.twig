@@ -1,0 +1,41 @@
+{#
+    Composant ChatSuggestedActions - Boutons d'actions suggérées
+
+    Props:
+    - actions: array (liste des actions suggérées avec type, label, icon, invoice_id, prompt)
+
+    Structure d'une action:
+    {
+        'type': 'invoice_details',
+        'label': 'Voir les détails',
+        'icon': 'bi-file-earmark-text',
+        'invoice_id': 11735,
+        'prompt': 'Donne-moi tous les détails de la facture 11735'
+    }
+#}
+
+{% set actions = actions ?? [] %}
+
+{% if actions is not empty %}
+    <div class="chat-suggested-actions">
+        <div class="chat-suggested-actions-label">
+            <i class="bi bi-lightbulb"></i>
+            <span>Actions rapides :</span>
+        </div>
+        <div class="chat-suggested-actions-buttons">
+            {% for action in actions %}
+                <button
+                    type="button"
+                    class="btn btn-sm btn-outline-primary suggested-action-btn"
+                    data-action-type="{{ action.type }}"
+                    data-action-prompt="{{ action.prompt }}"
+                    data-invoice-id="{{ action.invoice_id }}"
+                    title="{{ action.prompt }}"
+                >
+                    <i class="bi {{ action.icon }}"></i>
+                    {{ action.label }}
+                </button>
+            {% endfor %}
+        </div>
+    </div>
+{% endif %}

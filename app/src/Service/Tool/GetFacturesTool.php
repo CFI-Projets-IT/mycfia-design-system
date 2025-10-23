@@ -9,6 +9,7 @@ use App\Security\UserAuthenticationService;
 use App\Service\AiLoggerService;
 use App\Service\Api\FacturationApiService;
 use App\Service\ToolCallCollector;
+use App\Service\ToolResultCollector;
 use Psr\Log\LoggerInterface;
 use Symfony\AI\Agent\Toolbox\Attribute\AsTool;
 use Symfony\Component\DependencyInjection\Attribute\AsTaggedItem;
@@ -50,6 +51,7 @@ final readonly class GetFacturesTool
         private UserAuthenticationService $authService,
         private AiLoggerService $aiLogger,
         private ToolCallCollector $toolCallCollector,
+        private ToolResultCollector $toolResultCollector,
         #[Autowire(service: 'monolog.logger.tools')]
         private LoggerInterface $logger,
         private TranslatorInterface $translator,
@@ -108,6 +110,7 @@ final readonly class GetFacturesTool
             );
 
             // MODE LISTE : Formatter données pour l'agent IA (résumé sans lignes détaillées)
+            // On ajoute un lien cliquable pour chaque facture directement dans les données
             $formattedFacturations = array_map(
                 fn (FactureDto $facturation) => [
                     'id' => $facturation->id,
@@ -124,12 +127,31 @@ final readonly class GetFacturesTool
                             'montantHT' => $facture->montantHT,
                             'montantTTC' => $facture->montantTTC,
                             'nb_lignes' => count($facture->lignes),
+                            // Ajouter l'action directement dans chaque facture
+                            'action_link' => [
+                                'type' => 'invoice_details',
+                                'label' => '📄 Voir tous les détails',
+                                'prompt' => "Donne-moi tous les détails de la facture {$facture->id}",
+                            ],
                         ],
                         $facturation->factures
                     ),
                 ],
                 $facturations
             );
+
+            // Générer les actions suggérées pour transmission au frontend
+            // Chaque facture aura son lien intégré dans la réponse de l'IA
+            $suggestedActions = [];
+            foreach ($facturations as $facturation) {
+                foreach ($facturation->factures as $facture) {
+                    $suggestedActions[] = [
+                        'type' => 'invoice_details',
+                        'invoice_id' => $facture->id,
+                        'prompt' => "Donne-moi tous les détails de la facture {$facture->id}",
+                    ];
+                }
+            }
 
             $durationMs = (int) ((microtime(true) - $startTime) * 1000);
 
@@ -152,10 +174,11 @@ final readonly class GetFacturesTool
                 'division_id' => $idDivision,
             ]);
 
-            return [
+            $result = [
                 'success' => true,
                 'count' => count($formattedFacturations),
                 'facturations' => $formattedFacturations,
+                'suggested_actions' => $suggestedActions,
                 'metadata' => [
                     'source' => 'CFI API',
                     'endpoint' => '/Facturations/getFacturations',
@@ -164,6 +187,11 @@ final readonly class GetFacturesTool
                     'duration_ms' => $durationMs,
                 ],
             ];
+
+            // Collecter le résultat pour transmission au frontend
+            $this->toolResultCollector->addToolResult('get_factures', $result);
+
+            return $result;
         } catch (\Exception $e) {
             $durationMs = (int) ((microtime(true) - $startTime) * 1000);
 

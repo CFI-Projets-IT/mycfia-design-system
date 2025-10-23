@@ -14,6 +14,7 @@ use App\Service\Cfi\CfiTokenContext;
 use App\Service\ChatStreamPublisher;
 use App\Service\Tool;
 use App\Service\ToolCallCollector;
+use App\Service\ToolResultCollector;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\AI\Agent\AgentInterface;
@@ -61,6 +62,7 @@ final readonly class ChatStreamMessageHandler
         private AsyncExecutionContext $asyncContext,
         private AiLoggerService $aiLogger,
         private ToolCallCollector $toolCallCollector,
+        private ToolResultCollector $toolResultCollector,
         private ChatStreamPublisher $streamPublisher,
         private EntityManagerInterface $entityManager,
         #[Autowire(service: 'monolog.logger.chat')]
@@ -95,8 +97,9 @@ final readonly class ChatStreamMessageHandler
 
             $tenantId = $message->tenantId;
 
-            // Réinitialiser le collecteur pour cette nouvelle question
+            // Réinitialiser les collecteurs pour cette nouvelle question
             $this->toolCallCollector->reset();
+            $this->toolResultCollector->reset();
 
             // 3. Publier événement "start"
             $this->streamPublisher->publishStart($message->conversationId, $message->messageId, $message->context);
@@ -186,8 +189,11 @@ final readonly class ChatStreamMessageHandler
             $durationMs = (int) ((microtime(true) - $startTime) * 1000);
             $toolsUsed = $this->toolCallCollector->getToolsUsed();
 
-            // 11. Publier événement "complete" avec métadonnées (incluant model et token_usage)
-            $this->streamPublisher->publishComplete($message->conversationId, $message->messageId, [
+            // Récupérer les métadonnées agrégées des tools (suggested_actions, etc.)
+            $toolMetadata = $this->toolResultCollector->getAggregatedMetadata();
+
+            // 11. Publier événement "complete" avec métadonnées (incluant model, token_usage et suggested_actions)
+            $this->streamPublisher->publishComplete($message->conversationId, $message->messageId, array_merge([
                 'user_id' => $user->getId(),
                 'tenant_id' => $tenantId,
                 'context' => $message->context,
@@ -196,7 +202,7 @@ final readonly class ChatStreamMessageHandler
                 'answer_length' => mb_strlen($fullResponse, 'UTF-8'),
                 'model' => $resultMetadata->get('model'),
                 'token_usage' => $resultMetadata->get('token_usage'),
-            ]);
+            ], $toolMetadata));
 
             // 12. Logger l'appel
             $this->aiLogger->logToolCall(

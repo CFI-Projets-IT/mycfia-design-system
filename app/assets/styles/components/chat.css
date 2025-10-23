@@ -263,3 +263,86 @@
         font-size: 0.75rem;
     }
 }
+
+/* ============================================
+   SUGGESTED ACTIONS
+   Actions rapides suggérées par l'IA
+   ============================================ */
+
+.chat-suggested-actions {
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid rgba(24, 62, 130, 0.2);
+}
+
+.chat-suggested-actions-label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: 8px;
+    font-weight: 500;
+}
+
+.chat-suggested-actions-label i {
+    font-size: 0.875rem;
+    color: var(--color-secondary);
+}
+
+.chat-suggested-actions-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.suggested-action-btn {
+    font-size: 0.8125rem;
+    padding: 6px 12px;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.suggested-action-btn i {
+    margin-right: 4px;
+    font-size: 0.75rem;
+}
+
+.suggested-action-btn:not(:disabled):hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(24, 62, 130, 0.3);
+}
+
+.suggested-action-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.suggested-action-btn.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+/* ============================================
+   INVOICE DETAIL LINKS
+   Liens intégrés dans le texte pour détails factures
+   ============================================ */
+
+.invoice-detail-link {
+    display: inline-block;
+    margin-left: 4px;
+    font-size: 1rem;
+    text-decoration: none;
+    transition: transform 0.2s ease;
+    cursor: pointer;
+}
+
+.invoice-detail-link:hover {
+    transform: scale(1.2);
+}
+
+.invoice-detail-link:active {
+    transform: scale(0.95);
+}

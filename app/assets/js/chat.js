@@ -132,6 +132,25 @@ function initEventListeners() {
     // Export chat
     elements.exportChat?.addEventListener('click', handleExportChat);
 
+    // Suggested actions - Délégation d'événements sur le conteneur de messages
+    elements.chatMessages?.addEventListener('click', (e) => {
+        // Boutons d'actions (ancienne version, gardé pour compatibilité)
+        const actionBtn = e.target.closest('.suggested-action-btn');
+        if (actionBtn) {
+            e.preventDefault();
+            handleSuggestedActionClick(actionBtn);
+            return;
+        }
+
+        // Liens d'actions intégrés dans le texte (nouvelle version)
+        const actionLink = e.target.closest('.invoice-detail-link');
+        if (actionLink) {
+            e.preventDefault();
+            handleSuggestedActionClick(actionLink);
+            return;
+        }
+    });
+
     // Touche Enter pour envoyer (Shift+Enter pour nouvelle ligne)
     elements.chatInput?.addEventListener('keydown', (e) => {
         if (e.key === 'Enter' && !e.shiftKey) {
@@ -457,13 +476,47 @@ function updateStreamingMessage(messageElement, text) {
 }
 
 /**
+ * Injecter des liens d'actions cliquables dans le texte formaté
+ */
+function injectActionLinks(formattedHtml, actions) {
+    // Créer une map invoice_id => prompt pour accès rapide
+    const actionsMap = {};
+    actions.forEach(action => {
+        actionsMap[action.invoice_id] = action.prompt;
+    });
+
+    // Regex pour détecter "Facture #12345" ou "**Facture #12345**"
+    const facturePattern = /(\*\*)?Facture\s+#(\d+)(\*\*)?/gi;
+
+    return formattedHtml.replace(facturePattern, (match, bold1, invoiceId, bold2) => {
+        const prompt = actionsMap[invoiceId];
+        if (prompt) {
+            // Générer un lien cliquable
+            const link = `<a href="#" class="invoice-detail-link" data-action-prompt="${escapeHtml(prompt)}" data-invoice-id="${invoiceId}" title="Cliquer pour voir les détails">📄</a>`;
+            // Retourner le match original + le lien
+            return match + ' ' + link;
+        }
+        return match;
+    });
+}
+
+/**
  * Finaliser un message streamé avec les métadonnées
  */
 function finalizeStreamingMessage(messageElement, text, metadata = {}, toolsUsed = []) {
     const contentDiv = messageElement.querySelector('[data-streaming-content]');
 
     if (contentDiv) {
-        contentDiv.innerHTML = formatMessage(text);
+        // Formater le message et injecter les liens d'actions si présents
+        let formattedText = formatMessage(text);
+
+        // Ajouter les liens d'actions cliquables si présents
+        if (metadata.suggested_actions && Array.isArray(metadata.suggested_actions) && metadata.suggested_actions.length > 0) {
+            console.log('[Chat] Injection de', metadata.suggested_actions.length, 'liens d\'actions');
+            formattedText = injectActionLinks(formattedText, metadata.suggested_actions);
+        }
+
+        contentDiv.innerHTML = formattedText;
     }
 
     messageElement.dataset.messageType = 'assistant';
@@ -541,6 +594,38 @@ function scrollToBottom() {
 function getCurrentTime() {
     const now = new Date();
     return now.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+}
+
+/**
+ * Gérer le clic sur un bouton d'action suggérée
+ */
+function handleSuggestedActionClick(button) {
+    const prompt = button.dataset.actionPrompt;
+    const invoiceId = button.dataset.invoiceId;
+
+    if (!prompt || state.isLoading) {
+        console.error('[Chat] Prompt manquant ou chargement en cours');
+        return;
+    }
+
+    console.log('[Chat] Action suggérée cliquée:', { invoiceId, prompt });
+
+    // Désactiver tous les boutons d'actions suggérées du même groupe
+    const actionsContainer = button.closest('.chat-suggested-actions');
+    if (actionsContainer) {
+        const allButtons = actionsContainer.querySelectorAll('.suggested-action-btn');
+        allButtons.forEach(btn => {
+            btn.disabled = true;
+            btn.classList.add('disabled');
+        });
+    }
+
+    // Remplir l'input avec le prompt et déclencher la soumission
+    elements.chatInput.value = prompt;
+    handleInputChange();
+
+    // Déclencher le submit du formulaire
+    elements.chatForm.dispatchEvent(new Event('submit'));
 }
 
 // ====================================
