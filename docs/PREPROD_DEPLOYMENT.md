@@ -655,6 +655,81 @@ git pull origin preprod
 ./deploy.sh preprod --build
 ```
 
+### ⚠️ Configuration Post-Déploiement (CRITIQUE)
+
+**À FAIRE APRÈS CHAQUE MISE À JOUR** pour éviter les problèmes Mercure SSE :
+
+#### 1. Corriger MERCURE_PUBLIC_URL dans les fichiers .env
+
+Le problème : Les fichiers `.env` et `app/.env` contiennent des valeurs localhost qui écrasent `.env.preprod.local`.
+
+```bash
+# 1. Corriger .env à la racine (pour Docker Compose)
+sed -i 's|MERCURE_PUBLIC_URL=http://localhost:82/.well-known/mercure|MERCURE_PUBLIC_URL=https://mycfia.gorillias.app/.well-known/mercure|' .env
+
+# 2. Commenter MERCURE_PUBLIC_URL dans app/.env (pour Symfony)
+sed -i 's/^MERCURE_PUBLIC_URL=/#MERCURE_PUBLIC_URL=/' app/.env
+
+# 3. Vérifier les modifications
+grep MERCURE_PUBLIC_URL .env
+grep MERCURE_PUBLIC_URL app/.env
+grep MERCURE_PUBLIC_URL .env.preprod.local
+
+# Résultat attendu :
+# .env : MERCURE_PUBLIC_URL=https://mycfia.gorillias.app/.well-known/mercure
+# app/.env : #MERCURE_PUBLIC_URL=http://0.0.0.0:3001/.well-known/mercure
+# .env.preprod.local : MERCURE_PUBLIC_URL=https://mycfia.gorillias.app/.well-known/mercure
+```
+
+#### 2. Recompiler les assets et redémarrer
+
+```bash
+# Supprimer les anciens assets
+docker compose -f docker-compose.yml -f docker-compose.preprod.yml exec --user root frankenphp rm -rf /var/www/html/app/public/assets/*
+
+# Corriger les permissions var/
+docker compose -f docker-compose.yml -f docker-compose.preprod.yml exec --user root frankenphp chmod -R 777 /var/www/html/app/var
+docker compose -f docker-compose.yml -f docker-compose.preprod.yml exec --user root frankenphp chmod -R 777 /var/www/html/app/public/assets
+
+# Recompiler les assets
+docker compose -f docker-compose.yml -f docker-compose.preprod.yml exec --user root frankenphp bash -c "cd /var/www/html/app && php bin/console asset-map:compile"
+
+# Redémarrer COMPLÈTEMENT (pour recharger les variables d'environnement)
+docker compose -f docker-compose.yml -f docker-compose.preprod.yml down
+docker compose -f docker-compose.yml -f docker-compose.preprod.yml up -d
+
+# Attendre le démarrage
+sleep 10
+```
+
+#### 3. Vérifier la configuration
+
+```bash
+# Test depuis le serveur (doit afficher l'URL HTTPS)
+curl -s http://127.0.0.1:8081/chat/factures | grep "data-mercure-url"
+
+# Résultat attendu :
+# data-mercure-url="https://mycfia.gorillias.app/.well-known/mercure"
+
+# Vérifier les logs
+docker compose -f docker-compose.yml -f docker-compose.preprod.yml logs --tail=20 frankenphp
+```
+
+#### 4. Test navigateur
+
+1. **Ouvrir DevTools** (F12)
+2. **Application → Stockage → Effacer les données du site**
+3. **Recharger** (Ctrl+Shift+R)
+4. **Console** : Ne doit pas afficher d'erreur CORS Mercure
+
+**Symptôme si non corrigé** :
+```
+Access to resource at 'http://localhost:82/.well-known/mercure' from origin 'https://mycfia.gorillias.app'
+has been blocked by CORS policy
+```
+
+---
+
 ### Mise à jour des dépendances
 
 ```bash
@@ -682,4 +757,4 @@ sudo truncate -s 0 /var/log/nginx/preprod-mycfia-*.log
 
 **Projet** : myCfia - Plateforme d'automatisation marketing multi-canal
 **Environnement** : Préproduction
-**Dernière mise à jour** : 2025-10-17
+**Dernière mise à jour** : 2025-10-24
