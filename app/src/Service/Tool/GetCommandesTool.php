@@ -12,6 +12,7 @@ use App\Service\ToolCallCollector;
 use Psr\Log\LoggerInterface;
 use Symfony\AI\Agent\Toolbox\Attribute\AsTool;
 use Symfony\Component\DependencyInjection\Attribute\AsTaggedItem;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -29,6 +30,8 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  * - Appelle avec type=null pour récupérer tous types
  * - Description optimisée pour contexte commandes
  * - Nom métier "commandes" plutôt que "opérations"
+ *
+ * Logging : Canal dédié 'tools' (pas 'chat')
  */
 #[AsTool(
     name: 'get_commandes',
@@ -44,6 +47,7 @@ final readonly class GetCommandesTool
         private UserAuthenticationService $authService,
         private AiLoggerService $aiLogger,
         private ToolCallCollector $toolCallCollector,
+        #[Autowire(service: 'monolog.logger.tools')]
         private LoggerInterface $logger,
         private TranslatorInterface $translator,
     ) {

@@ -13,7 +13,11 @@
     flex-direction: column;
     gap: 1.5rem;
     width: 100%;
-    min-height: 100%; /* Occupe toute la hauteur du parent scrollable */
+    /* Hauteur fixe pour activer le scroll : viewport - header - nav tabs - input */
+    height: calc(100vh - 180px);
+    overflow-y: auto;
+    overflow-x: hidden;
+    scroll-behavior: smooth; /* Scroll fluide automatique */
 }
 
 /* Masquer la scrollbar */

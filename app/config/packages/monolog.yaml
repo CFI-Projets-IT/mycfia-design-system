@@ -1,56 +1,98 @@
 monolog:
     channels:
-        - deprecation # Deprecations are logged in the dedicated "deprecation" channel when it exists
-        - auth        # Authentification CFI (CfiAuthenticator, UserAuthenticationService)
-        - chat        # Chat IA uniquement (ChatService, Tools IA)
-        - streaming   # Streaming Mercure SSE (ChatStreamPublisher)
-        - cfi_api     # Appels API CFI (CfiApiService, CfiTenantService, CfiSessionService)
-        - messenger   # Messages async Symfony Messenger
+        - deprecation   # Deprecations are logged in the dedicated "deprecation" channel when it exists
+        - auth          # Authentification CFI (CfiAuthenticator, UserAuthenticationService)
+        - chat          # Chat IA uniquement (ChatService, Tools IA)
+        - streaming     # Streaming Mercure SSE (ChatStreamPublisher)
+        - cfi_api       # Appels API CFI (CfiApiService, CfiTenantService, CfiSessionService)
+        - messenger     # Messages async Symfony Messenger
+        - api_services  # Services API métier (FacturationApiService, OperationApiService, StockApiService, etc.)
+        - tools         # Tools IA (GetFacturesTool, GetOperationsTool, GetStocksTool, etc.)
+        - permissions   # Gestion des droits utilisateurs (PermissionsApiService, vérifications d'accès)
+        - llm           # Appels LLM (Mistral via Symfony AI Bundle - temps génération, tokens, coût)
 
 when@dev:
     monolog:
         handlers:
             # Fichier principal (tous les logs sauf channels spécifiques)
             main:
-                type: stream
+                type: rotating_file
                 path: "%kernel.logs_dir%/%kernel.environment%.log"
                 level: debug
-                channels: ["!event", "!auth", "!chat", "!streaming", "!cfi_api", "!messenger"]
+                max_files: 7
+                channels: ["!event", "!auth", "!chat", "!streaming", "!cfi_api", "!messenger", "!api_services", "!tools", "!permissions", "!llm"]
 
             # Logs d'authentification CFI
             auth:
-                type: stream
+                type: rotating_file
                 path: "%kernel.logs_dir%/auth.log"
                 level: info
+                max_files: 14
                 channels: ["auth"]
 
             # Logs du chat IA (ChatService, Tools uniquement)
             chat:
-                type: stream
+                type: rotating_file
                 path: "%kernel.logs_dir%/chat.log"
                 level: debug
+                max_files: 7
                 channels: ["chat"]
 
             # Logs du streaming Mercure (ChatStreamPublisher)
             streaming:
-                type: stream
+                type: rotating_file
                 path: "%kernel.logs_dir%/streaming.log"
                 level: info  # INFO uniquement (pas DEBUG = pas de chunks)
+                max_files: 7
                 channels: ["streaming"]
 
             # Logs des appels API CFI
             cfi_api:
-                type: stream
+                type: rotating_file
                 path: "%kernel.logs_dir%/cfi_api.log"
                 level: debug
+                max_files: 7
                 channels: ["cfi_api"]
 
             # Logs Messenger (messages async)
             messenger:
-                type: stream
+                type: rotating_file
                 path: "%kernel.logs_dir%/messenger.log"
                 level: info
+                max_files: 7
                 channels: ["messenger"]
+
+            # Logs des services API métier (FacturationApiService, OperationApiService, StockApiService, etc.)
+            api_services:
+                type: rotating_file
+                path: "%kernel.logs_dir%/api_services.log"
+                level: info
+                max_files: 7
+                channels: ["api_services"]
+
+            # Logs des tools IA (GetFacturesTool, GetOperationsTool, GetStocksTool, etc.)
+            tools:
+                type: rotating_file
+                path: "%kernel.logs_dir%/tools.log"
+                level: info
+                max_files: 7
+                channels: ["tools"]
+
+            # Logs de gestion des droits utilisateurs (PermissionsApiService, vérifications d'accès)
+            permissions:
+                type: rotating_file
+                path: "%kernel.logs_dir%/permissions.log"
+                level: info
+                max_files: 14
+                channels: ["permissions"]
+
+            # Logs des appels LLM (Mistral via Symfony AI Bundle)
+            llm:
+                type: rotating_file
+                path: "%kernel.logs_dir%/llm.log"
+                level: info
+                max_files: 7
+                channels: ["llm"]
 
             # uncomment to get logging in your browser
             # you may have to allow bigger header sizes in your Web server configuration

@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace App\Service\Api;
 
+use App\DTO\Cfi\FactureDetailDto;
 use App\DTO\Cfi\FactureDto;
 use App\Service\Cfi\CfiApiService;
 use App\Service\Cfi\CfiTokenContext;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\Cache\ItemInterface;
 
@@ -22,6 +24,8 @@ use Symfony\Contracts\Cache\ItemInterface;
  * - Récupérer les factures CFI avec filtres temporels
  * - Mapper les données vers FactureDto
  * - Gérer cache et authentification
+ *
+ * Logging : Canal dédié 'api_services' (pas 'cfi_api')
  */
 final readonly class FacturationApiService
 {
@@ -33,6 +37,7 @@ final readonly class FacturationApiService
         private CfiApiService $cfiApi,
         private CfiTokenContext $cfiTokenContext,
         private CacheInterface $cache,
+        #[Autowire(service: 'monolog.logger.api_services')]
         private LoggerInterface $logger,
     ) {
     }
@@ -54,21 +59,28 @@ final readonly class FacturationApiService
         ?string $debut = null,
         ?string $fin = null,
     ): array {
+        $startTime = microtime(true);
+
         // Générer clé cache unique basée sur les filtres
         $cacheKey = $this->buildCacheKey($idDivision, $debut, $fin);
 
-        return $this->cache->get($cacheKey, function (ItemInterface $item) use ($idDivision, $debut, $fin): array {
+        $beta = null;
+
+        $factures = $this->cache->get($cacheKey, function (ItemInterface $item) use ($idDivision, $debut, $fin, $startTime): array {
             $item->expiresAfter(self::CACHE_TTL);
 
             $this->logger->info('FacturationApiService: Cache MISS - Appel API CFI', [
                 'cache_key' => $item->getKey(),
                 'id_division' => $idDivision,
+                'cache_status' => 'MISS',
             ]);
 
             // Récupérer le token d'authentification (contexte sync ou async)
             $jeton = $this->cfiTokenContext->getToken();
             if (null === $jeton) {
-                $this->logger->error('FacturationApiService: Token CFI manquant ou expiré');
+                $this->logger->error('FacturationApiService: Token CFI manquant ou expiré', [
+                    'duration_ms' => (microtime(true) - $startTime) * 1000,
+                ]);
 
                 return [];
             }
@@ -98,10 +110,25 @@ final readonly class FacturationApiService
             $this->logger->info('FacturationApiService: Récupération réussie', [
                 'id_division' => $idDivision,
                 'nb_facturations' => count($factures),
+                'duration_ms' => (microtime(true) - $startTime) * 1000,
+                'cache_status' => 'MISS',
             ]);
 
             return $factures;
-        });
+        }, INF, $cacheHit);
+
+        // Logger cache HIT si applicable
+        if ($cacheHit) {
+            $this->logger->info('FacturationApiService: Cache HIT', [
+                'cache_key' => $cacheKey,
+                'id_division' => $idDivision,
+                'nb_facturations' => count($factures),
+                'duration_ms' => (microtime(true) - $startTime) * 1000,
+                'cache_status' => 'HIT',
+            ]);
+        }
+
+        return $factures;
     }
 
     /**
@@ -127,6 +154,68 @@ final readonly class FacturationApiService
         ];
 
         return implode('.', $parts);
+    }
+
+    /**
+     * Récupérer une facture spécifique par son ID.
+     *
+     * Endpoint : POST /Facturations/getFacture
+     * Sécurité : CFI vérifie automatiquement le droit 'factures_Visu'
+     *
+     * Pas de cache : Donnée spécifique, requête rapide
+     *
+     * @param int $idFacture ID de la facture à récupérer
+     *
+     * @return FactureDetailDto|null Facture trouvée ou null si inexistante/pas de droit
+     */
+    public function getFacture(int $idFacture): ?FactureDetailDto
+    {
+        $startTime = microtime(true);
+
+        $this->logger->info('FacturationApiService: Récupération facture spécifique', [
+            'id_facture' => $idFacture,
+        ]);
+
+        // Récupérer le token d'authentification (contexte sync ou async)
+        $jeton = $this->cfiTokenContext->getToken();
+        if (null === $jeton) {
+            $this->logger->error('FacturationApiService: Token CFI manquant ou expiré', [
+                'duration_ms' => (microtime(true) - $startTime) * 1000,
+            ]);
+
+            return null;
+        }
+
+        // Construire le corps de la requête
+        $body = [
+            'idFacture' => $idFacture,
+        ];
+
+        try {
+            // Appel API CFI
+            $response = $this->cfiApi->post('/Facturations/getFacture', $body, $jeton);
+
+            // La réponse est directement un FactureDetailDto (pas un tableau de facturations)
+            $facture = FactureDetailDto::fromApiData($response);
+
+            $this->logger->info('FacturationApiService: Facture récupérée avec succès', [
+                'id_facture' => $idFacture,
+                'montant_ttc' => $facture->montantTTC,
+                'nb_lignes' => count($facture->lignes),
+                'duration_ms' => (microtime(true) - $startTime) * 1000,
+            ]);
+
+            return $facture;
+        } catch (\Exception $e) {
+            // Gestion des erreurs (400 = pas de droit factures_Visu ou facture inexistante)
+            $this->logger->error('FacturationApiService: Erreur récupération facture', [
+                'id_facture' => $idFacture,
+                'error' => $e->getMessage(),
+                'duration_ms' => (microtime(true) - $startTime) * 1000,
+            ]);
+
+            return null;
+        }
     }
 
     /**

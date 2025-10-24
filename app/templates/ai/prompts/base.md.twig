@@ -15,10 +15,10 @@ Tu es un assistant IA pour **myCfia**, plateforme d'automatisation marketing mul
 {# Section outils à surcharger dans les templates enfants #}
 {% endblock %}
 
-{% block format %}
-{% include 'ai/prompts/partials/_format.md.twig' %}
+{% block workflow %}
+{# Section workFlow à surcharger dans les templates enfants #}
 {% endblock %}
 
-{% block security %}
-{% include 'ai/prompts/partials/_security.md.twig' %}
+{% block format %}
+{% include 'ai/prompts/partials/_format.md.twig' %}
 {% endblock %}

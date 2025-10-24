@@ -14,6 +14,7 @@ use App\Service\Cfi\CfiTokenContext;
 use App\Service\ChatStreamPublisher;
 use App\Service\Tool;
 use App\Service\ToolCallCollector;
+use App\Service\ToolResultCollector;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\AI\Agent\AgentInterface;
@@ -61,10 +62,13 @@ final readonly class ChatStreamMessageHandler
         private AsyncExecutionContext $asyncContext,
         private AiLoggerService $aiLogger,
         private ToolCallCollector $toolCallCollector,
+        private ToolResultCollector $toolResultCollector,
         private ChatStreamPublisher $streamPublisher,
         private EntityManagerInterface $entityManager,
         #[Autowire(service: 'monolog.logger.chat')]
         private LoggerInterface $logger,
+        #[Autowire(service: 'monolog.logger.llm')]
+        private LoggerInterface $llmLogger,
     ) {
     }
 
@@ -93,8 +97,9 @@ final readonly class ChatStreamMessageHandler
 
             $tenantId = $message->tenantId;
 
-            // Réinitialiser le collecteur pour cette nouvelle question
+            // Réinitialiser les collecteurs pour cette nouvelle question
             $this->toolCallCollector->reset();
+            $this->toolResultCollector->reset();
 
             // 3. Publier événement "start"
             $this->streamPublisher->publishStart($message->conversationId, $message->messageId, $message->context);
@@ -127,11 +132,35 @@ final readonly class ChatStreamMessageHandler
 
             // 7. Appel NON-STREAMING pour récupérer métadonnées complètes
             // TokenOutputProcessor (services.yaml) capture automatiquement model + token_usage
+            $llmStartTime = microtime(true);
             $result = $agent->call($messages); // Pas d'option ['stream' => true]
+            $llmDurationMs = (microtime(true) - $llmStartTime) * 1000;
 
             // 8. Récupérer réponse complète et métadonnées
             $fullResponse = $result->getContent();
             $resultMetadata = $result->getMetadata();
+
+            // Extraire token_usage
+            $tokenUsage = $resultMetadata->get('token_usage');
+            $promptTokens = $tokenUsage->promptTokens ?? 0;
+            $completionTokens = $tokenUsage->completionTokens ?? 0;
+            $totalTokens = $tokenUsage->totalTokens ?? 0;
+
+            // KPI LLM : Logger temps génération + tokens utilisés
+            $this->llmLogger->info('LLM Call', [
+                'model' => $resultMetadata->get('model') ?? 'unknown',
+                'duration_ms' => $llmDurationMs,
+                'prompt_tokens' => $promptTokens,
+                'completion_tokens' => $completionTokens,
+                'total_tokens' => $totalTokens,
+                'user_id' => $user->getId(),
+                'tenant_id' => $tenantId,
+                'context' => $message->context,
+                'conversation_id' => $message->conversationId,
+                'message_id' => $message->messageId,
+                'question_length' => mb_strlen($message->question, 'UTF-8'),
+                'answer_length' => mb_strlen($fullResponse, 'UTF-8'),
+            ]);
 
             // DEBUG : Logger métadonnées capturées (model + token_usage)
             $this->logger->info('ChatStreamMessageHandler: Métadonnées capturées', [
@@ -160,8 +189,19 @@ final readonly class ChatStreamMessageHandler
             $durationMs = (int) ((microtime(true) - $startTime) * 1000);
             $toolsUsed = $this->toolCallCollector->getToolsUsed();
 
-            // 11. Publier événement "complete" avec métadonnées (incluant model et token_usage)
-            $this->streamPublisher->publishComplete($message->conversationId, $message->messageId, [
+            // Récupérer les métadonnées agrégées des tools (suggested_actions, table_data, etc.)
+            $toolMetadata = $this->toolResultCollector->getAggregatedMetadata();
+
+            // DEBUG : Logger les métadonnées des tools
+            $this->logger->info('[DEBUG HANDLER] getAggregatedMetadata result', [
+                'has_table_data' => isset($toolMetadata['table_data']),
+                'has_suggested_actions' => isset($toolMetadata['suggested_actions']),
+                'metadata_keys' => array_keys($toolMetadata),
+                'collector_count' => $this->toolResultCollector->count(),
+            ]);
+
+            // 11. Publier événement "complete" avec métadonnées (incluant model, token_usage, suggested_actions, table_data)
+            $this->streamPublisher->publishComplete($message->conversationId, $message->messageId, array_merge([
                 'user_id' => $user->getId(),
                 'tenant_id' => $tenantId,
                 'context' => $message->context,
@@ -170,7 +210,7 @@ final readonly class ChatStreamMessageHandler
                 'answer_length' => mb_strlen($fullResponse, 'UTF-8'),
                 'model' => $resultMetadata->get('model'),
                 'token_usage' => $resultMetadata->get('token_usage'),
-            ]);
+            ], $toolMetadata));
 
             // 12. Logger l'appel
             $this->aiLogger->logToolCall(

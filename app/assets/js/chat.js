@@ -8,6 +8,7 @@
  * - Auto-resize du textarea
  * - Quick questions (suggestions)
  * - Export de conversation (future)
+ * - Rendu des tableaux de données (DataTable component)
  *
  * Architecture : Vanilla JavaScript (ES6+)
  * Pas de framework pour optimiser les performances
@@ -27,6 +28,96 @@ const state = {
     isLoading: false,
     messageHistory: [],
 };
+
+// ====================================
+// 1.1. DataTable Renderer (intégré)
+// ====================================
+
+/**
+ * Vérifier si les métadonnées contiennent des données de tableau.
+ */
+function hasTableData(metadata) {
+    return metadata &&
+           metadata.table_data &&
+           Array.isArray(metadata.table_data.headers) &&
+           Array.isArray(metadata.table_data.rows) &&
+           metadata.table_data.headers.length > 0 &&
+           metadata.table_data.rows.length > 0;
+}
+
+/**
+ * Générer le HTML du tableau DataTable.
+ */
+function renderDataTable(tableData) {
+    const { headers, rows, totalRow, linkColumns } = tableData;
+
+    // 1. Générer les en-têtes
+    const theadHtml = `
+        <thead>
+            <tr>
+                ${headers.map(header => `<th scope="col">${escapeHtml(header)}</th>`).join('')}
+            </tr>
+        </thead>
+    `;
+
+    // 2. Générer les lignes de données
+    const tbodyHtml = `
+        <tbody>
+            ${rows.map(row => {
+                return `
+                    <tr>
+                        ${headers.map((header, index) => {
+                            const key = Object.keys(row)[index];
+                            const value = row[key];
+
+                            // Si cette colonne a un lien cliquable configuré
+                            if (linkColumns && linkColumns[key] && value) {
+                                const prompt = linkColumns[key].replace(`{${key}}`, value);
+                                return `
+                                    <td>
+                                        <a href="#"
+                                           class="invoice-detail-link text-decoration-none fw-semibold"
+                                           data-action-prompt="${escapeHtml(prompt)}"
+                                           data-invoice-id="${escapeHtml(value)}"
+                                           title="Cliquer pour voir les détails">
+                                            ${escapeHtml(value)}
+                                        </a>
+                                    </td>
+                                `;
+                            }
+
+                            return `<td>${escapeHtml(value || '')}</td>`;
+                        }).join('')}
+                    </tr>
+                `;
+            }).join('')}
+        </tbody>
+    `;
+
+    // 3. Générer la ligne Total (optionnelle)
+    const tfootHtml = totalRow ? `
+        <tfoot>
+            <tr class="table-total fw-bold">
+                ${headers.map((header, index) => {
+                    const key = Object.keys(totalRow)[index];
+                    const value = totalRow[key];
+                    return `<td>${escapeHtml(value || '')}</td>`;
+                }).join('')}
+            </tr>
+        </tfoot>
+    ` : '';
+
+    // 4. Assembler le tableau complet
+    return `
+        <div class="chat-datatable table-responsive">
+            <table class="table table-striped table-hover mb-0">
+                ${theadHtml}
+                ${tbodyHtml}
+                ${tfootHtml}
+            </table>
+        </div>
+    `;
+}
 
 // ====================================
 // 2. Éléments DOM
@@ -131,6 +222,25 @@ function initEventListeners() {
 
     // Export chat
     elements.exportChat?.addEventListener('click', handleExportChat);
+
+    // Suggested actions - Délégation d'événements sur le conteneur de messages
+    elements.chatMessages?.addEventListener('click', (e) => {
+        // Boutons d'actions (ancienne version, gardé pour compatibilité)
+        const actionBtn = e.target.closest('.suggested-action-btn');
+        if (actionBtn) {
+            e.preventDefault();
+            handleSuggestedActionClick(actionBtn);
+            return;
+        }
+
+        // Liens d'actions intégrés dans le texte (nouvelle version)
+        const actionLink = e.target.closest('.invoice-detail-link');
+        if (actionLink) {
+            e.preventDefault();
+            handleSuggestedActionClick(actionLink);
+            return;
+        }
+    });
 
     // Touche Enter pour envoyer (Shift+Enter pour nouvelle ligne)
     elements.chatInput?.addEventListener('keydown', (e) => {
@@ -267,6 +377,19 @@ async function handleStreamingSubmit(question) {
                 case 'complete':
                     // Finaliser le message avec les métadonnées
                     metadata = eventData.metadata || {};
+
+                    // DEBUG : Logger les métadonnées reçues
+                    console.log('[Chat] Event "complete" received');
+                    console.log('[Chat] metadata:', metadata);
+                    console.log('[Chat] has table_data:', hasTableData(metadata));
+                    if (metadata.table_data) {
+                        console.log('[Chat] table_data structure:', {
+                            headers: metadata.table_data.headers,
+                            rows_count: metadata.table_data.rows?.length,
+                            has_totalRow: !!metadata.table_data.totalRow,
+                            has_linkColumns: !!metadata.table_data.linkColumns
+                        });
+                    }
                     toolsUsed = metadata.tools_used || [];
 
                     if (currentMessageElement) {
@@ -388,12 +511,20 @@ function addUserMessage(text) {
 function addAssistantMessage(text, metadata = {}, toolsUsed = []) {
     // Utiliser la structure du composant ChatMessageAssistant
     const logoUrl = state.assistantLogo || '/assets/images/assistant-picto.svg';
+
+    // Vérifier si on a des données de tableau à afficher
+    let tableHtml = '';
+    if (hasTableData(metadata)) {
+        tableHtml = renderDataTable(metadata.table_data);
+    }
+
     const messageHtml = `
         <div class="chat-message chat-message-assistant">
             <div class="chat-message-bubble">
                 <img src="${logoUrl}" alt="IA" class="chat-message-logo">
                 <div class="chat-message-text">
                     ${formatMessage(text)}
+                    ${tableHtml}
                 </div>
             </div>
         </div>
@@ -457,13 +588,54 @@ function updateStreamingMessage(messageElement, text) {
 }
 
 /**
+ * Injecter des liens d'actions cliquables dans le texte formaté
+ */
+function injectActionLinks(formattedHtml, actions) {
+    // Créer une map invoice_id => prompt pour accès rapide
+    const actionsMap = {};
+    actions.forEach(action => {
+        actionsMap[action.invoice_id] = action.prompt;
+    });
+
+    // Regex pour détecter "Facture #12345" ou "**Facture #12345**"
+    const facturePattern = /(\*\*)?Facture\s+#(\d+)(\*\*)?/gi;
+
+    return formattedHtml.replace(facturePattern, (match, bold1, invoiceId, bold2) => {
+        const prompt = actionsMap[invoiceId];
+        if (prompt) {
+            // Générer un lien cliquable
+            const link = `<a href="#" class="invoice-detail-link" data-action-prompt="${escapeHtml(prompt)}" data-invoice-id="${invoiceId}" title="Cliquer pour voir les détails">📄</a>`;
+            // Retourner le match original + le lien
+            return match + ' ' + link;
+        }
+        return match;
+    });
+}
+
+/**
  * Finaliser un message streamé avec les métadonnées
  */
 function finalizeStreamingMessage(messageElement, text, metadata = {}, toolsUsed = []) {
     const contentDiv = messageElement.querySelector('[data-streaming-content]');
 
     if (contentDiv) {
-        contentDiv.innerHTML = formatMessage(text);
+        // Formater le message et injecter les liens d'actions si présents
+        let formattedText = formatMessage(text);
+
+        // Ajouter les liens d'actions cliquables si présents
+        if (metadata.suggested_actions && Array.isArray(metadata.suggested_actions) && metadata.suggested_actions.length > 0) {
+            console.log('[Chat] Injection de', metadata.suggested_actions.length, 'liens d\'actions');
+            formattedText = injectActionLinks(formattedText, metadata.suggested_actions);
+        }
+
+        // Vérifier si on a des données de tableau à afficher
+        let tableHtml = '';
+        if (hasTableData(metadata)) {
+            console.log('[Chat] Rendu du tableau de données');
+            tableHtml = renderDataTable(metadata.table_data);
+        }
+
+        contentDiv.innerHTML = formattedText + tableHtml;
     }
 
     messageElement.dataset.messageType = 'assistant';
@@ -521,19 +693,17 @@ function setupTextareaAutoResize() {
 }
 
 function scrollToBottom() {
-    console.log('[Chat] scrollToBottom called');
-    console.log('[Chat] chatMessages element:', elements.chatMessages);
-    console.log('[Chat] scrollHeight BEFORE:', elements.chatMessages.scrollHeight);
-    console.log('[Chat] scrollTop BEFORE:', elements.chatMessages.scrollTop);
+    if (!elements.chatMessages) return;
 
     // Utiliser requestAnimationFrame pour s'assurer que le DOM est mis à jour
     requestAnimationFrame(() => {
         // Double RAF pour garantir que le layout est recalculé
         requestAnimationFrame(() => {
-            console.log('[Chat] Inside double RAF');
-            console.log('[Chat] scrollHeight AFTER RAF:', elements.chatMessages.scrollHeight);
-            elements.chatMessages.scrollTop = elements.chatMessages.scrollHeight;
-            console.log('[Chat] scrollTop AFTER assignment:', elements.chatMessages.scrollTop);
+            // Scroll fluide vers le bas avec scrollTo (meilleure compatibilité)
+            elements.chatMessages.scrollTo({
+                top: elements.chatMessages.scrollHeight,
+                behavior: 'smooth'
+            });
         });
     });
 }
@@ -541,6 +711,38 @@ function scrollToBottom() {
 function getCurrentTime() {
     const now = new Date();
     return now.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+}
+
+/**
+ * Gérer le clic sur un bouton d'action suggérée
+ */
+function handleSuggestedActionClick(button) {
+    const prompt = button.dataset.actionPrompt;
+    const invoiceId = button.dataset.invoiceId;
+
+    if (!prompt || state.isLoading) {
+        console.error('[Chat] Prompt manquant ou chargement en cours');
+        return;
+    }
+
+    console.log('[Chat] Action suggérée cliquée:', { invoiceId, prompt });
+
+    // Désactiver tous les boutons d'actions suggérées du même groupe
+    const actionsContainer = button.closest('.chat-suggested-actions');
+    if (actionsContainer) {
+        const allButtons = actionsContainer.querySelectorAll('.suggested-action-btn');
+        allButtons.forEach(btn => {
+            btn.disabled = true;
+            btn.classList.add('disabled');
+        });
+    }
+
+    // Remplir l'input avec le prompt et déclencher la soumission
+    elements.chatInput.value = prompt;
+    handleInputChange();
+
+    // Déclencher le submit du formulaire
+    elements.chatForm.dispatchEvent(new Event('submit'));
 }
 
 // ====================================

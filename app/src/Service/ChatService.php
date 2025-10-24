@@ -54,6 +54,7 @@ final readonly class ChatService
         private CfiTenantService $tenantService,
         private AiLoggerService $aiLogger,
         private ToolCallCollector $toolCallCollector,
+        private ToolResultCollector $toolResultCollector,
         private ChatStreamPublisher $streamPublisher,
         #[Autowire(service: 'monolog.logger.chat')]
         private LoggerInterface $logger,
@@ -83,8 +84,9 @@ final readonly class ChatService
     {
         $startTime = microtime(true);
 
-        // Réinitialiser le collecteur pour cette nouvelle question
+        // Réinitialiser les collecteurs pour cette nouvelle question
         $this->toolCallCollector->reset();
+        $this->toolResultCollector->reset();
 
         try {
             // 1. Valider contexte utilisateur
@@ -146,6 +148,9 @@ final readonly class ChatService
                 'tools_count' => count($toolsUsed),
             ]);
 
+            // Récupérer les métadonnées agrégées incluant table_data
+            $aggregatedMetadata = $this->toolResultCollector->getAggregatedMetadata();
+
             $chatResponse = ChatResponse::fromAgentResponse(
                 agentResponse: $result->getContent(),
                 metadata: [
@@ -154,6 +159,8 @@ final readonly class ChatService
                     'timestamp' => (new \DateTime())->format('Y-m-d H:i:s'),
                     'model' => $result->getMetadata()->get('model'),
                     'token_usage' => $result->getMetadata()->get('token_usage'),
+                    'suggested_actions' => $aggregatedMetadata['suggested_actions'] ?? [],
+                    'table_data' => $aggregatedMetadata['table_data'] ?? null,
                 ],
                 durationMs: $durationMs,
                 toolsUsed: $toolsUsed,
@@ -219,8 +226,15 @@ final readonly class ChatService
         // Générer UUID v4 pour le message
         $messageId = \Symfony\Component\Uid\Uuid::v4()->toString();
 
-        // Réinitialiser le collecteur pour cette nouvelle question
+        // Réinitialiser les collecteurs pour cette nouvelle question
         $this->toolCallCollector->reset();
+        $this->toolResultCollector->reset();
+
+        $this->logger->info('[DEBUG] ChatService::streamQuestion: Collecteurs réinitialisés', [
+            'message_id' => $messageId,
+            'timestamp' => microtime(true),
+            'collector_count_after_reset' => $this->toolResultCollector->count(),
+        ]);
 
         try {
             // 1. Valider contexte utilisateur
@@ -283,7 +297,25 @@ final readonly class ChatService
             $durationMs = (int) ((microtime(true) - $startTime) * 1000);
             $toolsUsed = $this->toolCallCollector->getToolsUsed();
 
-            // 9. Publier événement "complete" avec métadonnées (incluant model et token_usage)
+            // Récupérer les métadonnées agrégées incluant table_data
+            $this->logger->info('[DEBUG] ChatService::streamQuestion: AVANT getAggregatedMetadata()', [
+                'message_id' => $messageId,
+                'collector_count' => $this->toolResultCollector->count(),
+                'tools_used' => $toolsUsed,
+            ]);
+
+            $aggregatedMetadata = $this->toolResultCollector->getAggregatedMetadata();
+
+            // DEBUG : Logger les métadonnées agrégées
+            $this->logger->info('[DEBUG] ChatService::streamQuestion: APRÈS getAggregatedMetadata()', [
+                'message_id' => $messageId,
+                'has_table_data' => isset($aggregatedMetadata['table_data']),
+                'has_suggested_actions' => isset($aggregatedMetadata['suggested_actions']),
+                'table_data_keys' => isset($aggregatedMetadata['table_data']) ? array_keys($aggregatedMetadata['table_data']) : [],
+                'aggregated_metadata_keys' => array_keys($aggregatedMetadata),
+            ]);
+
+            // 9. Publier événement "complete" avec métadonnées (incluant model, token_usage et table_data)
             $this->streamPublisher->publishComplete($conversationId, $messageId, [
                 'user_id' => $user->getId(),
                 'tenant_id' => $tenantId,
@@ -293,6 +325,8 @@ final readonly class ChatService
                 'answer_length' => strlen($fullResponse),
                 'model' => $resultMetadata->get('model'),
                 'token_usage' => $resultMetadata->get('token_usage'),
+                'suggested_actions' => $aggregatedMetadata['suggested_actions'] ?? [],
+                'table_data' => $aggregatedMetadata['table_data'] ?? null,
             ]);
 
             // 10. Logger l'appel
