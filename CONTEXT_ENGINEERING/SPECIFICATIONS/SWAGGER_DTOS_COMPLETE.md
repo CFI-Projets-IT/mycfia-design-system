@@ -2,14 +2,19 @@
 
 **Source** : https://test.cfitech.io/API/swagger/v1/swagger.json
 **Date extraction** : 2025-10-22
-**Dernière mise à jour** : 2025-10-22 (Version corrigée après analyse du JSON)
+**Dernière mise à jour** : 2025-10-24 (Ajout champ `clef` dans UtilisateurGorilliasDto)
 **Version API** : myCFI_API v1.0 (OpenAPI 3.0.1)
 
 ---
 
-## 🚀 NOUVEAUTÉS PRINCIPALES - Version du 2025-10-22
+## 🚀 NOUVEAUTÉS PRINCIPALES
 
-### 🆕 Endpoints Critiques Ajoutés (4 nouveaux)
+### 🆕 Version 2025-10-24
+- **Champ `clef`** ajouté dans `UtilisateurGorilliasDto`
+- UUID utilisateur retourné lors de l'authentification
+- **TODO** : Implémenter l'usage du champ `clef` dans les appels futurs (à définir avec équipe CFI)
+
+### 🆕 Version 2025-10-22 - Endpoints Critiques Ajoutés (4 nouveaux)
 
 1. **`POST /Utilisateurs/getDroitsUtilisateur`** - **SYSTÈME DE PERMISSIONS** => Mise en application, effectuer, lecture seulement
    - Récupère tous les droits de l'utilisateur connecté
@@ -73,14 +78,15 @@ Jeton: {token}
 
 ```json
 {
-  "id": 123,
-  "idDivision": 456,
-  "nomDivision": "Division Paris",
-  "nom": "Bichon",
-  "prenom": "Christophe",
-  "email": "c.bichon@CEIDF",
-  "type_d_option_GA": "???",
-  "jeton": "xyz-token-interne"
+  "id": 4370,
+  "idDivision": 1114,
+  "nomDivision": "Caisse d'Epargne IDF",
+  "nom": "bichon",
+  "prenom": "Christopher",
+  "email": "contact@krystdev.com",
+  "type_d_option_GA": "GEN1",
+  "jeton": "2c2b2af3-f534-4555-8c90-64440fdd780a",
+  "clef": "8f0b9445-0a83-4231-b5fe-9c9d1d7a3daf"
 }
 ```
 
@@ -91,8 +97,9 @@ Jeton: {token}
 - `nom` : Nom de famille utilisateur (string | null)
 - `prenom` : Prénom utilisateur (string | null)
 - `email` : Email utilisateur (string | null)
-- `type_d_option_GA` : Type d'option - **À CLARIFIER AVEC CFI** (string | null)
-- `jeton` : **Token interne à utiliser pour les appels suivants** (string | null)
+- `type_d_option_GA` : Type d'option GA (ex: "GEN1") (string | null)
+- `jeton` : **Token CFI à utiliser pour les appels suivants** (string | null)
+- `clef` : **🆕 Clé utilisateur UUID** - À utiliser dans les appels futurs (string | null)
 
 **Response 400** : `string` - Message d'erreur
 

@@ -135,6 +135,14 @@ class CfiAuthenticator extends AbstractAuthenticator
                 'divisionId' => $user->getDivision()?->getId(),
             ]);
 
+            // Stocker le token CFI en session AVANT les sync (nécessaire pour appels API)
+            if (null !== $utilisateurDto->jeton) {
+                $this->cfiSessionService->setToken($utilisateurDto->jeton);
+                $this->logger->debug('CFI Authenticator: Token CFI stocké en session', [
+                    'ttl_seconds' => 1800,
+                ]);
+            }
+
             // Synchroniser les permissions utilisateur depuis l'API CFI
             $this->cfiUserSyncService->syncUserPermissions($user);
 
@@ -151,14 +159,6 @@ class CfiAuthenticator extends AbstractAuthenticator
                 $this->logger->error('CFI Authenticator: Erreur sync divisions (non-bloquant)', [
                     'userId' => $user->getId(),
                     'error' => $e->getMessage(),
-                ]);
-            }
-
-            // Stocker le token CFI en session
-            if (null !== $utilisateurDto->jeton) {
-                $this->cfiSessionService->setToken($utilisateurDto->jeton);
-                $this->logger->debug('CFI Authenticator: Token CFI stocké en session', [
-                    'ttl_seconds' => 1800,
                 ]);
             }
 

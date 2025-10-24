@@ -27,8 +27,8 @@ use Symfony\Component\DependencyInjection\Attribute\Autowire;
  */
 final readonly class DivisionApiService
 {
-    private const ENDPOINT_GET_DIVISIONS = '/Division/getDivisions';
-    private const ENDPOINT_GET_UTILISATEURS = '/Division/getUtilisateurs';
+    private const ENDPOINT_GET_DIVISIONS = '/Divisions/getDivisions';
+    private const ENDPOINT_GET_UTILISATEURS = '/Divisions/getUtilisateurs';
 
     public function __construct(
         private CfiApiService $cfiApi,

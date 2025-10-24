@@ -29,9 +29,12 @@ class UserAccessibleDivisionRepository extends ServiceEntityRepository
      */
     public function findDivisionsByUser(User $user): array
     {
-        $results = $this->createQueryBuilder('uad')
+        $qb = $this->getEntityManager()->createQueryBuilder();
+
+        $results = $qb
             ->select('d')
-            ->join('uad.division', 'd')
+            ->from(Division::class, 'd')
+            ->innerJoin(UserAccessibleDivision::class, 'uad', 'WITH', 'uad.division = d')
             ->where('uad.user = :user')
             ->setParameter('user', $user)
             ->orderBy('d.nomDivision', 'ASC')
