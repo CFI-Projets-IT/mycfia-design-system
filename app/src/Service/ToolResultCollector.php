@@ -63,7 +63,7 @@ final class ToolResultCollector
             $debugData['table_data_rows_count'] = count($result['table_data']['rows'] ?? []);
         }
 
-        file_put_contents($debugFile, json_encode($debugData, JSON_PRETTY_PRINT) . "\n\n", FILE_APPEND);
+        file_put_contents($debugFile, json_encode($debugData, JSON_PRETTY_PRINT)."\n\n", FILE_APPEND);
 
         // Logger aussi
         $this->logger->info('[COLLECTOR] addToolResult CALLED', [
@@ -83,7 +83,7 @@ final class ToolResultCollector
             'action' => 'addToolResult DONE',
             'total_tool_results' => count($this->toolResults),
         ];
-        file_put_contents($debugFile, json_encode($debugData2, JSON_PRETTY_PRINT) . "\n\n", FILE_APPEND);
+        file_put_contents($debugFile, json_encode($debugData2, JSON_PRETTY_PRINT)."\n\n", FILE_APPEND);
 
         $this->logger->info('[COLLECTOR] addToolResult DONE', [
             'total_tool_results' => count($this->toolResults),
@@ -108,7 +108,7 @@ final class ToolResultCollector
             'action' => 'getAggregatedMetadata CALLED',
             'total_tool_results' => count($this->toolResults),
         ];
-        file_put_contents($debugFile, json_encode($debugData, JSON_PRETTY_PRINT) . "\n\n", FILE_APPEND);
+        file_put_contents($debugFile, json_encode($debugData, JSON_PRETTY_PRINT)."\n\n", FILE_APPEND);
 
         // Agréger tous les suggested_actions de tous les tools
         $allSuggestedActions = [];
@@ -136,7 +136,7 @@ final class ToolResultCollector
                 'has_table_data' => isset($result['table_data']),
                 'result_keys' => array_keys($result),
             ];
-            file_put_contents($debugFile, json_encode($debugCheck, JSON_PRETTY_PRINT) . "\n\n", FILE_APPEND);
+            file_put_contents($debugFile, json_encode($debugCheck, JSON_PRETTY_PRINT)."\n\n", FILE_APPEND);
 
             if (isset($result['table_data']) && is_array($result['table_data'])) {
                 $metadata['table_data'] = $result['table_data'];
@@ -149,7 +149,7 @@ final class ToolResultCollector
                     'rows_count' => count($result['table_data']['rows'] ?? []),
                     'table_data_keys' => array_keys($result['table_data']),
                 ];
-                file_put_contents($debugFile, json_encode($debugFound, JSON_PRETTY_PRINT) . "\n\n", FILE_APPEND);
+                file_put_contents($debugFile, json_encode($debugFound, JSON_PRETTY_PRINT)."\n\n", FILE_APPEND);
 
                 // DEBUG : Logger la récupération
                 $this->logger->info('[COLLECTOR] getAggregatedMetadata FOUND table_data', [
@@ -170,7 +170,7 @@ final class ToolResultCollector
             'metadata_keys' => array_keys($metadata),
             'total_tool_results_checked' => count($this->toolResults),
         ];
-        file_put_contents($debugFile, json_encode($debugFinal, JSON_PRETTY_PRINT) . "\n\n", FILE_APPEND);
+        file_put_contents($debugFile, json_encode($debugFinal, JSON_PRETTY_PRINT)."\n\n", FILE_APPEND);
 
         // DEBUG : Logger le résultat final
         $this->logger->info('[COLLECTOR] getAggregatedMetadata RETURNING', [

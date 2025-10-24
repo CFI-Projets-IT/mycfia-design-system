@@ -95,7 +95,8 @@ final readonly class GetFacturesTool
             if (null !== $idFacture) {
                 error_log("[GetFacturesTool] AVANT appel getFactureDetails() avec idFacture=$idFacture");
                 $result = $this->getFactureDetails($idFacture, $user, $tenant, $startTime);
-                error_log("[GetFacturesTool] APRÈS appel getFactureDetails() - has_table_data=" . (isset($result['table_data']) ? 'YES' : 'NO'));
+                error_log('[GetFacturesTool] APRÈS appel getFactureDetails() - has_table_data='.(isset($result['table_data']) ? 'YES' : 'NO'));
+
                 return $result;
             }
 
