@@ -92,13 +92,14 @@ final readonly class GetFacturesTool
             $idDivision = $tenant->getIdCfi();
 
             // MODE DÉTAIL : Si idFacture est fourni, appel direct à /Facturations/getFacture
-            // Plus besoin de récupérer toutes les factures et de chercher, on va directement chercher la facture spécifique
             if (null !== $idFacture) {
-                return $this->getFactureDetails($idFacture, $user, $tenant, $startTime);
+                error_log("[GetFacturesTool] AVANT appel getFactureDetails() avec idFacture=$idFacture");
+                $result = $this->getFactureDetails($idFacture, $user, $tenant, $startTime);
+                error_log("[GetFacturesTool] APRÈS appel getFactureDetails() - has_table_data=" . (isset($result['table_data']) ? 'YES' : 'NO'));
+                return $result;
             }
 
             // MODE LISTE : Récupération de la liste des factures avec filtres temporels
-            // Convertir dates YYYY-MM-DD en ISO 8601 si nécessaire
             $debut = $dateDebut ? $this->normalizeDate($dateDebut) : null;
             $fin = $dateFin ? $this->normalizeDate($dateFin) : null;
 
@@ -110,7 +111,6 @@ final readonly class GetFacturesTool
             );
 
             // MODE LISTE : Formatter données pour l'agent IA (résumé sans lignes détaillées)
-            // On ajoute un lien cliquable pour chaque facture directement dans les données
             $formattedFacturations = array_map(
                 fn (FactureDto $facturation) => [
                     'id' => $facturation->id,
@@ -174,11 +174,15 @@ final readonly class GetFacturesTool
                 'division_id' => $idDivision,
             ]);
 
+            // Générer les données du tableau pour le composant DataTable
+            $tableData = $this->generateTableData($facturations, $suggestedActions);
+
             $result = [
                 'success' => true,
                 'count' => count($formattedFacturations),
                 'facturations' => $formattedFacturations,
                 'suggested_actions' => $suggestedActions,
+                'table_data' => $tableData, // Ajout : données formatées pour DataTable component
                 'metadata' => [
                     'source' => 'CFI API',
                     'endpoint' => '/Facturations/getFacturations',
@@ -189,7 +193,18 @@ final readonly class GetFacturesTool
             ];
 
             // Collecter le résultat pour transmission au frontend
+            $this->logger->info('[DEBUG] GetFacturesTool: AVANT addToolResult()', [
+                'has_table_data_in_result' => isset($result['table_data']),
+                'table_data_headers_count' => isset($result['table_data']['headers']) ? count($result['table_data']['headers']) : 0,
+                'table_data_rows_count' => isset($result['table_data']['rows']) ? count($result['table_data']['rows']) : 0,
+                'collector_count_before' => $this->toolResultCollector->count(),
+            ]);
+
             $this->toolResultCollector->addToolResult('get_factures', $result);
+
+            $this->logger->info('[DEBUG] GetFacturesTool: APRÈS addToolResult()', [
+                'collector_count_after' => $this->toolResultCollector->count(),
+            ]);
 
             return $result;
         } catch (\Exception $e) {
@@ -245,6 +260,8 @@ final readonly class GetFacturesTool
         mixed $tenant,
         float $startTime
     ): array {
+        error_log("[GetFacturesTool::getFactureDetails] DÉBUT avec idFacture=$idFacture");
+
         // Appel direct à /Facturations/getFacture via FacturationApiService
         $facture = $this->facturationApi->getFacture($idFacture);
 
@@ -299,8 +316,11 @@ final readonly class GetFacturesTool
             'division_id' => $tenant->getIdCfi(),
         ]);
 
+        // Générer les données du tableau pour les lignes de facturation (MODE DÉTAIL)
+        $tableData = $this->generateDetailTableData($facture);
+
         // Retourner facture complète avec toutes les lignes
-        return [
+        $result = [
             'success' => true,
             'facture' => [
                 'id' => $facture->id,
@@ -325,6 +345,7 @@ final readonly class GetFacturesTool
                     $facture->lignes
                 ),
             ],
+            'table_data' => $tableData, // Ajout : données formatées pour DataTable (lignes de facturation)
             'metadata' => [
                 'source' => 'CFI API',
                 'endpoint' => '/Facturations/getFacture',
@@ -333,6 +354,21 @@ final readonly class GetFacturesTool
                 'duration_ms' => $durationMs,
             ],
         ];
+
+        // DEBUG : Logger le résultat complet pour diagnostic
+        $this->logger->info('[DEBUG MODE DÉTAIL] Résultat retourné à l\'IA', [
+            'has_success_key' => isset($result['success']),
+            'success_value' => $result['success'] ?? null,
+            'has_facture_key' => isset($result['facture']),
+            'facture_id' => $result['facture']['id'] ?? null,
+            'facture_nb_lignes' => $result['facture']['nb_lignes'] ?? null,
+            'result_keys' => array_keys($result),
+        ]);
+
+        // Collecter le résultat pour transmission au frontend
+        $this->toolResultCollector->addToolResult('get_factures', $result);
+
+        return $result;
     }
 
     /**
@@ -360,5 +396,121 @@ final readonly class GetFacturesTool
             // Fallback : retourner la date telle quelle
             return $date;
         }
+    }
+
+    /**
+     * Générer les données formatées pour le composant DataTable.
+     *
+     * Transforme les facturations CFI en structure compatible avec DataTable component.
+     * Conforme à la mockup : colonnes ID, NOM, BON DE COMMANDE, MOIS FACTURATION, MONTANT HT, MONTANT TTC.
+     *
+     * @param array<int, FactureDto>                                           $facturations     Facturations CFI
+     * @param array<int, array{type: string, invoice_id: int, prompt: string}> $suggestedActions Actions suggérées
+     *
+     * @return array{headers: array<int, string>, rows: array<int, array<string, mixed>>, totalRow: array<string, mixed>, linkColumns: array<string, string>}
+     */
+    private function generateTableData(array $facturations, array $suggestedActions): array
+    {
+        // En-têtes du tableau (conforme mockup)
+        $headers = ['ID', 'NOM', 'BON DE COMMANDE', 'MOIS FACTURATION', 'MONTANT HT', 'MONTANT TTC'];
+
+        // Lignes de données
+        $rows = [];
+        $totalHT = 0.0;
+        $totalTTC = 0.0;
+
+        foreach ($facturations as $facturation) {
+            foreach ($facturation->factures as $facture) {
+                $rows[] = [
+                    'id' => (string) $facture->id,
+                    'nom' => $facture->nomCommande ?? 'N/A',
+                    'bon' => $facture->demandeur ?? '',
+                    'mois' => $facturation->moisFacturation->format('F Y'),
+                    'montant_ht' => number_format($facture->montantHT, 2, ',', ' ').' €',
+                    'montant_ttc' => number_format($facture->montantTTC, 2, ',', ' ').' €',
+                ];
+
+                $totalHT += $facture->montantHT;
+                $totalTTC += $facture->montantTTC;
+            }
+        }
+
+        // Ligne Total
+        $totalRow = [
+            'label' => 'Total',
+            'nom' => '',
+            'bon' => '',
+            'mois' => '',
+            'montant_ht' => number_format($totalHT, 2, ',', ' ').' €',
+            'montant_ttc' => number_format($totalTTC, 2, ',', ' ').' €',
+        ];
+
+        // Configuration des colonnes cliquables
+        $linkColumns = [
+            'id' => 'Donne-moi tous les détails de la facture {id}',
+        ];
+
+        return [
+            'headers' => $headers,
+            'rows' => $rows,
+            'totalRow' => $totalRow,
+            'linkColumns' => $linkColumns,
+        ];
+    }
+
+    /**
+     * Générer les données du tableau pour une facture en détail (lignes de facturation).
+     *
+     * @param object $facture Facture complète avec ses lignes
+     *
+     * @return array{headers: array<string>, rows: array<array<string, string>>, totalRow: array<string, string>, linkColumns: array<string, string>}
+     */
+    private function generateDetailTableData(object $facture): array
+    {
+        // Headers du tableau (colonnes des lignes de facturation)
+        $headers = ['ID LIGNE', 'LIBELLÉ', 'QUANTITÉ', 'MONTANT HT', 'TAUX TVA', 'MONTANT TTC'];
+
+        // Rows : lignes de facturation
+        $rows = [];
+        $totalHT = 0.0;
+        $totalTTC = 0.0;
+
+        foreach ($facture->lignes as $ligne) {
+            $montantHT = $ligne->montantHT ?? 0.0;
+            $tauxTVA = $ligne->tauxTVA ?? 0.0;
+            $montantTTC = round($montantHT * (1 + $tauxTVA / 100), 2);
+
+            $rows[] = [
+                'id' => (string) $ligne->id,
+                'libelle' => $ligne->libelle ?? 'N/A',
+                'quantite' => (string) ($ligne->qte ?? 0),
+                'montant_ht' => number_format($montantHT, 2, ',', ' ').' €',
+                'taux_tva' => number_format($tauxTVA, 2, ',', ' ').' %',
+                'montant_ttc' => number_format($montantTTC, 2, ',', ' ').' €',
+            ];
+
+            $totalHT += $montantHT;
+            $totalTTC += $montantTTC;
+        }
+
+        // Total row
+        $totalRow = [
+            'label' => 'Total',
+            'libelle' => '',
+            'quantite' => '',
+            'montant_ht' => number_format($totalHT, 2, ',', ' ').' €',
+            'taux_tva' => '',
+            'montant_ttc' => number_format($totalTTC, 2, ',', ' ').' €',
+        ];
+
+        // Pas de linkColumns pour les lignes de facturation (pas cliquables)
+        $linkColumns = [];
+
+        return [
+            'headers' => $headers,
+            'rows' => $rows,
+            'totalRow' => $totalRow,
+            'linkColumns' => $linkColumns,
+        ];
     }
 }
