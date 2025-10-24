@@ -9,6 +9,7 @@ import './styles/themes/dark-blue.css';
 import './styles/themes/dark-red.css';
 import './styles/components/glass-effects.css';
 import './styles/components/hexagons.css';
+import './styles/components/permissions.css';
 import './styles/components/sidebar.css';
 import './styles/components/topbar.css';
 import './styles/components/chat.css';

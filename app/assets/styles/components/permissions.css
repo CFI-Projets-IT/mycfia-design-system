@@ -1,0 +1,14 @@
+/* ====================================
+   Permissions Component - Theme-aware styles
+   ==================================== */
+
+/* Styles pour les permissions actives (true) */
+.permission-active {
+    color: var(--theme-permission-active);
+}
+
+/* Styles pour les permissions désactivées (false) */
+.permission-disabled {
+    color: var(--theme-permission-disabled);
+    opacity: 0.7;
+}

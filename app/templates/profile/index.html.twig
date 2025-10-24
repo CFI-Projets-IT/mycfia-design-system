@@ -173,27 +173,27 @@
                     <div class="col-md-6 col-lg-4">
                         <h6 class="text-muted mb-2"><i class="bi bi-gear"></i> {{ 'profile.permissions.system.title'|trans({}, 'profile') }}</h6>
                         <ul class="list-unstyled small">
-                            <li class="{{ user.permissions.connexion ? 'text-success' : 'text-muted' }}">
+                            <li class="{{ user.permissions.connexion ? 'permission-active' : 'permission-disabled' }}">
                                 <i class="bi {{ user.permissions.connexion ? 'bi-check-circle-fill' : 'bi-x-circle' }}"></i>
                                 {{ 'profile.permissions.system.connexion'|trans({}, 'profile') }}
                             </li>
-                            <li class="{{ user.permissions.pwa ? 'text-success' : 'text-muted' }}">
+                            <li class="{{ user.permissions.pwa ? 'permission-active' : 'permission-disabled' }}">
                                 <i class="bi {{ user.permissions.pwa ? 'bi-check-circle-fill' : 'bi-x-circle' }}"></i>
                                 {{ 'profile.permissions.system.pwa'|trans({}, 'profile') }}
                             </li>
-                            <li class="{{ user.permissions.administrateur ? 'text-success' : 'text-muted' }}">
+                            <li class="{{ user.permissions.administrateur ? 'permission-active' : 'permission-disabled' }}">
                                 <i class="bi {{ user.permissions.administrateur ? 'bi-check-circle-fill' : 'bi-x-circle' }}"></i>
                                 {{ 'profile.permissions.system.administrateur'|trans({}, 'profile') }}
                             </li>
-                            <li class="{{ user.permissions.logistique ? 'text-success' : 'text-muted' }}">
+                            <li class="{{ user.permissions.logistique ? 'permission-active' : 'permission-disabled' }}">
                                 <i class="bi {{ user.permissions.logistique ? 'bi-check-circle-fill' : 'bi-x-circle' }}"></i>
                                 {{ 'profile.permissions.system.logistique'|trans({}, 'profile') }}
                             </li>
-                            <li class="{{ user.permissions.production ? 'text-success' : 'text-muted' }}">
+                            <li class="{{ user.permissions.production ? 'permission-active' : 'permission-disabled' }}">
                                 <i class="bi {{ user.permissions.production ? 'bi-check-circle-fill' : 'bi-x-circle' }}"></i>
                                 {{ 'profile.permissions.system.production'|trans({}, 'profile') }}
                             </li>
-                            <li class="{{ user.permissions.developpement ? 'text-success' : 'text-muted' }}">
+                            <li class="{{ user.permissions.developpement ? 'permission-active' : 'permission-disabled' }}">
                                 <i class="bi {{ user.permissions.developpement ? 'bi-check-circle-fill' : 'bi-x-circle' }}"></i>
                                 {{ 'profile.permissions.system.developpement'|trans({}, 'profile') }}
                             </li>
@@ -204,19 +204,19 @@
                     <div class="col-md-6 col-lg-4">
                         <h6 class="text-muted mb-2"><i class="bi bi-people"></i> {{ 'profile.permissions.users.title'|trans({}, 'profile') }}</h6>
                         <ul class="list-unstyled small">
-                            <li class="{{ user.permissions.utilisateurs_Crea ? 'text-success' : 'text-muted' }}">
+                            <li class="{{ user.permissions.utilisateurs_Crea ? 'permission-active' : 'permission-disabled' }}">
                                 <i class="bi {{ user.permissions.utilisateurs_Crea ? 'bi-check-circle-fill' : 'bi-x-circle' }}"></i>
                                 {{ 'profile.permissions.users.create'|trans({}, 'profile') }}
                             </li>
-                            <li class="{{ user.permissions.utilisateurs_Modif ? 'text-success' : 'text-muted' }}">
+                            <li class="{{ user.permissions.utilisateurs_Modif ? 'permission-active' : 'permission-disabled' }}">
                                 <i class="bi {{ user.permissions.utilisateurs_Modif ? 'bi-check-circle-fill' : 'bi-x-circle' }}"></i>
                                 {{ 'profile.permissions.users.modify'|trans({}, 'profile') }}
                             </li>
-                            <li class="{{ user.permissions.utilisateurs_Supp ? 'text-success' : 'text-muted' }}">
+                            <li class="{{ user.permissions.utilisateurs_Supp ? 'permission-active' : 'permission-disabled' }}">
                                 <i class="bi {{ user.permissions.utilisateurs_Supp ? 'bi-check-circle-fill' : 'bi-x-circle' }}"></i>
                                 {{ 'profile.permissions.users.delete'|trans({}, 'profile') }}
                             </li>
-                            <li class="{{ user.permissions.utilisateurs_EmpruntIdentite ? 'text-success' : 'text-muted' }}">
+                            <li class="{{ user.permissions.utilisateurs_EmpruntIdentite ? 'permission-active' : 'permission-disabled' }}">
                                 <i class="bi {{ user.permissions.utilisateurs_EmpruntIdentite ? 'bi-check-circle-fill' : 'bi-x-circle' }}"></i>
                                 {{ 'profile.permissions.users.impersonate'|trans({}, 'profile') }}
                             </li>
@@ -227,15 +227,15 @@
                     <div class="col-md-6 col-lg-4">
                         <h6 class="text-muted mb-2"><i class="bi bi-building"></i> {{ 'profile.permissions.divisions.title'|trans({}, 'profile') }}</h6>
                         <ul class="list-unstyled small">
-                            <li class="{{ user.permissions.divisions_Crea ? 'text-success' : 'text-muted' }}">
+                            <li class="{{ user.permissions.divisions_Crea ? 'permission-active' : 'permission-disabled' }}">
                                 <i class="bi {{ user.permissions.divisions_Crea ? 'bi-check-circle-fill' : 'bi-x-circle' }}"></i>
                                 {{ 'profile.permissions.divisions.create'|trans({}, 'profile') }}
                             </li>
-                            <li class="{{ user.permissions.divisions_Modif ? 'text-success' : 'text-muted' }}">
+                            <li class="{{ user.permissions.divisions_Modif ? 'permission-active' : 'permission-disabled' }}">
                                 <i class="bi {{ user.permissions.divisions_Modif ? 'bi-check-circle-fill' : 'bi-x-circle' }}"></i>
                                 {{ 'profile.permissions.divisions.modify'|trans({}, 'profile') }}
                             </li>
-                            <li class="{{ user.permissions.divisions_Visu ? 'text-success' : 'text-muted' }}">
+                            <li class="{{ user.permissions.divisions_Visu ? 'permission-active' : 'permission-disabled' }}">
                                 <i class="bi {{ user.permissions.divisions_Visu ? 'bi-check-circle-fill' : 'bi-x-circle' }}"></i>
                                 {{ 'profile.permissions.divisions.view'|trans({}, 'profile') }}
                             </li>
@@ -246,19 +246,19 @@
                     <div class="col-md-6 col-lg-4">
                         <h6 class="text-muted mb-2"><i class="bi bi-box-seam"></i> {{ 'profile.permissions.stocks.title'|trans({}, 'profile') }}</h6>
                         <ul class="list-unstyled small">
-                            <li class="{{ user.permissions.stocks_Crea ? 'text-success' : 'text-muted' }}">
+                            <li class="{{ user.permissions.stocks_Crea ? 'permission-active' : 'permission-disabled' }}">
                                 <i class="bi {{ user.permissions.stocks_Crea ? 'bi-check-circle-fill' : 'bi-x-circle' }}"></i>
                                 {{ 'profile.permissions.stocks.create'|trans({}, 'profile') }}
                             </li>
-                            <li class="{{ user.permissions.stocks_Modif ? 'text-success' : 'text-muted' }}">
+                            <li class="{{ user.permissions.stocks_Modif ? 'permission-active' : 'permission-disabled' }}">
                                 <i class="bi {{ user.permissions.stocks_Modif ? 'bi-check-circle-fill' : 'bi-x-circle' }}"></i>
                                 {{ 'profile.permissions.stocks.modify'|trans({}, 'profile') }}
                             </li>
-                            <li class="{{ user.permissions.stocks_Visu ? 'text-success' : 'text-muted' }}">
+                            <li class="{{ user.permissions.stocks_Visu ? 'permission-active' : 'permission-disabled' }}">
                                 <i class="bi {{ user.permissions.stocks_Visu ? 'bi-check-circle-fill' : 'bi-x-circle' }}"></i>
                                 {{ 'profile.permissions.stocks.view'|trans({}, 'profile') }}
                             </li>
-                            <li class="{{ user.permissions.stocks_Supp ? 'text-success' : 'text-muted' }}">
+                            <li class="{{ user.permissions.stocks_Supp ? 'permission-active' : 'permission-disabled' }}">
                                 <i class="bi {{ user.permissions.stocks_Supp ? 'bi-check-circle-fill' : 'bi-x-circle' }}"></i>
                                 {{ 'profile.permissions.stocks.delete'|trans({}, 'profile') }}
                             </li>
@@ -269,15 +269,15 @@
                     <div class="col-md-6 col-lg-4">
                         <h6 class="text-muted mb-2"><i class="bi bi-activity"></i> {{ 'profile.permissions.operations.title'|trans({}, 'profile') }}</h6>
                         <ul class="list-unstyled small">
-                            <li class="{{ user.permissions.operations_Crea ? 'text-success' : 'text-muted' }}">
+                            <li class="{{ user.permissions.operations_Crea ? 'permission-active' : 'permission-disabled' }}">
                                 <i class="bi {{ user.permissions.operations_Crea ? 'bi-check-circle-fill' : 'bi-x-circle' }}"></i>
                                 {{ 'profile.permissions.operations.create'|trans({}, 'profile') }}
                             </li>
-                            <li class="{{ user.permissions.operations_Valid ? 'text-success' : 'text-muted' }}">
+                            <li class="{{ user.permissions.operations_Valid ? 'permission-active' : 'permission-disabled' }}">
                                 <i class="bi {{ user.permissions.operations_Valid ? 'bi-check-circle-fill' : 'bi-x-circle' }}"></i>
                                 {{ 'profile.permissions.operations.validate'|trans({}, 'profile') }}
                             </li>
-                            <li class="{{ user.permissions.operations_Visu ? 'text-success' : 'text-muted' }}">
+                            <li class="{{ user.permissions.operations_Visu ? 'permission-active' : 'permission-disabled' }}">
                                 <i class="bi {{ user.permissions.operations_Visu ? 'bi-check-circle-fill' : 'bi-x-circle' }}"></i>
                                 {{ 'profile.permissions.operations.view'|trans({}, 'profile') }}
                             </li>
@@ -288,11 +288,11 @@
                     <div class="col-md-6 col-lg-4">
                         <h6 class="text-muted mb-2"><i class="bi bi-megaphone"></i> {{ 'profile.permissions.campaigns.title'|trans({}, 'profile') }}</h6>
                         <ul class="list-unstyled small">
-                            <li class="{{ user.permissions.campagnes_Commande ? 'text-success' : 'text-muted' }}">
+                            <li class="{{ user.permissions.campagnes_Commande ? 'permission-active' : 'permission-disabled' }}">
                                 <i class="bi {{ user.permissions.campagnes_Commande ? 'bi-check-circle-fill' : 'bi-x-circle' }}"></i>
                                 {{ 'profile.permissions.campaigns.order'|trans({}, 'profile') }}
                             </li>
-                            <li class="{{ user.permissions.campagnes_Edit ? 'text-success' : 'text-muted' }}">
+                            <li class="{{ user.permissions.campagnes_Edit ? 'permission-active' : 'permission-disabled' }}">
                                 <i class="bi {{ user.permissions.campagnes_Edit ? 'bi-check-circle-fill' : 'bi-x-circle' }}"></i>
                                 {{ 'profile.permissions.campaigns.edit'|trans({}, 'profile') }}
                             </li>
@@ -303,27 +303,27 @@
                     <div class="col-md-6 col-lg-4">
                         <h6 class="text-muted mb-2"><i class="bi bi-grid-3x3-gap"></i> {{ 'profile.permissions.other.title'|trans({}, 'profile') }}</h6>
                         <ul class="list-unstyled small">
-                            <li class="{{ user.permissions.factures_Visu ? 'text-success' : 'text-muted' }}">
+                            <li class="{{ user.permissions.factures_Visu ? 'permission-active' : 'permission-disabled' }}">
                                 <i class="bi {{ user.permissions.factures_Visu ? 'bi-check-circle-fill' : 'bi-x-circle' }}"></i>
                                 {{ 'profile.permissions.other.invoices_view'|trans({}, 'profile') }}
                             </li>
-                            <li class="{{ user.permissions.reprises_Visu ? 'text-success' : 'text-muted' }}">
+                            <li class="{{ user.permissions.reprises_Visu ? 'permission-active' : 'permission-disabled' }}">
                                 <i class="bi {{ user.permissions.reprises_Visu ? 'bi-check-circle-fill' : 'bi-x-circle' }}"></i>
                                 {{ 'profile.permissions.other.returns_view'|trans({}, 'profile') }}
                             </li>
-                            <li class="{{ user.permissions.npaI_Crea ? 'text-success' : 'text-muted' }}">
+                            <li class="{{ user.permissions.npaI_Crea ? 'permission-active' : 'permission-disabled' }}">
                                 <i class="bi {{ user.permissions.npaI_Crea ? 'bi-check-circle-fill' : 'bi-x-circle' }}"></i>
                                 {{ 'profile.permissions.other.npai_create'|trans({}, 'profile') }}
                             </li>
-                            <li class="{{ user.permissions.npaI_Visu ? 'text-success' : 'text-muted' }}">
+                            <li class="{{ user.permissions.npaI_Visu ? 'permission-active' : 'permission-disabled' }}">
                                 <i class="bi {{ user.permissions.npaI_Visu ? 'bi-check-circle-fill' : 'bi-x-circle' }}"></i>
                                 {{ 'profile.permissions.other.npai_view'|trans({}, 'profile') }}
                             </li>
-                            <li class="{{ user.permissions.signataire ? 'text-success' : 'text-muted' }}">
+                            <li class="{{ user.permissions.signataire ? 'permission-active' : 'permission-disabled' }}">
                                 <i class="bi {{ user.permissions.signataire ? 'bi-check-circle-fill' : 'bi-x-circle' }}"></i>
                                 {{ 'profile.permissions.other.signatory'|trans({}, 'profile') }}
                             </li>
-                            <li class="{{ user.permissions.valideur ? 'text-success' : 'text-muted' }}">
+                            <li class="{{ user.permissions.valideur ? 'permission-active' : 'permission-disabled' }}">
                                 <i class="bi {{ user.permissions.valideur ? 'bi-check-circle-fill' : 'bi-x-circle' }}"></i>
                                 {{ 'profile.permissions.other.validator'|trans({}, 'profile') }}
                             </li>

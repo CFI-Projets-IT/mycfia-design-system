@@ -24,6 +24,10 @@ body.theme-dark-blue {
     --theme-accent: #5fa8d3;
     --theme-accent-hover: #4a8ab8;
 
+    /* Permissions */
+    --theme-permission-active: #5fa8d3;
+    --theme-permission-disabled: rgba(255, 255, 255, 0.3);
+
     /* Ombres */
     --theme-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
     --theme-shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.5);
