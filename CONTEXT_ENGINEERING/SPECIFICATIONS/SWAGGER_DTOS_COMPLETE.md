@@ -11,7 +11,7 @@
 
 ### 🆕 Endpoints Critiques Ajoutés (4 nouveaux)
 
-1. **`POST /Utilisateurs/getDroitsUtilisateur`** - **SYSTÈME DE PERMISSIONS**
+1. **`POST /Utilisateurs/getDroitsUtilisateur`** - **SYSTÈME DE PERMISSIONS** => Mise en application, effectuer, lecture seulement
    - Récupère tous les droits de l'utilisateur connecté
    - 25 permissions différentes (utilisateurs, divisions, stocks, opérations, campagnes, factures...)
    - **Impact** : Gestion fine des permissions dans l'UI
@@ -24,7 +24,7 @@
    - Récupère les utilisateurs enfants de l'utilisateur loggé (hiérarchie)
    - **Impact** : Gestion hiérarchique des utilisateurs
 
-4. **`POST /Facturations/getFacture`** - **FACTURE INDIVIDUELLE**
+4. **`POST /Facturations/getFacture`** - **FACTURE INDIVIDUELLE** => Mise en application, effectuer
    - Récupère une facture spécifique si l'utilisateur a le droit
    - Request : `{idFacture: 0}`
    - **Impact** : Accès sécurisé aux factures individuelles avec vérification des droits

@@ -7,6 +7,7 @@ namespace App\Service\Cfi;
 use App\DTO\Cfi\TenantDto;
 use App\DTO\Cfi\UtilisateurGorilliasDto;
 use App\Entity\User;
+use App\Repository\UserAccessibleDivisionRepository;
 use App\Service\AsyncExecutionContext;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
@@ -22,6 +23,7 @@ class CfiTenantService
     public function __construct(
         private readonly CfiSessionService $sessionService,
         private readonly AsyncExecutionContext $asyncContext,
+        private readonly UserAccessibleDivisionRepository $accessibleDivisionRepository,
         #[Autowire(service: 'monolog.logger.cfi_api')]
         private readonly LoggerInterface $logger,
     ) {
@@ -119,21 +121,37 @@ class CfiTenantService
     /**
      * Change le tenant actif (pour utilisateurs multi-organisations).
      *
-     * Note: Dans Sprint S0, cette fonctionnalite n'est pas encore implementee.
-     * Elle sera developpee dans un sprint ulterieur pour gerer le multi-tenant complet.
+     * Vérifie que l'utilisateur a accès à la division via la table BDD
+     * user_accessible_divisions avant d'autoriser le changement de contexte.
      *
-     * @param int $idDivision Identifiant de la division cible
+     * @param User $user       Utilisateur authentifié
+     * @param int  $idDivision Identifiant de la division cible
      *
-     * @throws \RuntimeException Si l'utilisateur n'a pas acces a cette division
+     * @throws \RuntimeException Si l'utilisateur n'a pas accès à cette division
      */
-    public function switchTenant(int $idDivision): void
+    public function switchTenant(User $user, int $idDivision): void
     {
-        // TODO Sprint S0+: Verifier que l'utilisateur a acces a cette division
-        // via un appel API CFI ou une liste stockee en session
+        // Vérifier que l'utilisateur a accès à cette division
+        $hasAccess = $this->accessibleDivisionRepository->hasAccess($user, $idDivision);
 
+        if (! $hasAccess) {
+            $this->logger->warning('CFI Tenant Switch Denied: accès refusé', [
+                'user_id' => $user->getId(),
+                'requested_division' => $idDivision,
+            ]);
+
+            throw new \RuntimeException(sprintf('L\'utilisateur #%d n\'a pas accès à la division #%d', $user->getId(), $idDivision));
+        }
+
+        // Sauvegarder l'ancien tenant pour le log
+        $oldTenantId = $this->sessionService->getCurrentTenant();
+
+        // Changer le tenant actif en session
         $this->sessionService->setCurrentTenant($idDivision);
 
         $this->logger->info('CFI Tenant Switched', [
+            'user_id' => $user->getId(),
+            'old_tenant_id' => $oldTenantId,
             'new_tenant_id' => $idDivision,
         ]);
     }
