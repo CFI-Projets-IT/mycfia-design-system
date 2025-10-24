@@ -8,6 +8,7 @@
  * - Auto-resize du textarea
  * - Quick questions (suggestions)
  * - Export de conversation (future)
+ * - Rendu des tableaux de données (DataTable component)
  *
  * Architecture : Vanilla JavaScript (ES6+)
  * Pas de framework pour optimiser les performances
@@ -27,6 +28,96 @@ const state = {
     isLoading: false,
     messageHistory: [],
 };
+
+// ====================================
+// 1.1. DataTable Renderer (intégré)
+// ====================================
+
+/**
+ * Vérifier si les métadonnées contiennent des données de tableau.
+ */
+function hasTableData(metadata) {
+    return metadata &&
+           metadata.table_data &&
+           Array.isArray(metadata.table_data.headers) &&
+           Array.isArray(metadata.table_data.rows) &&
+           metadata.table_data.headers.length > 0 &&
+           metadata.table_data.rows.length > 0;
+}
+
+/**
+ * Générer le HTML du tableau DataTable.
+ */
+function renderDataTable(tableData) {
+    const { headers, rows, totalRow, linkColumns } = tableData;
+
+    // 1. Générer les en-têtes
+    const theadHtml = `
+        <thead>
+            <tr>
+                ${headers.map(header => `<th scope="col">${escapeHtml(header)}</th>`).join('')}
+            </tr>
+        </thead>
+    `;
+
+    // 2. Générer les lignes de données
+    const tbodyHtml = `
+        <tbody>
+            ${rows.map(row => {
+                return `
+                    <tr>
+                        ${headers.map((header, index) => {
+                            const key = Object.keys(row)[index];
+                            const value = row[key];
+
+                            // Si cette colonne a un lien cliquable configuré
+                            if (linkColumns && linkColumns[key] && value) {
+                                const prompt = linkColumns[key].replace(`{${key}}`, value);
+                                return `
+                                    <td>
+                                        <a href="#"
+                                           class="invoice-detail-link text-decoration-none fw-semibold"
+                                           data-action-prompt="${escapeHtml(prompt)}"
+                                           data-invoice-id="${escapeHtml(value)}"
+                                           title="Cliquer pour voir les détails">
+                                            ${escapeHtml(value)}
+                                        </a>
+                                    </td>
+                                `;
+                            }
+
+                            return `<td>${escapeHtml(value || '')}</td>`;
+                        }).join('')}
+                    </tr>
+                `;
+            }).join('')}
+        </tbody>
+    `;
+
+    // 3. Générer la ligne Total (optionnelle)
+    const tfootHtml = totalRow ? `
+        <tfoot>
+            <tr class="table-total fw-bold">
+                ${headers.map((header, index) => {
+                    const key = Object.keys(totalRow)[index];
+                    const value = totalRow[key];
+                    return `<td>${escapeHtml(value || '')}</td>`;
+                }).join('')}
+            </tr>
+        </tfoot>
+    ` : '';
+
+    // 4. Assembler le tableau complet
+    return `
+        <div class="chat-datatable table-responsive">
+            <table class="table table-striped table-hover mb-0">
+                ${theadHtml}
+                ${tbodyHtml}
+                ${tfootHtml}
+            </table>
+        </div>
+    `;
+}
 
 // ====================================
 // 2. Éléments DOM
@@ -286,6 +377,19 @@ async function handleStreamingSubmit(question) {
                 case 'complete':
                     // Finaliser le message avec les métadonnées
                     metadata = eventData.metadata || {};
+
+                    // DEBUG : Logger les métadonnées reçues
+                    console.log('[Chat] Event "complete" received');
+                    console.log('[Chat] metadata:', metadata);
+                    console.log('[Chat] has table_data:', hasTableData(metadata));
+                    if (metadata.table_data) {
+                        console.log('[Chat] table_data structure:', {
+                            headers: metadata.table_data.headers,
+                            rows_count: metadata.table_data.rows?.length,
+                            has_totalRow: !!metadata.table_data.totalRow,
+                            has_linkColumns: !!metadata.table_data.linkColumns
+                        });
+                    }
                     toolsUsed = metadata.tools_used || [];
 
                     if (currentMessageElement) {
@@ -407,12 +511,20 @@ function addUserMessage(text) {
 function addAssistantMessage(text, metadata = {}, toolsUsed = []) {
     // Utiliser la structure du composant ChatMessageAssistant
     const logoUrl = state.assistantLogo || '/assets/images/assistant-picto.svg';
+
+    // Vérifier si on a des données de tableau à afficher
+    let tableHtml = '';
+    if (hasTableData(metadata)) {
+        tableHtml = renderDataTable(metadata.table_data);
+    }
+
     const messageHtml = `
         <div class="chat-message chat-message-assistant">
             <div class="chat-message-bubble">
                 <img src="${logoUrl}" alt="IA" class="chat-message-logo">
                 <div class="chat-message-text">
                     ${formatMessage(text)}
+                    ${tableHtml}
                 </div>
             </div>
         </div>
@@ -516,7 +628,14 @@ function finalizeStreamingMessage(messageElement, text, metadata = {}, toolsUsed
             formattedText = injectActionLinks(formattedText, metadata.suggested_actions);
         }
 
-        contentDiv.innerHTML = formattedText;
+        // Vérifier si on a des données de tableau à afficher
+        let tableHtml = '';
+        if (hasTableData(metadata)) {
+            console.log('[Chat] Rendu du tableau de données');
+            tableHtml = renderDataTable(metadata.table_data);
+        }
+
+        contentDiv.innerHTML = formattedText + tableHtml;
     }
 
     messageElement.dataset.messageType = 'assistant';
@@ -574,19 +693,17 @@ function setupTextareaAutoResize() {
 }
 
 function scrollToBottom() {
-    console.log('[Chat] scrollToBottom called');
-    console.log('[Chat] chatMessages element:', elements.chatMessages);
-    console.log('[Chat] scrollHeight BEFORE:', elements.chatMessages.scrollHeight);
-    console.log('[Chat] scrollTop BEFORE:', elements.chatMessages.scrollTop);
+    if (!elements.chatMessages) return;
 
     // Utiliser requestAnimationFrame pour s'assurer que le DOM est mis à jour
     requestAnimationFrame(() => {
         // Double RAF pour garantir que le layout est recalculé
         requestAnimationFrame(() => {
-            console.log('[Chat] Inside double RAF');
-            console.log('[Chat] scrollHeight AFTER RAF:', elements.chatMessages.scrollHeight);
-            elements.chatMessages.scrollTop = elements.chatMessages.scrollHeight;
-            console.log('[Chat] scrollTop AFTER assignment:', elements.chatMessages.scrollTop);
+            // Scroll fluide vers le bas avec scrollTo (meilleure compatibilité)
+            elements.chatMessages.scrollTo({
+                top: elements.chatMessages.scrollHeight,
+                behavior: 'smooth'
+            });
         });
     });
 }

@@ -189,10 +189,18 @@ final readonly class ChatStreamMessageHandler
             $durationMs = (int) ((microtime(true) - $startTime) * 1000);
             $toolsUsed = $this->toolCallCollector->getToolsUsed();
 
-            // Récupérer les métadonnées agrégées des tools (suggested_actions, etc.)
+            // Récupérer les métadonnées agrégées des tools (suggested_actions, table_data, etc.)
             $toolMetadata = $this->toolResultCollector->getAggregatedMetadata();
 
-            // 11. Publier événement "complete" avec métadonnées (incluant model, token_usage et suggested_actions)
+            // DEBUG : Logger les métadonnées des tools
+            $this->logger->info('[DEBUG HANDLER] getAggregatedMetadata result', [
+                'has_table_data' => isset($toolMetadata['table_data']),
+                'has_suggested_actions' => isset($toolMetadata['suggested_actions']),
+                'metadata_keys' => array_keys($toolMetadata),
+                'collector_count' => $this->toolResultCollector->count(),
+            ]);
+
+            // 11. Publier événement "complete" avec métadonnées (incluant model, token_usage, suggested_actions, table_data)
             $this->streamPublisher->publishComplete($message->conversationId, $message->messageId, array_merge([
                 'user_id' => $user->getId(),
                 'tenant_id' => $tenantId,

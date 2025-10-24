@@ -89,6 +89,13 @@ final readonly class ChatStreamPublisher
      */
     public function publishComplete(string $conversationId, string $messageId, array $metadata): void
     {
+        // DEBUG : Logger AVANT publication
+        error_log(sprintf(
+            '[ChatStreamPublisher] publishComplete BEFORE: has_table_data=%s, table_data_keys=%s',
+            isset($metadata['table_data']) ? 'YES' : 'NO',
+            isset($metadata['table_data']) ? implode(',', array_keys($metadata['table_data'])) : 'N/A'
+        ));
+
         $this->publish($conversationId, [
             'type' => 'complete',
             'messageId' => $messageId,
@@ -100,7 +107,14 @@ final readonly class ChatStreamPublisher
             'conversation_id' => $conversationId,
             'message_id' => $messageId,
             'metadata' => $metadata,
+            'has_table_data' => isset($metadata['table_data']),
         ]);
+
+        // DEBUG : Logger APRÈS publication
+        error_log(sprintf(
+            '[ChatStreamPublisher] publishComplete AFTER: Event sent to Mercure with table_data=%s',
+            isset($metadata['table_data']) ? 'YES' : 'NO'
+        ));
     }
 
     /**
