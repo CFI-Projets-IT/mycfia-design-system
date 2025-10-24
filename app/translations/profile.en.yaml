@@ -37,3 +37,59 @@
 'profile.button.edit_settings': 'Edit Settings'
 'profile.button.back': 'Back to Home'
 'profile.button.manage_cfi': 'Manage My CFI Account'
+
+# Permissions
+'profile.section.permissions.title': 'Permissions'
+
+# Permissions - System
+'profile.permissions.system.title': 'System'
+'profile.permissions.system.connexion': 'Connection'
+'profile.permissions.system.pwa': 'PWA Application'
+'profile.permissions.system.administrateur': 'Administrator'
+'profile.permissions.system.logistique': 'Logistics Module'
+'profile.permissions.system.production': 'Production Module'
+'profile.permissions.system.developpement': 'Development Module'
+
+# Permissions - Users
+'profile.permissions.users.title': 'Users'
+'profile.permissions.users.create': 'Create'
+'profile.permissions.users.modify': 'Modify'
+'profile.permissions.users.delete': 'Delete'
+'profile.permissions.users.impersonate': 'Impersonate'
+
+# Permissions - Divisions
+'profile.permissions.divisions.title': 'Divisions'
+'profile.permissions.divisions.create': 'Create'
+'profile.permissions.divisions.modify': 'Modify'
+'profile.permissions.divisions.view': 'View'
+
+# Permissions - Stocks
+'profile.permissions.stocks.title': 'Stocks'
+'profile.permissions.stocks.create': 'Create'
+'profile.permissions.stocks.modify': 'Modify'
+'profile.permissions.stocks.view': 'View'
+'profile.permissions.stocks.delete': 'Delete'
+
+# Permissions - Operations
+'profile.permissions.operations.title': 'Operations'
+'profile.permissions.operations.create': 'Create'
+'profile.permissions.operations.validate': 'Validate'
+'profile.permissions.operations.view': 'View'
+
+# Permissions - Campaigns
+'profile.permissions.campaigns.title': 'Campaigns'
+'profile.permissions.campaigns.order': 'Order'
+'profile.permissions.campaigns.edit': 'Edit'
+
+# Permissions - Other
+'profile.permissions.other.title': 'Other'
+'profile.permissions.other.invoices_view': 'View Invoices'
+'profile.permissions.other.returns_view': 'View Returns'
+'profile.permissions.other.npai_create': 'Create NPAI'
+'profile.permissions.other.npai_view': 'View NPAI'
+'profile.permissions.other.signatory': 'Signatory'
+'profile.permissions.other.validator': 'Validator'
+
+# Permissions - Quota
+'profile.permissions.quota.title': 'Quota'
+'profile.permissions.quota.hd_download': 'HD Download'

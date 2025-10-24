@@ -78,6 +78,17 @@ class User implements UserInterface
     private ?array $preferences = null;
 
     /**
+     * Permissions utilisateur CFI (JSON).
+     *
+     * Contient les 25 permissions + quota téléchargement HD récupérés depuis getDroitsUtilisateur.
+     * Format : {connexion: bool, pwa: bool, administrateur: bool, ..., telechargementHD: double}
+     *
+     * @var array<string, bool|float>|null
+     */
+    #[ORM\Column(type: Types::JSON, nullable: true)]
+    private ?array $permissions = null;
+
+    /**
      * Date de dernière connexion.
      */
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE, nullable: true)]
@@ -272,6 +283,34 @@ class User implements UserInterface
         $this->preferences = $preferences;
 
         return $this;
+    }
+
+    /**
+     * @return array<string, bool|float>|null
+     */
+    public function getPermissions(): ?array
+    {
+        return $this->permissions;
+    }
+
+    /**
+     * @param array<string, bool|float>|null $permissions
+     */
+    public function setPermissions(?array $permissions): static
+    {
+        $this->permissions = $permissions;
+
+        return $this;
+    }
+
+    /**
+     * Vérifie si l'utilisateur possède une permission spécifique.
+     *
+     * @param string $permission Nom de la permission (ex: 'factures_Visu', 'administrateur')
+     */
+    public function hasPermission(string $permission): bool
+    {
+        return (bool) ($this->permissions[$permission] ?? false);
     }
 
     public function getLastLoginAt(): ?\DateTimeImmutable

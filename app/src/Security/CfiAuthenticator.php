@@ -133,6 +133,9 @@ class CfiAuthenticator extends AbstractAuthenticator
                 'divisionId' => $user->getDivision()?->getId(),
             ]);
 
+            // Synchroniser les permissions utilisateur depuis l'API CFI
+            $this->cfiUserSyncService->syncUserPermissions($user);
+
             // Stocker le token CFI en session
             if (null !== $utilisateurDto->jeton) {
                 $this->cfiSessionService->setToken($utilisateurDto->jeton);
