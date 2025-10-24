@@ -1,0 +1,75 @@
+{#
+ # Composant DataTable - Tableau de données réutilisable
+ #
+ # Variables disponibles :
+ # - headers : array<int, string>
+ # - rows : array<int, array<string, mixed>>
+ # - totalRow : array<string, mixed>|null
+ # - linkColumns : array<string, string>
+ # - striped : bool
+ # - hover : bool
+ # - responsive : bool
+ # - showPdfIcon : bool
+ # - pdfColumn : string
+ #}
+
+<div class="chat-datatable {% if responsive %}table-responsive{% endif %}">
+    <table class="table {% if striped %}table-striped{% endif %} {% if hover %}table-hover{% endif %} mb-0">
+        <thead>
+            <tr>
+                {% for header in headers %}
+                <th scope="col">{{ header }}</th>
+                {% endfor %}
+                {% if showPdfIcon %}
+                <th scope="col" class="text-center pdf-column"></th>
+                {% endif %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in rows %}
+            <tr>
+                {% for key, value in row %}
+                <td>
+                    {# Si cette colonne a un lien cliquable configuré #}
+                    {% if linkColumns[key] is defined and value %}
+                        {# Générer le prompt en remplaçant {key} par la valeur #}
+                        {% set prompt = linkColumns[key]|replace({('{' ~ key ~ '}'): value}) %}
+                        <a href="#"
+                           class="invoice-detail-link text-decoration-none fw-semibold"
+                           data-action-prompt="{{ prompt }}"
+                           data-invoice-id="{{ value }}"
+                           title="Cliquer pour voir les détails">
+                            {{ value }}
+                        </a>
+                    {% else %}
+                        {{ value }}
+                    {% endif %}
+                </td>
+                {% endfor %}
+
+                {% if showPdfIcon %}
+                <td class="text-center pdf-column">
+                    {# Icône PDF placeholder (futur téléchargement PDF) #}
+                    <span class="pdf-icon-placeholder" title="PDF non disponible pour le moment">
+                        <i class="bi bi-file-pdf text-muted"></i>
+                    </span>
+                </td>
+                {% endif %}
+            </tr>
+            {% endfor %}
+        </tbody>
+
+        {% if totalRow %}
+        <tfoot>
+            <tr class="table-total fw-bold">
+                {% for key, value in totalRow %}
+                <td {% if loop.first %}colspan="1"{% endif %}>{{ value }}</td>
+                {% endfor %}
+                {% if showPdfIcon %}
+                <td></td>
+                {% endif %}
+            </tr>
+        </tfoot>
+        {% endif %}
+    </table>
+</div>

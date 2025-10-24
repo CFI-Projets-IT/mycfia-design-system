@@ -70,3 +70,8 @@ services:
     App\Service\MercureJwtGenerator:
         arguments:
             $mercureJwtSecret: '%env(MERCURE_JWT_SECRET)%'
+
+    # ToolResultCollector - Service singleton pour collecter les résultats des tools
+    # IMPORTANT : shared: true pour garantir une instance unique partagée entre tous les services
+    App\Service\ToolResultCollector:
+        shared: true

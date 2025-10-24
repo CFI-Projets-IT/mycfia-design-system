@@ -1,0 +1,38 @@
+{#
+  Composant Input Chat Immersif
+
+  Usage :
+  {{ component('ChatInput', { context: 'factures' }) }}
+
+  Paramètres :
+  - context (string) : Contexte du chat (factures|commandes|stocks|general)
+#}
+
+{% set placeholders = {
+    'factures': 'Je recherche la/les facture(s) par <strong>année</strong> ou <strong>mois</strong> ?',
+    'commandes': 'Je recherche la/les commande(s) par <strong>client</strong> ou <strong>référence</strong> ?',
+    'stocks': 'Je recherche les stocks par <strong>référence</strong> ou <strong>niveau</strong> ?',
+    'general': 'Posez votre question ici...'
+} %}
+
+<div class="chat-input-wrapper">
+    <form id="chatForm" class="chat-input-form">
+        <div class="chat-input-container">
+            <textarea
+                id="chatInput"
+                class="chat-input-field"
+                placeholder="{{ placeholders[context]|raw|striptags }}"
+                rows="1"
+                maxlength="500"
+            ></textarea>
+        </div>
+        <button
+            type="submit"
+            id="sendButton"
+            class="chat-send-button"
+            aria-label="Envoyer le message"
+        >
+            <i class="bi bi-send-fill"></i>
+        </button>
+    </form>
+</div>

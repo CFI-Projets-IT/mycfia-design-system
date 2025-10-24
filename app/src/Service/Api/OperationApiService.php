@@ -8,6 +8,7 @@ use App\DTO\Cfi\LigneOperationDto;
 use App\Service\Cfi\CfiApiService;
 use App\Service\Cfi\CfiTokenContext;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\Cache\ItemInterface;
 
@@ -16,6 +17,8 @@ use Symfony\Contracts\Cache\ItemInterface;
  *
  * Cache : 5 minutes (données fréquemment modifiées)
  * Filtrage automatique par tenant (idDivision)
+ *
+ * Logging : Canal dédié 'api_services' (pas 'cfi_api')
  */
 final readonly class OperationApiService
 {
@@ -27,6 +30,7 @@ final readonly class OperationApiService
         private CfiApiService $cfiApi,
         private CfiTokenContext $cfiTokenContext,
         private CacheInterface $cache,
+        #[Autowire(service: 'monolog.logger.api_services')]
         private LoggerInterface $logger,
     ) {
     }
@@ -46,21 +50,28 @@ final readonly class OperationApiService
         ?string $dateFin = null,
         ?string $statut = null,
     ): array {
+        $startTime = microtime(true);
+
         // Générer clé cache unique basée sur les filtres
         $cacheKey = $this->buildCacheKey($idDivision, $type, $dateDebut, $dateFin, $statut);
 
-        return $this->cache->get($cacheKey, function (ItemInterface $item) use ($idDivision, $type, $dateDebut, $dateFin, $statut): array {
+        $beta = null;
+
+        $operations = $this->cache->get($cacheKey, function (ItemInterface $item) use ($idDivision, $type, $dateDebut, $dateFin, $statut, $startTime): array {
             $item->expiresAfter(self::CACHE_TTL);
 
             $this->logger->info('OperationApiService: Cache MISS - Appel API CFI', [
                 'cache_key' => $item->getKey(),
                 'id_division' => $idDivision,
+                'cache_status' => 'MISS',
             ]);
 
             // Récupérer le token d'authentification (contexte sync ou async)
             $jeton = $this->cfiTokenContext->getToken();
             if (null === $jeton) {
-                $this->logger->error('OperationApiService: Token CFI manquant ou expiré');
+                $this->logger->error('OperationApiService: Token CFI manquant ou expiré', [
+                    'duration_ms' => (microtime(true) - $startTime) * 1000,
+                ]);
 
                 return [];
             }
@@ -111,10 +122,25 @@ final readonly class OperationApiService
             $this->logger->info('OperationApiService: Récupération réussie', [
                 'id_division' => $idDivision,
                 'nb_operations' => count($operations),
+                'duration_ms' => (microtime(true) - $startTime) * 1000,
+                'cache_status' => 'MISS',
             ]);
 
             return $operations;
-        });
+        }, INF, $beta);
+
+        // Logger cache HIT si applicable
+        if ($beta) {
+            $this->logger->info('OperationApiService: Cache HIT', [
+                'cache_key' => $cacheKey,
+                'id_division' => $idDivision,
+                'nb_operations' => count($operations),
+                'duration_ms' => (microtime(true) - $startTime) * 1000,
+                'cache_status' => 'HIT',
+            ]);
+        }
+
+        return $operations;
     }
 
     /**

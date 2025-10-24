@@ -3,17 +3,7 @@
    Interface de chat avec IA - Glass effect #183E82
    ============================================ */
 
-/* Chat Container */
-.chat-container {
-    height: calc(100vh - 140px);
-    display: flex;
-    flex-direction: column;
-    background: linear-gradient(135deg, rgba(24, 62, 130, 0.2) 0%, rgba(0, 0, 0, 0.3) 100%);
-    backdrop-filter: blur(30px);
-    border-radius: var(--border-radius-lg);
-    border: 1px solid rgba(24, 62, 130, 0.4);
-    overflow: hidden;
-}
+/* Chat Container - N'est plus utilisé avec la nouvelle structure */
 
 /* Chat Header */
 .chat-header {
@@ -84,37 +74,7 @@
     }
 }
 
-.chat-message-user {
-    align-self: flex-end;
-    flex-direction: row-reverse;
-}
-
-.chat-message-assistant {
-    align-self: flex-start;
-}
-
-/* Avatar */
-.chat-message-avatar {
-    width: 40px;
-    height: 40px;
-    min-width: 40px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.5rem;
-}
-
-.chat-message-user .chat-message-avatar {
-    background: var(--color-primary);
-    color: var(--color-white);
-}
-
-.chat-message-assistant .chat-message-avatar {
-    background: rgba(24, 62, 130, 0.4);
-    color: var(--color-secondary);
-    border: 2px solid rgba(24, 62, 130, 0.6);
-}
+/* Message User & Avatar - Styles déplacés vers chat-messages.css */
 
 /* Message Content */
 .chat-message-content {
@@ -190,47 +150,7 @@
     color: var(--color-secondary);
 }
 
-/* Chat Input Area */
-.chat-input-wrapper {
-    background: rgba(24, 62, 130, 0.2);
-    border-top: 1px solid rgba(24, 62, 130, 0.5);
-    padding: 20px 24px;
-}
-
-.chat-input-form {
-    margin-bottom: 8px;
-}
-
-.chat-input-container {
-    display: flex;
-    gap: 12px;
-    align-items: flex-end;
-}
-
-.chat-input-field {
-    flex: 1;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(24, 62, 130, 0.4);
-    border-radius: var(--border-radius-md);
-    padding: 12px 16px;
-    color: var(--color-white);
-    font-family: var(--font-family-content);
-    font-size: 0.95rem;
-    resize: none;
-    transition: all 0.3s ease;
-    min-height: 44px;
-    max-height: 150px;
-}
-
-.chat-input-field:focus {
-    outline: none;
-    border-color: var(--color-secondary);
-    background: rgba(255, 255, 255, 0.08);
-}
-
-.chat-input-field::placeholder {
-    color: var(--color-text-muted);
-}
+/* Chat Input Area - Styles déplacés vers chat-input.css */
 
 .chat-input-actions {
     display: flex;
@@ -342,4 +262,87 @@
     .chat-input-hints {
         font-size: 0.75rem;
     }
+}
+
+/* ============================================
+   SUGGESTED ACTIONS
+   Actions rapides suggérées par l'IA
+   ============================================ */
+
+.chat-suggested-actions {
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid rgba(24, 62, 130, 0.2);
+}
+
+.chat-suggested-actions-label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: 8px;
+    font-weight: 500;
+}
+
+.chat-suggested-actions-label i {
+    font-size: 0.875rem;
+    color: var(--color-secondary);
+}
+
+.chat-suggested-actions-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.suggested-action-btn {
+    font-size: 0.8125rem;
+    padding: 6px 12px;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.suggested-action-btn i {
+    margin-right: 4px;
+    font-size: 0.75rem;
+}
+
+.suggested-action-btn:not(:disabled):hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(24, 62, 130, 0.3);
+}
+
+.suggested-action-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.suggested-action-btn.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+/* ============================================
+   INVOICE DETAIL LINKS
+   Liens intégrés dans le texte pour détails factures
+   ============================================ */
+
+.invoice-detail-link {
+    display: inline-block;
+    margin-left: 4px;
+    font-size: 1rem;
+    text-decoration: none;
+    transition: transform 0.2s ease;
+    cursor: pointer;
+}
+
+.invoice-detail-link:hover {
+    transform: scale(1.2);
+}
+
+.invoice-detail-link:active {
+    transform: scale(0.95);
 }

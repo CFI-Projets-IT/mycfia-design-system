@@ -8,6 +8,7 @@ use App\DTO\Cfi\EtatOperationDto;
 use App\Service\Cfi\CfiApiService;
 use App\Service\Cfi\CfiSessionService;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\Cache\ItemInterface;
 
@@ -16,6 +17,8 @@ use Symfony\Contracts\Cache\ItemInterface;
  *
  * Cache : 1 heure (données de référence rarement modifiées)
  * Pas de filtrage tenant (données globales)
+ *
+ * Logging : Canal dédié 'api_services' (pas 'cfi_api')
  */
 final readonly class EtatOperationApiService
 {
@@ -27,6 +30,7 @@ final readonly class EtatOperationApiService
         private CfiApiService $cfiApi,
         private CfiSessionService $cfiSession,
         private CacheInterface $cache,
+        #[Autowire(service: 'monolog.logger.api_services')]
         private LoggerInterface $logger,
     ) {
     }
@@ -41,17 +45,24 @@ final readonly class EtatOperationApiService
      */
     public function getEtatsOperations(): array
     {
-        return $this->cache->get(self::CACHE_KEY, function (ItemInterface $item): array {
+        $startTime = microtime(true);
+
+        $beta = null;
+
+        $etats = $this->cache->get(self::CACHE_KEY, function (ItemInterface $item) use ($startTime): array {
             $item->expiresAfter(self::CACHE_TTL);
 
             $this->logger->info('EtatOperationApiService: Cache MISS - Appel API CFI', [
                 'cache_key' => $item->getKey(),
+                'cache_status' => 'MISS',
             ]);
 
             // Récupérer le token d'authentification
             $jeton = $this->cfiSession->getToken();
             if (null === $jeton) {
-                $this->logger->error('EtatOperationApiService: Token CFI manquant');
+                $this->logger->error('EtatOperationApiService: Token CFI manquant', [
+                    'duration_ms' => (microtime(true) - $startTime) * 1000,
+                ]);
 
                 return [];
             }
@@ -72,10 +83,24 @@ final readonly class EtatOperationApiService
 
             $this->logger->info('EtatOperationApiService: Récupération réussie', [
                 'nb_etats' => count($etats),
+                'duration_ms' => (microtime(true) - $startTime) * 1000,
+                'cache_status' => 'MISS',
             ]);
 
             return $etats;
-        });
+        }, INF, $beta);
+
+        // Logger cache HIT si applicable
+        if ($beta) {
+            $this->logger->info('EtatOperationApiService: Cache HIT', [
+                'cache_key' => self::CACHE_KEY,
+                'nb_etats' => count($etats),
+                'duration_ms' => (microtime(true) - $startTime) * 1000,
+                'cache_status' => 'HIT',
+            ]);
+        }
+
+        return $etats;
     }
 
     /**

@@ -12,6 +12,7 @@ use App\Service\ToolCallCollector;
 use Psr\Log\LoggerInterface;
 use Symfony\AI\Agent\Toolbox\Attribute\AsTool;
 use Symfony\Component\DependencyInjection\Attribute\AsTaggedItem;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -24,6 +25,8 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  * - Statistiques temporelles (par jour, semaine, mois)
  *
  * Retour structuré avec métadonnées pour "cartes preuve".
+ *
+ * Logging : Canal dédié 'tools' (pas 'chat')
  */
 #[AsTool(
     name: 'get_operation_stats',
@@ -39,6 +42,7 @@ final readonly class GetOperationStatsTool
         private UserAuthenticationService $authService,
         private AiLoggerService $aiLogger,
         private ToolCallCollector $toolCallCollector,
+        #[Autowire(service: 'monolog.logger.tools')]
         private LoggerInterface $logger,
         private TranslatorInterface $translator,
     ) {

@@ -8,6 +8,7 @@
  * - Auto-resize du textarea
  * - Quick questions (suggestions)
  * - Export de conversation (future)
+ * - Rendu des tableaux de données (DataTable component)
  *
  * Architecture : Vanilla JavaScript (ES6+)
  * Pas de framework pour optimiser les performances
@@ -23,9 +24,100 @@ const state = {
     streamUrl: null,
     mercureUrl: null,
     mercureJwt: null,
+    assistantLogo: null,
     isLoading: false,
     messageHistory: [],
 };
+
+// ====================================
+// 1.1. DataTable Renderer (intégré)
+// ====================================
+
+/**
+ * Vérifier si les métadonnées contiennent des données de tableau.
+ */
+function hasTableData(metadata) {
+    return metadata &&
+           metadata.table_data &&
+           Array.isArray(metadata.table_data.headers) &&
+           Array.isArray(metadata.table_data.rows) &&
+           metadata.table_data.headers.length > 0 &&
+           metadata.table_data.rows.length > 0;
+}
+
+/**
+ * Générer le HTML du tableau DataTable.
+ */
+function renderDataTable(tableData) {
+    const { headers, rows, totalRow, linkColumns } = tableData;
+
+    // 1. Générer les en-têtes
+    const theadHtml = `
+        <thead>
+            <tr>
+                ${headers.map(header => `<th scope="col">${escapeHtml(header)}</th>`).join('')}
+            </tr>
+        </thead>
+    `;
+
+    // 2. Générer les lignes de données
+    const tbodyHtml = `
+        <tbody>
+            ${rows.map(row => {
+                return `
+                    <tr>
+                        ${headers.map((header, index) => {
+                            const key = Object.keys(row)[index];
+                            const value = row[key];
+
+                            // Si cette colonne a un lien cliquable configuré
+                            if (linkColumns && linkColumns[key] && value) {
+                                const prompt = linkColumns[key].replace(`{${key}}`, value);
+                                return `
+                                    <td>
+                                        <a href="#"
+                                           class="invoice-detail-link text-decoration-none fw-semibold"
+                                           data-action-prompt="${escapeHtml(prompt)}"
+                                           data-invoice-id="${escapeHtml(value)}"
+                                           title="Cliquer pour voir les détails">
+                                            ${escapeHtml(value)}
+                                        </a>
+                                    </td>
+                                `;
+                            }
+
+                            return `<td>${escapeHtml(value || '')}</td>`;
+                        }).join('')}
+                    </tr>
+                `;
+            }).join('')}
+        </tbody>
+    `;
+
+    // 3. Générer la ligne Total (optionnelle)
+    const tfootHtml = totalRow ? `
+        <tfoot>
+            <tr class="table-total fw-bold">
+                ${headers.map((header, index) => {
+                    const key = Object.keys(totalRow)[index];
+                    const value = totalRow[key];
+                    return `<td>${escapeHtml(value || '')}</td>`;
+                }).join('')}
+            </tr>
+        </tfoot>
+    ` : '';
+
+    // 4. Assembler le tableau complet
+    return `
+        <div class="chat-datatable table-responsive">
+            <table class="table table-striped table-hover mb-0">
+                ${theadHtml}
+                ${tbodyHtml}
+                ${tfootHtml}
+            </table>
+        </div>
+    `;
+}
 
 // ====================================
 // 2. Éléments DOM
@@ -73,14 +165,16 @@ function initializeChatInterface() {
         state.streamUrl = chatData.dataset.streamUrl;
         state.mercureUrl = chatData.dataset.mercureUrl;
         state.mercureJwt = chatData.dataset.mercureJwt;
+        state.assistantLogo = chatData.dataset.assistantLogo;
 
-        console.log('[Chat] Configuration chargée:', {
-            conversationId: state.conversationId,
-            messageUrl: state.messageUrl,
-            streamUrl: state.streamUrl,
-            mercureUrl: state.mercureUrl,
-            mercureJwt: state.mercureJwt ? 'présent' : 'absent',
-        });
+        // console.log('[Chat] Configuration chargée:', {
+        //     conversationId: state.conversationId,
+        //     messageUrl: state.messageUrl,
+        //     streamUrl: state.streamUrl,
+        //     mercureUrl: state.mercureUrl,
+        //     mercureJwt: state.mercureJwt ? 'présent' : 'absent',
+        //     assistantLogo: state.assistantLogo,
+        // });
     }
 
     // Initialiser les event listeners
@@ -129,11 +223,30 @@ function initEventListeners() {
     // Export chat
     elements.exportChat?.addEventListener('click', handleExportChat);
 
+    // Suggested actions - Délégation d'événements sur le conteneur de messages
+    elements.chatMessages?.addEventListener('click', (e) => {
+        // Boutons d'actions (ancienne version, gardé pour compatibilité)
+        const actionBtn = e.target.closest('.suggested-action-btn');
+        if (actionBtn) {
+            e.preventDefault();
+            handleSuggestedActionClick(actionBtn);
+            return;
+        }
+
+        // Liens d'actions intégrés dans le texte (nouvelle version)
+        const actionLink = e.target.closest('.invoice-detail-link');
+        if (actionLink) {
+            e.preventDefault();
+            handleSuggestedActionClick(actionLink);
+            return;
+        }
+    });
+
     // Touche Enter pour envoyer (Shift+Enter pour nouvelle ligne)
     elements.chatInput?.addEventListener('keydown', (e) => {
         if (e.key === 'Enter' && !e.shiftKey) {
             e.preventDefault();
-            if (!elements.sendButton.disabled) {
+            if (elements.sendButton && !elements.sendButton.disabled) {
                 elements.chatForm.dispatchEvent(new Event('submit'));
             }
         }
@@ -165,11 +278,18 @@ async function handleFormSubmit(e) {
     setLoading(true);
 
     // Utiliser le streaming si Mercure est configuré
-    if (state.mercureUrl && state.streamUrl) {
-        await handleStreamingSubmit(question);
-    } else {
-        // Fallback vers mode synchrone si Mercure non disponible
-        await handleSyncSubmit(question);
+    try {
+        if (state.mercureUrl && state.streamUrl) {
+            console.log('[Chat] Mode streaming activé');
+            await handleStreamingSubmit(question);
+        } else {
+            console.log('[Chat] Mode synchrone (Mercure non configuré)');
+            await handleSyncSubmit(question);
+        }
+    } catch (error) {
+        console.error('[Chat] Erreur lors de l\'envoi:', error);
+        addErrorMessage(`Erreur d'envoi : ${error.message}`);
+        setLoading(false);
     }
 }
 
@@ -213,15 +333,15 @@ async function handleStreamingSubmit(question) {
         }
 
         const finalUrl = mercureUrl.toString();
-        console.log('[Chat] EventSource URL:', finalUrl);
-        console.log('[Chat] Creating EventSource...');
+        // console.log('[Chat] EventSource URL:', finalUrl);
+        // console.log('[Chat] Creating EventSource...');
 
         const eventSource = new EventSource(finalUrl);
 
-        console.log('[Chat] EventSource created, readyState:', eventSource.readyState);
-        console.log('[Chat] EventSource.CONNECTING:', EventSource.CONNECTING);
-        console.log('[Chat] EventSource.OPEN:', EventSource.OPEN);
-        console.log('[Chat] EventSource.CLOSED:', EventSource.CLOSED);
+        // console.log('[Chat] EventSource created, readyState:', eventSource.readyState);
+        // console.log('[Chat] EventSource.CONNECTING:', EventSource.CONNECTING);
+        // console.log('[Chat] EventSource.OPEN:', EventSource.OPEN);
+        // console.log('[Chat] EventSource.CLOSED:', EventSource.CLOSED);
 
         let currentMessageElement = null;
         let fullAnswer = '';
@@ -229,13 +349,13 @@ async function handleStreamingSubmit(question) {
         let toolsUsed = [];
 
         eventSource.onopen = () => {
-            console.log('[Chat] EventSource OPENED! readyState:', eventSource.readyState);
+            // console.log('[Chat] EventSource OPENED! readyState:', eventSource.readyState);
         };
 
         eventSource.onmessage = (event) => {
-            console.log('[Chat] EventSource onmessage fired!');
+            // console.log('[Chat] EventSource onmessage fired!');
             const eventData = JSON.parse(event.data);
-            console.log('[Chat] Mercure event:', eventData);
+            // console.log('[Chat] Mercure event:', eventData);
 
             switch (eventData.type) {
                 case 'start':
@@ -257,6 +377,19 @@ async function handleStreamingSubmit(question) {
                 case 'complete':
                     // Finaliser le message avec les métadonnées
                     metadata = eventData.metadata || {};
+
+                    // DEBUG : Logger les métadonnées reçues
+                    console.log('[Chat] Event "complete" received');
+                    console.log('[Chat] metadata:', metadata);
+                    console.log('[Chat] has table_data:', hasTableData(metadata));
+                    if (metadata.table_data) {
+                        console.log('[Chat] table_data structure:', {
+                            headers: metadata.table_data.headers,
+                            rows_count: metadata.table_data.rows?.length,
+                            has_totalRow: !!metadata.table_data.totalRow,
+                            has_linkColumns: !!metadata.table_data.linkColumns
+                        });
+                    }
                     toolsUsed = metadata.tools_used || [];
 
                     if (currentMessageElement) {
@@ -357,21 +490,16 @@ async function handleSyncSubmit(question) {
 // ====================================
 
 function addUserMessage(text) {
+    // Utiliser la structure du composant ChatMessageUser
     const messageHtml = `
-        <div class="chat-message user-message mb-4" data-message-type="user">
-            <div class="d-flex gap-3 flex-row-reverse">
-                <div class="message-avatar flex-shrink-0">
-                    <i class="bi bi-person-fill"></i>
+        <div class="chat-message chat-message-user">
+            <div class="chat-message-content">
+                <div class="chat-message-bubble">
+                    ${escapeHtml(text)}
                 </div>
-                <div class="message-content flex-grow-1">
-                    <div class="message-header mb-2 text-end">
-                        <span class="fw-semibold">Vous</span>
-                        <span class="small text-muted ms-2">${getCurrentTime()}</span>
-                    </div>
-                    <div class="message-text">
-                        ${escapeHtml(text)}
-                    </div>
-                </div>
+            </div>
+            <div class="chat-message-avatar">
+                <i class="bi bi-person-fill"></i>
             </div>
         </div>
     `;
@@ -381,30 +509,22 @@ function addUserMessage(text) {
 }
 
 function addAssistantMessage(text, metadata = {}, toolsUsed = []) {
-    const toolsHtml = toolsUsed.length > 0 ? `
-        <div class="mt-2 pt-2 border-top">
-            <small class="text-muted">
-                <i class="bi bi-tools"></i>
-                <strong>Outils utilisés :</strong> ${toolsUsed.join(', ')}
-            </small>
-        </div>
-    ` : '';
+    // Utiliser la structure du composant ChatMessageAssistant
+    const logoUrl = state.assistantLogo || '/assets/images/assistant-picto.svg';
+
+    // Vérifier si on a des données de tableau à afficher
+    let tableHtml = '';
+    if (hasTableData(metadata)) {
+        tableHtml = renderDataTable(metadata.table_data);
+    }
 
     const messageHtml = `
-        <div class="chat-message assistant-message mb-4" data-message-type="assistant">
-            <div class="d-flex gap-3">
-                <div class="message-avatar flex-shrink-0">
-                    <i class="bi bi-robot"></i>
-                </div>
-                <div class="message-content flex-grow-1">
-                    <div class="message-header mb-2">
-                        <span class="fw-semibold text-primary">Assistant IA</span>
-                        <span class="small text-muted ms-2">${getCurrentTime()}</span>
-                    </div>
-                    <div class="message-text">
-                        ${formatMessage(text)}
-                        ${toolsHtml}
-                    </div>
+        <div class="chat-message chat-message-assistant">
+            <div class="chat-message-bubble">
+                <img src="${logoUrl}" alt="IA" class="chat-message-logo">
+                <div class="chat-message-text">
+                    ${formatMessage(text)}
+                    ${tableHtml}
                 </div>
             </div>
         </div>
@@ -442,25 +562,15 @@ function addErrorMessage(text) {
  * Créer un élément de message vide pour le streaming progressif
  */
 function createStreamingMessageElement() {
+    const logoUrl = state.assistantLogo || '/assets/images/assistant-picto.svg';
     const messageDiv = document.createElement('div');
-    messageDiv.className = 'chat-message assistant-message mb-4';
+    messageDiv.className = 'chat-message chat-message-assistant';
     messageDiv.dataset.messageType = 'assistant-streaming';
     messageDiv.innerHTML = `
-        <div class="d-flex gap-3">
-            <div class="message-avatar flex-shrink-0">
-                <i class="bi bi-robot"></i>
-            </div>
-            <div class="message-content flex-grow-1">
-                <div class="message-header mb-2">
-                    <span class="fw-semibold text-primary">Assistant IA</span>
-                    <span class="small text-muted ms-2">${getCurrentTime()}</span>
-                    <span class="badge bg-info ms-2">
-                        <i class="bi bi-three-dots"></i> En cours...
-                    </span>
-                </div>
-                <div class="message-text" data-streaming-content>
-                    <span class="text-muted"><i class="bi bi-hourglass-split"></i> Réflexion en cours...</span>
-                </div>
+        <div class="chat-message-bubble">
+            <img src="${logoUrl}" alt="IA" class="chat-message-logo">
+            <div class="chat-message-text" data-streaming-content>
+                <span style="opacity: 0.7;"><i class="bi bi-hourglass-split"></i> Réflexion en cours...</span>
             </div>
         </div>
     `;
@@ -478,27 +588,54 @@ function updateStreamingMessage(messageElement, text) {
 }
 
 /**
+ * Injecter des liens d'actions cliquables dans le texte formaté
+ */
+function injectActionLinks(formattedHtml, actions) {
+    // Créer une map invoice_id => prompt pour accès rapide
+    const actionsMap = {};
+    actions.forEach(action => {
+        actionsMap[action.invoice_id] = action.prompt;
+    });
+
+    // Regex pour détecter "Facture #12345" ou "**Facture #12345**"
+    const facturePattern = /(\*\*)?Facture\s+#(\d+)(\*\*)?/gi;
+
+    return formattedHtml.replace(facturePattern, (match, bold1, invoiceId, bold2) => {
+        const prompt = actionsMap[invoiceId];
+        if (prompt) {
+            // Générer un lien cliquable
+            const link = `<a href="#" class="invoice-detail-link" data-action-prompt="${escapeHtml(prompt)}" data-invoice-id="${invoiceId}" title="Cliquer pour voir les détails">📄</a>`;
+            // Retourner le match original + le lien
+            return match + ' ' + link;
+        }
+        return match;
+    });
+}
+
+/**
  * Finaliser un message streamé avec les métadonnées
  */
 function finalizeStreamingMessage(messageElement, text, metadata = {}, toolsUsed = []) {
     const contentDiv = messageElement.querySelector('[data-streaming-content]');
-    const badgeDiv = messageElement.querySelector('.badge.bg-info');
-
-    if (badgeDiv) {
-        badgeDiv.remove();
-    }
-
-    const toolsHtml = toolsUsed.length > 0 ? `
-        <div class="mt-2 pt-2 border-top">
-            <small class="text-muted">
-                <i class="bi bi-tools"></i>
-                <strong>Outils utilisés :</strong> ${toolsUsed.join(', ')}
-            </small>
-        </div>
-    ` : '';
 
     if (contentDiv) {
-        contentDiv.innerHTML = formatMessage(text) + toolsHtml;
+        // Formater le message et injecter les liens d'actions si présents
+        let formattedText = formatMessage(text);
+
+        // Ajouter les liens d'actions cliquables si présents
+        if (metadata.suggested_actions && Array.isArray(metadata.suggested_actions) && metadata.suggested_actions.length > 0) {
+            console.log('[Chat] Injection de', metadata.suggested_actions.length, 'liens d\'actions');
+            formattedText = injectActionLinks(formattedText, metadata.suggested_actions);
+        }
+
+        // Vérifier si on a des données de tableau à afficher
+        let tableHtml = '';
+        if (hasTableData(metadata)) {
+            console.log('[Chat] Rendu du tableau de données');
+            tableHtml = renderDataTable(metadata.table_data);
+        }
+
+        contentDiv.innerHTML = formattedText + tableHtml;
     }
 
     messageElement.dataset.messageType = 'assistant';
@@ -525,18 +662,20 @@ function handleInputChange() {
     const length = value.length;
     const maxLength = 500;
 
-    // Mettre à jour le compteur
-    elements.charCount.textContent = `${length} / ${maxLength}`;
+    // Mettre à jour le compteur (si présent)
+    if (elements.charCount) {
+        elements.charCount.textContent = `${length} / ${maxLength}`;
+
+        // Limiter la longueur
+        if (length > maxLength) {
+            elements.charCount.classList.add('text-danger');
+        } else {
+            elements.charCount.classList.remove('text-danger');
+        }
+    }
 
     // Activer/désactiver le bouton d'envoi
     elements.sendButton.disabled = length === 0 || length > maxLength || state.isLoading;
-
-    // Limiter la longueur
-    if (length > maxLength) {
-        elements.charCount.classList.add('text-danger');
-    } else {
-        elements.charCount.classList.remove('text-danger');
-    }
 }
 
 function setupTextareaAutoResize() {
@@ -554,15 +693,56 @@ function setupTextareaAutoResize() {
 }
 
 function scrollToBottom() {
-    elements.chatMessages.scrollTo({
-        top: elements.chatMessages.scrollHeight,
-        behavior: 'smooth',
+    if (!elements.chatMessages) return;
+
+    // Utiliser requestAnimationFrame pour s'assurer que le DOM est mis à jour
+    requestAnimationFrame(() => {
+        // Double RAF pour garantir que le layout est recalculé
+        requestAnimationFrame(() => {
+            // Scroll fluide vers le bas avec scrollTo (meilleure compatibilité)
+            elements.chatMessages.scrollTo({
+                top: elements.chatMessages.scrollHeight,
+                behavior: 'smooth'
+            });
+        });
     });
 }
 
 function getCurrentTime() {
     const now = new Date();
     return now.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+}
+
+/**
+ * Gérer le clic sur un bouton d'action suggérée
+ */
+function handleSuggestedActionClick(button) {
+    const prompt = button.dataset.actionPrompt;
+    const invoiceId = button.dataset.invoiceId;
+
+    if (!prompt || state.isLoading) {
+        console.error('[Chat] Prompt manquant ou chargement en cours');
+        return;
+    }
+
+    console.log('[Chat] Action suggérée cliquée:', { invoiceId, prompt });
+
+    // Désactiver tous les boutons d'actions suggérées du même groupe
+    const actionsContainer = button.closest('.chat-suggested-actions');
+    if (actionsContainer) {
+        const allButtons = actionsContainer.querySelectorAll('.suggested-action-btn');
+        allButtons.forEach(btn => {
+            btn.disabled = true;
+            btn.classList.add('disabled');
+        });
+    }
+
+    // Remplir l'input avec le prompt et déclencher la soumission
+    elements.chatInput.value = prompt;
+    handleInputChange();
+
+    // Déclencher le submit du formulaire
+    elements.chatForm.dispatchEvent(new Event('submit'));
 }
 
 // ====================================

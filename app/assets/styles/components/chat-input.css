@@ -1,0 +1,278 @@
+/**
+ * Chat Input Component - Composant réutilisable
+ * Gestion multi-thèmes : light, dark-blue, dark-red
+ */
+
+/* ====================================
+   1. Wrapper - Positionnement Fixed
+   ==================================== */
+
+.chat-input-wrapper {
+    padding: 2rem;
+}
+
+.chat-input-form {
+    pointer-events: auto; /* Réactive les clics sur le formulaire */
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* ====================================
+   2. Container Input - Base
+   ==================================== */
+
+.chat-input-form {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.chat-input-container {
+    flex: 1;
+    /* Pas de background ni border - juste un container transparent */
+}
+
+/* ====================================
+   3. Input Field - Base
+   ==================================== */
+
+.chat-input-field {
+    width: 100%;
+    outline: none;
+    border: 2px solid #FFFFFF;
+    border-radius: 15px;
+    background: transparent linear-gradient(93deg, #FFFFFFA7 0%, #FEFEFE66 46%, #FFFFFFE6 100%) 0% 0% no-repeat padding-box;
+    box-shadow: 5px 6px 7px #0000005A;
+    opacity: 0.95;
+    backdrop-filter: blur(30px);
+    -webkit-backdrop-filter: blur(30px);
+    font-size: 1rem;
+    color: var(--chat-input-text);
+    padding: 0.75rem 1rem;
+    resize: none;
+    overflow: hidden;
+    min-height: 44px;
+    max-height: 120px;
+    line-height: 1.5;
+    font-family: inherit;
+}
+
+/* Masquer la scrollbar sur tous les navigateurs */
+.chat-input-field::-webkit-scrollbar {
+    display: none;
+}
+
+.chat-input-field {
+    -ms-overflow-style: none;  /* IE et Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+
+.chat-input-field::placeholder {
+    color: #6b7280;
+    font-weight: 400;
+}
+
+.chat-input-field:focus::placeholder {
+    color: #9ca3af;
+}
+
+/* ====================================
+   4. Send Button - Base
+   ==================================== */
+
+.chat-send-button {
+    flex-shrink: 0;
+    width: 52px;
+    height: 52px;
+    background: #143F80 0% 0% no-repeat padding-box;
+    border: 2px solid #FFFFFFFD;
+    border-radius: 15px;
+    opacity: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-bottom: 7px;
+}
+
+.chat-send-button i {
+    color: #FFFFFF;
+    font-size: 1.25rem;
+    transform: matrix(0.71, 0.71, -0.71, 0.71, 0, 0);
+    background: #FFFFFF 0% 0% no-repeat padding-box;
+    opacity: 1;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: #FFFFFF;
+}
+
+.chat-send-button:hover {
+    background: #1e40af 0% 0% no-repeat padding-box;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+.chat-send-button:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.chat-send-button:disabled {
+    background: #9ca3af 0% 0% no-repeat padding-box;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* ====================================
+   5. Thème Light (par défaut)
+   ==================================== */
+
+.theme-light .chat-input-field {
+    color: var(--chat-input-text);
+}
+
+.theme-light .chat-input-field::placeholder {
+    color: #6b7280;
+}
+
+.theme-light .chat-send-button {
+    background: #143F80 0% 0% no-repeat padding-box;
+}
+
+.theme-light .chat-send-button:hover {
+    background: #1e40af 0% 0% no-repeat padding-box;
+}
+
+/* ====================================
+   6. Thème Dark Blue
+   ==================================== */
+
+body.theme-dark-blue .chat-input-field {
+    color: #ffffff;
+}
+
+body.theme-dark-blue .chat-input-field::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+body.theme-dark-blue .chat-input-field:focus::placeholder {
+    color: rgba(255, 255, 255, 0.3);
+}
+
+body.theme-dark-blue .chat-send-button {
+    background: #5fa8d3 0% 0% no-repeat padding-box;
+}
+
+body.theme-dark-blue .chat-send-button:hover {
+    background: #4a8ab8 0% 0% no-repeat padding-box;
+}
+
+body.theme-dark-blue .chat-send-button:disabled {
+    background: rgba(255, 255, 255, 0.2) 0% 0% no-repeat padding-box;
+}
+
+/* ====================================
+   7. Thème Dark Red
+   ==================================== */
+
+body.theme-dark-red .chat-input-field {
+    color: #ffffff;
+}
+
+body.theme-dark-red .chat-input-field::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+body.theme-dark-red .chat-input-field:focus::placeholder {
+    color: rgba(255, 255, 255, 0.3);
+}
+
+body.theme-dark-red .chat-send-button {
+    background: #ba1818 0% 0% no-repeat padding-box;
+}
+
+body.theme-dark-red .chat-send-button:hover {
+    background: #991414 0% 0% no-repeat padding-box;
+}
+
+body.theme-dark-red .chat-send-button:disabled {
+    background: rgba(255, 255, 255, 0.2) 0% 0% no-repeat padding-box;
+}
+
+/* ====================================
+   8. Responsive Design
+   ==================================== */
+
+/* Mobile (< 576px) */
+@media (max-width: 575.98px) {
+    .chat-input-wrapper {
+        left: 0;
+        padding: 1rem;
+    }
+
+    .chat-input-field {
+        font-size: 0.9375rem;
+        padding: 0.625rem 0.875rem;
+    }
+
+    .chat-send-button {
+        width: 44px;
+        height: 44px;
+        font-size: 1.125rem;
+    }
+}
+
+/* Tablet (576px - 991px) */
+@media (min-width: 576px) and (max-width: 991.98px) {
+    .chat-input-wrapper {
+        left: 0;
+        padding: 1.5rem;
+    }
+
+    .chat-send-button {
+        width: 48px;
+        height: 48px;
+    }
+}
+
+/* Desktop (> 992px) */
+@media (min-width: 992px) {
+    .chat-input-wrapper {
+        left: 280px; /* Largeur sidebar */
+    }
+}
+
+/* ====================================
+   9. Accessibility
+   ==================================== */
+
+/* Focus visible pour navigation clavier */
+.chat-input-field:focus-visible {
+    outline: 2px solid var(--bs-primary, #0d6efd);
+    outline-offset: 2px;
+}
+
+.chat-send-button:focus-visible {
+    outline: 2px solid white;
+    outline-offset: 2px;
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+    .chat-input-field {
+        border: 2px solid currentColor;
+    }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+    .chat-input-field,
+    .chat-send-button {
+        transition: none;
+    }
+
+    .chat-send-button:hover {
+        transform: none;
+    }
+}

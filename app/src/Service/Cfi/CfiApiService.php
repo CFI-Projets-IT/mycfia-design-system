@@ -85,6 +85,9 @@ readonly class CfiApiService
         ]);
 
         try {
+            // Mesurer le temps de l'appel HTTP uniquement (KPI)
+            $httpStartTime = microtime(true);
+
             $response = $this->httpClient->request('POST', $url, [
                 'headers' => $headers,
                 'json' => $body,
@@ -100,6 +103,19 @@ readonly class CfiApiService
 
             // Decoder la reponse JSON
             $data = $response->toArray();
+
+            // Calculer le temps HTTP pur (après décodage complet)
+            $httpDurationMs = (microtime(true) - $httpStartTime) * 1000;
+
+            // Log KPI : Temps HTTP pur uniquement
+            $this->logger->info('CFI API HTTP Call', [
+                'correlation_id' => $correlationId,
+                'endpoint' => $endpoint,
+                'method' => 'POST',
+                'status_code' => $statusCode,
+                'duration_ms' => $httpDurationMs,
+                'has_jeton' => null !== $jeton,
+            ]);
 
             // Log de la reponse (dev uniquement)
             $this->logger->debug('CFI API Response', [

@@ -2,72 +2,13 @@
  * Styles pour l'interface de Chat IA - myCFiia
  * Architecture : BEM (Block Element Modifier)
  * Responsive : Mobile-first avec breakpoints Bootstrap
+ *
+ * ⚠️ NETTOYÉ - Card de développement supprimée
+ * Seules les classes réutilisables pour la nouvelle UI immersive sont conservées
  */
 
 /* ====================================
-   1. Chat Container & Layout
-   ==================================== */
-
-.chat-container {
-    height: calc(100vh - 73px); /* Hauteur viewport - header home */
-    max-height: calc(100vh - 73px);
-    display: flex;
-    flex-direction: column;
-    background-color: var(--bs-body-bg, #ffffff);
-}
-
-/* ====================================
-   2. Chat Header
-   ==================================== */
-
-.chat-header {
-    flex-shrink: 0;
-    background-color: var(--bs-light, #f8f9fa);
-    border-bottom: 1px solid var(--bs-border-color, #dee2e6);
-}
-
-.chat-avatar {
-    width: 48px;
-    height: 48px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
-}
-
-/* ====================================
-   3. Chat Messages Zone
-   ==================================== */
-
-.chat-messages {
-    flex: 1 1 auto;
-    overflow-y: auto;
-    background-color: var(--bs-body-bg, #ffffff);
-    scroll-behavior: smooth;
-}
-
-/* Scroll bar custom */
-.chat-messages::-webkit-scrollbar {
-    width: 8px;
-}
-
-.chat-messages::-webkit-scrollbar-track {
-    background: var(--bs-light, #f8f9fa);
-}
-
-.chat-messages::-webkit-scrollbar-thumb {
-    background: var(--bs-secondary, #6c757d);
-    border-radius: 4px;
-}
-
-.chat-messages::-webkit-scrollbar-thumb:hover {
-    background: var(--bs-primary, #0d6efd);
-}
-
-/* ====================================
-   4. Chat Messages - Structure
+   1. Chat Messages - Structure Réutilisable
    ==================================== */
 
 .chat-message {
@@ -111,6 +52,23 @@
     max-width: 100%;
 }
 
+.message-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.message-author {
+    font-weight: 600;
+    font-size: 0.875rem;
+}
+
+.message-time {
+    font-size: 0.75rem;
+    color: var(--bs-secondary, #6c757d);
+}
+
 .message-text {
     background-color: var(--bs-light, #f8f9fa);
     border-radius: 12px;
@@ -134,7 +92,8 @@
     margin-bottom: 0;
 }
 
-.message-text ul, .message-text ol {
+.message-text ul,
+.message-text ol {
     margin-left: 1.5rem;
     margin-bottom: 0.5rem;
 }
@@ -155,40 +114,34 @@
     background-color: rgba(255, 255, 255, 0.2);
 }
 
-/* ====================================
-   5. Chat Input Container
-   ==================================== */
-
-.chat-input-container {
-    flex-shrink: 0;
-    background-color: var(--bs-light, #f8f9fa);
-    border-top: 1px solid var(--bs-border-color, #dee2e6);
-}
-
-.chat-textarea {
-    border: 1px solid var(--bs-border-color, #dee2e6);
+/* Pre/Code blocks */
+.message-text pre {
+    background-color: #2d2d2d;
+    color: #e0e0e0;
     border-radius: 8px;
-    padding: 0.75rem 1rem;
-    font-size: 1rem;
-    line-height: 1.5;
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
-    min-height: 44px;
-    max-height: 200px;
+    padding: 1rem;
+    overflow-x: auto;
+    margin: 0.5rem 0;
 }
 
-.chat-textarea:focus {
-    border-color: var(--bs-primary, #0d6efd);
-    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
-    outline: none;
+.message-text pre code {
+    background-color: transparent;
+    padding: 0;
+    color: inherit;
 }
 
-.chat-textarea::placeholder {
-    color: var(--bs-secondary, #6c757d);
-    opacity: 0.7;
+/* Links */
+.message-text a {
+    color: var(--bs-primary, #0d6efd);
+    text-decoration: underline;
+}
+
+.user-message .message-text a {
+    color: rgba(255, 255, 255, 0.9);
 }
 
 /* ====================================
-   6. Quick Questions (Suggestions)
+   2. Quick Questions (Suggestions)
    ==================================== */
 
 .quick-question {
@@ -202,36 +155,23 @@
 }
 
 /* ====================================
-   7. Chat Loading Indicator
-   ==================================== */
-
-.chat-loading {
-    position: absolute;
-    bottom: 120px;
-    left: 50%;
-    transform: translateX(-50%);
-    background-color: rgba(255, 255, 255, 0.95);
-    border: 1px solid var(--bs-border-color, #dee2e6);
-    border-radius: 8px;
-    padding: 0.75rem 1.5rem;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    z-index: 10;
-}
-
-/* ====================================
-   8. Message Actions (Future: Edit, Copy, etc.)
+   3. Message Actions (Copy, Regenerate)
    ==================================== */
 
 .message-actions {
     opacity: 0;
     transition: opacity 0.2s ease;
+    margin-top: 0.5rem;
+    display: flex;
+    gap: 0.5rem;
 }
 
 .chat-message:hover .message-actions {
     opacity: 1;
 }
 
-.message-action-btn {
+.message-action-btn,
+.btn-message-action {
     padding: 0.25rem 0.5rem;
     font-size: 0.875rem;
     border: none;
@@ -239,42 +179,108 @@
     color: var(--bs-secondary, #6c757d);
     cursor: pointer;
     transition: color 0.2s ease;
+    border-radius: 4px;
 }
 
-.message-action-btn:hover {
+.message-action-btn:hover,
+.btn-message-action:hover {
     color: var(--bs-primary, #0d6efd);
+    background-color: rgba(13, 110, 253, 0.1);
 }
 
 /* ====================================
-   9. Responsive Design
+   4. Scrollbar Styling (Réutilisable)
+   ==================================== */
+
+.chat-scrollable::-webkit-scrollbar,
+#chatMessages::-webkit-scrollbar {
+    width: 8px;
+}
+
+.chat-scrollable::-webkit-scrollbar-track,
+#chatMessages::-webkit-scrollbar-track {
+    background: var(--bs-light, #f8f9fa);
+}
+
+.chat-scrollable::-webkit-scrollbar-thumb,
+#chatMessages::-webkit-scrollbar-thumb {
+    background: var(--bs-secondary, #6c757d);
+    border-radius: 4px;
+}
+
+.chat-scrollable::-webkit-scrollbar-thumb:hover,
+#chatMessages::-webkit-scrollbar-thumb:hover {
+    background: var(--bs-primary, #0d6efd);
+}
+
+/* ====================================
+   5. Streaming Cursor Animation
+   ==================================== */
+
+/* Animation du curseur de streaming (effet typing) */
+.streaming-cursor {
+    display: inline-block;
+    width: 2px;
+    height: 1.2em;
+    background-color: var(--bs-primary, #0d6efd);
+    margin-left: 2px;
+    animation: blink 1s step-end infinite;
+    vertical-align: text-bottom;
+}
+
+@keyframes blink {
+    0%,
+    50% {
+        opacity: 1;
+    }
+    50.01%,
+    100% {
+        opacity: 0;
+    }
+}
+
+/* Badge "En cours..." pour message streaming */
+[data-message-type="assistant-streaming"] .badge {
+    animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%,
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 0.7;
+        transform: scale(0.95);
+    }
+}
+
+/* ====================================
+   6. Responsive Design
    ==================================== */
 
 /* Mobile (< 576px) */
 @media (max-width: 575.98px) {
-    .chat-container {
-        height: calc(100vh - 60px); /* Header plus petit sur mobile */
-    }
-
-    .chat-messages {
-        padding: 1rem;
-    }
-
-    .chat-input-container {
-        padding: 0.75rem;
-    }
-
     .message-content {
-        max-width: calc(100% - 56px); /* Avatar + gap */
+        max-width: calc(100% - 56px);
+        /* Avatar + gap */
     }
 
-    .chat-avatar {
-        width: 40px;
-        height: 40px;
+    .message-avatar {
+        width: 36px;
+        height: 36px;
+        font-size: 1rem;
     }
 
     .quick-question {
         font-size: 0.875rem;
         padding: 0.375rem 0.75rem;
+    }
+
+    .message-text {
+        padding: 0.75rem;
+        font-size: 0.9375rem;
     }
 }
 
@@ -287,10 +293,6 @@
 
 /* Desktop (> 992px) */
 @media (min-width: 992px) {
-    .chat-messages {
-        padding: 2rem 3rem;
-    }
-
     .message-content {
         max-width: 65%;
     }
@@ -309,18 +311,10 @@
 }
 
 /* ====================================
-   10. Dark Mode Support (Future)
+   7. Dark Mode Support (Thèmes)
    ==================================== */
 
 @media (prefers-color-scheme: dark) {
-    .theme-dark .chat-container {
-        background-color: #1a1a1a;
-    }
-
-    .theme-dark .chat-messages {
-        background-color: #1a1a1a;
-    }
-
     .theme-dark .message-text {
         background-color: #2d2d2d;
         border-color: #444;
@@ -331,30 +325,19 @@
         color: #e0e0e0;
     }
 
-    .theme-dark .chat-input-container {
-        background-color: #2d2d2d;
-        border-top-color: #444;
-    }
-
-    .theme-dark .chat-textarea {
-        background-color: #1a1a1a;
-        border-color: #444;
-        color: #e0e0e0;
-    }
-
-    .theme-dark .chat-textarea:focus {
-        border-color: #667eea;
-        box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+    .theme-dark .message-text code {
+        background-color: rgba(255, 255, 255, 0.1);
     }
 }
 
 /* ====================================
-   11. Accessibility
+   8. Accessibility
    ==================================== */
 
 /* Focus visible pour navigation clavier */
-.chat-textarea:focus-visible,
-button:focus-visible {
+button:focus-visible,
+.quick-question:focus-visible,
+.btn-message-action:focus-visible {
     outline: 2px solid var(--bs-primary, #0d6efd);
     outline-offset: 2px;
 }
@@ -365,8 +348,8 @@ button:focus-visible {
         border: 2px solid currentColor;
     }
 
-    .chat-textarea {
-        border-width: 2px;
+    .message-avatar {
+        border: 2px solid currentColor;
     }
 }
 
@@ -380,53 +363,6 @@ button:focus-visible {
         transform: none;
     }
 
-    * {
-        transition: none !important;
-    }
-}
-
-/* ====================================
-   12. Streaming Cursor Animation
-   ==================================== */
-
-/* Animation du curseur de streaming (effet typing) */
-.streaming-cursor {
-    display: inline-block;
-    width: 2px;
-    height: 1.2em;
-    background-color: var(--bs-primary, #0d6efd);
-    margin-left: 2px;
-    animation: blink 1s step-end infinite;
-    vertical-align: text-bottom;
-}
-
-@keyframes blink {
-    0%, 50% {
-        opacity: 1;
-    }
-    50.01%, 100% {
-        opacity: 0;
-    }
-}
-
-/* Badge "En cours..." pour message streaming */
-[data-message-type="assistant-streaming"] .badge {
-    animation: pulse 1.5s ease-in-out infinite;
-}
-
-@keyframes pulse {
-    0%, 100% {
-        opacity: 1;
-        transform: scale(1);
-    }
-    50% {
-        opacity: 0.7;
-        transform: scale(0.95);
-    }
-}
-
-/* Reduced motion: désactiver animations */
-@media (prefers-reduced-motion: reduce) {
     .streaming-cursor {
         animation: none;
         opacity: 1;
@@ -434,5 +370,64 @@ button:focus-visible {
 
     [data-message-type="assistant-streaming"] .badge {
         animation: none;
+    }
+
+    * {
+        transition: none !important;
+    }
+}
+
+/* ====================================
+   9. Utilities (Réutilisables)
+   ==================================== */
+
+/* Animation fade in pour nouveaux messages */
+@keyframes chatFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.chat-fade-in {
+    animation: chatFadeIn 0.4s ease-out;
+}
+
+/* Loading dots animation */
+.chat-dots {
+    display: inline-flex;
+    gap: 4px;
+}
+
+.chat-dots span {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: var(--bs-secondary, #6c757d);
+    animation: dotPulse 1.4s infinite ease-in-out both;
+}
+
+.chat-dots span:nth-child(1) {
+    animation-delay: -0.32s;
+}
+
+.chat-dots span:nth-child(2) {
+    animation-delay: -0.16s;
+}
+
+@keyframes dotPulse {
+    0%,
+    80%,
+    100% {
+        opacity: 0.3;
+        transform: scale(0.8);
+    }
+    40% {
+        opacity: 1;
+        transform: scale(1);
     }
 }

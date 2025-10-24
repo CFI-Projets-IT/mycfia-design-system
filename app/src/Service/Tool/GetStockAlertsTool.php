@@ -12,6 +12,7 @@ use App\Service\ToolCallCollector;
 use Psr\Log\LoggerInterface;
 use Symfony\AI\Agent\Toolbox\Attribute\AsTool;
 use Symfony\Component\DependencyInjection\Attribute\AsTaggedItem;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -21,6 +22,8 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  * Retourne les stocks nécessitant une attention urgente.
  *
  * Retour structuré avec métadonnées pour "cartes preuve".
+ *
+ * Logging : Canal dédié 'tools' (pas 'chat')
  */
 #[AsTool(
     name: 'get_stock_alerts',
@@ -36,6 +39,7 @@ final readonly class GetStockAlertsTool
         private UserAuthenticationService $authService,
         private AiLoggerService $aiLogger,
         private ToolCallCollector $toolCallCollector,
+        #[Autowire(service: 'monolog.logger.tools')]
         private LoggerInterface $logger,
         private TranslatorInterface $translator,
     ) {

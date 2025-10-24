@@ -1,0 +1,19 @@
+{#
+    Composant ChatMessageAssistant - Message de l'assistant IA
+
+    Props:
+    - message: string (le texte du message)
+    - timestamp: string (optionnel - horodatage)
+#}
+
+{% set message = message ?? 'Message de l\'assistant' %}
+{% set timestamp = timestamp ?? null %}
+
+<div class="chat-message chat-message-assistant">
+    <div class="chat-message-bubble">
+        <img src="{{ asset('images/assistant-picto.svg') }}" alt="IA" class="chat-message-logo">
+        <div class="chat-message-text">
+            {{ message|raw }}
+        </div>
+    </div>
+</div>

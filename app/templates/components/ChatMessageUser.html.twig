@@ -1,0 +1,21 @@
+{#
+    Composant ChatMessageUser - Message utilisateur
+
+    Props:
+    - message: string (le texte du message)
+    - timestamp: string (optionnel - horodatage)
+#}
+
+{% set message = message ?? 'Message utilisateur' %}
+{% set timestamp = timestamp ?? null %}
+
+<div class="chat-message chat-message-user">
+    <div class="chat-message-content">
+        <div class="chat-message-bubble">
+            {{ message }}
+        </div>
+    </div>
+    <div class="chat-message-avatar">
+        <i class="bi bi-person-fill"></i>
+    </div>
+</div>
