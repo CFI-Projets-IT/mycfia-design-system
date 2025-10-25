@@ -9,6 +9,7 @@ use App\Security\UserAuthenticationService;
 use App\Service\AiLoggerService;
 use App\Service\Api\OperationApiService;
 use App\Service\ToolCallCollector;
+use App\Service\ToolResultCollector;
 use Psr\Log\LoggerInterface;
 use Symfony\AI\Agent\Toolbox\Attribute\AsTool;
 use Symfony\Component\DependencyInjection\Attribute\AsTaggedItem;
@@ -42,6 +43,7 @@ final readonly class GetOperationStatsTool
         private UserAuthenticationService $authService,
         private AiLoggerService $aiLogger,
         private ToolCallCollector $toolCallCollector,
+        private ToolResultCollector $toolResultCollector,
         #[Autowire(service: 'monolog.logger.tools')]
         private LoggerInterface $logger,
         private TranslatorInterface $translator,
@@ -105,19 +107,51 @@ final readonly class GetOperationStatsTool
                 durationMs: $durationMs
             );
 
-            return [
+            // Générer suggested_actions
+            $suggestedActions = [];
+            if (count($operations) > 0) {
+                $suggestedActions[] = [
+                    'label' => 'Voir les opérations détaillées',
+                    'icon' => '📋',
+                    'prompt' => 'Affiche-moi toutes les opérations',
+                ];
+            }
+
+            // Générer table_data pour le composant DataTable
+            $tableData = $this->generateTableData($stats, $groupBy, $suggestedActions);
+
+            // Log KPI pour monitoring
+            $this->logger->info('Tool executed successfully', [
+                'tool_name' => 'get_operation_stats',
+                'mode' => 'STATISTIQUES',
+                'duration_ms' => $durationMs,
+                'nb_operations' => count($operations),
+                'group_by' => $groupBy,
+                'user_id' => $user->getId(),
+                'division_id' => $tenant->getIdCfi(),
+            ]);
+
+            $result = [
                 'success' => true,
                 'total_operations' => count($operations),
                 'group_by' => $groupBy,
                 'stats' => $stats,
+                'suggested_actions' => $suggestedActions,
+                'table_data' => $tableData,
                 'metadata' => [
                     'source' => 'CFI API /Operations/getLignesOperations',
                     'cache_ttl' => '5 minutes',
                     'division' => $tenant->getNom(),
                     'duration_ms' => $durationMs,
                     'period' => $dateDebut && $dateFin ? "{$dateDebut} → {$dateFin}" : 'Toutes périodes',
+                    'mode' => 'STATISTIQUES',
                 ],
             ];
+
+            // Collecter le résultat pour transmission au frontend
+            $this->toolResultCollector->addToolResult('get_operation_stats', $result);
+
+            return $result;
         } catch (\Exception $e) {
             // Log détaillé pour développeurs (technique)
             $this->logger->error('GetOperationStatsTool: Erreur lors du calcul des statistiques', [
@@ -223,6 +257,85 @@ final readonly class GetOperationStatsTool
             'success' => false,
             'error' => $message,
             'stats' => [],
+        ];
+    }
+
+    /**
+     * Générer table_data structuré pour le composant DataTable.
+     *
+     * @param array<string, mixed>             $stats            Statistiques calculées
+     * @param string                           $groupBy          Type de groupement
+     * @param array<int, array<string, mixed>> $suggestedActions Actions suggérées pour liens cliquables
+     *
+     * @return array{headers: array<int, string>, rows: array<int, array<string, mixed>>, totalRow: array<string, mixed>, linkColumns: array<string, string>}
+     */
+    private function generateTableData(array $stats, string $groupBy, array $suggestedActions): array
+    {
+        // Adapter les en-têtes selon le type de groupement
+        $headers = match ($groupBy) {
+            'type' => ['TYPE', 'NB OPÉRATIONS', 'NB DESTINATAIRES', 'NB ENVOYÉS', 'TAUX ENVOI'],
+            'statut' => ['STATUT', 'NB OPÉRATIONS'],
+            'jour', 'semaine', 'mois' => ['PÉRIODE', 'NB OPÉRATIONS'],
+            default => ['CATÉGORIE', 'VALEUR'],
+        };
+
+        // Générer les lignes selon le type de stats
+        $rows = [];
+        $totalOperations = 0;
+        $totalDestinataires = 0;
+        $totalEnvoyes = 0;
+
+        foreach ($stats as $key => $value) {
+            if ('type' === $groupBy && is_array($value)) {
+                // Stats par type (avec détails)
+                $rows[] = [
+                    'type' => $key,
+                    'count' => (string) $value['count'],
+                    'nb_destinataires' => (string) $value['nb_destinataires'],
+                    'nb_envoyes' => (string) $value['nb_envoyes'],
+                    'taux_envoi' => "{$value['taux_envoi']}%",
+                ];
+                $totalOperations += $value['count'];
+                $totalDestinataires += $value['nb_destinataires'];
+                $totalEnvoyes += $value['nb_envoyes'];
+            } else {
+                // Stats simples (statut, période)
+                $rows[] = [
+                    'categorie' => $key,
+                    'count' => (string) $value,
+                ];
+                $totalOperations += is_int($value) ? $value : 0;
+            }
+        }
+
+        // Ligne de total
+        if ('type' === $groupBy) {
+            $tauxEnvoiTotal = $totalDestinataires > 0
+                ? round(($totalEnvoyes / $totalDestinataires) * 100, 1)
+                : 0.0;
+
+            $totalRow = [
+                'label' => 'TOTAL',
+                'total_operations' => (string) $totalOperations,
+                'total_destinataires' => (string) $totalDestinataires,
+                'total_envoyes' => (string) $totalEnvoyes,
+                'taux_envoi_global' => "{$tauxEnvoiTotal}%",
+            ];
+        } else {
+            $totalRow = [
+                'label' => 'TOTAL',
+                'total_operations' => (string) $totalOperations,
+            ];
+        }
+
+        // Colonnes cliquables (pas de liens pour les statistiques)
+        $linkColumns = [];
+
+        return [
+            'headers' => $headers,
+            'rows' => $rows,
+            'totalRow' => $totalRow,
+            'linkColumns' => $linkColumns,
         ];
     }
 }
