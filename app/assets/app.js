@@ -13,6 +13,7 @@ import './styles/components/permissions.css';
 import './styles/components/sidebar.css';
 import './styles/components/topbar.css';
 import './styles/components/chat.css';
+import './styles/components/division-selector.css';
 import './styles/layouts/auth.css';
 import './styles/layouts/app-layout.css';
 import './styles/layouts/home-layout.css';
@@ -29,6 +30,9 @@ import * as bootstrap from 'bootstrap';
 
 // Exposer Bootstrap globalement (optionnel, pour usage dans le HTML)
 window.bootstrap = bootstrap;
+
+// Import des composants JavaScript
+import './js/division-selector.js';
 
 // Initialiser automatiquement les tooltips et popovers
 document.addEventListener('DOMContentLoaded', () => {
