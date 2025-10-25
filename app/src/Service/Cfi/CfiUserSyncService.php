@@ -9,6 +9,7 @@ use App\Entity\Division;
 use App\Entity\User;
 use App\Repository\DivisionRepository;
 use App\Repository\UserRepository;
+use App\Service\Api\UtilisateurApiService;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 
@@ -24,6 +25,7 @@ readonly class CfiUserSyncService
         private EntityManagerInterface $entityManager,
         private DivisionRepository $divisionRepository,
         private UserRepository $userRepository,
+        private UtilisateurApiService $utilisateurApiService,
         private LoggerInterface $logger,
     ) {
     }
@@ -180,5 +182,59 @@ readonly class CfiUserSyncService
             'loginCount' => $user->getLoginCount(),
             'lastLoginAt' => $user->getLastLoginAt()?->format('Y-m-d H:i:s'),
         ]);
+    }
+
+    /**
+     * Synchronise les permissions de l'utilisateur depuis l'API CFI.
+     *
+     * Cette méthode :
+     * 1. Appelle l'endpoint /Utilisateurs/getDroitsUtilisateur
+     * 2. Met à jour le champ permissions en base de données
+     * 3. Flush l'EntityManager
+     *
+     * Appelée après l'authentification pour récupérer les 25 permissions + quota HD.
+     *
+     * @param User $user Utilisateur à synchroniser
+     */
+    public function syncUserPermissions(User $user): void
+    {
+        $this->logger->info('Synchronisation permissions utilisateur', [
+            'userId' => $user->getId(),
+            'idCfi' => $user->getIdCfi(),
+        ]);
+
+        try {
+            // Récupérer les droits depuis l'API CFI
+            $permissions = $this->utilisateurApiService->getDroitsUtilisateur($user->getIdCfi());
+
+            if (empty($permissions)) {
+                $this->logger->warning('Aucune permission récupérée depuis API CFI', [
+                    'userId' => $user->getId(),
+                    'idCfi' => $user->getIdCfi(),
+                ]);
+
+                return;
+            }
+
+            // Mettre à jour le champ permissions de l'utilisateur
+            $user->setPermissions($permissions);
+            $this->entityManager->flush();
+
+            $this->logger->info('Permissions utilisateur synchronisées avec succès', [
+                'userId' => $user->getId(),
+                'idCfi' => $user->getIdCfi(),
+                'nb_permissions' => count($permissions),
+                'administrateur' => $permissions['administrateur'] ?? false,
+            ]);
+        } catch (\Exception $e) {
+            $this->logger->error('Erreur lors de la synchronisation des permissions', [
+                'userId' => $user->getId(),
+                'idCfi' => $user->getIdCfi(),
+                'error' => $e->getMessage(),
+            ]);
+
+            // Ne pas bloquer l'authentification si la sync permissions échoue
+            // Les permissions resteront null et ne seront pas affichées
+        }
     }
 }

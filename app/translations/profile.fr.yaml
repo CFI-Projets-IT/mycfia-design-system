@@ -37,3 +37,59 @@
 'profile.button.edit_settings': 'Modifier les paramètres'
 'profile.button.back': 'Retour à l''accueil'
 'profile.button.manage_cfi': 'Gérer mon compte CFI'
+
+# Permissions
+'profile.section.permissions.title': 'Permissions'
+
+# Permissions - Système
+'profile.permissions.system.title': 'Système'
+'profile.permissions.system.connexion': 'Connexion'
+'profile.permissions.system.pwa': 'Application PWA'
+'profile.permissions.system.administrateur': 'Administrateur'
+'profile.permissions.system.logistique': 'Module Logistique'
+'profile.permissions.system.production': 'Module Production'
+'profile.permissions.system.developpement': 'Module Développement'
+
+# Permissions - Utilisateurs
+'profile.permissions.users.title': 'Utilisateurs'
+'profile.permissions.users.create': 'Créer'
+'profile.permissions.users.modify': 'Modifier'
+'profile.permissions.users.delete': 'Supprimer'
+'profile.permissions.users.impersonate': 'Emprunter identité'
+
+# Permissions - Divisions
+'profile.permissions.divisions.title': 'Divisions'
+'profile.permissions.divisions.create': 'Créer'
+'profile.permissions.divisions.modify': 'Modifier'
+'profile.permissions.divisions.view': 'Visualiser'
+
+# Permissions - Stocks
+'profile.permissions.stocks.title': 'Stocks'
+'profile.permissions.stocks.create': 'Créer'
+'profile.permissions.stocks.modify': 'Modifier'
+'profile.permissions.stocks.view': 'Visualiser'
+'profile.permissions.stocks.delete': 'Supprimer'
+
+# Permissions - Opérations
+'profile.permissions.operations.title': 'Opérations'
+'profile.permissions.operations.create': 'Créer'
+'profile.permissions.operations.validate': 'Valider'
+'profile.permissions.operations.view': 'Visualiser'
+
+# Permissions - Campagnes
+'profile.permissions.campaigns.title': 'Campagnes'
+'profile.permissions.campaigns.order': 'Commander'
+'profile.permissions.campaigns.edit': 'Éditer'
+
+# Permissions - Autres
+'profile.permissions.other.title': 'Autres'
+'profile.permissions.other.invoices_view': 'Visualiser factures'
+'profile.permissions.other.returns_view': 'Visualiser reprises'
+'profile.permissions.other.npai_create': 'Créer NPAI'
+'profile.permissions.other.npai_view': 'Visualiser NPAI'
+'profile.permissions.other.signatory': 'Signataire'
+'profile.permissions.other.validator': 'Valideur'
+
+# Permissions - Quota
+'profile.permissions.quota.title': 'Quota'
+'profile.permissions.quota.hd_download': 'Téléchargement HD'

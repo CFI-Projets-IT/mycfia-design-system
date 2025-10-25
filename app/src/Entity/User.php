@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
@@ -58,6 +60,22 @@ class User implements UserInterface
     private ?Division $division = null;
 
     /**
+     * Divisions accessibles par l'utilisateur (système multi-tenant hiérarchique).
+     *
+     * Cette collection contient toutes les divisions auxquelles l'utilisateur
+     * a accès selon la hiérarchie CFI, synchronisée depuis l'API CFI.
+     *
+     * @var Collection<int, UserAccessibleDivision>
+     */
+    #[ORM\OneToMany(
+        targetEntity: UserAccessibleDivision::class,
+        mappedBy: 'user',
+        cascade: ['persist', 'remove'],
+        orphanRemoval: true
+    )]
+    private Collection $accessibleDivisions;
+
+    /**
      * Thème de l'interface utilisateur (light|dark).
      */
     #[ORM\Column(length: 20, options: ['default' => 'light'])]
@@ -76,6 +94,17 @@ class User implements UserInterface
      */
     #[ORM\Column(type: Types::JSON, nullable: true)]
     private ?array $preferences = null;
+
+    /**
+     * Permissions utilisateur CFI (JSON).
+     *
+     * Contient les 25 permissions + quota téléchargement HD récupérés depuis getDroitsUtilisateur.
+     * Format : {connexion: bool, pwa: bool, administrateur: bool, ..., telechargementHD: double}
+     *
+     * @var array<string, bool|float>|null
+     */
+    #[ORM\Column(type: Types::JSON, nullable: true)]
+    private ?array $permissions = null;
 
     /**
      * Date de dernière connexion.
@@ -103,6 +132,10 @@ class User implements UserInterface
     #[Gedmo\Timestampable(on: 'update')]
     private \DateTimeImmutable $updatedAt;
 
+    public function __construct()
+    {
+        $this->accessibleDivisions = new ArrayCollection();
+    }
 
     // ========================================
     // UserInterface Implementation
@@ -274,6 +307,34 @@ class User implements UserInterface
         return $this;
     }
 
+    /**
+     * @return array<string, bool|float>|null
+     */
+    public function getPermissions(): ?array
+    {
+        return $this->permissions;
+    }
+
+    /**
+     * @param array<string, bool|float>|null $permissions
+     */
+    public function setPermissions(?array $permissions): static
+    {
+        $this->permissions = $permissions;
+
+        return $this;
+    }
+
+    /**
+     * Vérifie si l'utilisateur possède une permission spécifique.
+     *
+     * @param string $permission Nom de la permission (ex: 'factures_Visu', 'administrateur')
+     */
+    public function hasPermission(string $permission): bool
+    {
+        return (bool) ($this->permissions[$permission] ?? false);
+    }
+
     public function getLastLoginAt(): ?\DateTimeImmutable
     {
         return $this->lastLoginAt;
@@ -306,5 +367,58 @@ class User implements UserInterface
     public function getUpdatedAt(): \DateTimeImmutable
     {
         return $this->updatedAt;
+    }
+
+    // ========================================
+    // Multi-Tenant Methods
+    // ========================================
+
+    /**
+     * Récupère les divisions accessibles à cet utilisateur.
+     *
+     * Retourne une Collection de Division (pas UserAccessibleDivision).
+     * Utilisé pour afficher le sélecteur de divisions dans l'interface.
+     *
+     * @return Collection<int, Division>
+     */
+    public function getAccessibleDivisions(): Collection
+    {
+        return $this->accessibleDivisions->map(
+            fn (UserAccessibleDivision $uad) => $uad->getDivision()
+        );
+    }
+
+    /**
+     * Récupère la collection brute UserAccessibleDivision.
+     *
+     * @return Collection<int, UserAccessibleDivision>
+     */
+    public function getAccessibleDivisionsRaw(): Collection
+    {
+        return $this->accessibleDivisions;
+    }
+
+    /**
+     * Vérifie si l'utilisateur a accès à une division spécifique.
+     *
+     * @param int $idDivision ID CFI de la division
+     */
+    public function hasAccessToDivision(int $idDivision): bool
+    {
+        foreach ($this->accessibleDivisions as $uad) {
+            if ($uad->getDivision()->getIdDivision() === $idDivision) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Compte le nombre de divisions accessibles.
+     */
+    public function countAccessibleDivisions(): int
+    {
+        return $this->accessibleDivisions->count();
     }
 }

@@ -1,8 +1,9 @@
 {
-  "openapi": "3.0.1",
+  "openapi": "3.0.4",
   "info": {
     "title": "myCFI_API",
-    "version": "1.0"
+    "description": "API D'accès à MyCFI",
+    "version": "v1"
   },
   "servers": [
     {
@@ -87,10 +88,87 @@
         }
       }
     },
-    "/Division/getDivisions": {
+    "/Campagnes/getCampagne": {
       "post": {
         "tags": [
-          "Division"
+          "Campagnes"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GetCampagneDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GetCampagneDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/GetCampagneDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CampagneDto"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CampagneDto"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CampagneDto"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Divisions/getDivisions": {
+      "post": {
+        "tags": [
+          "Divisions"
         ],
         "responses": {
           "200": {
@@ -145,10 +223,10 @@
         }
       }
     },
-    "/Division/getUtilisateurs": {
+    "/Divisions/getUtilisateurs": {
       "post": {
         "tags": [
-          "Division"
+          "Divisions"
         ],
         "responses": {
           "200": {
@@ -321,6 +399,219 @@
               "text/json": {
                 "schema": {
                   "$ref": "#/components/schemas/FactureDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/FichierIN/getFichierIN": {
+      "post": {
+        "tags": [
+          "FichierIN"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GetFichierINParams"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GetFichierINParams"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/GetFichierINParams"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/FichierINDto"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FichierINDto"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FichierINDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/FichierIN/getLignesFichiersIN": {
+      "post": {
+        "tags": [
+          "FichierIN"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GetLignesFichiersINParams"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GetLignesFichiersINParams"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/GetLignesFichiersINParams"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/FichierINDto"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/FichierINDto"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/FichierINDto"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/FichierIN/createFichiersIN": {
+      "post": {
+        "tags": [
+          "FichierIN"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateFichierINParams"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateFichierINParams"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateFichierINParams"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/FichierINDto"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FichierINDto"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FichierINDto"
                 }
               }
             }
@@ -778,6 +1069,46 @@
   },
   "components": {
     "schemas": {
+      "CampagneDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "idDivision": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "codeClient": {
+            "type": "string",
+            "nullable": true
+          },
+          "dateCreation": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "nom": {
+            "type": "string"
+          },
+          "lignesOperations": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LigneOperationDto"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "CreateFichierINParams": {
+        "type": "object",
+        "properties": {
+          "nomFichier": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
       "DivisionDto": {
         "type": "object",
         "properties": {
@@ -786,8 +1117,7 @@
             "format": "int32"
           },
           "nom": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           }
         },
         "additionalProperties": false
@@ -894,8 +1224,7 @@
             "format": "int32"
           },
           "nom": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           }
         },
         "additionalProperties": false
@@ -933,16 +1262,13 @@
             "format": "int32"
           },
           "adresse": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           },
           "nomCommande": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           },
           "demandeur": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           },
           "montantTTC": {
             "type": "number",
@@ -970,6 +1296,76 @@
               "$ref": "#/components/schemas/LigneFactureDto"
             },
             "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "FichierINDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "nom": {
+            "type": "string"
+          },
+          "codeClient": {
+            "type": "string"
+          },
+          "nomEtat": {
+            "type": "string"
+          },
+          "ligneDeConnexion": {
+            "type": "string"
+          },
+          "origine": {
+            "type": "string"
+          },
+          "idEtat": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "idCampagne": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "idAutomate": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "idUtilisateur": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "commentaire": {
+            "type": "string"
+          },
+          "taille": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "qte": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "variables": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "GetCampagneDto": {
+        "type": "object",
+        "properties": {
+          "idCampagne": {
+            "type": "integer",
+            "format": "int32"
           }
         },
         "additionalProperties": false
@@ -1019,6 +1415,33 @@
         },
         "additionalProperties": false
       },
+      "GetFichierINParams": {
+        "type": "object",
+        "properties": {
+          "idFichier": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "GetLignesFichiersINParams": {
+        "type": "object",
+        "properties": {
+          "dateCreationMin": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "dateCreationMax": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "GetOperationsDto": {
         "type": "object",
         "properties": {
@@ -1056,12 +1479,10 @@
         "type": "object",
         "properties": {
           "jetonUtilisateur": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           },
           "clefApi": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           }
         },
         "additionalProperties": false
@@ -1070,16 +1491,13 @@
         "type": "object",
         "properties": {
           "identifiant": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           },
           "mdp": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           },
           "clefApi": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           }
         },
         "additionalProperties": false
@@ -1104,8 +1522,7 @@
             "format": "date-time"
           },
           "nom": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           }
         },
         "additionalProperties": false
@@ -1118,8 +1535,7 @@
             "format": "int32"
           },
           "libelle": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           },
           "qte": {
             "type": "number",
@@ -1151,8 +1567,7 @@
             "format": "int32"
           },
           "nomCampagne": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           },
           "dateCreation": {
             "type": "string",
@@ -1163,8 +1578,7 @@
             "nullable": true
           },
           "nom": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           },
           "idDivision": {
             "type": "integer",
@@ -1231,8 +1645,7 @@
             "format": "int32"
           },
           "nom": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           },
           "codeClient": {
             "type": "string",
@@ -1291,20 +1704,16 @@
             "format": "int32"
           },
           "nomDivision": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           },
           "nom": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           },
           "prenom": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           },
           "email": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           }
         },
         "additionalProperties": false
@@ -1321,28 +1730,25 @@
             "format": "int32"
           },
           "nomDivision": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           },
           "nom": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           },
           "prenom": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           },
           "email": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           },
           "type_d_option_GA": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           },
           "jeton": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
+          },
+          "clef": {
+            "type": "string"
           }
         },
         "additionalProperties": false
