@@ -326,11 +326,11 @@
 }
 
 /* ============================================
-   INVOICE DETAIL LINKS
-   Liens intégrés dans le texte pour détails factures
+   DETAIL LINKS
+   Liens intégrés dans le texte pour détails entités
    ============================================ */
 
-.invoice-detail-link {
+.detail-link {
     display: inline-block;
     margin-left: 4px;
     font-size: 1rem;
@@ -339,10 +339,10 @@
     cursor: pointer;
 }
 
-.invoice-detail-link:hover {
+.detail-link:hover {
     transform: scale(1.2);
 }
 
-.invoice-detail-link:active {
+.detail-link:active {
     transform: scale(0.95);
 }

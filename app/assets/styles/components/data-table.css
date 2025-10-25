@@ -61,10 +61,10 @@
 }
 
 /* ====================================
-   4. Liens Cliquables (Invoice Detail Link)
+   4. Liens Cliquables (Detail Link)
    ==================================== */
 
-.chat-datatable .invoice-detail-link {
+.chat-datatable .detail-link {
     color: #0D6EFD;
     font-weight: 600;
     transition: all 0.2s ease;
@@ -73,13 +73,13 @@
     gap: 0.25rem;
 }
 
-.chat-datatable .invoice-detail-link:hover {
+.chat-datatable .detail-link:hover {
     color: #0A58CA;
     text-decoration: underline !important;
 }
 
 /* Icône pour les liens (après le texte) */
-.chat-datatable .invoice-detail-link::after {
+.chat-datatable .detail-link::after {
     content: '📄';
     font-size: 0.875rem;
     opacity: 0.7;
@@ -180,11 +180,11 @@ body.theme-dark-blue .chat-datatable .table-total td {
     color: #FFFFFF;
 }
 
-body.theme-dark-blue .chat-datatable .invoice-detail-link {
+body.theme-dark-blue .chat-datatable .detail-link {
     color: #5FA8D3;
 }
 
-body.theme-dark-blue .chat-datatable .invoice-detail-link:hover {
+body.theme-dark-blue .chat-datatable .detail-link:hover {
     color: #7CBDE0;
 }
 
@@ -219,11 +219,11 @@ body.theme-dark-red .chat-datatable .table-total td {
     color: #FFFFFF;
 }
 
-body.theme-dark-red .chat-datatable .invoice-detail-link {
+body.theme-dark-red .chat-datatable .detail-link {
     color: #D35F8D;
 }
 
-body.theme-dark-red .chat-datatable .invoice-detail-link:hover {
+body.theme-dark-red .chat-datatable .detail-link:hover {
     color: #E077A3;
 }
 
@@ -291,7 +291,7 @@ body.theme-dark-red .chat-datatable .invoice-detail-link:hover {
    ==================================== */
 
 /* Focus visible pour navigation clavier */
-.chat-datatable .invoice-detail-link:focus-visible {
+.chat-datatable .detail-link:focus-visible {
     outline: 2px solid #0D6EFD;
     outline-offset: 2px;
     border-radius: 2px;
@@ -319,7 +319,7 @@ body.theme-dark-red .chat-datatable .invoice-detail-link:hover {
     }
 
     .chat-datatable tbody tr,
-    .chat-datatable .invoice-detail-link {
+    .chat-datatable .detail-link {
         transition: none;
     }
 }

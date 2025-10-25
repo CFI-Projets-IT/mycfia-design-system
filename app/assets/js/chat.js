@@ -76,9 +76,9 @@ function renderDataTable(tableData) {
                                 return `
                                     <td>
                                         <a href="#"
-                                           class="invoice-detail-link text-decoration-none fw-semibold"
+                                           class="detail-link text-decoration-none fw-semibold"
                                            data-action-prompt="${escapeHtml(prompt)}"
-                                           data-invoice-id="${escapeHtml(value)}"
+                                           data-entity-id="${escapeHtml(value)}"
                                            title="Cliquer pour voir les détails">
                                             ${escapeHtml(value)}
                                         </a>
@@ -234,7 +234,7 @@ function initEventListeners() {
         }
 
         // Liens d'actions intégrés dans le texte (nouvelle version)
-        const actionLink = e.target.closest('.invoice-detail-link');
+        const actionLink = e.target.closest('.detail-link');
         if (actionLink) {
             e.preventDefault();
             handleSuggestedActionClick(actionLink);
@@ -604,7 +604,7 @@ function injectActionLinks(formattedHtml, actions) {
         const prompt = actionsMap[invoiceId];
         if (prompt) {
             // Générer un lien cliquable
-            const link = `<a href="#" class="invoice-detail-link" data-action-prompt="${escapeHtml(prompt)}" data-invoice-id="${invoiceId}" title="Cliquer pour voir les détails">📄</a>`;
+            const link = `<a href="#" class="detail-link" data-action-prompt="${escapeHtml(prompt)}" data-entity-id="${invoiceId}" title="Cliquer pour voir les détails">📄</a>`;
             // Retourner le match original + le lien
             return match + ' ' + link;
         }
