@@ -31,80 +31,15 @@
 
             {# Navigation - Flex 1 pour occuper l'espace disponible #}
             <nav class="flex-grow-1 overflow-auto px-3">
-                {# Section Favoris (collapsible avec fond) #}
-                <div class="nav-section">
-                    <div class="nav-section-title-pill" data-bs-toggle="collapse" data-bs-target="#favorisSection" aria-expanded="true">
-                        <div class="d-flex align-items-center gap-2">
-                            <i class="bi bi-star"></i>
-                            <span>{{ 'nav.section.favorites'|trans({}, 'navigation') }}</span>
-                        </div>
-                        <i class="bi bi-chevron-down"></i>
-                    </div>
-                    <div class="collapse show" id="favorisSection">
-                        <ul class="list-unstyled">
-                            <li class="mb-2">
-                                <a href="#" class="d-flex align-items-center gap-3 px-3 py-2 rounded text-white text-decoration-none nav-link">
-                                    <span>{{ 'nav.favorites.invoices'|trans({}, 'navigation') }}</span>
-                                </a>
-                            </li>
-                            <li class="mb-2">
-                                <a href="#" class="d-flex align-items-center gap-3 px-3 py-2 rounded text-white text-decoration-none nav-link">
-                                    <span>{{ 'nav.favorites.orders'|trans({}, 'navigation') }}</span>
-                                </a>
-                            </li>
-                            <li class="mb-2">
-                                <a href="#" class="d-flex align-items-center gap-3 px-3 py-2 rounded text-white text-decoration-none nav-link">
-                                    <span>{{ 'nav.favorites.stocks'|trans({}, 'navigation') }}</span>
-                                </a>
-                            </li>
-                            <li class="mb-2">
-                                <a href="#" class="d-flex align-items-center gap-3 px-3 py-2 rounded text-white text-decoration-none nav-link">
-                                    <span>{{ 'nav.favorites.help'|trans({}, 'navigation') }}</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
+                {# Section Favoris - Composant Twig dynamique avec Turbo Frame #}
+                <turbo-frame id="sidebar-favorites" src="{{ path('chat_sidebar_frame', {section: 'favorites'}) }}">
+                    {{ component('ConversationSidebar', {section: 'favorites'}) }}
+                </turbo-frame>
 
-                {# Section Historique (collapsible avec fond) #}
-                <div class="nav-section">
-                    <div class="nav-section-title-pill" data-bs-toggle="collapse" data-bs-target="#historiqueSection" aria-expanded="false">
-                        <div class="d-flex align-items-center gap-2">
-                            <i class="bi bi-clock-history"></i>
-                            <span>{{ 'nav.section.history'|trans({}, 'navigation') }}</span>
-                        </div>
-                        <i class="bi bi-chevron-down"></i>
-                    </div>
-                    <div class="collapse" id="historiqueSection">
-                        <ul class="list-unstyled">
-                            <li class="mb-2">
-                                <a href="#" class="d-flex align-items-center px-3 py-2 rounded text-white-50 text-decoration-none small nav-link">
-                                    <span>{{ 'nav.history.last_conversation'|trans({}, 'navigation') }}</span>
-                                </a>
-                            </li>
-                            <li class="mb-2">
-                                <a href="#" class="d-flex align-items-center px-3 py-2 rounded text-white-50 text-decoration-none small nav-link">
-                                    <span>{{ 'nav.history.invoices_jan'|trans({}, 'navigation') }}</span>
-                                </a>
-                            </li>
-                            <li class="mb-2">
-                                <a href="#" class="d-flex align-items-center px-3 py-2 rounded text-white-50 text-decoration-none small nav-link">
-                                    <span>{{ 'nav.history.stock_analysis'|trans({}, 'navigation') }}</span>
-                                </a>
-                            </li>
-                            <li class="mb-2">
-                                <a href="#" class="d-flex align-items-center px-3 py-2 rounded text-white-50 text-decoration-none small nav-link">
-                                    <span>{{ 'nav.history.orders_report'|trans({}, 'navigation') }}</span>
-                                </a>
-                            </li>
-                            <li class="mb-2">
-                                <a href="#" class="d-flex align-items-center px-3 py-2 rounded text-white-50 text-decoration-none small nav-link">
-                                    <span>{{ 'nav.history.data_export'|trans({}, 'navigation') }}</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
+                {# Section Historique - Composant Twig dynamique avec Turbo Frame #}
+                <turbo-frame id="sidebar-history" src="{{ path('chat_sidebar_frame', {section: 'history'}) }}">
+                    {{ component('ConversationSidebar', {section: 'history'}) }}
+                </turbo-frame>
             </nav>
 
             {# Footer avec Paramètres, Mon compte, Quitter #}
@@ -281,6 +216,7 @@
     {% block javascripts %}
         {{ importmap('app') }}
         <script type="module" src="{{ asset('sidebar.js') }}"></script>
+        <script type="module" src="{{ asset('js/conversation-sidebar.js') }}"></script>
     {% endblock %}
 </body>
 </html>

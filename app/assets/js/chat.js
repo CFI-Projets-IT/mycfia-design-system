@@ -257,9 +257,88 @@ function initializeChatInterface() {
     // Auto-resize du textarea
     setupTextareaAutoResize();
 
+    // Si des messages ont été chargés depuis la BDD, scroller vers le bas
+    if (elements.chatMessages && elements.chatMessages.children.length > 0) {
+        console.log('[Chat] Messages pré-chargés détectés, scroll vers le bas');
+        scrollToBottom();
+    }
+
+    // Injecter le bouton favori si conversation chargée
+    injectFavoriteButton();
+
     // Marquer comme initialisé
     elements.chatForm.dataset.chatInitialized = 'true';
     console.log('[Chat] Initialisation terminée');
+}
+
+/**
+ * Mettre à jour chatData avec les informations de conversation BDD.
+ */
+function updateChatDataWithConversation(conversationId, isFavorite) {
+    const chatData = document.getElementById('chatData');
+    if (!chatData) return;
+
+    const context = chatData.dataset.context;
+
+    chatData.dataset.loadedConversation = conversationId;
+    chatData.dataset.isFavorite = isFavorite ? '1' : '0';
+    chatData.dataset.favoriteUrl = `/chat/conversation/${conversationId}/favorite`;
+    chatData.dataset.deleteUrl = `/chat/conversation/${conversationId}`;
+
+    console.log('[Chat] chatData updated with conversation', { conversationId, isFavorite });
+}
+
+/**
+ * Injecter le bouton favori dans la barre de navigation si conversation chargée.
+ */
+function injectFavoriteButton() {
+    const chatData = document.getElementById('chatData');
+    const container = document.getElementById('favoriteButtonContainer');
+
+    if (!chatData || !container) return;
+
+    const conversationId = chatData.dataset.loadedConversation;
+    const isFavorite = chatData.dataset.isFavorite === '1';
+    const favoriteUrl = chatData.dataset.favoriteUrl;
+
+    if (!conversationId || !favoriteUrl) return;
+
+    // Nettoyer le conteneur avant d'ajouter le bouton
+    container.innerHTML = '';
+
+    // Créer le bouton favori
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'btn btn-link p-2';
+    button.style.color = 'var(--theme-text-primary, #212529)';
+    button.dataset.action = 'toggle-favorite';
+    button.dataset.conversationId = conversationId;
+    button.dataset.favoriteUrl = favoriteUrl;
+    button.dataset.turbo = 'false'; // Désactiver Turbo pour ce bouton
+    button.title = isFavorite ? 'Retirer des favoris' : 'Ajouter aux favoris';
+
+    const icon = document.createElement('i');
+    icon.className = isFavorite ? 'bi bi-star-fill text-warning' : 'bi bi-star';
+    icon.style.fontSize = '1.5rem';
+
+    button.appendChild(icon);
+    container.appendChild(button);
+
+    console.log('[Chat] Bouton favori injecté', { conversationId, isFavorite });
+}
+
+/**
+ * Recharger le Turbo Frame de l'historique dans la sidebar.
+ */
+function reloadSidebarHistory() {
+    const historyFrame = document.getElementById('sidebar-history');
+
+    if (historyFrame) {
+        historyFrame.reload();
+        console.log('[Chat] Frame historique rechargé');
+    } else {
+        console.warn('[Chat] Frame historique introuvable');
+    }
 }
 
 // Écouter les événements de chargement (DOMContentLoaded + Turbo)
@@ -480,6 +559,15 @@ async function handleStreamingSubmit(question) {
                     });
 
                     console.log('[Chat] Streaming complete');
+
+                    // Injecter le bouton favori si conversation BDD créée
+                    if (metadata.db_conversation_id) {
+                        updateChatDataWithConversation(metadata.db_conversation_id, metadata.is_favorite);
+                        injectFavoriteButton();
+
+                        // Recharger le frame historique de la sidebar
+                        reloadSidebarHistory();
+                    }
 
                     // Fermer la connexion Mercure
                     eventSource.close();

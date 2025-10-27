@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\MessageHandler;
 
+use App\Entity\ChatConversation;
+use App\Entity\Division;
 use App\Entity\User;
 use App\Exception\ChatException;
 use App\Message\ChatStreamMessage;
@@ -11,6 +13,7 @@ use App\Service\AiLoggerService;
 use App\Service\AiPromptService;
 use App\Service\AsyncExecutionContext;
 use App\Service\Cfi\CfiTokenContext;
+use App\Service\ChatPersistenceService;
 use App\Service\ChatStreamPublisher;
 use App\Service\Tool;
 use App\Service\ToolCallCollector;
@@ -64,6 +67,7 @@ final readonly class ChatStreamMessageHandler
         private ToolCallCollector $toolCallCollector,
         private ToolResultCollector $toolResultCollector,
         private ChatStreamPublisher $streamPublisher,
+        private ChatPersistenceService $persistenceService,
         private EntityManagerInterface $entityManager,
         #[Autowire(service: 'monolog.logger.chat')]
         private LoggerInterface $logger,
@@ -103,6 +107,16 @@ final readonly class ChatStreamMessageHandler
 
             // 3. Publier événement "start"
             $this->streamPublisher->publishStart($message->conversationId, $message->messageId, $message->context);
+
+            // 3.1. PERSISTANCE : Créer/récupérer conversation et enregistrer message user
+            $conversation = $this->getOrCreateConversation($user, $message);
+            $this->persistenceService->saveMessage(
+                conversation: $conversation,
+                role: 'user',
+                content: $message->question,
+                type: 'text',
+                data: null
+            );
 
             // 4. Sélectionner l'agent spécialisé selon le contexte
             $agent = $this->getAgentByContext($message->context);
@@ -200,6 +214,18 @@ final readonly class ChatStreamMessageHandler
                 'collector_count' => $this->toolResultCollector->count(),
             ]);
 
+            // 10.1. PERSISTANCE : Enregistrer message assistant avec metadata
+            $messageType = isset($toolMetadata['table_data']) ? 'table' : 'text';
+            $messageData = ! empty($toolMetadata) ? $toolMetadata : null;
+
+            $this->persistenceService->saveMessage(
+                conversation: $conversation,
+                role: 'assistant',
+                content: $fullResponse,
+                type: $messageType,
+                data: $messageData
+            );
+
             // 11. Publier événement "complete" avec métadonnées (incluant model, token_usage, suggested_actions, table_data)
             $this->streamPublisher->publishComplete($message->conversationId, $message->messageId, array_merge([
                 'user_id' => $user->getId(),
@@ -210,6 +236,9 @@ final readonly class ChatStreamMessageHandler
                 'answer_length' => mb_strlen($fullResponse, 'UTF-8'),
                 'model' => $resultMetadata->get('model'),
                 'token_usage' => $resultMetadata->get('token_usage'),
+                // Données de conversation pour le frontend (bouton favori)
+                'db_conversation_id' => $conversation->getId(),
+                'is_favorite' => $conversation->isFavorite(),
             ], $toolMetadata));
 
             // 12. Logger l'appel
@@ -326,6 +355,47 @@ final readonly class ChatStreamMessageHandler
             ],
             default => [], // Aucun tool pour contexte invalide
         };
+    }
+
+    /**
+     * Récupérer ou créer une conversation pour ce streaming.
+     *
+     * Crée une nouvelle conversation avec titre généré depuis la question utilisateur.
+     * Le titre est tronqué à 50 caractères pour respecter les contraintes UX.
+     *
+     * @param User              $user    Utilisateur propriétaire
+     * @param ChatStreamMessage $message Message de streaming contenant le contexte
+     *
+     * @return ChatConversation Conversation créée ou existante
+     *
+     * @throws \RuntimeException Si la division n'existe pas
+     */
+    private function getOrCreateConversation(User $user, ChatStreamMessage $message): ChatConversation
+    {
+        // Récupérer la Division entity depuis idDivision (CFI externe ID)
+        // Note : tenantId dans le message = idDivision CFI, PAS l'id auto-incrémenté local
+        $division = $this->entityManager->getRepository(Division::class)->findOneBy([
+            'idDivision' => $message->tenantId,
+        ]);
+
+        if (null === $division) {
+            throw new \RuntimeException(sprintf('Division with idDivision %d not found', $message->tenantId));
+        }
+
+        // Générer le titre depuis la question (tronqué à 50 caractères)
+        $title = mb_strlen($message->question, 'UTF-8') > 50
+            ? mb_substr($message->question, 0, 47, 'UTF-8').'...'
+            : $message->question;
+
+        // Créer une nouvelle conversation
+        // Note : Pour l'instant, une nouvelle conversation est créée à chaque message.
+        // Phase 2 : Améliorer en stockant l'ID BDD dans la session pour récupérer la conversation existante.
+        return $this->persistenceService->createConversation(
+            user: $user,
+            tenant: $division,
+            context: $message->context,
+            title: $title
+        );
     }
 
     /**

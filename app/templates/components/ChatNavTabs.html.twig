@@ -31,7 +31,7 @@
     }
 ] %}
 
-<nav class="chat-nav-tabs">
+<nav class="chat-nav-tabs" style="display: flex; align-items: center; justify-content: space-between;">
     <div class="chat-nav-tabs-container">
         {% for tab in tabs %}
             <a href="{{ path('chat_index', {context: tab.key}) }}"
@@ -41,5 +41,21 @@
                 <span>{{ tab.label }}</span>
             </a>
         {% endfor %}
+    </div>
+
+    {# Actions : Nouvelle conversation + Favori #}
+    <div class="chat-nav-actions d-flex align-items-center gap-2" style="padding: 0 1rem;">
+        {# Bouton Nouvelle conversation #}
+        <a href="{{ path('chat_new_conversation', {context: context}) }}"
+           class="btn btn-sm btn-outline-primary"
+           style="color: var(--theme-text-primary, #212529); border-color: var(--theme-text-primary, #212529);"
+           data-turbo="false"
+           title="Démarrer une nouvelle conversation">
+            <i class="bi bi-plus-circle"></i>
+            <span class="d-none d-md-inline ms-1">Nouvelle</span>
+        </a>
+
+        {# Bouton favori - visible uniquement si conversation chargée #}
+        <div id="favoriteButtonContainer"></div>
     </div>
 </nav>

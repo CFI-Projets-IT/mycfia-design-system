@@ -1,0 +1,13 @@
+{#
+ # Template Turbo Frame pour recharger dynamiquement une section de la sidebar.
+ #
+ # Ce template est utilisé pour recharger uniquement la sidebar (favoris ou historique)
+ # sans rafraîchir toute la page. Compatible Symfony UX Turbo.
+ #
+ # Variables :
+ # - section (string) : 'favorites' ou 'history'
+ #}
+
+<turbo-frame id="sidebar-{{ section }}">
+    {{ component('ConversationSidebar', {section: section}) }}
+</turbo-frame>

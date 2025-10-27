@@ -8,6 +8,8 @@ use App\Message\ChatStreamMessage;
 use App\Security\UserAuthenticationService;
 use App\Service\Cfi\CfiSessionService;
 use App\Service\Cfi\CfiTenantService;
+use App\Service\ChatHistoryService;
+use App\Service\ChatPersistenceService;
 use App\Service\ChatService;
 use App\Service\MercureJwtGenerator;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -56,19 +58,64 @@ final class ChatController extends AbstractController
         private readonly string $mercurePublicUrl,
         private readonly MessageBusInterface $messageBus,
         private readonly MercureJwtGenerator $mercureJwtGenerator,
+        private readonly ChatPersistenceService $persistenceService,
+        private readonly ChatHistoryService $historyService,
     ) {
+    }
+
+    /**
+     * Démarrer une nouvelle conversation vide dans un contexte.
+     *
+     * Force la création d'une nouvelle conversation sans charger l'historique.
+     * Utilisé via le bouton "Nouvelle conversation" dans la navigation.
+     *
+     * @param Request $request Requête HTTP pour accès session
+     * @param string  $context Contexte du chat (factures|commandes|stocks|general)
+     *
+     * @return Response Template Twig chat/index.html.twig avec conversation vide
+     */
+    #[Route('/{context}/new', name: 'new_conversation', methods: ['GET'])]
+    public function newConversation(Request $request, string $context): Response
+    {
+        // Validation du contexte
+        if (! in_array($context, self::ALLOWED_CONTEXTS, true)) {
+            $this->addFlash('error', sprintf(
+                'Contexte "%s" invalide. Contextes autorisés : %s',
+                $context,
+                implode(', ', self::ALLOWED_CONTEXTS)
+            ));
+
+            return $this->redirectToRoute('chat_index', ['context' => 'general']);
+        }
+
+        // Créer un nouvel UUID pour la conversation
+        $sessionKey = sprintf('chat_conversation_id_%s', $context);
+        $conversationId = Uuid::v4()->toString();
+        $request->getSession()->set($sessionKey, $conversationId);
+
+        // Générer un JWT Mercure pour autoriser l'abonnement au topic de cette conversation
+        $mercureJwt = $this->mercureJwtGenerator->generateSubscriberToken([
+            sprintf('chat/%s', $conversationId),
+        ]);
+
+        return $this->render('chat/index.html.twig', [
+            'context' => $context,
+            'conversationId' => $conversationId,
+            'mercureUrl' => $this->mercurePublicUrl,
+            'mercureJwt' => $mercureJwt,
+        ]);
     }
 
     /**
      * Page principale du chat IA contextuel.
      *
-     * Initialise une conversation (UUID v4) si non existante dans la session.
-     * Affiche l'interface chat avec historique éventuel pour le contexte spécifié.
+     * Charge automatiquement la dernière conversation du contexte si elle existe,
+     * sinon affiche une interface chat vide.
      *
      * @param Request $request Requête HTTP pour accès session
      * @param string  $context Contexte du chat (factures|commandes|stocks|general)
      *
-     * @return Response Template Twig chat/index.html.twig ou redirection si contexte invalide
+     * @return Response Template Twig chat/index.html.twig ou redirection
      */
     #[Route('/{context}', name: 'index', methods: ['GET'])]
     public function index(Request $request, string $context): Response
@@ -84,6 +131,34 @@ final class ChatController extends AbstractController
             return $this->redirectToRoute('chat_index', ['context' => 'general']);
         }
 
+        // Authentification
+        $user = $this->authService->getAuthenticatedUser();
+        if (null === $user) {
+            $this->addFlash('error', 'Vous devez être connecté pour accéder au chat');
+
+            return $this->redirectToRoute('app_login');
+        }
+
+        // Récupération du tenant
+        $tenantId = $this->tenantService->getCurrentTenantOrNull();
+        if (null === $tenantId) {
+            $this->addFlash('error', 'Aucune division sélectionnée');
+
+            return $this->redirectToRoute('division_select');
+        }
+
+        // Chercher la dernière conversation de ce contexte
+        $latestConversation = $this->historyService->getLatestConversationByContext($user, $tenantId, $context);
+
+        // Si une conversation existe, rediriger vers elle
+        if (null !== $latestConversation) {
+            return $this->redirectToRoute('chat_load_conversation', [
+                'context' => $context,
+                'conversationId' => $latestConversation->getId(),
+            ]);
+        }
+
+        // Aucune conversation existante → afficher chat vide
         // Récupérer ou créer ID conversation depuis session (par contexte)
         $sessionKey = sprintf('chat_conversation_id_%s', $context);
         $conversationId = $request->getSession()->get($sessionKey);
@@ -241,5 +316,196 @@ final class ChatController extends AbstractController
                 'message' => $e->getMessage(),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
+    }
+
+    /**
+     * Charger une conversation existante depuis la BDD.
+     *
+     * Récupère une conversation avec tous ses messages et l'affiche dans le chat.
+     * Utilisé lorsque l'utilisateur clique sur une conversation dans la sidebar.
+     *
+     * @param Request $request        Requête HTTP pour accès session
+     * @param string  $context        Contexte du chat (factures|commandes|stocks|general)
+     * @param int     $conversationId ID de la conversation en BDD
+     *
+     * @return Response Template Twig avec conversation chargée ou erreur 404
+     */
+    #[Route('/{context}/conversation/{conversationId}', name: 'load_conversation', methods: ['GET'])]
+    public function loadConversation(Request $request, string $context, int $conversationId): Response
+    {
+        // Validation du contexte
+        if (! in_array($context, self::ALLOWED_CONTEXTS, true)) {
+            $this->addFlash('error', sprintf('Contexte "%s" invalide. Contextes autorisés : %s', $context, implode(', ', self::ALLOWED_CONTEXTS)));
+
+            return $this->redirectToRoute('chat_index', ['context' => 'general']);
+        }
+
+        try {
+            // Récupérer la conversation avec messages
+            $conversation = $this->historyService->getConversationWithMessages($conversationId);
+
+            if (null === $conversation) {
+                $this->addFlash('error', sprintf('Conversation #%d introuvable', $conversationId));
+
+                return $this->redirectToRoute('chat_index', ['context' => $context]);
+            }
+
+            // Vérifier que la conversation appartient bien à l'utilisateur authentifié
+            $user = $this->authService->getAuthenticatedUser();
+            if (null === $user || $conversation->getUser()->getId() !== $user->getId()) {
+                $this->addFlash('error', 'Vous n\'avez pas accès à cette conversation');
+
+                return $this->redirectToRoute('chat_index', ['context' => $context]);
+            }
+
+            // Vérifier que le contexte correspond bien au contexte de la conversation
+            if ($conversation->getContext() !== $context) {
+                // Rediriger vers le bon contexte
+                return $this->redirectToRoute('chat_load_conversation', [
+                    'context' => $conversation->getContext(),
+                    'conversationId' => $conversationId,
+                ]);
+            }
+
+            // Générer un nouvel UUID pour cette session de conversation
+            $sessionConversationId = $request->getSession()->get(sprintf('chat_conversation_id_%s', $context));
+            if (null === $sessionConversationId) {
+                $sessionConversationId = Uuid::v4()->toString();
+                $request->getSession()->set(sprintf('chat_conversation_id_%s', $context), $sessionConversationId);
+            }
+
+            // Générer JWT Mercure
+            $mercureJwt = $this->mercureJwtGenerator->generateSubscriberToken([
+                sprintf('chat/%s', $sessionConversationId),
+            ]);
+
+            return $this->render('chat/index.html.twig', [
+                'context' => $context,
+                'conversationId' => $sessionConversationId,
+                'mercureUrl' => $this->mercurePublicUrl,
+                'mercureJwt' => $mercureJwt,
+                'loadedConversation' => $conversation, // Conversation chargée depuis BDD
+            ]);
+        } catch (\Exception $e) {
+            $this->addFlash('error', sprintf('Erreur lors du chargement de la conversation : %s', $e->getMessage()));
+
+            return $this->redirectToRoute('chat_index', ['context' => $context]);
+        }
+    }
+
+    /**
+     * Toggle le statut favori d'une conversation (AJAX).
+     *
+     * Endpoint AJAX pour marquer/démarquer une conversation comme favorite.
+     * Utilisé depuis la sidebar (icône étoile) et la page historique.
+     *
+     * @param int $id ID de la conversation
+     *
+     * @return JsonResponse Nouveau statut favori
+     */
+    #[Route('/conversation/{id}/favorite', name: 'toggle_favorite', methods: ['POST'])]
+    public function toggleFavorite(int $id): JsonResponse
+    {
+        try {
+            // Authentification
+            $user = $this->authService->getAuthenticatedUser();
+            if (null === $user) {
+                return $this->json(['error' => 'Utilisateur non authentifié'], Response::HTTP_UNAUTHORIZED);
+            }
+
+            // Récupérer la conversation
+            $conversation = $this->historyService->getConversationWithMessages($id);
+            if (null === $conversation) {
+                return $this->json(['error' => 'Conversation introuvable'], Response::HTTP_NOT_FOUND);
+            }
+
+            // Vérifier que la conversation appartient à l'utilisateur
+            if ($conversation->getUser()->getId() !== $user->getId()) {
+                return $this->json(['error' => 'Accès non autorisé'], Response::HTTP_FORBIDDEN);
+            }
+
+            // Toggle favori
+            $newStatus = $this->persistenceService->toggleFavorite($conversation);
+
+            return $this->json([
+                'success' => true,
+                'isFavorite' => $newStatus,
+                'message' => $newStatus ? 'Conversation ajoutée aux favoris' : 'Conversation retirée des favoris',
+            ]);
+        } catch (\Exception $e) {
+            return $this->json([
+                'error' => 'Erreur lors de la modification du statut favori',
+                'message' => $e->getMessage(),
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    /**
+     * Supprimer une conversation (AJAX).
+     *
+     * Endpoint AJAX pour supprimer définitivement une conversation et tous ses messages.
+     * Utilisé depuis la sidebar et la page historique.
+     *
+     * @param int $id ID de la conversation
+     *
+     * @return JsonResponse Confirmation de suppression
+     */
+    #[Route('/conversation/{id}', name: 'delete_conversation', methods: ['DELETE'])]
+    public function deleteConversation(int $id): JsonResponse
+    {
+        try {
+            // Authentification
+            $user = $this->authService->getAuthenticatedUser();
+            if (null === $user) {
+                return $this->json(['error' => 'Utilisateur non authentifié'], Response::HTTP_UNAUTHORIZED);
+            }
+
+            // Récupérer la conversation
+            $conversation = $this->historyService->getConversationWithMessages($id);
+            if (null === $conversation) {
+                return $this->json(['error' => 'Conversation introuvable'], Response::HTTP_NOT_FOUND);
+            }
+
+            // Vérifier que la conversation appartient à l'utilisateur
+            if ($conversation->getUser()->getId() !== $user->getId()) {
+                return $this->json(['error' => 'Accès non autorisé'], Response::HTTP_FORBIDDEN);
+            }
+
+            // Supprimer la conversation
+            $this->persistenceService->deleteConversation($conversation);
+
+            return $this->json([
+                'success' => true,
+                'message' => 'Conversation supprimée avec succès',
+            ]);
+        } catch (\Exception $e) {
+            return $this->json([
+                'error' => 'Erreur lors de la suppression de la conversation',
+                'message' => $e->getMessage(),
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    /**
+     * Endpoint Turbo Frame pour recharger dynamiquement une section de la sidebar.
+     *
+     * Retourne uniquement le HTML du composant ConversationSidebar entouré d'un turbo-frame.
+     * Utilisé après toggle favori ou suppression pour rafraîchir la sidebar sans reload complet.
+     *
+     * @param string $section Section à recharger ('favorites' ou 'history')
+     *
+     * @return Response Fragment HTML Turbo Frame
+     */
+    #[Route('/sidebar/{section}', name: 'sidebar_frame', methods: ['GET'])]
+    public function sidebarFrame(string $section): Response
+    {
+        // Valider la section
+        if (! \in_array($section, ['favorites', 'history'], true)) {
+            throw $this->createNotFoundException('Section invalide');
+        }
+
+        return $this->render('chat/sidebar_frame.html.twig', [
+            'section' => $section,
+        ]);
     }
 }

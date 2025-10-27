@@ -1,0 +1,83 @@
+{#
+ # Composant sidebar pour l'affichage des conversations chat (Favoris ou Historique).
+ #
+ # Props:
+ # - section (string): 'favorites' ou 'history'
+ # - limit (int): Nombre de conversations à afficher (défaut: 5)
+ #}
+
+<div class="nav-section">
+    {# En-tête de section (collapsible) #}
+    <div class="nav-section-title-pill"
+         data-bs-toggle="collapse"
+         data-bs-target="#{{ section }}Section"
+         aria-expanded="true">
+        <div class="d-flex align-items-center gap-2">
+            <i class="bi {{ this.sectionIcon }}"></i>
+            <span>{{ this.sectionTitle }}</span>
+        </div>
+        <i class="bi bi-chevron-down"></i>
+    </div>
+
+    {# Contenu de la section (collapsible) - Toujours ouvert par défaut #}
+    <div class="collapse show" id="{{ section }}Section">
+        {% if this.isEmpty %}
+            {# Message si aucune conversation #}
+            <div class="px-3 py-2 text-white-50 small">
+                {% if section == 'favorites' %}
+                    Aucune conversation favorite
+                {% else %}
+                    Aucune conversation récente
+                {% endif %}
+            </div>
+        {% else %}
+            {# Liste des conversations #}
+            <ul class="list-unstyled">
+                {% for conversation in this.conversations %}
+                    <li class="mb-2 position-relative">
+                        <div class="d-flex align-items-center justify-content-between">
+                            {# Lien principal vers la conversation #}
+                            <a href="{{ path('chat_load_conversation', {
+                                context: conversation.context,
+                                conversationId: conversation.id
+                            }) }}"
+                               class="d-flex align-items-center flex-grow-1 px-3 py-2 rounded text-decoration-none nav-link
+                                      {{ section == 'favorites' ? 'text-white' : 'text-white-50 small' }}"
+                               title="{{ conversation.title }}"
+                               data-turbo="false">
+
+                                {# Titre de la conversation (tronqué) #}
+                                <span class="text-truncate" style="max-width: 140px;">
+                                    {{ conversation.title }}
+                                </span>
+
+                                {# Badge contexte pour historique uniquement #}
+                                {% if section == 'history' %}
+                                    <span class="badge badge-sm ms-auto" style="font-size: 0.65rem;">
+                                        {{ conversation.context|capitalize }}
+                                    </span>
+                                {% endif %}
+                            </a>
+
+                            {# Bouton supprimer - DÉSACTIVÉ (code conservé pour usage futur) #}
+                            {#
+                            <div class="d-flex align-items-center gap-1 px-2">
+                                <button type="button"
+                                        class="btn btn-link p-0 text-danger"
+                                        style="font-size: 0.9rem;"
+                                        data-action="delete-conversation"
+                                        data-conversation-id="{{ conversation.id }}"
+                                        data-delete-url="{{ path('chat_delete_conversation', {id: conversation.id}) }}"
+                                        data-conversation-title="{{ conversation.title }}"
+                                        title="Supprimer cette conversation">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </div>
+                            #}
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+</div>
