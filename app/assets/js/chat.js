@@ -49,13 +49,17 @@ function hasTableData(metadata) {
  * Générer le HTML du tableau DataTable.
  */
 function renderDataTable(tableData) {
-    const { headers, rows, totalRow, linkColumns } = tableData;
+    const { headers, rows, totalRow, linkColumns, mode } = tableData;
+
+    // Debug : afficher le mode reçu
+    console.log('[DataTable] Mode reçu:', mode, 'Type:', typeof mode);
 
     // 1. Générer les en-têtes
     const theadHtml = `
         <thead>
             <tr>
                 ${headers.map(header => `<th scope="col">${escapeHtml(header)}</th>`).join('')}
+                <th scope="col" class="text-center export-column" style="width: 100px;">Export</th>
             </tr>
         </thead>
     `;
@@ -76,9 +80,9 @@ function renderDataTable(tableData) {
                                 return `
                                     <td>
                                         <a href="#"
-                                           class="invoice-detail-link text-decoration-none fw-semibold"
+                                           class="detail-link text-decoration-none fw-semibold"
                                            data-action-prompt="${escapeHtml(prompt)}"
-                                           data-invoice-id="${escapeHtml(value)}"
+                                           data-entity-id="${escapeHtml(value)}"
                                            title="Cliquer pour voir les détails">
                                             ${escapeHtml(value)}
                                         </a>
@@ -88,6 +92,42 @@ function renderDataTable(tableData) {
 
                             return `<td>${escapeHtml(value || '')}</td>`;
                         }).join('')}
+                        ${mode !== 'DÉTAIL' ? `
+                        <td class="export-column text-center">
+                            <div class="d-flex gap-1 justify-content-center">
+                                <span
+                                    class="d-inline-block"
+                                    data-bs-toggle="tooltip"
+                                    data-bs-placement="top"
+                                    title="En développement"
+                                    style="cursor: not-allowed;">
+                                    <button
+                                        class="btn btn-sm btn-outline-secondary"
+                                        disabled
+                                        data-facture-id="${escapeHtml(row[Object.keys(row)[0]])}"
+                                        data-export-type="pdf"
+                                        style="pointer-events: none; padding: 0.15rem 0.4rem;">
+                                        <i class="bi bi-file-earmark-pdf" style="font-size: 0.875rem;"></i>
+                                    </button>
+                                </span>
+                                <span
+                                    class="d-inline-block"
+                                    data-bs-toggle="tooltip"
+                                    data-bs-placement="top"
+                                    title="En développement"
+                                    style="cursor: not-allowed;">
+                                    <button
+                                        class="btn btn-sm btn-outline-success"
+                                        disabled
+                                        data-facture-id="${escapeHtml(row[Object.keys(row)[0]])}"
+                                        data-export-type="excel"
+                                        style="pointer-events: none; padding: 0.15rem 0.4rem;">
+                                        <i class="bi bi-file-earmark-excel" style="font-size: 0.875rem;"></i>
+                                    </button>
+                                </span>
+                            </div>
+                        </td>
+                        ` : '<td class="export-column"></td>'}
                     </tr>
                 `;
             }).join('')}
@@ -103,6 +143,40 @@ function renderDataTable(tableData) {
                     const value = totalRow[key];
                     return `<td>${escapeHtml(value || '')}</td>`;
                 }).join('')}
+                <td class="export-column text-center">
+                    <div class="d-flex gap-1 justify-content-center">
+                        <span
+                            class="d-inline-block"
+                            data-bs-toggle="tooltip"
+                            data-bs-placement="top"
+                            title="En développement"
+                            style="cursor: not-allowed;">
+                            <button
+                                class="btn btn-sm btn-outline-secondary"
+                                disabled
+                                data-export-type="pdf"
+                                data-export-scope="all"
+                                style="pointer-events: none; padding: 0.15rem 0.4rem;">
+                                <i class="bi bi-file-earmark-pdf" style="font-size: 0.875rem;"></i>
+                            </button>
+                        </span>
+                        <span
+                            class="d-inline-block"
+                            data-bs-toggle="tooltip"
+                            data-bs-placement="top"
+                            title="En développement"
+                            style="cursor: not-allowed;">
+                            <button
+                                class="btn btn-sm btn-outline-success"
+                                disabled
+                                data-export-type="excel"
+                                data-export-scope="all"
+                                style="pointer-events: none; padding: 0.15rem 0.4rem;">
+                                <i class="bi bi-file-earmark-excel" style="font-size: 0.875rem;"></i>
+                            </button>
+                        </span>
+                    </div>
+                </td>
             </tr>
         </tfoot>
     ` : '';
@@ -234,7 +308,7 @@ function initEventListeners() {
         }
 
         // Liens d'actions intégrés dans le texte (nouvelle version)
-        const actionLink = e.target.closest('.invoice-detail-link');
+        const actionLink = e.target.closest('.detail-link');
         if (actionLink) {
             e.preventDefault();
             handleSuggestedActionClick(actionLink);
@@ -531,6 +605,14 @@ function addAssistantMessage(text, metadata = {}, toolsUsed = []) {
     `;
 
     elements.chatMessages.insertAdjacentHTML('beforeend', messageHtml);
+
+    // Initialiser les tooltips Bootstrap pour les éléments dynamiques du tableau
+    if (tableHtml && window.bootstrap) {
+        const lastMessage = elements.chatMessages.lastElementChild;
+        const tooltipElements = lastMessage.querySelectorAll('[data-bs-toggle="tooltip"]');
+        tooltipElements.forEach(el => new window.bootstrap.Tooltip(el));
+    }
+
     scrollToBottom();
 }
 
@@ -604,7 +686,7 @@ function injectActionLinks(formattedHtml, actions) {
         const prompt = actionsMap[invoiceId];
         if (prompt) {
             // Générer un lien cliquable
-            const link = `<a href="#" class="invoice-detail-link" data-action-prompt="${escapeHtml(prompt)}" data-invoice-id="${invoiceId}" title="Cliquer pour voir les détails">📄</a>`;
+            const link = `<a href="#" class="detail-link" data-action-prompt="${escapeHtml(prompt)}" data-entity-id="${invoiceId}" title="Cliquer pour voir les détails">📄</a>`;
             // Retourner le match original + le lien
             return match + ' ' + link;
         }
@@ -632,10 +714,18 @@ function finalizeStreamingMessage(messageElement, text, metadata = {}, toolsUsed
         let tableHtml = '';
         if (hasTableData(metadata)) {
             console.log('[Chat] Rendu du tableau de données');
+            console.log('[Chat] table_data COMPLET:', metadata.table_data);
+            console.log('[Chat] table_data CLÉS:', Object.keys(metadata.table_data));
             tableHtml = renderDataTable(metadata.table_data);
         }
 
         contentDiv.innerHTML = formattedText + tableHtml;
+
+        // Initialiser les tooltips Bootstrap pour les éléments dynamiques du tableau
+        if (tableHtml && window.bootstrap) {
+            const tooltipElements = contentDiv.querySelectorAll('[data-bs-toggle="tooltip"]');
+            tooltipElements.forEach(el => new window.bootstrap.Tooltip(el));
+        }
     }
 
     messageElement.dataset.messageType = 'assistant';
