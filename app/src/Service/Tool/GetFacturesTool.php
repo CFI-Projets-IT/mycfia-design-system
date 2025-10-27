@@ -456,6 +456,7 @@ final readonly class GetFacturesTool
             'rows' => $rows,
             'totalRow' => $totalRow,
             'linkColumns' => $linkColumns,
+            'mode' => 'LISTE', // Indicateur de mode pour le frontend
         ];
     }
 
@@ -512,6 +513,7 @@ final readonly class GetFacturesTool
             'rows' => $rows,
             'totalRow' => $totalRow,
             'linkColumns' => $linkColumns,
+            'mode' => 'DÉTAIL', // Indicateur de mode pour le frontend
         ];
     }
 }

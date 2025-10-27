@@ -108,9 +108,45 @@
 }
 
 /* ====================================
-   6. Colonne PDF (Placeholder)
+   6. Colonne Export (PDF & Excel)
    ==================================== */
 
+.chat-datatable .export-column {
+    width: 100px;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.chat-datatable .export-column .btn {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+}
+
+.chat-datatable .export-column .btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+.chat-datatable .export-column .btn i {
+    font-size: 1rem;
+}
+
+/* Bouton PDF */
+.chat-datatable .export-column .btn-outline-secondary:not(:disabled):hover {
+    background-color: #6c757d;
+    color: #fff;
+}
+
+/* Bouton Excel */
+.chat-datatable .export-column .btn-outline-success:not(:disabled):hover {
+    background-color: #198754;
+    color: #fff;
+}
+
+/* Ancien style PDF - conservé pour compatibilité */
 .chat-datatable .pdf-column {
     width: 50px;
     text-align: center;
