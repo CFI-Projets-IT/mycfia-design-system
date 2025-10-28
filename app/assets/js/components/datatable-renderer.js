@@ -65,9 +65,9 @@ export function renderDataTable(tableData) {
                                 return `
                                     <td>
                                         <a href="#"
-                                           class="invoice-detail-link text-decoration-none fw-semibold"
+                                           class="detail-link text-decoration-none fw-semibold"
                                            data-action-prompt="${escapeHtml(prompt)}"
-                                           data-invoice-id="${escapeHtml(value)}"
+                                           data-entity-id="${escapeHtml(value)}"
                                            title="Cliquer pour voir les détails">
                                             ${escapeHtml(value)}
                                         </a>

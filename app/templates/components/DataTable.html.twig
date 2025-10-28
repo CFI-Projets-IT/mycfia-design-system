@@ -35,9 +35,9 @@
                         {# Générer le prompt en remplaçant {key} par la valeur #}
                         {% set prompt = linkColumns[key]|replace({('{' ~ key ~ '}'): value}) %}
                         <a href="#"
-                           class="invoice-detail-link text-decoration-none fw-semibold"
+                           class="detail-link text-decoration-none fw-semibold"
                            data-action-prompt="{{ prompt }}"
-                           data-invoice-id="{{ value }}"
+                           data-entity-id="{{ value }}"
                            title="Cliquer pour voir les détails">
                             {{ value }}
                         </a>

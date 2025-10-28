@@ -41,9 +41,55 @@
    - app.user.fullName   → Nom complet de l'utilisateur
    ================================================================================== #}
 
-{# Zone des messages - Vide au démarrage, messages ajoutés dynamiquement par chat.js #}
+{# Zone des messages - Pré-remplie si conversation chargée depuis BDD #}
 <div id="chatMessages" class="chat-messages-container">
-    {# Les messages seront insérés ici dynamiquement via JavaScript #}
+    {% if loadedConversation is defined and loadedConversation %}
+        {# Messages existants chargés depuis la BDD #}
+        {% for message in loadedConversation.messages %}
+            {% if message.role == 'user' %}
+                {# Message utilisateur #}
+                <div class="chat-message chat-message-user">
+                    <div class="chat-message-content">
+                        <div class="chat-message-bubble">
+                            {{ message.content|nl2br }}
+                        </div>
+                    </div>
+                    <div class="chat-message-avatar">
+                        <i class="bi bi-person-fill"></i>
+                    </div>
+                </div>
+            {% else %}
+                {# Message assistant #}
+                <div class="chat-message chat-message-assistant">
+                    <div class="chat-message-bubble">
+                        <img src="{{ asset('images/assistant-picto.svg') }}" alt="IA" class="chat-message-logo">
+                        <div class="chat-message-text">
+                            {{ message.content|nl2br }}
+                        </div>
+                    </div>
+                </div>
+                {# Si le message contient des données de tableau #}
+                {% if message.type == 'table' and message.data.table_data is defined %}
+                    <div class="chat-message chat-message-assistant mt-3">
+                        <div class="chat-message-bubble">
+                            <img src="{{ asset('images/assistant-picto.svg') }}" alt="IA" class="chat-message-logo">
+                            <div class="chat-message-text">
+                                {{ component('DataTable', {
+                                    headers: message.data.table_data.headers,
+                                    rows: message.data.table_data.rows,
+                                    totalRow: message.data.table_data.totalRow|default(null),
+                                    linkColumns: message.data.table_data.linkColumns|default({}),
+                                    mode: message.data.table_data.mode|default('LISTE')
+                                }) }}
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            {% endif %}
+        {% endfor %}
+    {% else %}
+        {# Les messages seront insérés ici dynamiquement via JavaScript #}
+    {% endif %}
 </div>
 
 {# ==================================================================================
@@ -58,6 +104,12 @@
      data-message-url="{{ path('chat_message', {context: context}) }}"
      data-stream-url="{{ path('chat_stream', {context: context}) }}"
      data-assistant-logo="{{ asset('images/assistant-picto.svg') }}"
+     {% if loadedConversation is defined and loadedConversation %}
+     data-loaded-conversation="{{ loadedConversation.id }}"
+     data-is-favorite="{{ loadedConversation.isFavorite ? '1' : '0' }}"
+     data-favorite-url="{{ path('chat_toggle_favorite', {id: loadedConversation.id}) }}"
+     data-delete-url="{{ path('chat_delete_conversation', {id: loadedConversation.id}) }}"
+     {% endif %}
      style="display: none;">
 </div>
 {% endblock %}

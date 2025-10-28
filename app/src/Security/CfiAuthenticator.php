@@ -13,6 +13,7 @@ use App\Service\Cfi\CfiAuthService;
 use App\Service\Cfi\CfiSessionService;
 use App\Service\Cfi\CfiTenantService;
 use App\Service\Cfi\CfiUserSyncService;
+use App\Service\Cfi\DivisionSyncService;
 use App\Service\PasswordHasherService;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
@@ -58,6 +59,7 @@ class CfiAuthenticator extends AbstractAuthenticator
         private readonly CfiSessionService $cfiSessionService,
         private readonly CfiTenantService $cfiTenantService,
         private readonly CfiUserSyncService $cfiUserSyncService,
+        private readonly DivisionSyncService $divisionSyncService,
         private readonly PasswordHasherService $passwordHasher,
         private readonly UrlGeneratorInterface $urlGenerator,
         #[Autowire(service: 'monolog.logger.auth')]
@@ -133,11 +135,30 @@ class CfiAuthenticator extends AbstractAuthenticator
                 'divisionId' => $user->getDivision()?->getId(),
             ]);
 
-            // Stocker le token CFI en session
+            // Stocker le token CFI en session AVANT les sync (nécessaire pour appels API)
             if (null !== $utilisateurDto->jeton) {
                 $this->cfiSessionService->setToken($utilisateurDto->jeton);
                 $this->logger->debug('CFI Authenticator: Token CFI stocké en session', [
                     'ttl_seconds' => 1800,
+                ]);
+            }
+
+            // Synchroniser les permissions utilisateur depuis l'API CFI
+            $this->cfiUserSyncService->syncUserPermissions($user);
+
+            // Synchroniser les divisions accessibles depuis l'API CFI
+            try {
+                $divisions = $this->divisionSyncService->syncUserDivisions($user);
+                $this->logger->info('CFI Authenticator: Divisions accessibles synchronisées', [
+                    'userId' => $user->getId(),
+                    'nbDivisions' => count($divisions),
+                ]);
+            } catch (\Exception $e) {
+                // Ne pas bloquer l'authentification si la sync divisions échoue
+                // Le mode dégradé utilisera les divisions BDD existantes
+                $this->logger->error('CFI Authenticator: Erreur sync divisions (non-bloquant)', [
+                    'userId' => $user->getId(),
+                    'error' => $e->getMessage(),
                 ]);
             }
 

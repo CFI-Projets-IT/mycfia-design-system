@@ -2,6 +2,8 @@
 
 {% block title %}{{ 'profile.page.title'|trans({}, 'profile') }} - myCFiia{% endblock %}
 
+{% block content_classes %} profile-page{% endblock %}
+
 {% block content %}
 <div class="container" style="max-width: 1000px;">
     <div class="text-center py-5">
@@ -157,6 +159,193 @@
                 </div>
             </div>
         </div>
+
+        {# Section Permissions - Pleine largeur #}
+        {% if user.permissions %}
+        <div class="card shadow-sm mb-4 text-start">
+            <div class="card-header glass-primary text-primary d-flex align-items-center gap-2">
+                <i class="bi bi-shield-lock"></i>
+                <strong>{{ 'profile.section.permissions.title'|trans({}, 'profile') }}</strong>
+            </div>
+            <div class="card-body">
+                <div class="row g-3">
+                    {# Permissions Système #}
+                    <div class="col-md-6 col-lg-4">
+                        <h6 class="text-muted mb-2"><i class="bi bi-gear"></i> {{ 'profile.permissions.system.title'|trans({}, 'profile') }}</h6>
+                        <ul class="list-unstyled small">
+                            <li class="{{ user.permissions.connexion ? 'permission-active' : 'permission-disabled' }}">
+                                <i class="bi {{ user.permissions.connexion ? 'bi-check-circle-fill' : 'bi-x-circle' }}"></i>
+                                {{ 'profile.permissions.system.connexion'|trans({}, 'profile') }}
+                            </li>
+                            <li class="{{ user.permissions.pwa ? 'permission-active' : 'permission-disabled' }}">
+                                <i class="bi {{ user.permissions.pwa ? 'bi-check-circle-fill' : 'bi-x-circle' }}"></i>
+                                {{ 'profile.permissions.system.pwa'|trans({}, 'profile') }}
+                            </li>
+                            <li class="{{ user.permissions.administrateur ? 'permission-active' : 'permission-disabled' }}">
+                                <i class="bi {{ user.permissions.administrateur ? 'bi-check-circle-fill' : 'bi-x-circle' }}"></i>
+                                {{ 'profile.permissions.system.administrateur'|trans({}, 'profile') }}
+                            </li>
+                            <li class="{{ user.permissions.logistique ? 'permission-active' : 'permission-disabled' }}">
+                                <i class="bi {{ user.permissions.logistique ? 'bi-check-circle-fill' : 'bi-x-circle' }}"></i>
+                                {{ 'profile.permissions.system.logistique'|trans({}, 'profile') }}
+                            </li>
+                            <li class="{{ user.permissions.production ? 'permission-active' : 'permission-disabled' }}">
+                                <i class="bi {{ user.permissions.production ? 'bi-check-circle-fill' : 'bi-x-circle' }}"></i>
+                                {{ 'profile.permissions.system.production'|trans({}, 'profile') }}
+                            </li>
+                            <li class="{{ user.permissions.developpement ? 'permission-active' : 'permission-disabled' }}">
+                                <i class="bi {{ user.permissions.developpement ? 'bi-check-circle-fill' : 'bi-x-circle' }}"></i>
+                                {{ 'profile.permissions.system.developpement'|trans({}, 'profile') }}
+                            </li>
+                        </ul>
+                    </div>
+
+                    {# Permissions Utilisateurs #}
+                    <div class="col-md-6 col-lg-4">
+                        <h6 class="text-muted mb-2"><i class="bi bi-people"></i> {{ 'profile.permissions.users.title'|trans({}, 'profile') }}</h6>
+                        <ul class="list-unstyled small">
+                            <li class="{{ user.permissions.utilisateurs_Crea ? 'permission-active' : 'permission-disabled' }}">
+                                <i class="bi {{ user.permissions.utilisateurs_Crea ? 'bi-check-circle-fill' : 'bi-x-circle' }}"></i>
+                                {{ 'profile.permissions.users.create'|trans({}, 'profile') }}
+                            </li>
+                            <li class="{{ user.permissions.utilisateurs_Modif ? 'permission-active' : 'permission-disabled' }}">
+                                <i class="bi {{ user.permissions.utilisateurs_Modif ? 'bi-check-circle-fill' : 'bi-x-circle' }}"></i>
+                                {{ 'profile.permissions.users.modify'|trans({}, 'profile') }}
+                            </li>
+                            <li class="{{ user.permissions.utilisateurs_Supp ? 'permission-active' : 'permission-disabled' }}">
+                                <i class="bi {{ user.permissions.utilisateurs_Supp ? 'bi-check-circle-fill' : 'bi-x-circle' }}"></i>
+                                {{ 'profile.permissions.users.delete'|trans({}, 'profile') }}
+                            </li>
+                            <li class="{{ user.permissions.utilisateurs_EmpruntIdentite ? 'permission-active' : 'permission-disabled' }}">
+                                <i class="bi {{ user.permissions.utilisateurs_EmpruntIdentite ? 'bi-check-circle-fill' : 'bi-x-circle' }}"></i>
+                                {{ 'profile.permissions.users.impersonate'|trans({}, 'profile') }}
+                            </li>
+                        </ul>
+                    </div>
+
+                    {# Permissions Divisions #}
+                    <div class="col-md-6 col-lg-4">
+                        <h6 class="text-muted mb-2"><i class="bi bi-building"></i> {{ 'profile.permissions.divisions.title'|trans({}, 'profile') }}</h6>
+                        <ul class="list-unstyled small">
+                            <li class="{{ user.permissions.divisions_Crea ? 'permission-active' : 'permission-disabled' }}">
+                                <i class="bi {{ user.permissions.divisions_Crea ? 'bi-check-circle-fill' : 'bi-x-circle' }}"></i>
+                                {{ 'profile.permissions.divisions.create'|trans({}, 'profile') }}
+                            </li>
+                            <li class="{{ user.permissions.divisions_Modif ? 'permission-active' : 'permission-disabled' }}">
+                                <i class="bi {{ user.permissions.divisions_Modif ? 'bi-check-circle-fill' : 'bi-x-circle' }}"></i>
+                                {{ 'profile.permissions.divisions.modify'|trans({}, 'profile') }}
+                            </li>
+                            <li class="{{ user.permissions.divisions_Visu ? 'permission-active' : 'permission-disabled' }}">
+                                <i class="bi {{ user.permissions.divisions_Visu ? 'bi-check-circle-fill' : 'bi-x-circle' }}"></i>
+                                {{ 'profile.permissions.divisions.view'|trans({}, 'profile') }}
+                            </li>
+                        </ul>
+                    </div>
+
+                    {# Permissions Stocks #}
+                    <div class="col-md-6 col-lg-4">
+                        <h6 class="text-muted mb-2"><i class="bi bi-box-seam"></i> {{ 'profile.permissions.stocks.title'|trans({}, 'profile') }}</h6>
+                        <ul class="list-unstyled small">
+                            <li class="{{ user.permissions.stocks_Crea ? 'permission-active' : 'permission-disabled' }}">
+                                <i class="bi {{ user.permissions.stocks_Crea ? 'bi-check-circle-fill' : 'bi-x-circle' }}"></i>
+                                {{ 'profile.permissions.stocks.create'|trans({}, 'profile') }}
+                            </li>
+                            <li class="{{ user.permissions.stocks_Modif ? 'permission-active' : 'permission-disabled' }}">
+                                <i class="bi {{ user.permissions.stocks_Modif ? 'bi-check-circle-fill' : 'bi-x-circle' }}"></i>
+                                {{ 'profile.permissions.stocks.modify'|trans({}, 'profile') }}
+                            </li>
+                            <li class="{{ user.permissions.stocks_Visu ? 'permission-active' : 'permission-disabled' }}">
+                                <i class="bi {{ user.permissions.stocks_Visu ? 'bi-check-circle-fill' : 'bi-x-circle' }}"></i>
+                                {{ 'profile.permissions.stocks.view'|trans({}, 'profile') }}
+                            </li>
+                            <li class="{{ user.permissions.stocks_Supp ? 'permission-active' : 'permission-disabled' }}">
+                                <i class="bi {{ user.permissions.stocks_Supp ? 'bi-check-circle-fill' : 'bi-x-circle' }}"></i>
+                                {{ 'profile.permissions.stocks.delete'|trans({}, 'profile') }}
+                            </li>
+                        </ul>
+                    </div>
+
+                    {# Permissions Opérations #}
+                    <div class="col-md-6 col-lg-4">
+                        <h6 class="text-muted mb-2"><i class="bi bi-activity"></i> {{ 'profile.permissions.operations.title'|trans({}, 'profile') }}</h6>
+                        <ul class="list-unstyled small">
+                            <li class="{{ user.permissions.operations_Crea ? 'permission-active' : 'permission-disabled' }}">
+                                <i class="bi {{ user.permissions.operations_Crea ? 'bi-check-circle-fill' : 'bi-x-circle' }}"></i>
+                                {{ 'profile.permissions.operations.create'|trans({}, 'profile') }}
+                            </li>
+                            <li class="{{ user.permissions.operations_Valid ? 'permission-active' : 'permission-disabled' }}">
+                                <i class="bi {{ user.permissions.operations_Valid ? 'bi-check-circle-fill' : 'bi-x-circle' }}"></i>
+                                {{ 'profile.permissions.operations.validate'|trans({}, 'profile') }}
+                            </li>
+                            <li class="{{ user.permissions.operations_Visu ? 'permission-active' : 'permission-disabled' }}">
+                                <i class="bi {{ user.permissions.operations_Visu ? 'bi-check-circle-fill' : 'bi-x-circle' }}"></i>
+                                {{ 'profile.permissions.operations.view'|trans({}, 'profile') }}
+                            </li>
+                        </ul>
+                    </div>
+
+                    {# Permissions Campagnes #}
+                    <div class="col-md-6 col-lg-4">
+                        <h6 class="text-muted mb-2"><i class="bi bi-megaphone"></i> {{ 'profile.permissions.campaigns.title'|trans({}, 'profile') }}</h6>
+                        <ul class="list-unstyled small">
+                            <li class="{{ user.permissions.campagnes_Commande ? 'permission-active' : 'permission-disabled' }}">
+                                <i class="bi {{ user.permissions.campagnes_Commande ? 'bi-check-circle-fill' : 'bi-x-circle' }}"></i>
+                                {{ 'profile.permissions.campaigns.order'|trans({}, 'profile') }}
+                            </li>
+                            <li class="{{ user.permissions.campagnes_Edit ? 'permission-active' : 'permission-disabled' }}">
+                                <i class="bi {{ user.permissions.campagnes_Edit ? 'bi-check-circle-fill' : 'bi-x-circle' }}"></i>
+                                {{ 'profile.permissions.campaigns.edit'|trans({}, 'profile') }}
+                            </li>
+                        </ul>
+                    </div>
+
+                    {# Permissions Factures & Autres #}
+                    <div class="col-md-6 col-lg-4">
+                        <h6 class="text-muted mb-2"><i class="bi bi-grid-3x3-gap"></i> {{ 'profile.permissions.other.title'|trans({}, 'profile') }}</h6>
+                        <ul class="list-unstyled small">
+                            <li class="{{ user.permissions.factures_Visu ? 'permission-active' : 'permission-disabled' }}">
+                                <i class="bi {{ user.permissions.factures_Visu ? 'bi-check-circle-fill' : 'bi-x-circle' }}"></i>
+                                {{ 'profile.permissions.other.invoices_view'|trans({}, 'profile') }}
+                            </li>
+                            <li class="{{ user.permissions.reprises_Visu ? 'permission-active' : 'permission-disabled' }}">
+                                <i class="bi {{ user.permissions.reprises_Visu ? 'bi-check-circle-fill' : 'bi-x-circle' }}"></i>
+                                {{ 'profile.permissions.other.returns_view'|trans({}, 'profile') }}
+                            </li>
+                            <li class="{{ user.permissions.npaI_Crea ? 'permission-active' : 'permission-disabled' }}">
+                                <i class="bi {{ user.permissions.npaI_Crea ? 'bi-check-circle-fill' : 'bi-x-circle' }}"></i>
+                                {{ 'profile.permissions.other.npai_create'|trans({}, 'profile') }}
+                            </li>
+                            <li class="{{ user.permissions.npaI_Visu ? 'permission-active' : 'permission-disabled' }}">
+                                <i class="bi {{ user.permissions.npaI_Visu ? 'bi-check-circle-fill' : 'bi-x-circle' }}"></i>
+                                {{ 'profile.permissions.other.npai_view'|trans({}, 'profile') }}
+                            </li>
+                            <li class="{{ user.permissions.signataire ? 'permission-active' : 'permission-disabled' }}">
+                                <i class="bi {{ user.permissions.signataire ? 'bi-check-circle-fill' : 'bi-x-circle' }}"></i>
+                                {{ 'profile.permissions.other.signatory'|trans({}, 'profile') }}
+                            </li>
+                            <li class="{{ user.permissions.valideur ? 'permission-active' : 'permission-disabled' }}">
+                                <i class="bi {{ user.permissions.valideur ? 'bi-check-circle-fill' : 'bi-x-circle' }}"></i>
+                                {{ 'profile.permissions.other.validator'|trans({}, 'profile') }}
+                            </li>
+                        </ul>
+                    </div>
+
+                    {# Quota Téléchargement HD #}
+                    {% if user.permissions.telechargementHD is defined %}
+                    <div class="col-md-6 col-lg-4">
+                        <h6 class="text-muted mb-2"><i class="bi bi-download"></i> {{ 'profile.permissions.quota.title'|trans({}, 'profile') }}</h6>
+                        <div class="card text-center shadow-sm quick-access-card-compact">
+                            <div class="card-body p-3">
+                                <h3 class="fw-semibold text-primary mb-0">{{ user.permissions.telechargementHD|number_format(1, ',', ' ') }} Go</h3>
+                                <small class="opacity-75">{{ 'profile.permissions.quota.hd_download'|trans({}, 'profile') }}</small>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endif %}
 
         {# Boutons d'action #}
         <div class="d-flex justify-content-center gap-3 flex-wrap mt-4">

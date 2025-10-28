@@ -1,0 +1,25 @@
+{# Composant : Sélecteur de Division (Multi-Tenant) - DÉSACTIVÉ TEMPORAIREMENT #}
+<div class="division-selector dropdown" id="division-selector">
+    <button
+        class="btn btn-link dropdown-toggle division-selector-btn"
+        type="button"
+        id="divisionDropdown"
+        aria-expanded="false"
+        title="Sélecteur de division (temporairement désactivé)"
+        disabled
+        style="opacity: 0.6; cursor: not-allowed;"
+    >
+        <i class="bi bi-building"></i>
+        <span id="current-division-name" class="d-none d-md-inline">{{ this.currentDivisionName }}</span>
+    </button>
+    <ul class="dropdown-menu dropdown-menu-end division-selector-menu" aria-labelledby="divisionDropdown" id="divisions-list">
+        <li class="dropdown-header">
+            <i class="bi bi-building me-2"></i>Mes Divisions
+        </li>
+        <li><hr class="dropdown-divider"></li>
+        <li id="divisions-loading" class="px-3 py-2 text-muted">
+            <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+            Chargement...
+        </li>
+    </ul>
+</div>

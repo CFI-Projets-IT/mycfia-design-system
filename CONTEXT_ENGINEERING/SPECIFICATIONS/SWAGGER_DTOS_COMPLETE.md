@@ -2,16 +2,61 @@
 
 **Source** : https://test.cfitech.io/API/swagger/v1/swagger.json
 **Date extraction** : 2025-10-22
-**Dernière mise à jour** : 2025-10-22 (Version corrigée après analyse du JSON)
-**Version API** : myCFI_API v1.0 (OpenAPI 3.0.1)
+**Dernière mise à jour** : 2025-10-25 (Ajout endpoints FichierIN, TypesOperations, modification DroitsUtilisateurDto)
+**Version API** : myCFI_API v1.0 (OpenAPI 3.0.4)
 
 ---
 
-## 🚀 NOUVEAUTÉS PRINCIPALES - Version du 2025-10-22
+## 🚀 NOUVEAUTÉS PRINCIPALES
 
-### 🆕 Endpoints Critiques Ajoutés (4 nouveaux)
+### 🆕 Version 2025-10-25 - Endpoints FichierIN et Permissions (5 nouveaux)
 
-1. **`POST /Utilisateurs/getDroitsUtilisateur`** - **SYSTÈME DE PERMISSIONS**
+1. **`POST /FichierIN/getFichierIN`** - **FICHIERS ENTRANTS INDIVIDUELS**
+   - Récupère un fichier IN spécifique par ID
+   - Request : `{idFichier: 0}` (nullable)
+   - Response : `FichierINDto` avec métadonnées complètes
+   - **Impact** : Accès détaillé aux fichiers uploadés/importés
+
+2. **`POST /FichierIN/getLignesFichiersIN`** - **LISTE FICHIERS ENTRANTS**
+   - Récupère les fichiers IN par période de création
+   - Request : `{dateCreationMin, dateCreationMax}` (nullables)
+   - Response : `Array<FichierINDto>`
+   - **Impact** : Historique et suivi des fichiers importés
+
+3. **`POST /FichierIN/createFichiersIN`** - **CRÉATION FICHIERS**
+   - Crée un nouveau fichier IN
+   - Request : `{nomFichier: string}`
+   - Response : `FichierINDto` créé
+   - **Impact** : Création programmatique de fichiers
+
+4. **`POST /TypesOperations/getTypesOperationsByFamille`** - **TYPES D'OPÉRATIONS**
+   - Récupère la liste des types d'opérations par famille
+   - Request : Aucun (body vide)
+   - Response : `Array<TypesOperationDto>` avec canaux de communication
+   - **Impact** : Connaissance des types d'opérations disponibles (SMS, Email, Courrier, etc.)
+
+5. **Permission `campagnes_Visu`** ajoutée dans **`DroitsUtilisateurDto`**
+   - Nouveau droit de visualisation des campagnes
+   - Distinction entre visualiser (`campagnes_Visu`), commander (`campagnes_Commande`) et éditer (`campagnes_Edit`)
+   - **Impact** : Contrôle d'accès plus granulaire sur les campagnes
+
+### 🔧 Modifications Importantes
+
+- **`LigneOperationDto`** : Champs `idCampagne` et `nomCampagne` désormais **NON-NULLABLE**
+  - Garantit toujours la présence de l'ID et du nom de la campagne parent
+  - Suppression du `?` dans les types PHP/TypeScript
+
+- **`DroitsUtilisateurDto`** : Passe de 25 à **29 permissions** (+ 1 quota = 30 champs)
+  - Ajout de `campagnes_Visu` pour contrôle granulaire
+
+### 🆕 Version 2025-10-24
+- **Champ `clef`** ajouté dans `UtilisateurGorilliasDto`
+- UUID utilisateur retourné lors de l'authentification
+- **TODO** : Implémenter l'usage du champ `clef` dans les appels futurs (à définir avec équipe CFI)
+
+### 🆕 Version 2025-10-22 - Endpoints Critiques Ajoutés (4 nouveaux)
+
+1. **`POST /Utilisateurs/getDroitsUtilisateur`** - **SYSTÈME DE PERMISSIONS** => Mise en application, effectuer, lecture seulement
    - Récupère tous les droits de l'utilisateur connecté
    - 25 permissions différentes (utilisateurs, divisions, stocks, opérations, campagnes, factures...)
    - **Impact** : Gestion fine des permissions dans l'UI
@@ -24,7 +69,7 @@
    - Récupère les utilisateurs enfants de l'utilisateur loggé (hiérarchie)
    - **Impact** : Gestion hiérarchique des utilisateurs
 
-4. **`POST /Facturations/getFacture`** - **FACTURE INDIVIDUELLE**
+4. **`POST /Facturations/getFacture`** - **FACTURE INDIVIDUELLE** => Mise en application, effectuer
    - Récupère une facture spécifique si l'utilisateur a le droit
    - Request : `{idFacture: 0}`
    - **Impact** : Accès sécurisé aux factures individuelles avec vérification des droits
@@ -73,14 +118,15 @@ Jeton: {token}
 
 ```json
 {
-  "id": 123,
-  "idDivision": 456,
-  "nomDivision": "Division Paris",
-  "nom": "Bichon",
-  "prenom": "Christophe",
-  "email": "c.bichon@CEIDF",
-  "type_d_option_GA": "???",
-  "jeton": "xyz-token-interne"
+  "id": 4370,
+  "idDivision": 1114,
+  "nomDivision": "Caisse d'Epargne IDF",
+  "nom": "bichon",
+  "prenom": "Christopher",
+  "email": "contact@krystdev.com",
+  "type_d_option_GA": "GEN1",
+  "jeton": "2c2b2af3-f534-4555-8c90-64440fdd780a",
+  "clef": "8f0b9445-0a83-4231-b5fe-9c9d1d7a3daf"
 }
 ```
 
@@ -91,8 +137,9 @@ Jeton: {token}
 - `nom` : Nom de famille utilisateur (string | null)
 - `prenom` : Prénom utilisateur (string | null)
 - `email` : Email utilisateur (string | null)
-- `type_d_option_GA` : Type d'option - **À CLARIFIER AVEC CFI** (string | null)
-- `jeton` : **Token interne à utiliser pour les appels suivants** (string | null)
+- `type_d_option_GA` : Type d'option GA (ex: "GEN1") (string | null)
+- `jeton` : **Token CFI à utiliser pour les appels suivants** (string | null)
+- `clef` : **🆕 Clé utilisateur UUID** - À utiliser dans les appels futurs (string | null)
 
 **Response 400** : `string` - Message d'erreur
 
@@ -202,7 +249,7 @@ Jeton: {token}
 }
 ```
 
-**Champs (25 permissions + 1 quota)** :
+**Champs (29 permissions + 1 quota = 30 champs)** :
 - `connexion` : Droit de connexion (boolean)
 - `pwa` : Accès à l'application PWA (boolean)
 - `administrateur` : Statut administrateur (boolean)
@@ -223,6 +270,7 @@ Jeton: {token}
 - `operations_Crea` : Créer des opérations (boolean)
 - `operations_Valid` : Valider des opérations (boolean)
 - `operations_Visu` : Visualiser les opérations (boolean)
+- `campagnes_Visu` : **🆕 Visualiser les campagnes** (boolean)
 - `campagnes_Commande` : Commander des campagnes (boolean)
 - `campagnes_Edit` : Éditer des campagnes (boolean)
 - `reprises_Visu` : Visualiser les reprises (boolean)
@@ -525,7 +573,225 @@ Jeton: {token}
 
 ---
 
-### 6. Facturations
+### 6. FichierIN (Fichiers Entrants)
+
+#### POST `/FichierIN/getFichierIN`
+
+**🆕 NOUVEL ENDPOINT**
+
+**Description** : Récupère un fichier IN spécifique par son identifiant
+
+**Request Body** : `GetFichierINParams`
+
+```json
+{
+  "idFichier": 123
+}
+```
+
+**Champs** :
+- `idFichier` : Identifiant du fichier (int32 | null, nullable)
+
+**Response 200** : `FichierINDto`
+
+```json
+{
+  "id": 123,
+  "nom": "fichier_import_2025-01-15.csv",
+  "codeClient": "CLI123",
+  "nomEtat": "Traité",
+  "ligneDeConnexion": "192.168.1.100",
+  "origine": "FTP",
+  "idEtat": 3,
+  "idCampagne": 789,
+  "idAutomate": 1,
+  "idUtilisateur": 4370,
+  "commentaire": "Import automatique",
+  "taille": 2048576,
+  "qte": 1500,
+  "variables": {
+    "format": "CSV",
+    "encoding": "UTF-8"
+  }
+}
+```
+
+**Champs** :
+- `id` : Identifiant unique du fichier (int32)
+- `nom` : Nom du fichier (string)
+- `codeClient` : Code client associé (string)
+- `nomEtat` : Nom de l'état du fichier (string) - ex: "En attente", "Traité", "Erreur"
+- `ligneDeConnexion` : IP ou ligne de connexion d'origine (string)
+- `origine` : Source du fichier (string) - ex: "FTP", "Upload", "API"
+- `idEtat` : Identifiant de l'état (int32)
+- `idCampagne` : Lien vers la campagne associée (int32 | null, nullable)
+- `idAutomate` : Identifiant de l'automate ayant traité (int32)
+- `idUtilisateur` : Utilisateur ayant uploadé (int32 | null, nullable)
+- `commentaire` : Commentaire libre (string)
+- `taille` : Taille du fichier en octets (int32)
+- `qte` : Quantité d'enregistrements dans le fichier (int32)
+- `variables` : Variables clé-valeur associées (object<string, string>)
+
+**Response 400** : `string` - Message d'erreur
+
+**Usage** :
+- Récupérer les détails complets d'un fichier importé
+- Accès aux métadonnées (taille, origine, état de traitement)
+- Utile pour le suivi et le débogage des imports
+
+---
+
+#### POST `/FichierIN/getLignesFichiersIN`
+
+**🆕 NOUVEL ENDPOINT**
+
+**Description** : Récupère la liste des fichiers IN sur une période
+
+**Request Body** : `GetLignesFichiersINParams`
+
+```json
+{
+  "dateCreationMin": "2025-01-01T00:00:00Z",
+  "dateCreationMax": "2025-01-31T23:59:59Z"
+}
+```
+
+**Champs** :
+- `dateCreationMin` : Date de création minimale (datetime | null, ISO 8601, nullable)
+- `dateCreationMax` : Date de création maximale (datetime | null, ISO 8601, nullable)
+
+**Response 200** : `Array<FichierINDto>`
+
+```json
+[
+  {
+    "id": 123,
+    "nom": "fichier_import_2025-01-15.csv",
+    "codeClient": "CLI123",
+    "nomEtat": "Traité",
+    "ligneDeConnexion": "192.168.1.100",
+    "origine": "FTP",
+    "idEtat": 3,
+    "idCampagne": 789,
+    "idAutomate": 1,
+    "idUtilisateur": 4370,
+    "commentaire": "Import automatique",
+    "taille": 2048576,
+    "qte": 1500,
+    "variables": {}
+  }
+]
+```
+
+**Response 400** : `string` - Message d'erreur
+
+**Usage** :
+- Historique des fichiers importés sur une période
+- Suivi des imports automatiques et manuels
+- Identification des fichiers en erreur
+
+---
+
+#### POST `/FichierIN/createFichiersIN`
+
+**🆕 NOUVEL ENDPOINT**
+
+**Description** : Crée un nouveau fichier IN
+
+**Request Body** : `CreateFichierINParams`
+
+```json
+{
+  "nomFichier": "import_contacts_2025-01-20.csv"
+}
+```
+
+**Champs** :
+- `nomFichier` : Nom du fichier à créer (string)
+
+**Response 200** : `FichierINDto`
+
+```json
+{
+  "id": 124,
+  "nom": "import_contacts_2025-01-20.csv",
+  "codeClient": "CLI123",
+  "nomEtat": "En attente",
+  "ligneDeConnexion": "API",
+  "origine": "API",
+  "idEtat": 1,
+  "idCampagne": null,
+  "idAutomate": 0,
+  "idUtilisateur": 4370,
+  "commentaire": "",
+  "taille": 0,
+  "qte": 0,
+  "variables": {}
+}
+```
+
+**Response 400** : `string` - Message d'erreur
+
+**Usage** :
+- Création programmatique de fichiers IN via API
+- Préparation d'imports pour traitement ultérieur
+- Intégration avec systèmes externes
+
+---
+
+### 7. TypesOperations
+
+#### POST `/TypesOperations/getTypesOperationsByFamille`
+
+**🆕 NOUVEL ENDPOINT**
+
+**Description** : Récupère la liste des types d'opérations organisés par famille
+
+**Request Body** : Aucun (body vide)
+
+**Response 200** : `Array<TypesOperationDto>`
+
+```json
+[
+  {
+    "idTypeOperation": 1,
+    "nom": "Envoi SMS",
+    "canauxCommunication": ["SMS"]
+  },
+  {
+    "idTypeOperation": 2,
+    "nom": "Envoi Email",
+    "canauxCommunication": ["Email"]
+  },
+  {
+    "idTypeOperation": 3,
+    "nom": "Courrier Simple",
+    "canauxCommunication": ["Courrier"]
+  },
+  {
+    "idTypeOperation": 4,
+    "nom": "Campagne Multi-Canal",
+    "canauxCommunication": ["SMS", "Email", "Courrier"]
+  }
+]
+```
+
+**Champs** :
+- `idTypeOperation` : Identifiant unique du type (int32)
+- `nom` : Nom du type d'opération (string)
+- `canauxCommunication` : Liste des canaux disponibles (array<string>)
+  - Valeurs possibles : "SMS", "Email", "Courrier", etc.
+
+**Response 400** : `string` - Message d'erreur
+
+**Usage** :
+- Afficher les types d'opérations dans l'interface de création de campagne
+- Filtrage des opérations par canal de communication
+- Validation des types d'opérations lors de la création
+
+---
+
+### 8. Facturations
 
 #### POST `/Facturations/getFacturations`
 
@@ -674,13 +940,71 @@ Jeton: {token}
 
 ---
 
-## 🎯 Récapitulatif des Nouveautés (2025-10-22)
+## 🎯 Récapitulatif des Nouveautés
 
-### ✅ Endpoints Ajoutés (4 nouveaux critiques)
+### ✅ Version 2025-10-25 - Endpoints Ajoutés (5 nouveaux)
+
+1. **`POST /FichierIN/getFichierIN`** : Fichier IN individuel
+   - Request : `{idFichier: 0}` (nullable)
+   - Response : `FichierINDto` avec métadonnées complètes
+   - **Impact** : Accès détaillé aux fichiers uploadés/importés
+
+2. **`POST /FichierIN/getLignesFichiersIN`** : Liste des fichiers IN
+   - Request : `{dateCreationMin, dateCreationMax}` (nullables)
+   - Response : `Array<FichierINDto>`
+   - **Impact** : Historique et suivi des fichiers importés
+
+3. **`POST /FichierIN/createFichiersIN`** : Création de fichier IN
+   - Request : `{nomFichier: string}`
+   - Response : `FichierINDto` créé
+   - **Impact** : Création programmatique via API
+
+4. **`POST /TypesOperations/getTypesOperationsByFamille`** : Types d'opérations
+   - Request : Aucun body
+   - Response : `Array<TypesOperationDto>`
+   - **Impact** : Liste des types disponibles (SMS, Email, Courrier, etc.)
+
+5. **Permission `campagnes_Visu`** dans **`DroitsUtilisateurDto`**
+   - Nouveau droit de visualisation des campagnes
+   - **Impact** : Contrôle d'accès plus granulaire
+
+### 📋 DTOs Nouveaux (Version 2025-10-25)
+
+1. **`FichierINDto`** (nouveau) - 13 champs :
+   - Métadonnées complètes des fichiers importés
+   - Traçabilité (origine, utilisateur, état)
+   - Variables dynamiques (object)
+   - **Utilisations** : Suivi des imports, débogage, historique
+
+2. **`TypesOperationDto`** (nouveau) - 3 champs :
+   - `idTypeOperation`, `nom`, `canauxCommunication`
+   - **Utilisations** : Sélecteurs d'interface, validation, filtrage
+
+3. **`GetFichierINParams`** (nouveau) - 1 champ :
+   - `idFichier` (int32 | null) pour récupérer un fichier spécifique
+
+4. **`GetLignesFichiersINParams`** (nouveau) - 2 champs :
+   - `dateCreationMin`, `dateCreationMax` (nullables)
+
+5. **`CreateFichierINParams`** (nouveau) - 1 champ :
+   - `nomFichier` (string) pour créer un nouveau fichier
+
+### 🔧 Modifications DTO (Version 2025-10-25)
+
+1. **`LigneOperationDto`** : Champs **NON-NULLABLE**
+   - `idCampagne` : int32 (plus de nullable)
+   - `nomCampagne` : string (plus de nullable)
+   - **Impact** : Toujours présents, pas de vérification null côté frontend
+
+2. **`DroitsUtilisateurDto`** : 29 permissions + 1 quota = 30 champs
+   - Ajout de `campagnes_Visu` (boolean)
+   - **Impact** : Contrôle granulaire campagnes (Visu/Commande/Edit)
+
+### ✅ Version 2025-10-22 - Endpoints Ajoutés (4 nouveaux critiques)
 
 1. **`POST /Utilisateurs/getDroitsUtilisateur`** : Système complet de permissions
    - Request : Aucun body (utilise le token)
-   - Response : `DroitsUtilisateurDto` avec 25 permissions + 1 quota
+   - Response : `DroitsUtilisateurDto` avec permissions et quota
    - **Impact MAJEUR** : Gestion fine des droits utilisateurs dans toute l'application
 
 2. **`POST /Division/getDivisions`** : Divisions enfants (hiérarchie)
@@ -698,10 +1022,10 @@ Jeton: {token}
    - Response : `FactureDto` avec lignes détaillées
    - **Impact** : Accès détail facture avec vérification des droits
 
-### 📋 DTOs Critiques
+### 📋 DTOs Critiques (Version 2025-10-22)
 
-1. **`DroitsUtilisateurDto`** (nouveau) - 26 champs :
-   - 25 permissions booléennes
+1. **`DroitsUtilisateurDto`** (nouveau) - 30 champs total
+   - 29 permissions booléennes
    - 1 quota `telechargementHD` (double)
    - **Utilisations** : Contrôle d'accès, UI conditionnelle, validation backend
 
@@ -775,7 +1099,9 @@ Jeton: {token}
 
 ---
 
-**Dernière mise à jour** : 2025-10-22
-**Source** : Swagger JSON v1.0 (version corrigée)
-**Statut** : ~90% documenté - Questions restantes pour CFI
-**Changements majeurs** : Système de permissions complet, hiérarchie divisions/utilisateurs, facture individuelle
+**Dernière mise à jour** : 2025-10-25
+**Source** : Swagger JSON v1.0 (OpenAPI 3.0.4)
+**Statut** : ~95% documenté - Questions restantes pour CFI
+**Changements majeurs** :
+- Version 2025-10-25 : Endpoints FichierIN (3), TypesOperations (1), permission campagnes_Visu, LigneOperationDto non-nullable
+- Version 2025-10-22 : Système de permissions complet, hiérarchie divisions/utilisateurs, facture individuelle

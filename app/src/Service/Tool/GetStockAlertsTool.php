@@ -9,6 +9,7 @@ use App\Security\UserAuthenticationService;
 use App\Service\AiLoggerService;
 use App\Service\Api\StockApiService;
 use App\Service\ToolCallCollector;
+use App\Service\ToolResultCollector;
 use Psr\Log\LoggerInterface;
 use Symfony\AI\Agent\Toolbox\Attribute\AsTool;
 use Symfony\Component\DependencyInjection\Attribute\AsTaggedItem;
@@ -39,6 +40,7 @@ final readonly class GetStockAlertsTool
         private UserAuthenticationService $authService,
         private AiLoggerService $aiLogger,
         private ToolCallCollector $toolCallCollector,
+        private ToolResultCollector $toolResultCollector,
         #[Autowire(service: 'monolog.logger.tools')]
         private LoggerInterface $logger,
         private TranslatorInterface $translator,
@@ -111,19 +113,50 @@ final readonly class GetStockAlertsTool
                 durationMs: $durationMs
             );
 
-            return [
+            // Générer suggested_actions
+            $suggestedActions = [];
+            if (count($formattedAlerts) > 0) {
+                $suggestedActions[] = [
+                    'label' => 'Voir tous les stocks',
+                    'icon' => '📦',
+                    'prompt' => 'Affiche-moi tous les stocks',
+                ];
+            }
+
+            // Générer table_data pour le composant DataTable
+            $tableData = $this->generateTableData($stocks, $suggestedActions);
+
+            // Log KPI pour monitoring
+            $this->logger->info('Tool executed successfully', [
+                'tool_name' => 'get_stock_alerts',
+                'mode' => 'LISTE',
+                'duration_ms' => $durationMs,
+                'nb_alertes' => count($formattedAlerts),
+                'user_id' => $user->getId(),
+                'division_id' => $tenant->getIdCfi(),
+            ]);
+
+            $result = [
                 'success' => true,
                 'count' => count($formattedAlerts),
                 'niveau_urgence' => $this->getNiveauUrgenceGlobal($formattedAlerts),
                 'alerts' => $formattedAlerts,
+                'suggested_actions' => $suggestedActions,
+                'table_data' => $tableData,
                 'metadata' => [
                     'source' => 'CFI API',
                     'endpoint' => '/Stocks/getStocks',
                     'cache_ttl' => '5 minutes',
                     'division' => $tenant->getNom(),
                     'duration_ms' => $durationMs,
+                    'mode' => 'LISTE',
                 ],
             ];
+
+            // Collecter le résultat pour transmission au frontend
+            $this->toolResultCollector->addToolResult('get_stock_alerts', $result);
+
+            return $result;
         } catch (\Exception $e) {
             // Log détaillé pour développeurs (technique)
             $this->logger->error('GetStockAlertsTool: Erreur lors de la récupération des alertes', [
@@ -188,6 +221,75 @@ final readonly class GetStockAlertsTool
             'error' => $message,
             'count' => 0,
             'alerts' => [],
+        ];
+    }
+
+    /**
+     * Générer table_data structuré pour le composant DataTable.
+     *
+     * @param StockDto[]                       $stocks           Liste des stocks en alerte
+     * @param array<int, array<string, mixed>> $suggestedActions Actions suggérées pour liens cliquables
+     *
+     * @return array{headers: array<int, string>, rows: array<int, array<string, mixed>>, totalRow: array<string, mixed>, linkColumns: array<string, string>}
+     */
+    private function generateTableData(array $stocks, array $suggestedActions): array
+    {
+        // En-têtes du tableau
+        $headers = [
+            'ID',
+            'RÉFÉRENCE',
+            'DÉSIGNATION',
+            'QUANTITÉ ACTUELLE',
+            'QUANTITÉ MINIMALE',
+            'DÉFICIT',
+            'NIVEAU ALERTE',
+        ];
+
+        // Lignes du tableau
+        $rows = [];
+        $totalDeficit = 0;
+        $niveauxCritiques = 0;
+
+        foreach ($stocks as $stock) {
+            // Utiliser refStockage ou générer une référence par défaut
+            $reference = $stock->refStockage ?? sprintf('STOCK-%d', $stock->id);
+
+            $deficit = ($stock->stockMinimum ?? 0) - ($stock->qte ?? 0);
+            $niveauAlerte = $this->getNiveauAlerte($stock);
+
+            $rows[] = [
+                'id' => (string) $stock->id,
+                'reference' => $reference,
+                'designation' => $stock->nom ?? '',
+                'quantite_actuelle' => null !== $stock->qte ? (string) $stock->qte : '0',
+                'quantite_min' => null !== $stock->stockMinimum ? (string) $stock->stockMinimum : '0',
+                'deficit' => (string) $deficit,
+                'niveau_alerte' => $niveauAlerte,
+            ];
+
+            $totalDeficit += $deficit;
+
+            if ('Critique' === $niveauAlerte) {
+                ++$niveauxCritiques;
+            }
+        }
+
+        // Ligne de total
+        $totalRow = [
+            'label' => 'ALERTES',
+            'nb_references' => (string) count($stocks),
+            'deficit_total' => (string) $totalDeficit,
+            'nb_critiques' => "🚨 {$niveauxCritiques} critique(s)",
+        ];
+
+        // Colonnes cliquables (pas de mode DÉTAIL pour les stocks)
+        $linkColumns = [];
+
+        return [
+            'headers' => $headers,
+            'rows' => $rows,
+            'totalRow' => $totalRow,
+            'linkColumns' => $linkColumns,
         ];
     }
 }

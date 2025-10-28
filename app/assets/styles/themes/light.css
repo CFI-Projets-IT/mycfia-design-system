@@ -24,6 +24,10 @@ body.theme-light {
     --theme-accent: #003e82;
     --theme-accent-hover: #002d5f;
 
+    /* Permissions */
+    --theme-permission-active: #198754;
+    --theme-permission-disabled: #6c757d;
+
     /* Ombres */
     --theme-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     --theme-shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.15);

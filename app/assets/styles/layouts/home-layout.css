@@ -194,6 +194,16 @@
     justify-content: flex-start;
 }
 
+/* Page profile : contenu aligné en haut (pas centré verticalement) */
+.home-content.profile-page {
+    justify-content: flex-start;
+}
+
+/* Page settings : contenu aligné en haut (pas centré verticalement) */
+.home-content.settings-page {
+    justify-content: flex-start;
+}
+
 /* ====================================
    CONTAINER 3 : Input sticky en bas (seulement pages chat)
    ==================================== */
