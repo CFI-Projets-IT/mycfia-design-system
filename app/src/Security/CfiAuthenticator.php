@@ -235,6 +235,16 @@ class CfiAuthenticator extends AbstractAuthenticator
             ]);
         }
 
+        // BUGFIX: Forcer l'écriture de la session AVANT la redirection
+        // Race condition fix: Sans ceci, si l'utilisateur clique trop vite sur une page protégée,
+        // le token de sécurité n'est pas encore écrit en session et Symfony redirige vers /login
+        $session = $request->getSession();
+        $session->save();
+
+        $this->logger->debug('CFI Authenticator: Session saved before redirect', [
+            'session_id' => $session->getId(),
+        ]);
+
         // Redirection vers homepage
         return new RedirectResponse($this->urlGenerator->generate('home_index'));
     }
