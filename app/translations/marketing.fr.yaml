@@ -1,0 +1,22 @@
+project:
+  status:
+    draft: Brouillon
+    persona_generated: Personas générés
+    strategy_generated: Stratégie générée
+    assets_generating: Assets en cours
+    assets_generated: Assets générés
+    ready_to_publish: Prêt à publier
+    published: Publié
+
+  flash:
+    created: 'Projet créé avec succès ! Vous pouvez maintenant générer les personas.'
+    created_with_ai: 'Projet créé avec succès avec les améliorations IA ! Vous pouvez maintenant générer les personas.'
+    updated: 'Projet modifié avec succès !'
+    deleted: 'Projet supprimé avec succès !'
+    no_data_to_analyze: 'Aucune donnée de projet à analyser. Veuillez remplir le formulaire.'
+
+goal:
+  type:
+    awareness: Notoriété
+    conversion: Conversion
+    retention: Fidélisation

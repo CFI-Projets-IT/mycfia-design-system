@@ -56,6 +56,7 @@ a:hover {
 /* Components */
 @import './components/theme-selector.css';
 @import './components/quick-access.css';
+@import './components/forms.css';
 
 /* ====================================
    5. Utilities

@@ -1,0 +1,145 @@
+{% extends 'layouts/home.html.twig' %}
+
+{% block title %}Générer Stratégie - {{ project.name }}{% endblock %}
+
+{% block content %}
+<div class="container" style="max-width: 800px;">
+    <div class="mb-4">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="{{ path('marketing_project_index') }}">Projets Marketing</a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a href="{{ path('marketing_project_show', {id: project.id}) }}">{{ project.name }}</a>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">Génération stratégie</li>
+            </ol>
+        </nav>
+
+        <h1 class="h3 mb-1">Générer la stratégie marketing</h1>
+        <p class="text-muted">Étape 3 sur 4 : L'IA va analyser votre marché et optimiser votre budget</p>
+    </div>
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-primary text-white">
+            <div class="d-flex align-items-center">
+                <i class="bi bi-bullseye fs-4 me-2"></i>
+                <div>
+                    <h5 class="mb-0">Analyse Stratégique IA</h5>
+                    <small>3 agents IA : Stratégie + Budget + Concurrence</small>
+                </div>
+            </div>
+        </div>
+        <div class="card-body p-4">
+            {{ form_start(form) }}
+
+            {{ form_row(form.includeCompetitorAnalysis, {
+                label: 'Inclure une analyse concurrentielle',
+                attr: {class: 'form-check-input'}
+            }) }}
+
+            <div class="form-text mb-4">
+                <i class="bi bi-info-circle"></i>
+                Recommandé : L'agent IA analysera vos concurrents pour identifier opportunités et menaces
+            </div>
+
+            {{ form_row(form.focusChannels, {
+                label: 'Canaux marketing prioritaires',
+                attr: {class: 'form-check-input'}
+            }) }}
+
+            <div class="form-text mb-4">
+                <i class="bi bi-info-circle"></i>
+                Sélectionnez les canaux que vous souhaitez privilégier pour cette campagne
+            </div>
+
+            {{ form_row(form.additionalContext, {
+                label: 'Contexte additionnel (optionnel)',
+                attr: {
+                    class: 'form-control',
+                    rows: '4',
+                    placeholder: 'Exemple : Contraintes spécifiques, audiences géographiques, canaux à éviter...'
+                }
+            }) }}
+
+            <div class="alert alert-info">
+                <i class="bi bi-info-circle me-2"></i>
+                <strong>L'IA va générer :</strong>
+                <ul class="mb-0 mt-2">
+                    <li><strong>Stratégie marketing</strong> adaptée à votre secteur et objectifs</li>
+                    <li><strong>Allocation budget optimisée</strong> sur les canaux sélectionnés ({{ project.budget|number_format(0, ',', ' ') }} €)</li>
+                    <li><strong>KPIs et métriques</strong> de succès personnalisés</li>
+                    <li><strong>Risques et recommandations</strong> actionnables</li>
+                </ul>
+            </div>
+
+            <div class="card border-success mb-4">
+                <div class="card-body">
+                    <h6 class="text-success mb-2">
+                        <i class="bi bi-people-fill me-2"></i>
+                        Personas générés
+                    </h6>
+                    <div class="row g-2">
+                        {% for persona in project.personas %}
+                            <div class="col-12">
+                                <div class="d-flex align-items-center p-2 bg-light rounded">
+                                    <i class="bi bi-person-circle text-primary me-2"></i>
+                                    <div class="flex-grow-1">
+                                        <div class="fw-semibold">{{ persona.name }}</div>
+                                        <div class="small text-muted">{{ persona.description|u.truncate(80, '...') }}</div>
+                                    </div>
+                                    {% if persona.qualityScore %}
+                                        <span class="badge bg-success">{{ (persona.qualityScore * 100)|round }}%</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="d-flex gap-2 justify-content-end mt-4">
+                <a href="{{ path('marketing_project_show', {id: project.id}) }}" class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-left"></i> Retour
+                </a>
+                <button type="submit" class="btn btn-primary btn-lg">
+                    <i class="bi bi-magic"></i> Lancer l'analyse stratégique
+                </button>
+            </div>
+
+            {{ form_end(form) }}
+        </div>
+    </div>
+
+    <div class="row g-3">
+        <div class="col-md-4">
+            <div class="card border-primary">
+                <div class="card-body text-center">
+                    <i class="bi bi-bullseye text-primary fs-1 mb-2"></i>
+                    <h6 class="mb-1">Agent Stratégie</h6>
+                    <small class="text-muted">55-60s • ~$0.006</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card border-warning">
+                <div class="card-body text-center">
+                    <i class="bi bi-cash-stack text-warning fs-1 mb-2"></i>
+                    <h6 class="mb-1">Optimisation Budget</h6>
+                    <small class="text-muted">&lt;1s • Gratuit</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card border-info">
+                <div class="card-body text-center">
+                    <i class="bi bi-graph-up text-info fs-1 mb-2"></i>
+                    <h6 class="mb-1">Analyse Concurrence</h6>
+                    <small class="text-muted">35-40s • ~$0.004</small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

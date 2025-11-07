@@ -10,6 +10,27 @@ monolog:
         - tools         # Tools IA (GetFacturesTool, GetOperationsTool, GetStocksTool, etc.)
         - permissions   # Gestion des droits utilisateurs (PermissionsApiService, vérifications d'accès)
         - llm           # Appels LLM (Mistral via Symfony AI Bundle - temps génération, tokens, coût)
+        # Canaux marketing (8 assets + 4 agents + 3 stores + 3 tools + 2 services)
+        - marketing.asset.google_ads
+        - marketing.asset.bing_ads
+        - marketing.asset.linkedin_post
+        - marketing.asset.facebook_post
+        - marketing.asset.instagram_post
+        - marketing.asset.mail
+        - marketing.asset.iab
+        - marketing.asset.article
+        - marketing.agent.persona
+        - marketing.agent.strategy
+        - marketing.agent.competitor
+        - marketing.agent.content
+        - marketing.store.persona
+        - marketing.store.competitor
+        - marketing.store.brand
+        - marketing.tool.budget
+        - marketing.tool.competitor_intel
+        - marketing.tool.brand_style
+        - marketing.prompt_builder
+        - marketing.general
 
 when@dev:
     monolog:
@@ -20,7 +41,7 @@ when@dev:
                 path: "%kernel.logs_dir%/%kernel.environment%.log"
                 level: debug
                 max_files: 7
-                channels: ["!event", "!auth", "!chat", "!streaming", "!cfi_api", "!messenger", "!api_services", "!tools", "!permissions", "!llm"]
+                channels: ["!event", "!auth", "!chat", "!streaming", "!cfi_api", "!messenger", "!api_services", "!tools", "!permissions", "!llm", "!marketing.asset.google_ads", "!marketing.asset.bing_ads", "!marketing.asset.linkedin_post", "!marketing.asset.facebook_post", "!marketing.asset.instagram_post", "!marketing.asset.mail", "!marketing.asset.iab", "!marketing.asset.article", "!marketing.agent.persona", "!marketing.agent.strategy", "!marketing.agent.competitor", "!marketing.agent.content", "!marketing.store.persona", "!marketing.store.competitor", "!marketing.store.brand", "!marketing.tool.budget", "!marketing.tool.competitor_intel", "!marketing.tool.brand_style", "!marketing.prompt_builder", "!marketing.general"]
 
             # Logs d'authentification CFI
             auth:
@@ -93,6 +114,151 @@ when@dev:
                 level: info
                 max_files: 7
                 channels: ["llm"]
+
+            # === Marketing Bundle - Assets (8 handlers) ===
+            marketing_asset_google_ads:
+                type: rotating_file
+                path: '%kernel.logs_dir%/marketing/assets/google_ads.log'
+                level: debug
+                max_files: 7
+                channels: ['marketing.asset.google_ads']
+
+            marketing_asset_bing_ads:
+                type: rotating_file
+                path: '%kernel.logs_dir%/marketing/assets/bing_ads.log'
+                level: debug
+                max_files: 7
+                channels: ['marketing.asset.bing_ads']
+
+            marketing_asset_linkedin_post:
+                type: rotating_file
+                path: '%kernel.logs_dir%/marketing/assets/linkedin_post.log'
+                level: debug
+                max_files: 7
+                channels: ['marketing.asset.linkedin_post']
+
+            marketing_asset_facebook_post:
+                type: rotating_file
+                path: '%kernel.logs_dir%/marketing/assets/facebook_post.log'
+                level: debug
+                max_files: 7
+                channels: ['marketing.asset.facebook_post']
+
+            marketing_asset_instagram_post:
+                type: rotating_file
+                path: '%kernel.logs_dir%/marketing/assets/instagram_post.log'
+                level: debug
+                max_files: 7
+                channels: ['marketing.asset.instagram_post']
+
+            marketing_asset_mail:
+                type: rotating_file
+                path: '%kernel.logs_dir%/marketing/assets/mail.log'
+                level: debug
+                max_files: 7
+                channels: ['marketing.asset.mail']
+
+            marketing_asset_iab:
+                type: rotating_file
+                path: '%kernel.logs_dir%/marketing/assets/iab.log'
+                level: debug
+                max_files: 7
+                channels: ['marketing.asset.iab']
+
+            marketing_asset_article:
+                type: rotating_file
+                path: '%kernel.logs_dir%/marketing/assets/article.log'
+                level: debug
+                max_files: 7
+                channels: ['marketing.asset.article']
+
+            # === Marketing Bundle - Agents (4 handlers) ===
+            marketing_agent_persona:
+                type: rotating_file
+                path: '%kernel.logs_dir%/marketing/agents/persona.log'
+                level: debug
+                max_files: 7
+                channels: ['marketing.agent.persona']
+
+            marketing_agent_strategy:
+                type: rotating_file
+                path: '%kernel.logs_dir%/marketing/agents/strategy.log'
+                level: debug
+                max_files: 7
+                channels: ['marketing.agent.strategy']
+
+            marketing_agent_competitor:
+                type: rotating_file
+                path: '%kernel.logs_dir%/marketing/agents/competitor.log'
+                level: debug
+                max_files: 7
+                channels: ['marketing.agent.competitor']
+
+            marketing_agent_content:
+                type: rotating_file
+                path: '%kernel.logs_dir%/marketing/agents/content.log'
+                level: debug
+                max_files: 7
+                channels: ['marketing.agent.content']
+
+            # === Marketing Bundle - Stores (3 handlers) ===
+            marketing_store_persona:
+                type: rotating_file
+                path: '%kernel.logs_dir%/marketing/stores/persona.log'
+                level: debug
+                max_files: 7
+                channels: ['marketing.store.persona']
+
+            marketing_store_competitor:
+                type: rotating_file
+                path: '%kernel.logs_dir%/marketing/stores/competitor.log'
+                level: debug
+                max_files: 7
+                channels: ['marketing.store.competitor']
+
+            marketing_store_brand:
+                type: rotating_file
+                path: '%kernel.logs_dir%/marketing/stores/brand.log'
+                level: debug
+                max_files: 7
+                channels: ['marketing.store.brand']
+
+            # === Marketing Bundle - Tools (3 handlers) ===
+            marketing_tool_budget:
+                type: rotating_file
+                path: '%kernel.logs_dir%/marketing/tools/budget.log'
+                level: debug
+                max_files: 7
+                channels: ['marketing.tool.budget']
+
+            marketing_tool_competitor_intel:
+                type: rotating_file
+                path: '%kernel.logs_dir%/marketing/tools/competitor_intel.log'
+                level: debug
+                max_files: 7
+                channels: ['marketing.tool.competitor_intel']
+
+            marketing_tool_brand_style:
+                type: rotating_file
+                path: '%kernel.logs_dir%/marketing/tools/brand_style.log'
+                level: debug
+                max_files: 7
+                channels: ['marketing.tool.brand_style']
+
+            # === Marketing Bundle - Services (2 handlers) ===
+            marketing_prompt_builder:
+                type: rotating_file
+                path: '%kernel.logs_dir%/marketing/prompt_builder.log'
+                level: debug
+                max_files: 7
+                channels: ['marketing.prompt_builder']
+
+            marketing_general:
+                type: rotating_file
+                path: '%kernel.logs_dir%/marketing/general.log'
+                level: debug
+                max_files: 7
+                channels: ['marketing.general']
 
             # uncomment to get logging in your browser
             # you may have to allow bigger header sizes in your Web server configuration

@@ -33,3 +33,23 @@ conversation_status.archived: "Archived"
 ai_message_role.user: "User"
 ai_message_role.assistant: "AI Assistant"
 ai_message_role.system: "System"
+
+# Project Status
+project_status.draft: "Draft"
+project_status.persona_generated: "Personas Generated"
+project_status.strategy_generated: "Strategy Generated"
+project_status.assets_generating: "Assets Generating"
+project_status.assets_generated: "Assets Generated"
+project_status.ready_to_publish: "Ready to Publish"
+project_status.published: "Published"
+
+# Goal Type
+goal_type.awareness: "Awareness"
+goal_type.conversion: "Conversion"
+goal_type.retention: "Retention"
+
+# Asset Status
+asset_status.draft: "Draft"
+asset_status.approved: "Approved"
+asset_status.published: "Published"
+asset_status.rejected: "Rejected"

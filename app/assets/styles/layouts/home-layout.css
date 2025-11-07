@@ -204,6 +204,11 @@
     justify-content: flex-start;
 }
 
+/* Page marketing : contenu aligné en haut (pas centré verticalement) */
+.home-content.marketing-page {
+    justify-content: flex-start;
+}
+
 /* ====================================
    CONTAINER 3 : Input sticky en bas (seulement pages chat)
    ==================================== */

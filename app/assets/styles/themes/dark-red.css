@@ -165,3 +165,234 @@ body.theme-dark-red select:focus {
     background-color: var(--theme-card-bg);
     border-color: var(--theme-accent);
 }
+
+/* ====================================
+   Marketing Module - Form Overrides
+   ==================================== */
+
+/* Progress Bar */
+body.theme-dark-red .progress {
+    background-color: rgba(42, 20, 25, 0.4);
+    border: 1px solid var(--theme-border-color);
+}
+
+body.theme-dark-red .progress-bar {
+    background-color: var(--theme-accent);
+}
+
+/* Badges */
+body.theme-dark-red .badge.bg-primary {
+    background-color: var(--theme-accent) !important;
+    color: #ffffff;
+}
+
+body.theme-dark-red .badge.bg-secondary {
+    background-color: var(--theme-bg-secondary) !important;
+    color: var(--theme-text-secondary);
+    border: 1px solid var(--theme-border-color);
+}
+
+body.theme-dark-red .badge.bg-success {
+    background-color: #4caf50 !important;
+    color: #ffffff;
+}
+
+body.theme-dark-red .badge.bg-warning {
+    background-color: #ff9800 !important;
+    color: #000000;
+}
+
+body.theme-dark-red .badge.bg-info {
+    background-color: #5fa8d3 !important;
+    color: #ffffff;
+}
+
+body.theme-dark-red .badge.bg-danger {
+    background-color: var(--theme-accent) !important;
+    color: #ffffff;
+}
+
+/* Alerts and Cards - Contextual Backgrounds */
+body.theme-dark-red .alert.alert-success,
+body.theme-dark-red .card.bg-success {
+    background-color: rgba(76, 175, 80, 0.2) !important;
+    border-color: #4caf50;
+    color: var(--theme-text-primary);
+}
+
+body.theme-dark-red .alert.alert-warning,
+body.theme-dark-red .card.bg-warning {
+    background-color: rgba(255, 152, 0, 0.2) !important;
+    border-color: #ff9800;
+    color: var(--theme-text-primary);
+}
+
+body.theme-dark-red .alert.alert-info,
+body.theme-dark-red .card.bg-info {
+    background-color: rgba(95, 168, 211, 0.2) !important;
+    border-color: #5fa8d3;
+    color: var(--theme-text-primary);
+}
+
+body.theme-dark-red .alert.alert-danger,
+body.theme-dark-red .card.bg-danger {
+    background-color: rgba(211, 95, 141, 0.2) !important;
+    border-color: var(--theme-accent);
+    color: var(--theme-text-primary);
+}
+
+/* Progress Bar Variants */
+body.theme-dark-red .progress-bar.bg-success {
+    background-color: #4caf50 !important;
+}
+
+body.theme-dark-red .progress-bar.bg-warning {
+    background-color: #ff9800 !important;
+}
+
+body.theme-dark-red .progress-bar.bg-danger {
+    background-color: var(--theme-accent) !important;
+}
+
+/* Card Header */
+body.theme-dark-red .card-header {
+    background-color: var(--theme-accent);
+    color: #ffffff;
+    border-bottom: 1px solid var(--theme-border-color);
+}
+
+body.theme-dark-red .card-header.bg-primary {
+    background-color: var(--theme-accent) !important;
+    color: #ffffff !important;
+}
+
+/* Breadcrumb */
+body.theme-dark-red .breadcrumb {
+    background-color: transparent;
+}
+
+body.theme-dark-red .breadcrumb-item a {
+    color: var(--theme-accent);
+}
+
+body.theme-dark-red .breadcrumb-item.active {
+    color: var(--theme-text-primary);
+}
+
+body.theme-dark-red .breadcrumb-item + .breadcrumb-item::before {
+    color: var(--theme-text-secondary);
+}
+
+/* Border Utilities */
+body.theme-dark-red .border-bottom {
+    border-bottom-color: var(--theme-border-color) !important;
+}
+
+/* Step Circles */
+body.theme-dark-red .bg-primary.rounded-circle {
+    background-color: var(--theme-accent) !important;
+    color: #ffffff !important;
+}
+
+body.theme-dark-red .bg-secondary.rounded-circle {
+    background-color: var(--theme-bg-secondary) !important;
+    color: var(--theme-text-secondary) !important;
+    border: 1px solid var(--theme-border-color);
+}
+
+/* Text Colors for Steps and Headings */
+body.theme-dark-red h1,
+body.theme-dark-red h2,
+body.theme-dark-red h5,
+body.theme-dark-red h6 {
+    color: var(--theme-text-primary);
+}
+
+body.theme-dark-red h6.text-primary,
+body.theme-dark-red h5 .text-primary,
+body.theme-dark-red h6.fw-bold {
+    color: var(--theme-accent) !important;
+}
+
+body.theme-dark-red .text-muted,
+body.theme-dark-red .small.text-muted,
+body.theme-dark-red p.small.text-muted {
+    color: var(--theme-text-secondary) !important;
+}
+
+body.theme-dark-red .fw-bold {
+    color: var(--theme-text-primary);
+}
+
+/* Buttons */
+body.theme-dark-red .btn-outline-secondary {
+    color: var(--theme-text-primary);
+    border-color: var(--theme-border-color);
+}
+
+body.theme-dark-red .btn-outline-secondary:hover {
+    background-color: var(--theme-bg-secondary);
+    border-color: var(--theme-accent);
+    color: var(--theme-text-primary);
+}
+
+/* Icons */
+body.theme-dark-red .text-success,
+body.theme-dark-red i.text-success,
+body.theme-dark-red .bi.text-success {
+    color: #4caf50 !important;
+}
+
+body.theme-dark-red .text-warning,
+body.theme-dark-red i.text-warning,
+body.theme-dark-red .bi.text-warning {
+    color: #ff9800 !important;
+}
+
+body.theme-dark-red .text-danger,
+body.theme-dark-red i.text-danger,
+body.theme-dark-red .bi.text-danger {
+    color: var(--theme-accent) !important;
+}
+
+body.theme-dark-red i.text-primary,
+body.theme-dark-red .bi.text-primary {
+    color: var(--theme-accent) !important;
+}
+
+/* Form Elements - Labels and Help Text */
+body.theme-dark-red .form-label,
+body.theme-dark-red label {
+    color: var(--theme-text-primary) !important;
+}
+
+body.theme-dark-red .form-text,
+body.theme-dark-red .invalid-feedback,
+body.theme-dark-red .valid-feedback {
+    color: var(--theme-text-secondary) !important;
+}
+
+/* Form Controls - Text Input */
+body.theme-dark-red .form-control,
+body.theme-dark-red .form-select,
+body.theme-dark-red input[type="text"],
+body.theme-dark-red input[type="number"],
+body.theme-dark-red textarea,
+body.theme-dark-red select {
+    color: var(--theme-text-primary) !important;
+}
+
+body.theme-dark-red .form-control::placeholder {
+    color: var(--theme-text-secondary) !important;
+    opacity: 0.7;
+}
+
+/* Small text descriptions */
+body.theme-dark-red small {
+    color: var(--theme-text-secondary);
+}
+
+/* Paragraphs in cards */
+body.theme-dark-red .card-body p {
+    color: var(--theme-text-secondary);
+}

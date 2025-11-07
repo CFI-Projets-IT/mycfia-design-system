@@ -1,0 +1,189 @@
+{% extends 'layouts/home.html.twig' %}
+
+{% block title %}Générer Assets - {{ project.name }}{% endblock %}
+
+{% block content %}
+<div class="container" style="max-width: 900px;">
+    <div class="mb-4">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="{{ path('marketing_project_index') }}">Projets Marketing</a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a href="{{ path('marketing_project_show', {id: project.id}) }}">{{ project.name }}</a>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">Génération assets</li>
+            </ol>
+        </nav>
+
+        <h1 class="h3 mb-1">Générer les assets marketing</h1>
+        <p class="text-muted">Étape 4 sur 4 : L'IA va créer vos contenus multi-canaux prêts à publier</p>
+    </div>
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-primary text-white">
+            <div class="d-flex align-items-center">
+                <i class="bi bi-file-earmark-text fs-4 me-2"></i>
+                <div>
+                    <h5 class="mb-0">Création de Contenus Multi-Canaux</h5>
+                    <small>Génération parallèle avec ContentCreatorAgent</small>
+                </div>
+            </div>
+        </div>
+        <div class="card-body p-4">
+            {{ form_start(form) }}
+
+            <div class="mb-4">
+                <h6 class="mb-3">
+                    <i class="bi bi-check2-square me-2"></i>
+                    Types d'assets à générer
+                </h6>
+                {{ form_row(form.assetTypes, {
+                    label: false,
+                    attr: {class: 'form-check-input'}
+                }) }}
+                <div class="form-text">
+                    <i class="bi bi-info-circle"></i>
+                    Sélectionnez les canaux pour lesquels vous souhaitez générer des contenus
+                </div>
+            </div>
+
+            <div class="row g-3 mb-4">
+                <div class="col-md-6">
+                    {{ form_row(form.numberOfVariations, {
+                        label: 'Nombre de variations A/B par canal',
+                        attr: {class: 'form-select'}
+                    }) }}
+                </div>
+
+                <div class="col-md-6">
+                    {{ form_row(form.toneOfVoice, {
+                        label: 'Ton de voix souhaité',
+                        attr: {class: 'form-select'}
+                    }) }}
+                </div>
+            </div>
+
+            {{ form_row(form.additionalContext, {
+                label: 'Contexte additionnel (optionnel)',
+                attr: {
+                    class: 'form-control',
+                    rows: '3',
+                    placeholder: 'Exemple : Mettre en avant l\'offre de lancement, éviter le terme "gratuit", inclure témoignages clients...'
+                }
+            }) }}
+
+            <div class="card border-success mb-4">
+                <div class="card-body">
+                    <h6 class="text-success mb-2">
+                        <i class="bi bi-bullseye me-2"></i>
+                        Stratégie définie
+                    </h6>
+                    {% if project.strategies|length > 0 %}
+                        {% set strategy = project.strategies|first %}
+                        <div class="mb-3">
+                            <div class="fw-semibold">{{ strategy.name }}</div>
+                            <div class="small text-muted">{{ strategy.strategy|u.truncate(150, '...') }}</div>
+                        </div>
+
+                        {% if strategy.budgetAllocation %}
+                            <h6 class="text-muted mb-2 small">Allocation budget optimisée :</h6>
+                            <div class="row g-2">
+                                {% for channel, amount in strategy.budgetAllocation %}
+                                    {% if amount > 0 %}
+                                        <div class="col-6">
+                                            <div class="d-flex justify-content-between align-items-center p-2 bg-light rounded">
+                                                <span class="small">{{ channel|replace({'_': ' '})|title }}</span>
+                                                <span class="badge bg-success">{{ amount|number_format(0, ',', ' ') }} €</span>
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="alert alert-info">
+                <i class="bi bi-info-circle me-2"></i>
+                <strong>Génération parallèle :</strong><br>
+                <small class="text-muted">
+                    Tous les assets sélectionnés seront générés simultanément pour maximiser la vitesse.
+                    Temps estimé : 5-10 minutes pour 8 canaux × 2 variations = 16 assets
+                </small>
+            </div>
+
+            <div class="d-flex gap-2 justify-content-end mt-4">
+                <a href="{{ path('marketing_project_show', {id: project.id}) }}" class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-left"></i> Retour
+                </a>
+                <button type="submit" class="btn btn-primary btn-lg">
+                    <i class="bi bi-magic"></i> Lancer la création des assets
+                </button>
+            </div>
+
+            {{ form_end(form) }}
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h6 class="mb-0">Temps et coûts estimés par type d'asset</h6>
+        </div>
+        <div class="card-body">
+            <div class="row g-2 small">
+                <div class="col-md-3 col-6">
+                    <div class="p-2 border rounded">
+                        <div class="fw-semibold">Google Ads</div>
+                        <div class="text-muted">~18s • $0.004</div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6">
+                    <div class="p-2 border rounded">
+                        <div class="fw-semibold">LinkedIn</div>
+                        <div class="text-muted">~48s • $0.006</div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6">
+                    <div class="p-2 border rounded">
+                        <div class="fw-semibold">Facebook</div>
+                        <div class="text-muted">~24s • $0.005</div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6">
+                    <div class="p-2 border rounded">
+                        <div class="fw-semibold">Instagram</div>
+                        <div class="text-muted">~30s • $0.005</div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6">
+                    <div class="p-2 border rounded">
+                        <div class="fw-semibold">Email</div>
+                        <div class="text-muted">~54s • $0.008</div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6">
+                    <div class="p-2 border rounded">
+                        <div class="fw-semibold">Bing Ads</div>
+                        <div class="text-muted">~26s • $0.005</div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6">
+                    <div class="p-2 border rounded">
+                        <div class="fw-semibold">IAB Banner</div>
+                        <div class="text-muted">~96s • $0.011</div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6">
+                    <div class="p-2 border rounded">
+                        <div class="fw-semibold">Article SEO</div>
+                        <div class="text-muted">~201s • $0.023</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

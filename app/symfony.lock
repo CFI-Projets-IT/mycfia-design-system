@@ -59,6 +59,9 @@
             ".php-cs-fixer.dist.php"
         ]
     },
+    "gorillias/marketing-ai-bundle": {
+        "version": "1.0.0"
+    },
     "phpstan/phpstan": {
         "version": "2.1",
         "recipe": {

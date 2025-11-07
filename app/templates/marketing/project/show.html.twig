@@ -1,0 +1,333 @@
+{% extends 'layouts/home.html.twig' %}
+
+{% block title %}{{ project.name }} - Projet Marketing{% endblock %}
+
+{% block content_classes %} marketing-page{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="mb-4">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="{{ path('marketing_project_index') }}">Projets Marketing</a>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">{{ project.name }}</li>
+            </ol>
+        </nav>
+
+        <div class="d-flex justify-content-between align-items-start">
+            <div>
+                <h1 class="h3 mb-1">{{ project.name }}</h1>
+                <div class="d-flex align-items-center gap-2 mb-2">
+                    <span class="badge bg-secondary">
+                        {% if project.goalType == constant('App\\Enum\\GoalType::AWARENESS') %}
+                            <i class="bi bi-megaphone"></i> Notoriété
+                        {% elseif project.goalType == constant('App\\Enum\\GoalType::CONVERSION') %}
+                            <i class="bi bi-graph-up-arrow"></i> Conversion
+                        {% else %}
+                            <i class="bi bi-heart"></i> Fidélisation
+                        {% endif %}
+                    </span>
+                    <span class="text-muted">•</span>
+                    <span class="text-muted">Créé le {{ project.createdAt|date('d/m/Y') }}</span>
+                </div>
+            </div>
+            <div class="d-flex gap-2">
+                <span class="badge bg-{{ project.status == constant('App\\Enum\\ProjectStatus::PUBLISHED') ? 'success' : 'primary' }} fs-6">
+                    {{ ('project.status.' ~ project.status.value)|trans({}, 'marketing') }}
+                </span>
+                <a href="{{ path('marketing_project_edit', {id: project.id}) }}" class="btn btn-outline-secondary btn-sm">
+                    <i class="bi bi-pencil"></i> Modifier
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-3 mb-4">
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-shrink-0">
+                            <i class="bi bi-cash-coin text-success fs-2"></i>
+                        </div>
+                        <div class="flex-grow-1 ms-3">
+                            <div class="text-muted small">Budget</div>
+                            <div class="fs-5 fw-semibold">{{ project.budget|number_format(0, ',', ' ') }} €</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-shrink-0">
+                            <i class="bi bi-people text-primary fs-2"></i>
+                        </div>
+                        <div class="flex-grow-1 ms-3">
+                            <div class="text-muted small">Personas</div>
+                            <div class="fs-5 fw-semibold">{{ project.personas|length }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-shrink-0">
+                            <i class="bi bi-bullseye text-warning fs-2"></i>
+                        </div>
+                        <div class="flex-grow-1 ms-3">
+                            <div class="text-muted small">Stratégie</div>
+                            <div class="fs-5 fw-semibold">{{ project.strategies|length }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-shrink-0">
+                            <i class="bi bi-file-earmark-text text-info fs-2"></i>
+                        </div>
+                        <div class="flex-grow-1 ms-3">
+                            <div class="text-muted small">Assets</div>
+                            <div class="fs-5 fw-semibold">
+                                {{ project.assets|length }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5 class="mb-0">Workflow de Génération</h5>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-3 text-center">
+                    <div class="mb-2">
+                        <i class="bi bi-check-circle-fill text-success fs-1"></i>
+                    </div>
+                    <h6>Projet créé</h6>
+                    <p class="text-muted small">Configuration initiale</p>
+                </div>
+
+                <div class="col-md-3 text-center">
+                    <div class="mb-2">
+                        <i class="bi bi-{{ project.personas|length > 0 ? 'check-circle-fill text-success' : 'circle text-muted' }} fs-1"></i>
+                    </div>
+                    <h6>Personas</h6>
+                    {% if project.personas|length > 0 %}
+                        <a href="#personas" class="btn btn-sm btn-outline-primary">Voir les personas</a>
+                    {% else %}
+                        <a href="{{ path('marketing_persona_generate', {id: project.id}) }}" class="btn btn-sm btn-primary">
+                            <i class="bi bi-magic"></i> Générer
+                        </a>
+                    {% endif %}
+                </div>
+
+                <div class="col-md-3 text-center">
+                    <div class="mb-2">
+                        <i class="bi bi-{{ project.strategies|length > 0 ? 'check-circle-fill text-success' : 'circle text-muted' }} fs-1"></i>
+                    </div>
+                    <h6>Stratégie</h6>
+                    {% if project.strategies|length > 0 %}
+                        <a href="#strategy" class="btn btn-sm btn-outline-primary">Voir stratégie</a>
+                    {% elseif project.personas|length > 0 %}
+                        <a href="{{ path('marketing_strategy_generate', {id: project.id}) }}" class="btn btn-sm btn-primary">
+                            <i class="bi bi-magic"></i> Générer
+                        </a>
+                    {% else %}
+                        <button class="btn btn-sm btn-secondary" disabled>
+                            <i class="bi bi-lock"></i> Verrouillé
+                        </button>
+                    {% endif %}
+                </div>
+
+                <div class="col-md-3 text-center">
+                    <div class="mb-2">
+                        <i class="bi bi-{{ project.assets|length > 0 ? 'check-circle-fill text-success' : 'circle text-muted' }} fs-1"></i>
+                    </div>
+                    <h6>Assets</h6>
+                    {% if project.assets|length > 0 %}
+                        <a href="#assets" class="btn btn-sm btn-outline-primary">Voir assets</a>
+                    {% elseif project.strategies|length > 0 %}
+                        <a href="{{ path('marketing_asset_generate', {id: project.id}) }}" class="btn btn-sm btn-primary">
+                            <i class="bi bi-magic"></i> Générer
+                        </a>
+                    {% else %}
+                        <button class="btn btn-sm btn-secondary" disabled>
+                            <i class="bi bi-lock"></i> Verrouillé
+                        </button>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% if project.personas|length > 0 %}
+        <div class="card mb-4" id="personas">
+            <div class="card-header">
+                <h5 class="mb-0">Personas Générés</h5>
+            </div>
+            <div class="card-body">
+                <div class="row g-3">
+                    {% for persona in project.personas %}
+                        <div class="col-md-6 col-lg-4">
+                            <div class="card h-100 border">
+                                <div class="card-body">
+                                    <h6 class="card-title">{{ persona.name }}</h6>
+                                    <p class="card-text text-muted small">{{ persona.description|u.truncate(120, '...') }}</p>
+                                    {% if persona.qualityScore %}
+                                        <div class="progress" style="height: 8px;">
+                                            <div class="progress-bar bg-success" role="progressbar"
+                                                 style="width: {{ (persona.qualityScore * 100)|round }}%"
+                                                 aria-valuenow="{{ (persona.qualityScore * 100)|round }}"
+                                                 aria-valuemin="0"
+                                                 aria-valuemax="100">
+                                            </div>
+                                        </div>
+                                        <div class="text-muted small mt-1">
+                                            Qualité : {{ (persona.qualityScore * 100)|round }}%
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    <div class="card">
+        <div class="card-header">
+            <h5 class="mb-0">Détails du Projet</h5>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                {# Entreprise et Secteur #}
+                <div class="col-md-6 mb-3">
+                    <div class="text-muted small mb-1">
+                        <i class="bi bi-building"></i> Entreprise
+                    </div>
+                    <div class="fw-semibold">{{ project.companyName }}</div>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <div class="text-muted small mb-1">
+                        <i class="bi bi-tag"></i> Secteur d'activité
+                    </div>
+                    <div>
+                        <span class="badge bg-info">{{ project.sector }}</span>
+                    </div>
+                </div>
+
+                {# Description #}
+                <div class="col-md-12 mb-3">
+                    <div class="text-muted small mb-1">
+                        <i class="bi bi-card-text"></i> Description du projet
+                    </div>
+                    <div>{{ project.description|nl2br }}</div>
+                </div>
+
+                {# Produit/Service #}
+                <div class="col-md-12 mb-3">
+                    <div class="text-muted small mb-1">
+                        <i class="bi bi-box-seam"></i> Produit/Service
+                    </div>
+                    <div>{{ project.productInfo|nl2br }}</div>
+                </div>
+
+                {# Objectifs #}
+                <div class="col-md-4 mb-3">
+                    <div class="text-muted small mb-1">
+                        <i class="bi bi-bullseye"></i> Objectif principal
+                    </div>
+                    <div>
+                        <span class="badge bg-warning">
+                            {{ ('goal.type.' ~ project.goalType.value)|trans({}, 'marketing') }}
+                        </span>
+                    </div>
+                </div>
+
+                <div class="col-md-8 mb-3">
+                    <div class="text-muted small mb-1">
+                        <i class="bi bi-list-check"></i> Objectifs détaillés (SMART)
+                    </div>
+                    <div class="small">{{ project.detailedObjectives|nl2br }}</div>
+                </div>
+
+                {# Budget et Timeline #}
+                <div class="col-md-4 mb-3">
+                    <div class="text-muted small mb-1">
+                        <i class="bi bi-currency-euro"></i> Budget total
+                    </div>
+                    <div class="fs-5 fw-semibold text-success">{{ project.budget|number_format(2, ',', ' ') }} €</div>
+                </div>
+
+                <div class="col-md-4 mb-3">
+                    <div class="text-muted small mb-1">
+                        <i class="bi bi-calendar-event"></i> Date de début
+                    </div>
+                    <div>{{ project.startDate|date('d/m/Y') }}</div>
+                </div>
+
+                <div class="col-md-4 mb-3">
+                    <div class="text-muted small mb-1">
+                        <i class="bi bi-calendar-check"></i> Date de fin
+                    </div>
+                    <div>{{ project.endDate|date('d/m/Y') }}</div>
+                    <div class="small text-muted">
+                        Durée : {{ project.startDate.diff(project.endDate).days }} jours
+                    </div>
+                </div>
+
+                {# URL Site Web (si présent) #}
+                {% if project.websiteUrl %}
+                    <div class="col-md-12 mb-3">
+                        <div class="text-muted small mb-1">
+                            <i class="bi bi-link-45deg"></i> Site web
+                        </div>
+                        <div>
+                            <a href="{{ project.websiteUrl }}" target="_blank" class="text-decoration-none">
+                                {{ project.websiteUrl }}
+                                <i class="bi bi-box-arrow-up-right small"></i>
+                            </a>
+                        </div>
+                    </div>
+                {% endif %}
+
+                {# Métadonnées #}
+                <div class="col-md-6 mb-3 pt-3 border-top">
+                    <div class="text-muted small mb-1">
+                        <i class="bi bi-calendar-plus"></i> Date de création
+                    </div>
+                    <div>{{ project.createdAt|date('d/m/Y à H:i') }}</div>
+                </div>
+
+                <div class="col-md-6 mb-3 pt-3 border-top">
+                    <div class="text-muted small mb-1">
+                        <i class="bi bi-calendar-check"></i> Dernière mise à jour
+                    </div>
+                    <div>{{ project.updatedAt|date('d/m/Y à H:i') }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

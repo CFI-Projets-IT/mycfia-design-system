@@ -1,0 +1,309 @@
+{% extends 'layouts/home.html.twig' %}
+
+{% block title %}Analyse IA du Projet - myCFiia{% endblock %}
+
+{% block content_classes %} marketing-page{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4" style="max-width: 1400px;">
+    {# Breadcrumb Navigation #}
+    <nav aria-label="breadcrumb" class="mb-3">
+        <ol class="breadcrumb mb-0">
+            <li class="breadcrumb-item">
+                <a href="{{ path('marketing_project_index') }}" class="text-decoration-none">
+                    <i class="bi bi-grid-3x3-gap"></i> Projets Marketing
+                </a>
+            </li>
+            <li class="breadcrumb-item">
+                <a href="{{ path('marketing_project_new') }}" class="text-decoration-none">Nouveau projet</a>
+            </li>
+            <li class="breadcrumb-item active" aria-current="page">Analyse IA</li>
+        </ol>
+    </nav>
+
+    {# Page Header #}
+    <div class="mb-4">
+        <h1 class="h2 fw-bold mb-2">
+            <i class="bi bi-robot text-primary"></i>
+            Analyse et suggestions IA
+        </h1>
+        <p class="text-muted">
+            L'IA a analysé votre projet et propose des améliorations pour maximiser son efficacité.
+        </p>
+    </div>
+
+    {# Flash Messages #}
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle-fill"></i> {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    {% endfor %}
+    {% for message in app.flashes('error') %}
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="bi bi-exclamation-triangle-fill"></i> {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    {% endfor %}
+
+    {# Score de cohérence #}
+    <div class="card shadow-sm border-0 mb-4">
+        <div class="card-body p-4">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h5 class="fw-bold mb-3">
+                        <i class="bi bi-graph-up text-primary"></i>
+                        Score de cohérence du projet
+                    </h5>
+                    <div class="progress mb-2" style="height: 30px;">
+                        {% set scorePercent = (analysis.consistency_score * 100)|number_format(0) %}
+                        {% set progressClass = scorePercent >= 80 ? 'bg-success' : (scorePercent >= 60 ? 'bg-warning' : 'bg-danger') %}
+                        <div class="progress-bar {{ progressClass }}" role="progressbar"
+                             style="width: {{ scorePercent }}%;"
+                             aria-valuenow="{{ scorePercent }}"
+                             aria-valuemin="0"
+                             aria-valuemax="100">
+                            <span class="fw-bold">{{ scorePercent }}%</span>
+                        </div>
+                    </div>
+                    <p class="small text-muted mb-0">
+                        {% if scorePercent >= 80 %}
+                            <i class="bi bi-check-circle-fill text-success"></i>
+                            Excellent ! Votre projet est bien structuré et cohérent.
+                        {% elseif scorePercent >= 60 %}
+                            <i class="bi bi-exclamation-circle-fill text-warning"></i>
+                            Bon départ, mais quelques améliorations sont recommandées.
+                        {% else %}
+                            <i class="bi bi-x-circle-fill text-danger"></i>
+                            Votre projet nécessite des ajustements importants pour optimiser son efficacité.
+                        {% endif %}
+                    </p>
+                </div>
+                <div class="col-md-4 text-center">
+                    <div class="display-1 fw-bold {{ progressClass == 'bg-success' ? 'text-success' : (progressClass == 'bg-warning' ? 'text-warning' : 'text-danger') }}">
+                        {{ scorePercent }}<small class="h3">/100</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {# Layout 2 colonnes : Suggestions + Formulaire amélioré #}
+    <div class="row g-4">
+        {# Colonne principale : Formulaire avec suggestions appliquées #}
+        <div class="col-lg-8">
+            {# Warnings (si présents) #}
+            {% if analysis.warnings is not empty %}
+                <div class="card shadow-sm border-danger mb-4">
+                    <div class="card-header bg-danger text-white">
+                        <h6 class="mb-0">
+                            <i class="bi bi-exclamation-triangle-fill"></i>
+                            Points d'attention ({{ analysis.warnings|length }})
+                        </h6>
+                    </div>
+                    <div class="card-body">
+                        <ul class="mb-0">
+                            {% for warning in analysis.warnings %}
+                                <li class="text-danger">{{ warning }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            {% endif %}
+
+            {# Recommendations (si présentes) #}
+            {% if analysis.recommendations is not empty %}
+                <div class="card shadow-sm border-primary mb-4">
+                    <div class="card-header bg-primary text-white">
+                        <h6 class="mb-0">
+                            <i class="bi bi-lightbulb-fill"></i>
+                            Recommandations IA ({{ analysis.recommendations|length }})
+                        </h6>
+                    </div>
+                    <div class="card-body">
+                        <ul class="mb-0">
+                            {% for recommendation in analysis.recommendations %}
+                                <li class="text-primary">{{ recommendation }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            {% endif %}
+
+            {# Formulaire avec suggestions appliquées #}
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0 fw-bold">
+                        <i class="bi bi-pencil-square text-primary"></i>
+                        Projet amélioré par l'IA
+                    </h5>
+                </div>
+                <div class="card-body p-4">
+                    <form method="post" action="{{ path('marketing_project_analyze') }}">
+                        {# Champ caché pour déclencher l'acceptation #}
+                        <input type="hidden" name="accept_suggestions" value="1">
+
+                        {# Section 1: Nom du projet #}
+                        <div class="mb-4">
+                            <h6 class="fw-bold mb-3 pb-2 border-bottom">
+                                <i class="bi bi-tag-fill text-primary"></i>
+                                Nom du projet
+                            </h6>
+                            <div class="mb-3">
+                                <label for="name" class="form-label fw-semibold">Nom suggéré par l'IA</label>
+                                <input type="text"
+                                       class="form-control"
+                                       id="name"
+                                       name="name"
+                                       value="{{ analysis.suggested_name ?? projectData.name }}"
+                                       required>
+                                {% if analysis.suggested_name_reason %}
+                                    <div class="form-text text-primary">
+                                        <i class="bi bi-info-circle"></i> {{ analysis.suggested_name_reason }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        {# Section 2: Informations entreprise #}
+                        <div class="mb-4">
+                            <h6 class="fw-bold mb-3 pb-2 border-bottom">
+                                <i class="bi bi-building text-success"></i>
+                                Informations entreprise
+                            </h6>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label for="companyName" class="form-label fw-semibold">Nom de l'entreprise</label>
+                                    <input type="text" class="form-control" id="companyName" name="companyName" value="{{ projectData.companyName }}" readonly>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="sector" class="form-label fw-semibold">Secteur d'activité</label>
+                                    <input type="text" class="form-control" id="sector" name="sector" value="{{ projectData.sector }}" readonly>
+                                </div>
+                            </div>
+                        </div>
+
+                        {# Section 3: Description #}
+                        <div class="mb-4">
+                            <h6 class="fw-bold mb-3 pb-2 border-bottom">
+                                <i class="bi bi-card-text text-info"></i>
+                                Description
+                            </h6>
+                            <div class="mb-3">
+                                <label for="description" class="form-label fw-semibold">Description du projet</label>
+                                <textarea class="form-control" id="description" name="description" rows="4" readonly>{{ projectData.description }}</textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label for="productInfo" class="form-label fw-semibold">Informations produit</label>
+                                <textarea class="form-control" id="productInfo" name="productInfo" rows="4" readonly>{{ projectData.productInfo }}</textarea>
+                            </div>
+                        </div>
+
+                        {# Section 4: Objectifs améliorés #}
+                        <div class="mb-4">
+                            <h6 class="fw-bold mb-3 pb-2 border-bottom">
+                                <i class="bi bi-bullseye text-warning"></i>
+                                Objectifs marketing (améliorés par l'IA)
+                            </h6>
+                            <div class="mb-3">
+                                <label for="detailedObjectives" class="form-label fw-semibold">Objectifs SMART</label>
+                                <textarea class="form-control"
+                                          id="detailedObjectives"
+                                          name="detailedObjectives"
+                                          rows="6"
+                                          required>{{ analysis.enhanced_objectives ?? projectData.detailedObjectives }}</textarea>
+                                {% if analysis.objectives_improvements is not empty %}
+                                    <div class="form-text">
+                                        <strong class="text-success">
+                                            <i class="bi bi-check-circle"></i> Améliorations appliquées :
+                                        </strong>
+                                        <ul class="mb-0 mt-2">
+                                            {% for improvement in analysis.objectives_improvements %}
+                                                <li class="text-success">{{ improvement }}</li>
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        {# Actions #}
+                        <div class="d-flex gap-3 justify-content-end mt-4 pt-4 border-top">
+                            <a href="{{ path('marketing_project_new') }}" class="btn btn-outline-secondary px-4">
+                                <i class="bi bi-arrow-left"></i> Retour au formulaire
+                            </a>
+                            <button type="submit" class="btn btn-success px-4">
+                                <i class="bi bi-check-circle"></i> Accepter les suggestions et créer
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        {# Colonne sidebar : Analyse détaillée #}
+        <div class="col-lg-4">
+            {# Analyse du budget #}
+            {% if analysis.budget_analysis is defined and analysis.budget_analysis is not empty %}
+                <div class="card shadow-sm border-0 mb-4">
+                    <div class="card-header bg-warning text-dark">
+                        <h6 class="mb-0">
+                            <i class="bi bi-currency-euro"></i>
+                            Analyse du budget
+                        </h6>
+                    </div>
+                    <div class="card-body">
+                        <p class="small mb-0">{{ analysis.budget_analysis }}</p>
+                    </div>
+                </div>
+            {% endif %}
+
+            {# Analyse de la timeline #}
+            {% if analysis.timeline_analysis is defined and analysis.timeline_analysis is not empty %}
+                <div class="card shadow-sm border-0 mb-4">
+                    <div class="card-header bg-info text-white">
+                        <h6 class="mb-0">
+                            <i class="bi bi-calendar-range"></i>
+                            Analyse de la durée
+                        </h6>
+                    </div>
+                    <div class="card-body">
+                        <p class="small mb-0">{{ analysis.timeline_analysis }}</p>
+                    </div>
+                </div>
+            {% endif %}
+
+            {# Informations du projet original #}
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-secondary text-white">
+                    <h6 class="mb-0">
+                        <i class="bi bi-info-circle"></i>
+                        Données originales
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3 pb-3 border-bottom">
+                        <p class="small text-muted mb-1">Budget total</p>
+                        <p class="fw-bold mb-0">{{ projectData.budget|number_format(2, ',', ' ') }} €</p>
+                    </div>
+                    <div class="mb-3 pb-3 border-bottom">
+                        <p class="small text-muted mb-1">Période de campagne</p>
+                        <p class="fw-bold mb-0">
+                            {{ projectData.startDate|date('d/m/Y') }} - {{ projectData.endDate|date('d/m/Y') }}
+                        </p>
+                        <p class="small text-muted mb-0">
+                            Durée : {{ projectData.startDate.diff(projectData.endDate).days }} jours
+                        </p>
+                    </div>
+                    <div class="mb-0">
+                        <p class="small text-muted mb-1">Objectif principal</p>
+                        <p class="fw-bold mb-0">
+                            <span class="badge bg-primary">{{ projectData.goalType.value }}</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

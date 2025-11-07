@@ -25,6 +25,7 @@
     background-color: var(--theme-card-bg, #ffffff);
     border: 1px solid var(--theme-border-color, #e3e4e9);
     box-shadow: var(--theme-shadow-lg, 0 10px 25px rgba(0, 0, 0, 0.15));
+    z-index: 1050 !important; /* Au-dessus des cards avec backdrop-filter */
 }
 
 .theme-option {

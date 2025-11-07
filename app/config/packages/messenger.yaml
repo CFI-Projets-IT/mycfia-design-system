@@ -27,3 +27,12 @@ framework:
 
             # Route chat streaming to async transport for background execution
             App\Message\ChatStreamMessage: async
+
+            # Route Marketing AI generation messages to async transport
+            App\Message\GeneratePersonasMessage: async
+            App\Message\GenerateStrategyMessage: async
+            App\Message\GenerateAssetsMessage: async
+
+            # Route Marketing AI Bundle messages to async transport
+            # (PersonaGeneration, StrategyGeneration, AssetGeneration, etc.)
+            'Gorillias\MarketingBundle\Message\*': async
