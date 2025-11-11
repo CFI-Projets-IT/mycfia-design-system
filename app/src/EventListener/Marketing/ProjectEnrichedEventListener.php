@@ -84,7 +84,6 @@ final readonly class ProjectEnrichedEventListener
             'success_factors' => ! empty($enrichedData['ai_suggestions']['success_factors'])
                 ? $enrichedData['ai_suggestions']['success_factors']
                 : ($enrichedData['warnings'] ?? []), // Utiliser warnings comme facteurs de succès temporairement
-            'consistency_score' => $enrichedData['consistency_score'] ?? 0.0,
             'warnings' => $enrichedData['warnings'] ?? [],
             'budget_analysis' => $enrichedData['budget_analysis'] ?? null,
             'timeline_analysis' => $enrichedData['timeline_analysis'] ?? null,

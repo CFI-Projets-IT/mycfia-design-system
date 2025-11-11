@@ -473,30 +473,19 @@ export function initMarketingProjectEnrichment(config) {
 
         html += '</div>'; // Fin row
 
-        // === Deuxième ligne : Consistency Score + Infos Technique ===
+        // === Deuxième ligne : Infos Techniques uniquement ===
         html += '<div class="row g-3 mt-2">';
 
-        // Consistency Score
-        if (results.consistency_score !== undefined) {
-            html += '<div class="col-md-6">';
-            html += '<div class="card border-warning">';
-            html += '<div class="card-header bg-warning text-dark fw-bold"><i class="bi bi-speedometer2"></i> Score de Cohérence</div>';
-            html += '<div class="card-body text-center">';
-            const score = parseFloat(results.consistency_score);
-            const percentage = Math.round(score * 100);
-            const colorClass = percentage >= 80 ? 'success' : percentage >= 60 ? 'warning' : 'danger';
-            html += `<h1 class="display-3 text-${colorClass} mb-0">${percentage}%</h1>`;
-            html += '<p class="text-muted mb-0">Cohérence globale du projet</p>';
-            html += '</div></div></div>';
-        }
-
-        // Infos Techniques (tokens, durée, modèle)
-        html += '<div class="col-md-6">';
+        // Infos Techniques (tokens, durée, modèle) - Pleine largeur
+        html += '<div class="col-12">';
         html += '<div class="card border-secondary">';
         html += '<div class="card-header bg-secondary text-white fw-bold"><i class="bi bi-cpu"></i> Informations Techniques</div>';
         html += '<div class="card-body">';
-        html += '<table class="table table-sm table-borderless mb-0">';
+        html += '<div class="row">';
 
+        // Colonne 1 : Tokens
+        html += '<div class="col-md-4">';
+        html += '<table class="table table-sm table-borderless mb-0">';
         if (results.tokens_used) {
             if (results.tokens_used.input !== undefined) {
                 html += `<tr><td class="fw-bold">Tokens d'entrée :</td><td>${escapeHtml(String(results.tokens_used.input))}</td></tr>`;
@@ -508,6 +497,11 @@ export function initMarketingProjectEnrichment(config) {
                 html += `<tr><td class="fw-bold">Total tokens :</td><td class="text-primary fw-bold">${escapeHtml(String(results.tokens_used.total))}</td></tr>`;
             }
         }
+        html += '</table></div>';
+
+        // Colonne 2 : Durée & Modèle
+        html += '<div class="col-md-4">';
+        html += '<table class="table table-sm table-borderless mb-0">';
         if (results.duration_ms !== undefined) {
             const seconds = (results.duration_ms / 1000).toFixed(2);
             html += `<tr><td class="fw-bold">Durée traitement :</td><td>${seconds}s</td></tr>`;
@@ -515,8 +509,20 @@ export function initMarketingProjectEnrichment(config) {
         if (results.model_used) {
             html += `<tr><td class="fw-bold">Modèle IA :</td><td><code class="small">${escapeHtml(results.model_used)}</code></td></tr>`;
         }
+        html += '</table></div>';
 
-        html += '</table>';
+        // Colonne 3 : Campagne
+        html += '<div class="col-md-4">';
+        html += '<table class="table table-sm table-borderless mb-0">';
+        if (results.campaign_weeks !== undefined) {
+            html += `<tr><td class="fw-bold">Durée campagne :</td><td>${escapeHtml(String(results.campaign_weeks))} semaines</td></tr>`;
+        }
+        if (results.budget_per_month !== undefined) {
+            html += `<tr><td class="fw-bold">Budget mensuel :</td><td>${escapeHtml(String(results.budget_per_month))} €</td></tr>`;
+        }
+        html += '</table></div>';
+
+        html += '</div>'; // Fin row interne
         html += '</div></div></div>';
 
         html += '</div>'; // Fin row
