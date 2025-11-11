@@ -88,6 +88,14 @@ final readonly class ProjectEnrichedEventListener
             'warnings' => $enrichedData['warnings'] ?? [],
             'budget_analysis' => $enrichedData['budget_analysis'] ?? null,
             'timeline_analysis' => $enrichedData['timeline_analysis'] ?? null,
+            // Métriques au niveau racine pour affichage
+            'budget_per_day' => $enrichedData['budget_per_day'] ?? null,
+            'budget_per_month' => $enrichedData['budget_per_month'] ?? null,
+            'campaign_weeks' => $enrichedData['campaign_weeks'] ?? null,
+            'campaign_months' => $enrichedData['campaign_months'] ?? null,
+            'tokens_used' => $enrichedData['tokens_used'] ?? null,
+            'duration_ms' => $enrichedData['duration_ms'] ?? null,
+            'model_used' => $enrichedData['model_used'] ?? null,
         ];
 
         $this->cache->get($cacheKey, function (ItemInterface $item) use ($resultsData) {

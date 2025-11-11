@@ -207,10 +207,10 @@ export function initMarketingProjectEnrichment(config) {
 
         console.log('📊 Affichage des résultats enrichissement (v3.1.0):', results);
 
-        // Structure v3.1.0 simplifiée (DTO ProjectEnrichmentOutput)
+        // Structure v3.1.0 : données venant du ProjectEnrichedEventListener
         const mappedResults = {
-            alternative_names: results.creative_name_alternatives || [],
-            smart_objectives: results.smart_objectives_detailed || '',
+            alternative_names: results.alternative_names || [],
+            smart_objectives: results.enhanced_objectives || '',
             strategic_recommendations: results.strategic_recommendations || [],
             success_factors: results.success_factors || [],
         };
@@ -234,6 +234,9 @@ export function initMarketingProjectEnrichment(config) {
 
         // 4. Afficher facteurs clés de succès (array de strings)
         renderSuccessFactors('successFactorsContainer', mappedResults.success_factors);
+
+        // 5. Afficher métriques et analytics
+        renderMetrics('metricsContainer', results);
     }
 
     /**
@@ -426,28 +429,15 @@ export function initMarketingProjectEnrichment(config) {
         html += '<div class="card-header bg-success text-white fw-bold"><i class="bi bi-cash-stack"></i> Analyse Budget</div>';
         html += '<div class="card-body">';
 
-        if (results.budget_analysis) {
-            const budget = results.budget_analysis;
+        // v3.1.0 : Les données budget sont au niveau racine de results
+        if (results.budget_per_month !== undefined || results.budget_per_day !== undefined) {
             html += '<table class="table table-sm table-borderless mb-0">';
 
-            if (budget.budget_per_month !== undefined) {
-                html += `<tr><td class="fw-bold">Budget mensuel :</td><td>${escapeHtml(String(budget.budget_per_month))} €</td></tr>`;
+            if (results.budget_per_month !== undefined) {
+                html += `<tr><td class="fw-bold">Budget mensuel :</td><td>${escapeHtml(String(results.budget_per_month))} €</td></tr>`;
             }
-            if (budget.budget_per_day !== undefined) {
-                html += `<tr><td class="fw-bold">Budget journalier :</td><td>${escapeHtml(String(budget.budget_per_day))} €</td></tr>`;
-            }
-            if (budget.total_budget !== undefined) {
-                html += `<tr><td class="fw-bold">Budget total :</td><td>${escapeHtml(String(budget.total_budget))} €</td></tr>`;
-            }
-            if (budget.adequacy) {
-                html += `<tr><td colspan="2"><span class="badge bg-info">${escapeHtml(budget.adequacy)}</span></td></tr>`;
-            }
-            if (budget.recommendations?.length > 0) {
-                html += '<tr><td colspan="2" class="pt-2"><small class="text-muted fw-bold">Recommandations :</small><ul class="small mb-0">';
-                budget.recommendations.forEach((rec) => {
-                    html += `<li>${escapeHtml(String(rec))}</li>`;
-                });
-                html += '</ul></td></tr>';
+            if (results.budget_per_day !== undefined) {
+                html += `<tr><td class="fw-bold">Budget journalier :</td><td>${escapeHtml(String(results.budget_per_day))} €</td></tr>`;
             }
 
             html += '</table>';
@@ -463,32 +453,15 @@ export function initMarketingProjectEnrichment(config) {
         html += '<div class="card-header bg-primary text-white fw-bold"><i class="bi bi-calendar-range"></i> Analyse Timeline</div>';
         html += '<div class="card-body">';
 
-        if (results.timeline_analysis) {
-            const timeline = results.timeline_analysis;
+        // v3.1.0 : Les données timeline sont au niveau racine de results
+        if (results.campaign_weeks !== undefined || results.campaign_months !== undefined) {
             html += '<table class="table table-sm table-borderless mb-0">';
 
-            if (timeline.campaign_weeks !== undefined) {
-                html += `<tr><td class="fw-bold">Durée campagne :</td><td>${escapeHtml(String(timeline.campaign_weeks))} semaines</td></tr>`;
+            if (results.campaign_weeks !== undefined) {
+                html += `<tr><td class="fw-bold">Durée campagne :</td><td>${escapeHtml(String(results.campaign_weeks))} semaines</td></tr>`;
             }
-            if (timeline.campaign_months !== undefined) {
-                html += `<tr><td class="fw-bold">Durée campagne :</td><td>${escapeHtml(String(timeline.campaign_months))} mois</td></tr>`;
-            }
-            if (timeline.adequacy) {
-                html += `<tr><td colspan="2"><span class="badge bg-info">${escapeHtml(timeline.adequacy)}</span></td></tr>`;
-            }
-            if (timeline.milestones?.length > 0) {
-                html += '<tr><td colspan="2" class="pt-2"><small class="text-muted fw-bold">Jalons :</small><ul class="small mb-0">';
-                timeline.milestones.forEach((milestone) => {
-                    html += `<li>${escapeHtml(String(milestone))}</li>`;
-                });
-                html += '</ul></td></tr>';
-            }
-            if (timeline.recommendations?.length > 0) {
-                html += '<tr><td colspan="2" class="pt-2"><small class="text-muted fw-bold">Recommandations :</small><ul class="small mb-0">';
-                timeline.recommendations.forEach((rec) => {
-                    html += `<li>${escapeHtml(String(rec))}</li>`;
-                });
-                html += '</ul></td></tr>';
+            if (results.campaign_months !== undefined) {
+                html += `<tr><td class="fw-bold">Durée campagne :</td><td>${escapeHtml(String(results.campaign_months))} mois</td></tr>`;
             }
 
             html += '</table>';
