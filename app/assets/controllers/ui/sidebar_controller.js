@@ -37,7 +37,7 @@ export default class extends Controller {
     /**
      * Ferme le sidebar sur mobile après clic sur un lien
      */
-    closeMobile(event) {
+    closeMobile(_event) {
         if (window.innerWidth < 768) {
             const sidebar = document.querySelector('.app-sidebar');
             if (sidebar) {

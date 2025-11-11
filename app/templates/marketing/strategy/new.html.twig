@@ -1,0 +1,152 @@
+{% extends 'layouts/home.html.twig' %}
+
+{% block title %}Générer stratégie marketing - {{ project.name }}{% endblock %}
+
+{% block content %}
+<div class="container" style="max-width: 900px;">
+    {# Breadcrumb #}
+    <div class="mb-4">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="{{ path('marketing_project_index') }}">Projets Marketing</a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a href="{{ path('marketing_project_show', {id: project.id}) }}">{{ project.name }}</a>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">Générer stratégie</li>
+            </ol>
+        </nav>
+    </div>
+
+    {# En-tête #}
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <h2 class="mb-2">
+                <i class="bi bi-graph-up-arrow text-primary"></i>
+                Générer votre stratégie marketing IA
+            </h2>
+            <p class="text-muted mb-0">
+                Sélectionnez le persona cible et les canaux marketing pour générer une stratégie personnalisée
+            </p>
+        </div>
+    </div>
+
+    {# Formulaire de génération #}
+    <div class="card shadow-sm">
+        <div class="card-body p-4">
+            {{ form_start(form) }}
+
+            {# Sélection du persona #}
+            <div class="mb-4">
+                <h5 class="fw-bold text-primary mb-3">
+                    <i class="bi bi-person-circle"></i>
+                    Persona cible principal
+                </h5>
+                {{ form_row(form.persona, {
+                    'attr': {'class': 'form-select form-select-lg'}
+                }) }}
+            </div>
+
+            <hr class="my-4">
+
+            {# Sélection des canaux marketing #}
+            <div class="mb-4">
+                <h5 class="fw-bold text-primary mb-3">
+                    <i class="bi bi-broadcast"></i>
+                    Canaux marketing
+                </h5>
+                {{ form_row(form.channels, {
+                    'label': false,
+                    'row_attr': {'class': 'row g-3'}
+                }) }}
+            </div>
+
+            <hr class="my-4">
+
+            {# Analyse concurrentielle optionnelle #}
+            <div class="mb-4">
+                <h5 class="fw-bold text-primary mb-3">
+                    <i class="bi bi-pie-chart"></i>
+                    Analyse concurrentielle (optionnel)
+                </h5>
+                {{ form_row(form.competitors) }}
+                <div class="form-text">
+                    <i class="bi bi-info-circle"></i>
+                    L'IA analysera vos concurrents pour identifier des opportunités de différenciation
+                </div>
+            </div>
+
+            {# Actions #}
+            <div class="d-grid gap-2 mt-4">
+                <button type="submit" class="btn btn-primary btn-lg">
+                    <i class="bi bi-magic"></i>
+                    Générer la stratégie marketing
+                </button>
+                <a href="{{ path('marketing_project_show', {id: project.id}) }}" class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-left"></i>
+                    Retour au projet
+                </a>
+            </div>
+
+            {{ form_end(form) }}
+        </div>
+    </div>
+
+    {# Informations sur le processus #}
+    <div class="card mt-4 bg-light border-0">
+        <div class="card-body">
+            <h6 class="fw-bold mb-3">
+                <i class="bi bi-info-circle text-primary"></i>
+                Ce que l'IA va générer
+            </h6>
+            <div class="row g-3 small text-muted">
+                <div class="col-md-6">
+                    <h6 class="fw-bold text-dark">Stratégie multi-canal</h6>
+                    <ul class="mb-0">
+                        <li>Répartition budgétaire optimisée par canal</li>
+                        <li>Calendrier de campagne personnalisé</li>
+                        <li>KPIs et objectifs mesurables</li>
+                    </ul>
+                </div>
+                <div class="col-md-6">
+                    <h6 class="fw-bold text-dark">Recommandations IA</h6>
+                    <ul class="mb-0">
+                        <li>Meilleurs moments de diffusion</li>
+                        <li>Messages adaptés au persona</li>
+                        <li>Opportunités de marché identifiées</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {# Contexte projet #}
+    <div class="card mt-4 bg-primary text-white">
+        <div class="card-body">
+            <h6 class="fw-bold mb-3">
+                <i class="bi bi-briefcase-fill"></i>
+                Contexte du projet
+            </h6>
+            <div class="row g-3 small">
+                <div class="col-md-3">
+                    <strong>Entreprise</strong>
+                    <br>{{ project.companyName }}
+                </div>
+                <div class="col-md-3">
+                    <strong>Secteur</strong>
+                    <br>{{ project.sector }}
+                </div>
+                <div class="col-md-3">
+                    <strong>Objectif</strong>
+                    <br>{{ project.goalType.label }}
+                </div>
+                <div class="col-md-3">
+                    <strong>Budget</strong>
+                    <br>{{ project.budget|number_format(2, ',', ' ') }} €
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

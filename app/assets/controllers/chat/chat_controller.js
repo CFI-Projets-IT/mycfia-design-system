@@ -62,13 +62,17 @@ export default class extends Controller {
                         ${this.formatMessage(content)}
                     </div>
 
-                    ${type === 'assistant' ? `
+                    ${
+                        type === 'assistant'
+                            ? `
                         <div class="chat-message-actions">
                             <button type="button" class="btn-message-action" title="Copier" data-action="click->chat#copyMessage">
                                 <i class="bi bi-clipboard"></i>
                             </button>
                         </div>
-                    ` : ''}
+                    `
+                            : ''
+                    }
                 </div>
             </div>
         `;
@@ -97,7 +101,7 @@ export default class extends Controller {
             const responses = [
                 "Je suis un assistant IA placeholder. L'intégration complète avec Symfony AI Bundle sera réalisée dans les sprints S0-S11.",
                 "Cette interface sera connectée à l'API CFI et au Symfony AI Bundle lors des prochaines étapes.",
-                "L'interface chat est prête ! L'intégration avec LiveComponent et l'IA conversationnelle sera implémentée dans les sprints suivants."
+                "L'interface chat est prête ! L'intégration avec LiveComponent et l'IA conversationnelle sera implémentée dans les sprints suivants.",
             ];
 
             const randomResponse = responses[Math.floor(Math.random() * responses.length)];
@@ -128,7 +132,7 @@ export default class extends Controller {
     autoResize() {
         const textarea = this.inputTarget;
         textarea.style.height = 'auto';
-        textarea.style.height = Math.min(textarea.scrollHeight, 150) + 'px';
+        textarea.style.height = `${Math.min(textarea.scrollHeight, 150)}px`;
     }
 
     /**

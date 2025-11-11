@@ -23,12 +23,14 @@
  * @returns {boolean}
  */
 export function hasTableData(metadata) {
-    return metadata &&
-           metadata.table_data &&
-           Array.isArray(metadata.table_data.headers) &&
-           Array.isArray(metadata.table_data.rows) &&
-           metadata.table_data.headers.length > 0 &&
-           metadata.table_data.rows.length > 0;
+    return (
+        metadata &&
+        metadata.table_data &&
+        Array.isArray(metadata.table_data.headers) &&
+        Array.isArray(metadata.table_data.rows) &&
+        metadata.table_data.headers.length > 0 &&
+        metadata.table_data.rows.length > 0
+    );
 }
 
 /**
@@ -44,7 +46,7 @@ export function renderDataTable(tableData) {
     const theadHtml = `
         <thead>
             <tr>
-                ${headers.map(header => `<th scope="col">${escapeHtml(header)}</th>`).join('')}
+                ${headers.map((header) => `<th scope="col">${escapeHtml(header)}</th>`).join('')}
             </tr>
         </thead>
     `;
@@ -52,17 +54,19 @@ export function renderDataTable(tableData) {
     // 2. Générer les lignes de données
     const tbodyHtml = `
         <tbody>
-            ${rows.map(row => {
-                return `
+            ${rows
+                .map((row) => {
+                    return `
                     <tr>
-                        ${headers.map((header, index) => {
-                            const key = Object.keys(row)[index];
-                            const value = row[key];
+                        ${headers
+                            .map((header, index) => {
+                                const key = Object.keys(row)[index];
+                                const value = row[key];
 
-                            // Si cette colonne a un lien cliquable configuré
-                            if (linkColumns && linkColumns[key] && value) {
-                                const prompt = linkColumns[key].replace(`{${key}}`, value);
-                                return `
+                                // Si cette colonne a un lien cliquable configuré
+                                if (linkColumns && linkColumns[key] && value) {
+                                    const prompt = linkColumns[key].replace(`{${key}}`, value);
+                                    return `
                                     <td>
                                         <a href="#"
                                            class="detail-link text-decoration-none fw-semibold"
@@ -73,28 +77,34 @@ export function renderDataTable(tableData) {
                                         </a>
                                     </td>
                                 `;
-                            }
+                                }
 
-                            return `<td>${escapeHtml(value || '')}</td>`;
-                        }).join('')}
+                                return `<td>${escapeHtml(value || '')}</td>`;
+                            })
+                            .join('')}
                     </tr>
                 `;
-            }).join('')}
+                })
+                .join('')}
         </tbody>
     `;
 
     // 3. Générer la ligne Total (optionnelle)
-    const tfootHtml = totalRow ? `
+    const tfootHtml = totalRow
+        ? `
         <tfoot>
             <tr class="table-total fw-bold">
-                ${headers.map((header, index) => {
-                    const key = Object.keys(totalRow)[index];
-                    const value = totalRow[key];
-                    return `<td>${escapeHtml(value || '')}</td>`;
-                }).join('')}
+                ${headers
+                    .map((header, index) => {
+                        const key = Object.keys(totalRow)[index];
+                        const value = totalRow[key];
+                        return `<td>${escapeHtml(value || '')}</td>`;
+                    })
+                    .join('')}
             </tr>
         </tfoot>
-    ` : '';
+    `
+        : '';
 
     // 4. Assembler le tableau complet
     return `

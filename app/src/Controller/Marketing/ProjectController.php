@@ -11,13 +11,15 @@ use App\Enum\ProjectStatus;
 use App\Form\ProjectType;
 use App\Repository\ProjectRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Gorillias\MarketingBundle\Tool\ProjectContextAnalyzerTool;
+use Gorillias\MarketingBundle\Service\AgentTaskManager;
+use Psr\Cache\InvalidArgumentException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Form\ClickableInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -45,8 +47,9 @@ final class ProjectController extends AbstractController
     public function __construct(
         private readonly ProjectRepository $projectRepository,
         private readonly EntityManagerInterface $entityManager,
-        private readonly ProjectContextAnalyzerTool $projectAnalyzer,
+        private readonly AgentTaskManager $agentTaskManager,
         private readonly TranslatorInterface $translator,
+        private readonly CacheInterface $cache,
     ) {
     }
 
@@ -85,11 +88,49 @@ final class ProjectController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted()) {
-            // Si le bouton "Analyser avec l'IA" a été cliqué
-            $analyzeButton = $form->get('analyze');
-            if ($analyzeButton instanceof ClickableInterface && $analyzeButton->isClicked()) {
-                // Stocker les données du formulaire en session pour l'analyse
-                $request->getSession()->set('project_data_for_analysis', [
+            // Détecter si c'est une requête AJAX d'enrichissement
+            $isAjaxEnrichment = $request->isXmlHttpRequest() && $request->request->has('analyze');
+
+            if ($isAjaxEnrichment) {
+
+                // Validation du formulaire
+                if (! $form->isValid()) {
+                    // Retourner les erreurs de validation en JSON pour AJAX
+                    $errors = [];
+                    foreach ($form->getErrors(true) as $error) {
+                        $errors[] = $error->getMessage();
+                    }
+
+                    return new JsonResponse([
+                        'success' => false,
+                        'error' => 'Le formulaire contient des erreurs : '.implode(', ', $errors),
+                        'validation_errors' => $errors,
+                    ], 422);
+                }
+
+                // Calculer la durée de campagne en jours
+                $durationDays = $project->getStartDate()->diff($project->getEndDate())->days;
+
+                /** @var User $user */
+                $user = $this->getUser();
+
+                // Dispatcher la tâche asynchrone d'enrichissement IA via AgentTaskManager
+                $taskId = $this->agentTaskManager->dispatchProjectEnrichment(
+                    projectName: $project->getName(),
+                    companyName: $project->getCompanyName(),
+                    sector: $project->getSector(),
+                    budget: (int) ((float) $project->getBudget() * 100), // Convertir en centimes
+                    goalType: $project->getGoalType()->value,
+                    detailedObjectives: $project->getDetailedObjectives(),
+                    durationDays: $durationDays,
+                    websiteUrl: $project->getWebsiteUrl(),
+                    options: [
+                        'user_id' => $user->getId(),
+                    ]
+                );
+
+                // Stocker les données du projet en session pour utilisation après enrichissement
+                $request->getSession()->set('project_data_for_enrichment_'.$taskId, [
                     'name' => $project->getName(),
                     'companyName' => $project->getCompanyName(),
                     'sector' => $project->getSector(),
@@ -103,7 +144,12 @@ final class ProjectController extends AbstractController
                     'websiteUrl' => $project->getWebsiteUrl(),
                 ]);
 
-                return $this->redirectToRoute('marketing_project_analyze');
+                // Retourner une réponse JSON avec le taskId pour abonnement Mercure
+                return new JsonResponse([
+                    'success' => true,
+                    'taskId' => $taskId,
+                    'message' => $this->translator->trans('project.flash.enrichment_started', [], 'marketing'),
+                ]);
             }
 
             // Sinon, traitement normal (bouton "Enregistrer")
@@ -129,90 +175,100 @@ final class ProjectController extends AbstractController
 
         return $this->render('marketing/project/new.html.twig', [
             'form' => $form,
+            'mercure_public_url' => $_ENV['MERCURE_PUBLIC_URL'] ?? 'http://localhost:82/.well-known/mercure',
         ]);
     }
 
     /**
-     * Analyse un projet avec l'IA et propose des améliorations.
+     * Récupère les résultats d'enrichissement IA depuis le cache.
      *
-     * Option B - Enrichissement manuel :
-     * - L'utilisateur clique sur "Analyser et améliorer avec l'IA"
-     * - L'IA analyse : budget, timeline, nom projet, objectifs SMART
-     * - Retour : suggestions, warnings, recommandations, score de cohérence
-     * - L'utilisateur peut accepter les suggestions ou revenir au formulaire
+     * Route AJAX appelée par JavaScript après réception de l'événement Mercure ProjectEnrichedEvent.
      *
-     * @return Response Template avec analyse IA et suggestions d'amélioration
+     * @return JsonResponse Résultats enrichissement ou erreur
+     *
+     * @throws InvalidArgumentException
      */
-    #[Route('/analyze', name: 'analyze', methods: ['GET', 'POST'])]
-    public function analyze(Request $request): Response
+    #[Route('/enrichment/{taskId}/results', name: 'enrichment_results', methods: ['GET'])]
+    public function getEnrichmentResults(string $taskId): JsonResponse
     {
-        // Récupérer les données du formulaire depuis la session
-        $projectData = $request->getSession()->get('project_data_for_analysis');
+        // Récupérer les résultats depuis le cache (stockés par ProjectEnrichedEventListener)
+        $cacheKey = 'enrichment_results_'.$taskId;
+
+        try {
+            $enrichmentResults = $this->cache->get($cacheKey, function () {
+                throw new \RuntimeException('Cache miss');
+            });
+        } catch (\RuntimeException) {
+            return new JsonResponse([
+                'success' => false,
+                'error' => $this->translator->trans('project.flash.enrichment_not_found', [], 'marketing'),
+            ], 404);
+        }
+
+        return new JsonResponse([
+            'success' => true,
+            'results' => $enrichmentResults,
+        ]);
+    }
+
+    /**
+     * Accepte les suggestions d'enrichissement IA et crée le projet.
+     *
+     * @return JsonResponse Succès avec redirect URL ou erreur
+     */
+    #[Route('/enrichment/{taskId}/accept', name: 'enrichment_accept', methods: ['POST'])]
+    public function acceptEnrichment(Request $request, string $taskId): JsonResponse
+    {
+        // Récupérer les données originales du projet
+        $projectData = $request->getSession()->get('project_data_for_enrichment_'.$taskId);
 
         if (! $projectData) {
-            $this->addFlash('error', $this->translator->trans('project.flash.no_data_to_analyze', [], 'marketing'));
-
-            return $this->redirectToRoute('marketing_project_new');
+            return new JsonResponse([
+                'success' => false,
+                'error' => $this->translator->trans('project.flash.no_data_to_analyze', [], 'marketing'),
+            ], 404);
         }
 
-        // Si l'utilisateur a cliqué sur "Accepter les suggestions"
-        if ($request->isMethod('POST') && $request->request->get('accept_suggestions')) {
-            // Créer le projet avec les données améliorées depuis le formulaire
-            $project = new Project();
-            // Champs modifiables par l'utilisateur dans analyze.html.twig
-            $project->setName($request->request->get('name'));
-            $project->setDetailedObjectives($request->request->get('detailedObjectives'));
+        // Récupérer les données soumises depuis la modal (nom et objectifs modifiés)
+        $data = json_decode($request->getContent(), true);
 
-            // Champs en readonly (on garde les valeurs originales)
-            $project->setCompanyName($projectData['companyName']);
-            $project->setSector($projectData['sector']);
-            $project->setDescription($projectData['description']);
-            $project->setProductInfo($projectData['productInfo']);
-            $project->setGoalType($projectData['goalType']);
-            $project->setBudget($projectData['budget']);
-            $project->setStartDate($projectData['startDate']);
-            $project->setEndDate($projectData['endDate']);
-            $project->setWebsiteUrl($projectData['websiteUrl']);
+        // Créer le projet avec les données enrichies
+        $project = new Project();
+        $project->setName($data['name'] ?? $projectData['name']);
+        $project->setDetailedObjectives($data['detailedObjectives'] ?? $projectData['detailedObjectives']);
 
-            /** @var User $user */
-            $user = $this->getUser();
+        // Champs non modifiés (valeurs originales)
+        $project->setCompanyName($projectData['companyName']);
+        $project->setSector($projectData['sector']);
+        $project->setDescription($projectData['description']);
+        $project->setProductInfo($projectData['productInfo']);
+        $project->setGoalType($projectData['goalType']);
+        $project->setBudget($projectData['budget']);
+        $project->setStartDate($projectData['startDate']);
+        $project->setEndDate($projectData['endDate']);
+        $project->setWebsiteUrl($projectData['websiteUrl']);
 
-            /** @var Division $tenant */
-            $tenant = $user->getDivision();
+        /** @var User $user */
+        $user = $this->getUser();
 
-            $project->setUser($user);
-            $project->setTenant($tenant);
-            $project->setStatus(ProjectStatus::DRAFT);
+        /** @var Division $tenant */
+        $tenant = $user->getDivision();
 
-            $this->entityManager->persist($project);
-            $this->entityManager->flush();
+        $project->setUser($user);
+        $project->setTenant($tenant);
+        $project->setStatus(ProjectStatus::ENRICHED);
 
-            // Nettoyer la session
-            $request->getSession()->remove('project_data_for_analysis');
+        $this->entityManager->persist($project);
+        $this->entityManager->flush();
 
-            $this->addFlash('success', $this->translator->trans('project.flash.created_with_ai', [], 'marketing'));
+        // Nettoyer la session
+        $request->getSession()->remove('project_data_for_enrichment_'.$taskId);
+        $request->getSession()->remove('enrichment_results_'.$taskId);
 
-            return $this->redirectToRoute('marketing_persona_generate', ['id' => $project->getId()]);
-        }
-
-        // Calculer la durée de campagne en jours
-        $durationDays = $projectData['startDate']->diff($projectData['endDate'])->days;
-
-        // Appeler l'outil d'analyse IA
-        $analysisResults = $this->projectAnalyzer->analyzeProject(
-            projectName: $projectData['name'],
-            companyName: $projectData['companyName'],
-            sector: $projectData['sector'],
-            budget: (int) ($projectData['budget'] * 100), // Convertir en centimes
-            goalType: $projectData['goalType']->value,
-            detailedObjectives: $projectData['detailedObjectives'],
-            durationDays: $durationDays,
-            websiteUrl: $projectData['websiteUrl']
-        );
-
-        return $this->render('marketing/project/analyze.html.twig', [
-            'projectData' => $projectData,
-            'analysis' => $analysisResults,
+        return new JsonResponse([
+            'success' => true,
+            'message' => $this->translator->trans('project.flash.created_with_ai', [], 'marketing'),
+            'redirectUrl' => $this->generateUrl('marketing_persona_generate', ['id' => $project->getId()]),
         ]);
     }
 

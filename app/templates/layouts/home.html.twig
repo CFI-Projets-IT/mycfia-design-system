@@ -213,10 +213,13 @@
         </main>
     </div>
 
+    {# Bloc pour les modals Bootstrap (z-index correct) #}
+    {% block modals %}{% endblock %}
+
     {% block javascripts %}
         {{ importmap('app') }}
         <script type="module" src="{{ asset('sidebar.js') }}"></script>
-        <script type="module" src="{{ asset('js/conversation-sidebar.js') }}"></script>
+        <script type="module" src="{{ asset('js/chat/conversation-sidebar.js') }}"></script>
     {% endblock %}
 </body>
 </html>

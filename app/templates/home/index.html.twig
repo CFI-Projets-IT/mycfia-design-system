@@ -40,6 +40,13 @@
                     <h3 class="fs-6 fw-semibold text-primary mb-0">{{ 'home.quick_access.other'|trans({}, 'home') }}</h3>
                 </div>
             </a>
+
+            <a href="{{ path('marketing_project_index') }}" class="card text-decoration-none shadow-sm quick-access-card" data-turbo="false">
+                <div class="card-body d-flex align-items-center gap-3 p-3">
+                    <i class="bi bi-magic fs-2 text-danger flex-shrink-0"></i>
+                    <h3 class="fs-6 fw-semibold text-primary mb-0">{{ 'home.quick_access.marketing'|trans({}, 'home') }}</h3>
+                </div>
+            </a>
         </div>    </div>
 </div>
 {% endblock %}

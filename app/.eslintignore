@@ -1,0 +1,17 @@
+# Dépendances
+node_modules/
+vendor/
+
+# Fichiers de build
+public/build/
+var/
+
+# Fichiers AssetMapper compilés
+public/assets/
+
+# Vendors JavaScript (AssetMapper)
+assets/vendor/
+
+# Fichiers de configuration
+*.min.js
+*.bundle.js

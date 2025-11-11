@@ -47,6 +47,13 @@ services:
         tags:
             - { name: 'ai.output_processor', priority: 200 }
 
+    # Marketing AI Bundle - Task Persistence
+    # Implémentation de TaskStorageInterface pour activer la persistence des tâches asynchrones
+    # Permet le tracking historique, analytics LLM, debugging et audit
+    Gorillias\MarketingBundle\Storage\TaskStorageInterface:
+        class: App\Service\AppTaskStorage
+
+
     # CFI API Service Configuration
     App\Service\Cfi\CfiApiService:
         arguments:
@@ -75,3 +82,49 @@ services:
     # IMPORTANT : shared: true pour garantir une instance unique partagée entre tous les services
     App\Service\ToolResultCollector:
         shared: true
+
+    # ========================================================================
+    # Marketing AI Bundle - Configuration ProjectEnrichmentAgent
+    # ========================================================================
+    # Surcharge pour augmenter maxTokens (2000 → 8000) suite à l'erreur
+    # "Unsupported finish reason length" indiquant que la limite était atteinte.
+    # Configuration alignée avec les paramètres utilisateur (Temperature: 0.7, Max Tokens: 8000)
+    # ========================================================================
+    Gorillias\MarketingBundle\Agent\ProjectEnrichmentAgent:
+        arguments:
+            $model: 'mistral-large-latest'
+            $temperature: 0.7
+            $maxTokens: 8000
+
+    # ========================================================================
+    # Marketing AI Bundle - Fix ServiceLocator pour ProjectEnrichmentAgent
+    # ========================================================================
+    # Le bundle v2.6.0-dev ne référence pas ProjectEnrichmentAgent dans le
+    # ServiceLocator agent.locator, causant l'erreur "Agent service not found"
+    # lors de l'exécution asynchrone via AgentTaskHandler.
+    # Cette surcharge ajoute ProjectEnrichmentAgent au locator.
+    # ========================================================================
+    agent.locator:
+        class: Symfony\Component\DependencyInjection\ServiceLocator
+        arguments:
+            -
+                Gorillias\MarketingBundle\Agent\PersonaGeneratorAgent: '@Gorillias\MarketingBundle\Agent\PersonaGeneratorAgent'
+                Gorillias\MarketingBundle\Agent\StrategyAnalystAgent: '@Gorillias\MarketingBundle\Agent\StrategyAnalystAgent'
+                Gorillias\MarketingBundle\Agent\CompetitorAnalystAgent: '@Gorillias\MarketingBundle\Agent\CompetitorAnalystAgent'
+                Gorillias\MarketingBundle\Agent\ContentCreatorAgent: '@Gorillias\MarketingBundle\Agent\ContentCreatorAgent'
+                Gorillias\MarketingBundle\Agent\ProjectEnrichmentAgent: '@Gorillias\MarketingBundle\Agent\ProjectEnrichmentAgent'
+        tags: ['container.service_locator']
+
+    # ========================================================================
+    # Marketing AI Bundle - Configuration Logger pour AgentTaskHandler
+    # ========================================================================
+    # Surcharge pour injecter le logger marketing.task au lieu du logger par défaut
+    # Ce logger écrit dans var/log/marketing/tasks/task_execution.log
+    # Permet le suivi des tâches asynchrones Messenger (dispatch, processing, completion/failure)
+    # ========================================================================
+    Gorillias\MarketingBundle\MessageHandler\AgentTaskHandler:
+        arguments:
+            $container: '@agent.locator'
+            $eventDispatcher: '@event_dispatcher'
+            $logger: '@monolog.logger.marketing.task'
+        tags: ['messenger.message_handler']

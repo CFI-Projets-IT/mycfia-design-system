@@ -7,8 +7,8 @@ import { Controller } from '@hotwired/stimulus';
  */
 export default class extends Controller {
     static values = {
-        current: String
-    }
+        current: String,
+    };
 
     connect() {
         // Appliquer le thème initial au chargement

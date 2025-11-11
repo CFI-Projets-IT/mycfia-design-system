@@ -10,45 +10,40 @@ use App\Entity\User;
 use App\Enum\AssetStatus;
 use App\Enum\ProjectStatus;
 use App\Form\AssetGenerationType;
-use App\Message\GenerateAssetsMessage;
 use Doctrine\ORM\EntityManagerInterface;
+use Gorillias\MarketingBundle\Service\AgentTaskManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Contrôleur pour la génération et gestion des assets marketing par IA.
  *
- * Responsabilités :
- * - Affichage formulaire paramètres génération assets multi-canal
- * - Dispatch génération asynchrone via Symfony Messenger
- * - Validation assets par l'utilisateur (approve/reject workflow)
- * - Notification utilisateur via Mercure (temps réel)
- * - Mise à jour statut projet (STRATEGY_GENERATED → ASSETS_GENERATING → ASSETS_GENERATED)
+ * Workflow :
+ * 1. GET /marketing/asset/new/{id} - Affiche formulaire sélection types/variations
+ * 2. POST /marketing/asset/new/{id} - Dispatch vers ContentCreatorAgent
+ * 3. Redirection vers page d'attente avec EventSource Mercure
+ * 4. AssetsGeneratedEvent → EventListener stocke assets en BDD
+ * 5. Notification Mercure → Affichage résultats
+ * 6. Validation par utilisateur (approve/reject workflow)
  *
- * Architecture :
- * - GET /marketing/projects/{id}/assets/generate : Formulaire paramètres
- * - POST /marketing/projects/{id}/assets/generate : Lancement génération async
- * - POST /marketing/projects/{id}/assets/{assetId}/approve : Approuver un asset
- * - POST /marketing/projects/{id}/assets/{assetId}/reject : Rejeter un asset
- *
- * Agent IA utilisé : ContentCreatorAgent (Marketing AI Bundle)
- * AssetBuilders disponibles : GoogleAds, LinkedinPost, FacebookPost, InstagramPost,
- *                              Mail, BingAds, IabAsset, ArticleAsset
- * Stores RAG : AssetStore (optionnel, Mistral Embed 1024 dimensions)
- * Temps moyen : ~20 secondes par asset (parallélisation possible)
+ * Agent IA : ContentCreatorAgent (Marketing AI Bundle)
+ * AssetBuilders : GoogleAds, LinkedinPost, FacebookPost, InstagramPost,
+ *                 Mail, BingAds, IabAsset, ArticleAsset
+ * Durée : ~20 secondes par asset (parallélisation possible)
  */
-#[Route('/marketing/projects/{id}/assets', name: 'marketing_asset_')]
+#[Route('/marketing/asset', name: 'marketing_asset_')]
 #[IsGranted('ROLE_USER')]
 final class AssetController extends AbstractController
 {
     public function __construct(
+        private readonly AgentTaskManager $agentTaskManager,
         private readonly EntityManagerInterface $entityManager,
-        private readonly MessageBusInterface $messageBus,
+        private readonly TranslatorInterface $translator,
         #[Autowire('%env(MERCURE_PUBLIC_URL)%')]
         private readonly string $mercurePublicUrl,
     ) {
@@ -57,83 +52,155 @@ final class AssetController extends AbstractController
     /**
      * Affiche le formulaire de génération d'assets marketing IA.
      *
-     * Permet de paramétrer :
-     * - Types d'assets à générer (1-8 types multi-canal)
-     * - Nombre de variations par asset (1-3, A/B testing)
-     * - Ton de communication (6 styles disponibles)
-     * - Instructions spécifiques pour personnalisation
+     * Permet de sélectionner :
+     * - Types d'assets à générer (1-8 canaux multi-canal)
+     * - Nombre de variations par type (1-3 pour A/B testing)
+     * - Ton de communication optionnel
+     * - Instructions spécifiques additionnelles
      *
-     * Validation : Projet doit être en statut STRATEGY_GENERATED.
-     *
-     * @param Project $project Projet pour lequel générer les assets
-     *
-     * @return Response Template avec formulaire AssetGenerationType
+     * Validation : Projet doit avoir une stratégie générée.
      */
-    #[Route('/generate', name: 'generate', methods: ['GET', 'POST'])]
-    public function generate(Request $request, Project $project): Response
+    #[Route('/new/{id}', name: 'new', methods: ['GET', 'POST'])]
+    public function new(Request $request, Project $project): Response
     {
         $this->denyAccessUnlessGranted('edit', $project);
 
-        // Vérification : Ne pas regénérer si déjà des assets
-        if (ProjectStatus::STRATEGY_GENERATED !== $project->getStatus()) {
-            if (ProjectStatus::DRAFT === $project->getStatus()) {
-                $this->addFlash('warning', 'Vous devez d\'abord générer les personas et la stratégie.');
+        // Vérifier que la stratégie a été générée
+        if ($project->getStrategies()->isEmpty()) {
+            $this->addFlash('warning', $this->translator->trans('asset.flash.no_strategy', [], 'marketing'));
 
-                return $this->redirectToRoute('marketing_persona_generate', ['id' => $project->getId()]);
-            }
-
-            if (ProjectStatus::PERSONA_GENERATED === $project->getStatus()) {
-                $this->addFlash('warning', 'Vous devez d\'abord générer la stratégie avant les assets.');
-
-                return $this->redirectToRoute('marketing_strategy_generate', ['id' => $project->getId()]);
-            }
-
-            $this->addFlash('warning', 'Les assets ont déjà été générés pour ce projet. Utilisez l\'édition pour les modifier.');
-
-            return $this->redirectToRoute('marketing_project_show', ['id' => $project->getId()]);
+            return $this->redirectToRoute('marketing_strategy_new', ['id' => $project->getId()]);
         }
 
+        // Vérifier le statut du projet
+        if (! in_array($project->getStatus(), [ProjectStatus::STRATEGY_GENERATED], true)) {
+            $this->addFlash('info', $this->translator->trans('asset.flash.already_generated', [], 'marketing'));
+
+            return $this->redirectToRoute('marketing_asset_show', ['id' => $project->getId()]);
+        }
+
+        // Créer le formulaire
         $form = $this->createForm(AssetGenerationType::class);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
 
+            // PHPStan: après isValid(), getData() retourne toujours un array
+            /** @var array{assetTypes: array<string>, numberOfVariations: int, toneOfVoice?: string, additionalContext?: string} $data */
+
             /** @var User $user */
             $user = $this->getUser();
-            $tenant = $user->getDivision();
 
-            if (null === $tenant) {
-                $this->addFlash('error', 'Aucune division sélectionnée.');
+            // Préparer le brief de création
+            $brief = [
+                'project_id' => $project->getId(),
+                'project_name' => $project->getName(),
+                'company_name' => $project->getCompanyName(),
+                'sector' => $project->getSector(),
+                'goal_type' => $project->getGoalType()->value,
+                'budget' => (int) ((float) $project->getBudget() * 100),
+                'strategy' => $this->serializeStrategy($project),
+            ];
 
-                return $this->redirectToRoute('marketing_project_index');
+            // Options de génération
+            $options = [
+                'user_id' => $user->getId(),
+                'variations' => $data['numberOfVariations'],
+                'tone_of_voice' => $data['toneOfVoice'] ?? null,
+                'additional_context' => $data['additionalContext'] ?? '',
+            ];
+
+            // Dispatcher une tâche pour chaque type d'asset (ContentCreatorAgent génère un type à la fois)
+            $taskIds = [];
+            foreach ($data['assetTypes'] as $assetType) {
+                $taskIds[] = $this->agentTaskManager->dispatchContentCreation(
+                    assetType: $assetType,
+                    brief: $brief,
+                    options: $options
+                );
             }
 
-            // Dispatch message asynchrone vers ContentCreatorAgent
-            $this->messageBus->dispatch(new GenerateAssetsMessage(
-                projectId: $project->getId(),
-                userId: (int) $user->getId(),
-                tenantId: $tenant->getId(),
-                assetTypes: $data['assetTypes'],
-                numberOfVariations: $data['numberOfVariations'],
-                toneOfVoice: $data['toneOfVoice'] ?? null,
-                additionalContext: $data['additionalContext'] ?? ''
-            ));
+            // Mettre à jour le statut du projet
+            $project->setStatus(ProjectStatus::ASSETS_IN_PROGRESS);
+            $this->entityManager->flush();
 
-            $totalAssets = count($data['assetTypes']) * $data['numberOfVariations'];
-            $estimatedTime = $totalAssets * 20;
+            $this->addFlash('info', $this->translator->trans('asset.flash.generation_started', [], 'marketing'));
 
-            $this->addFlash('success', 'Génération des assets lancée ! Vous serez notifié en temps réel via Mercure.');
-            $this->addFlash('info', 'Temps estimé : environ '.$estimatedTime.' secondes pour '.$totalAssets.' assets.');
+            // Rediriger vers la page d'attente avec EventSource Mercure
+            // Note: On passe le premier taskId, mais Mercure écoutera tous les events
+            return $this->redirectToRoute('marketing_asset_generating', [
+                'id' => $project->getId(),
+                'taskId' => $taskIds[0] ?? '',
+            ]);
+        }
+
+        return $this->render('marketing/asset/new.html.twig', [
+            'form' => $form,
+            'project' => $project,
+        ]);
+    }
+
+    /**
+     * Page d'attente de la génération avec EventSource Mercure.
+     *
+     * Affiche un loader animé et se connecte à Mercure pour recevoir
+     * les notifications de génération en temps réel.
+     */
+    #[Route('/generating/{id}/{taskId}', name: 'generating', methods: ['GET'])]
+    public function generating(Project $project, string $taskId): Response
+    {
+        $this->denyAccessUnlessGranted('view', $project);
+
+        return $this->render('marketing/asset/generating.html.twig', [
+            'project' => $project,
+            'taskId' => $taskId,
+            'mercureUrl' => $this->mercurePublicUrl,
+        ]);
+    }
+
+    /**
+     * Affiche les assets générés pour un projet.
+     */
+    #[Route('/show/{id}', name: 'show', methods: ['GET'])]
+    public function show(Project $project): Response
+    {
+        $this->denyAccessUnlessGranted('view', $project);
+
+        // Vérifier que des assets existent
+        if ($project->getAssets()->isEmpty()) {
+            $this->addFlash('warning', $this->translator->trans('asset.flash.no_assets', [], 'marketing'));
 
             return $this->redirectToRoute('marketing_project_show', ['id' => $project->getId()]);
         }
 
-        return $this->render('marketing/asset/generate.html.twig', [
-            'form' => $form,
+        return $this->render('marketing/asset/show.html.twig', [
             'project' => $project,
-            'mercureUrl' => $this->mercurePublicUrl,
+            'assets' => $project->getAssets(),
         ]);
+    }
+
+    /**
+     * Sérialise la stratégie en tableau pour le contexte de l'agent.
+     *
+     * @return array<string, mixed>
+     */
+    private function serializeStrategy(Project $project): array
+    {
+        $strategy = $project->getStrategies()->last();
+
+        if (! $strategy) {
+            return [];
+        }
+
+        return [
+            'positioning' => $strategy->getPositioning(),
+            'key_messages' => $strategy->getKeyMessages(),
+            'recommended_channels' => $strategy->getRecommendedChannels(),
+            'timeline' => $strategy->getTimeline(),
+            'budget_allocation' => $strategy->getBudgetAllocation(),
+            'kpis' => $strategy->getKpis(),
+        ];
     }
 
     /**
@@ -179,7 +246,7 @@ final class AssetController extends AbstractController
             }
         }
 
-        if ($allApproved && ProjectStatus::ASSETS_GENERATING === $project->getStatus()) {
+        if ($allApproved && ProjectStatus::ASSETS_IN_PROGRESS === $project->getStatus()) {
             $project->setStatus(ProjectStatus::ASSETS_GENERATED);
             $this->entityManager->flush();
             $this->addFlash('success', 'Tous les assets sont approuvés ! Votre campagne est prête à être publiée.');

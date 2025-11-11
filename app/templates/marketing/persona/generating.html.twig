@@ -21,9 +21,10 @@
     <div class="card shadow-sm"
          data-controller="marketing-generation"
          data-marketing-generation-project-id-value="{{ project.id }}"
+         data-marketing-generation-task-id-value="{{ taskId }}"
          data-marketing-generation-stage-value="personas"
-         data-marketing-generation-mercure-url-value="{{ mercurePublicUrl }}"
-         data-marketing-generation-next-url-value="{{ path('marketing_project_show', {id: project.id}) }}">
+         data-marketing-generation-mercure-url-value="{{ mercureUrl }}"
+         data-marketing-generation-next-url-value="{{ path('marketing_persona_show', {id: project.id}) }}">
 
         <div class="card-header bg-primary text-white">
             <div class="d-flex align-items-center">

@@ -25,6 +25,7 @@ export default class extends Controller {
 
     static values = {
         projectId: Number,
+        taskId: String,
         stage: String,
         mercureUrl: String,
         nextUrl: String,
@@ -34,6 +35,7 @@ export default class extends Controller {
     connect() {
         console.log('Marketing generation controller connected');
         console.log('Project ID:', this.projectIdValue);
+        console.log('Task ID:', this.taskIdValue);
         console.log('Stage:', this.stageValue);
         console.log('Multiple mode:', this.multipleValue);
 
@@ -59,32 +61,55 @@ export default class extends Controller {
     }
 
     /**
-     * Connexion à Mercure EventSource
+     * Connexion à Mercure EventSource avec système taskId du Marketing AI Bundle
      */
     connectToMercure() {
-        const topic = `https://mycfia.local/marketing/generation/${this.projectIdValue}/${this.stageValue}`;
-        const url = new URL(this.mercureUrlValue);
-        url.searchParams.append('topic', topic);
+        // Utiliser le topic /tasks/{taskId} du Marketing AI Bundle
+        const topic = `/tasks/${this.taskIdValue}`;
+        const url = `${this.mercureUrlValue}?topic=${encodeURIComponent(topic)}`;
 
-        console.log('Connecting to Mercure:', url.toString());
+        console.log('Connecting to Mercure:', url);
+        console.log('Topic:', topic);
 
-        this.eventSource = new EventSource(url.toString());
+        this.eventSource = new EventSource(url);
 
-        this.eventSource.onmessage = (event) => {
-            console.log('Mercure event received:', event.data);
+        // Écouter les événements spécifiques du bundle
+        this.eventSource.addEventListener('TaskStartedEvent', (event) => {
+            console.log('TaskStartedEvent received:', event.data);
             const data = JSON.parse(event.data);
-            this.handleMercureEvent(data);
-        };
+            this.handleStart({ message: 'Agent IA démarré', ...data });
+        });
+
+        this.eventSource.addEventListener('PersonasGeneratedEvent', (event) => {
+            console.log('PersonasGeneratedEvent received:', event.data);
+            const data = JSON.parse(event.data);
+            this.handleComplete({
+                message: `${data.personas?.length || 3} personas générés avec succès !`,
+                ...data,
+            });
+        });
+
+        this.eventSource.addEventListener('TaskCompletedEvent', (event) => {
+            console.log('TaskCompletedEvent received:', event.data);
+            const data = JSON.parse(event.data);
+            this.handleComplete({ message: 'Génération terminée avec succès !', ...data });
+        });
+
+        this.eventSource.addEventListener('TaskFailedEvent', (event) => {
+            console.error('TaskFailedEvent received:', event.data);
+            const data = JSON.parse(event.data);
+            this.handleError({ message: data.error || 'Une erreur est survenue', ...data });
+        });
 
         this.eventSource.onerror = (error) => {
             console.error('EventSource error:', error);
-            this.showError('Erreur de connexion Mercure. Veuillez rafraîchir la page.');
+            // EventSource tente de se reconnecter automatiquement
         };
 
-        // Timeout après 10 minutes
+        // Timeout après 5 minutes (génération personas devrait prendre 10-60 secondes)
         this.timeoutTimer = setTimeout(() => {
             this.handleTimeout();
-        }, 600000);
+        }, 300000);
     }
 
     /**
@@ -332,7 +357,7 @@ export default class extends Controller {
         div.className = 'col-md-6';
         div.setAttribute('data-asset-type', assetType);
 
-        const formattedType = assetType.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+        const formattedType = assetType.replace(/_/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase());
 
         div.innerHTML = `
             <div class="d-flex align-items-center p-2 border rounded">

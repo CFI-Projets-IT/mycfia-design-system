@@ -1468,12 +1468,12 @@
             "source": {
                 "type": "git",
                 "url": "git@gitlab.com:gorillias/marketing-ai-bundle.git",
-                "reference": "4c530718e29c4d76fe3c54c50a4fbf89c00e597d"
+                "reference": "578ce3ebd96a563eb466481041dca4f5acf920ed"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://gitlab.com/api/v4/projects/gorillias%2Fmarketing-ai-bundle/repository/archive.zip?sha=4c530718e29c4d76fe3c54c50a4fbf89c00e597d",
-                "reference": "4c530718e29c4d76fe3c54c50a4fbf89c00e597d",
+                "url": "https://gitlab.com/api/v4/projects/gorillias%2Fmarketing-ai-bundle/repository/archive.zip?sha=578ce3ebd96a563eb466481041dca4f5acf920ed",
+                "reference": "578ce3ebd96a563eb466481041dca4f5acf920ed",
                 "shasum": ""
             },
             "require": {
@@ -1551,7 +1551,7 @@
                 "symfony",
                 "vector store"
             ],
-            "time": "2025-11-07T11:11:38+00:00"
+            "time": "2025-11-10T11:04:03+00:00"
         },
         {
             "name": "guzzlehttp/guzzle",
@@ -3022,12 +3022,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/ai-bundle.git",
-                "reference": "d4b20bb24b442a2b473ddb2c34d9d66e87f0b81f"
+                "reference": "09fe275cfdee3725e8c43ce8ae2eb577a6fa4231"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/ai-bundle/zipball/d4b20bb24b442a2b473ddb2c34d9d66e87f0b81f",
-                "reference": "d4b20bb24b442a2b473ddb2c34d9d66e87f0b81f",
+                "url": "https://api.github.com/repos/symfony/ai-bundle/zipball/09fe275cfdee3725e8c43ce8ae2eb577a6fa4231",
+                "reference": "09fe275cfdee3725e8c43ce8ae2eb577a6fa4231",
                 "shasum": ""
             },
             "require": {
@@ -3036,6 +3036,7 @@
                 "symfony/ai-chat": "@dev",
                 "symfony/ai-platform": "@dev",
                 "symfony/ai-store": "@dev",
+                "symfony/clock": "^7.3|^8.0",
                 "symfony/config": "^7.3|^8.0",
                 "symfony/console": "^7.3|^8.0",
                 "symfony/dependency-injection": "^7.3|^8.0",
@@ -3047,7 +3048,6 @@
                 "phpstan/phpstan": "^2.1",
                 "phpstan/phpstan-strict-rules": "^2.0",
                 "phpunit/phpunit": "^11.5",
-                "symfony/clock": "^7.3|^8.0",
                 "symfony/expression-language": "^7.3|^8.0",
                 "symfony/security-core": "^7.3|^8.0",
                 "symfony/translation": "^7.3|^8.0"
@@ -3101,7 +3101,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-11-06T21:51:41+00:00"
+            "time": "2025-11-09T23:02:00+00:00"
         },
         {
             "name": "symfony/ai-chat",
@@ -3109,12 +3109,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/ai-chat.git",
-                "reference": "d87e638dd6cc1987b5dfcd349733f27c7f0f1252"
+                "reference": "8c5a0032aba6e8415a529c8994e1a3124d2ce459"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/ai-chat/zipball/d87e638dd6cc1987b5dfcd349733f27c7f0f1252",
-                "reference": "d87e638dd6cc1987b5dfcd349733f27c7f0f1252",
+                "url": "https://api.github.com/repos/symfony/ai-chat/zipball/8c5a0032aba6e8415a529c8994e1a3124d2ce459",
+                "reference": "8c5a0032aba6e8415a529c8994e1a3124d2ce459",
                 "shasum": ""
             },
             "require": {
@@ -3123,6 +3123,7 @@
                 "symfony/ai-platform": "@dev"
             },
             "require-dev": {
+                "ext-redis": "*",
                 "phpstan/phpstan": "^2.0",
                 "phpstan/phpstan-strict-rules": "^2.0",
                 "phpunit/phpunit": "^11.5.13",
@@ -3130,7 +3131,8 @@
                 "symfony/clock": "^7.3|^8.0",
                 "symfony/console": "^7.3|^8.0",
                 "symfony/dependency-injection": "^7.3|^8.0",
-                "symfony/http-foundation": "^7.3|^8.0"
+                "symfony/http-foundation": "^7.3|^8.0",
+                "symfony/serializer": "^7.3|^8.0"
             },
             "suggest": {
                 "symfony/clock": "To use stores that requires waiting for actions like Meilisearch"
@@ -3190,7 +3192,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-11-01T00:06:06+00:00"
+            "time": "2025-11-07T12:51:09+00:00"
         },
         {
             "name": "symfony/ai-platform",
@@ -3198,12 +3200,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/ai-platform.git",
-                "reference": "c6416fb4e139221c986abee7775573866f1f21a6"
+                "reference": "4a1ed9d6faa267c5133c5092f23302d541ec66b1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/ai-platform/zipball/c6416fb4e139221c986abee7775573866f1f21a6",
-                "reference": "c6416fb4e139221c986abee7775573866f1f21a6",
+                "url": "https://api.github.com/repos/symfony/ai-platform/zipball/4a1ed9d6faa267c5133c5092f23302d541ec66b1",
+                "reference": "4a1ed9d6faa267c5133c5092f23302d541ec66b1",
                 "shasum": ""
             },
             "require": {
@@ -3313,7 +3315,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-11-07T01:36:44+00:00"
+            "time": "2025-11-09T23:02:00+00:00"
         },
         {
             "name": "symfony/ai-store",
@@ -3321,12 +3323,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/ai-store.git",
-                "reference": "9b04dd298618c73a6cbcfb3ebda320049f2e0da7"
+                "reference": "4d7861ba03f6064d7a9ffc019dba78d579cd0165"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/ai-store/zipball/9b04dd298618c73a6cbcfb3ebda320049f2e0da7",
-                "reference": "9b04dd298618c73a6cbcfb3ebda320049f2e0da7",
+                "url": "https://api.github.com/repos/symfony/ai-store/zipball/4d7861ba03f6064d7a9ffc019dba78d579cd0165",
+                "reference": "4d7861ba03f6064d7a9ffc019dba78d579cd0165",
                 "shasum": ""
             },
             "require": {
@@ -3423,7 +3425,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-11-06T21:51:37+00:00"
+            "time": "2025-11-07T13:05:23+00:00"
         },
         {
             "name": "symfony/asset",

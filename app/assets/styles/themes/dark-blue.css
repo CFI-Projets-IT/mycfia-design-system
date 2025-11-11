@@ -100,8 +100,9 @@ body.theme-dark-blue input.btn-check:checked + label.quick-access-card,
 body.theme-dark-blue .btn-check:checked + .quick-access-card {
     border: 3px solid #5fa8d3 !important;
     background: rgba(95, 168, 211, 0.25) !important;
-    box-shadow: 0 0 0 5px rgba(95, 168, 211, 0.3),
-                0 6px 16px rgba(95, 168, 211, 0.4) !important;
+    box-shadow:
+        0 0 0 5px rgba(95, 168, 211, 0.3),
+        0 6px 16px rgba(95, 168, 211, 0.4) !important;
     transform: translateY(-3px) !important;
 }
 
@@ -375,8 +376,8 @@ body.theme-dark-blue .valid-feedback {
 /* Form Controls - Text Input */
 body.theme-dark-blue .form-control,
 body.theme-dark-blue .form-select,
-body.theme-dark-blue input[type="text"],
-body.theme-dark-blue input[type="number"],
+body.theme-dark-blue input[type='text'],
+body.theme-dark-blue input[type='number'],
 body.theme-dark-blue textarea,
 body.theme-dark-blue select {
     color: var(--theme-text-primary) !important;

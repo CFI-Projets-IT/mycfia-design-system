@@ -22,7 +22,7 @@ export default class extends Controller {
 
         if (searchTerm === '') {
             // Réafficher toutes les lignes
-            rows.forEach(row => {
+            rows.forEach((row) => {
                 row.style.display = '';
             });
             this.updateNoResultsMessage(false);
@@ -31,7 +31,7 @@ export default class extends Controller {
 
         let visibleCount = 0;
 
-        rows.forEach(row => {
+        rows.forEach((row) => {
             // Ignorer la ligne "aucun résultat" si elle existe
             if (row.querySelector('td[colspan]')) {
                 row.style.display = 'none';

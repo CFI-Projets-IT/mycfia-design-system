@@ -40,7 +40,7 @@ class DivisionSelector {
             await this.loadDivisions();
             this.isLoaded = true;
         } catch (error) {
-            console.error('DivisionSelector: Erreur lors de l\'initialisation', error);
+            console.error("DivisionSelector: Erreur lors de l'initialisation", error);
             this.showError('Impossible de charger les divisions');
         } finally {
             this.isLoading = false;
@@ -55,7 +55,7 @@ class DivisionSelector {
             const response = await fetch('/api/tenant/divisions', {
                 method: 'GET',
                 headers: {
-                    'Accept': 'application/json',
+                    Accept: 'application/json',
                 },
             });
 
@@ -71,7 +71,6 @@ class DivisionSelector {
 
             this.renderDivisions(data.divisions);
             this.updateCurrentDivisionName(data.divisions);
-
         } catch (error) {
             console.error('DivisionSelector: Erreur loadDivisions', error);
             throw error;
@@ -96,7 +95,7 @@ class DivisionSelector {
         }
 
         // Créer les items de division
-        divisions.forEach(division => {
+        divisions.forEach((division) => {
             const li = document.createElement('li');
 
             const a = document.createElement('a');
@@ -135,7 +134,7 @@ class DivisionSelector {
      * Met à jour le nom de la division courante dans le bouton
      */
     updateCurrentDivisionName(divisions) {
-        const currentDivision = divisions.find(d => d.current);
+        const currentDivision = divisions.find((d) => d.current);
 
         if (currentDivision && this.currentDivisionName) {
             this.currentDivisionName.textContent = currentDivision.nom || `Division #${currentDivision.id}`;
@@ -148,6 +147,7 @@ class DivisionSelector {
      * Change la division active
      */
     async switchDivision(idDivision, nomDivision) {
+        let originalContent;
         try {
             // Confirmation utilisateur
             const confirmed = confirm(`Changer vers la division "${nomDivision}" ?\n\nLa page sera rechargée.`);
@@ -157,7 +157,7 @@ class DivisionSelector {
 
             // Afficher un loading sur le bouton
             const dropdownButton = this.selectorElement.querySelector('.dropdown-toggle');
-            const originalContent = dropdownButton.innerHTML;
+            originalContent = dropdownButton.innerHTML;
             dropdownButton.disabled = true;
             dropdownButton.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Changement...';
 
@@ -166,7 +166,7 @@ class DivisionSelector {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Accept': 'application/json',
+                    Accept: 'application/json',
                 },
                 body: JSON.stringify({ idDivision }),
             });
@@ -180,7 +180,6 @@ class DivisionSelector {
             // Succès → Recharger la page pour appliquer le nouveau contexte tenant
             console.log('DivisionSelector: Switch réussi, rechargement de la page...');
             window.location.reload();
-
         } catch (error) {
             console.error('DivisionSelector: Erreur switchDivision', error);
             alert(`Erreur lors du changement de division:\n${error.message}`);

@@ -7,104 +7,174 @@ namespace App\Controller\Marketing;
 use App\Entity\Project;
 use App\Entity\User;
 use App\Enum\ProjectStatus;
-use App\Form\PersonaGenerationType;
-use App\Message\GeneratePersonasMessage;
+use Doctrine\ORM\EntityManagerInterface;
+use Gorillias\MarketingBundle\Service\AgentTaskManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Contrôleur pour la génération de personas marketing par IA.
  *
- * Responsabilités :
- * - Affichage formulaire paramètres génération personas
- * - Dispatch génération asynchrone via Symfony Messenger
- * - Notification utilisateur via Mercure (temps réel)
- * - Mise à jour statut projet (DRAFT → PERSONA_GENERATED)
+ * Workflow :
+ * 1. GET /marketing/persona/generate/{id} - Démarre génération asynchrone
+ * 2. Dispatch vers PersonaGeneratorAgent via AgentTaskManager
+ * 3. Redirection vers page d'attente avec EventSource Mercure
+ * 4. PersonasGeneratedEvent → EventListener stocke personas en BDD
+ * 5. Notification Mercure → Affichage résultats
  *
- * Architecture :
- * - GET /marketing/projects/{id}/personas/generate : Formulaire paramètres
- * - POST /marketing/projects/{id}/personas/generate : Lancement génération async
- *
- * Agent IA utilisé : PersonaGeneratorAgent (Marketing AI Bundle)
- * Stores RAG : PersonaStore (optionnel, Mistral Embed 1024 dimensions)
- * Temps moyen : ~30 secondes pour 3 personas
+ * Agent IA : PersonaGeneratorAgent (Marketing AI Bundle)
+ * Durée : ~15 secondes pour 3-5 personas
  */
-#[Route('/marketing/projects/{id}/personas', name: 'marketing_persona_')]
+#[Route('/marketing/persona', name: 'marketing_persona_')]
 #[IsGranted('ROLE_USER')]
 final class PersonaController extends AbstractController
 {
     public function __construct(
-        private readonly MessageBusInterface $messageBus,
+        private readonly AgentTaskManager $agentTaskManager,
+        private readonly EntityManagerInterface $entityManager,
+        private readonly TranslatorInterface $translator,
         #[Autowire('%env(MERCURE_PUBLIC_URL)%')]
         private readonly string $mercurePublicUrl,
     ) {
     }
 
     /**
-     * Affiche le formulaire de génération de personas IA.
+     * Démarre la génération asynchrone des personas marketing.
      *
-     * Permet de paramétrer :
-     * - Nombre de personas (1-5, défaut 3)
-     * - Contexte additionnel pour affiner les résultats
-     *
-     * Validation : Projet doit être en statut DRAFT.
+     * Workflow :
+     * - Vérifie que le projet est en statut DRAFT ou ENRICHED
+     * - Dispatche la génération via AgentTaskManager
+     * - Redirige vers page d'attente avec Mercure EventSource
      *
      * @param Project $project Projet pour lequel générer les personas
-     *
-     * @return Response Template avec formulaire PersonaGenerationType
      */
-    #[Route('/generate', name: 'generate', methods: ['GET', 'POST'])]
-    public function generate(Request $request, Project $project): Response
+    #[Route('/generate/{id}', name: 'generate', methods: ['GET'])]
+    public function generate(Project $project): Response
     {
         $this->denyAccessUnlessGranted('edit', $project);
 
-        // Vérification : Ne pas regénérer si déjà des personas
-        if (ProjectStatus::DRAFT !== $project->getStatus()) {
-            $this->addFlash('warning', 'Les personas ont déjà été générés pour ce projet. Utilisez l\'édition pour les modifier.');
+        // Vérifier statut projet : doit être DRAFT ou ENRICHED
+        if (! in_array($project->getStatus(), [ProjectStatus::DRAFT, ProjectStatus::ENRICHED], true)) {
+            $this->addFlash('warning', $this->translator->trans('persona.flash.already_generated', [], 'marketing'));
 
             return $this->redirectToRoute('marketing_project_show', ['id' => $project->getId()]);
         }
 
-        $form = $this->createForm(PersonaGenerationType::class);
-        $form->handleRequest($request);
+        // Vérifier qu'il n'y a pas déjà des personas
+        if ($project->getPersonas()->count() > 0) {
+            $this->addFlash('info', $this->translator->trans('persona.flash.already_exists', [], 'marketing'));
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $data = $form->getData();
-
-            /** @var User $user */
-            $user = $this->getUser();
-            $tenant = $user->getDivision();
-
-            if (null === $tenant) {
-                $this->addFlash('error', 'Aucune division sélectionnée.');
-
-                return $this->redirectToRoute('marketing_project_index');
-            }
-
-            // Dispatch message asynchrone vers PersonaGeneratorAgent
-            $this->messageBus->dispatch(new GeneratePersonasMessage(
-                projectId: $project->getId(),
-                userId: (int) $user->getId(),
-                tenantId: $tenant->getId(),
-                numberOfPersonas: $data['numberOfPersonas'],
-                additionalContext: $data['additionalContext'] ?? ''
-            ));
-
-            $this->addFlash('success', 'Génération des personas lancée ! Vous serez notifié en temps réel via Mercure.');
-            $this->addFlash('info', 'Temps estimé : environ 30 secondes pour '.$data['numberOfPersonas'].' personas.');
-
-            return $this->redirectToRoute('marketing_project_show', ['id' => $project->getId()]);
+            return $this->redirectToRoute('marketing_persona_show', ['id' => $project->getId()]);
         }
 
-        return $this->render('marketing/persona/generate.html.twig', [
-            'form' => $form,
+        // Construire description cible pour PersonaGeneratorAgent
+        $targetDescription = $this->buildTargetDescription($project);
+
+        /** @var User $user */
+        $user = $this->getUser();
+
+        // Dispatcher la tâche asynchrone de génération via AgentTaskManager
+        $taskId = $this->agentTaskManager->dispatchPersonaGeneration(
+            sector: $project->getSector(),
+            target: $targetDescription,
+            options: [
+                'project_id' => $project->getId(),
+                'user_id' => $user->getId(),
+                'detail_level' => 'standard',
+                'brand_context' => $project->getWebsiteUrl() ? 'url:'.$project->getWebsiteUrl() : null,
+                'objectives' => $project->getDetailedObjectives(),
+                'budget' => (int) ((float) $project->getBudget() * 100), // Centimes
+            ]
+        );
+
+        // Mettre à jour le statut du projet
+        $project->setStatus(ProjectStatus::PERSONA_IN_PROGRESS);
+        $this->entityManager->flush();
+
+        $this->addFlash('info', $this->translator->trans('persona.flash.generation_started', [], 'marketing'));
+
+        // Rediriger vers la page d'attente avec EventSource Mercure
+        return $this->redirectToRoute('marketing_persona_generating', [
+            'id' => $project->getId(),
+            'taskId' => $taskId,
+        ]);
+    }
+
+    /**
+     * Page d'attente de la génération avec EventSource Mercure.
+     *
+     * Affiche un loader animé et se connecte à Mercure pour recevoir
+     * les notifications de génération en temps réel.
+     */
+    #[Route('/generating/{id}/{taskId}', name: 'generating', methods: ['GET'])]
+    public function generating(Project $project, string $taskId): Response
+    {
+        $this->denyAccessUnlessGranted('view', $project);
+
+        return $this->render('marketing/persona/generating.html.twig', [
             'project' => $project,
+            'taskId' => $taskId,
             'mercureUrl' => $this->mercurePublicUrl,
         ]);
+    }
+
+    /**
+     * Affiche les personas générés pour un projet.
+     */
+    #[Route('/show/{id}', name: 'show', methods: ['GET'])]
+    public function show(Project $project): Response
+    {
+        $this->denyAccessUnlessGranted('view', $project);
+
+        if ($project->getPersonas()->isEmpty()) {
+            $this->addFlash('warning', $this->translator->trans('persona.flash.no_personas', [], 'marketing'));
+
+            return $this->redirectToRoute('marketing_project_show', ['id' => $project->getId()]);
+        }
+
+        return $this->render('marketing/persona/show.html.twig', [
+            'project' => $project,
+            'personas' => $project->getPersonas(),
+        ]);
+    }
+
+    /**
+     * Construit une description cible pour la génération de personas.
+     *
+     * Combine les informations du projet (secteur, objectifs, produit)
+     * en une description narrative pour l'agent IA.
+     */
+    private function buildTargetDescription(Project $project): string
+    {
+        $parts = [];
+
+        // Contexte entreprise
+        $parts[] = sprintf('Entreprise : %s', $project->getCompanyName());
+        $parts[] = sprintf('Secteur : %s', $project->getSector());
+
+        // Produit/Service
+        if ($project->getProductInfo()) {
+            $parts[] = sprintf('Produit/Service : %s', $project->getProductInfo());
+        }
+
+        // Description générale
+        if ($project->getDescription()) {
+            $parts[] = sprintf('Description : %s', $project->getDescription());
+        }
+
+        // Objectifs marketing
+        $parts[] = sprintf('Objectif marketing : %s', $project->getGoalType()->getLabel());
+        $parts[] = sprintf('Objectifs détaillés : %s', $project->getDetailedObjectives());
+
+        // Contexte campagne
+        $durationDays = $project->getStartDate()->diff($project->getEndDate())->days;
+        $parts[] = sprintf('Durée campagne : %d jours', $durationDays);
+        $parts[] = sprintf('Budget : %.2f€', (float) $project->getBudget());
+
+        return implode("\n", $parts);
     }
 }

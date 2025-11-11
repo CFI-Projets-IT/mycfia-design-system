@@ -47,7 +47,7 @@
     transition: transform 0.2s ease;
 }
 
-.nav-section-title-pill[aria-expanded="true"] i.bi-chevron-down {
+.nav-section-title-pill[aria-expanded='true'] i.bi-chevron-down {
     transform: rotate(180deg);
 }
 
@@ -170,7 +170,8 @@
 /* Adaptation des couleurs du logo selon le thème */
 /* Logo texte : blanc en SVG, donc doit être converti en bleu pour thème light */
 .theme-light .header-logo {
-    filter: brightness(0) saturate(100%) invert(23%) sepia(73%) saturate(1647%) hue-rotate(203deg) brightness(93%) contrast(94%);
+    filter: brightness(0) saturate(100%) invert(23%) sepia(73%) saturate(1647%) hue-rotate(203deg) brightness(93%)
+        contrast(94%);
 }
 
 /* Logo picto : on utilise les bons SVG directement (logo_picto.svg en light, assistant-picto.svg en dark) */

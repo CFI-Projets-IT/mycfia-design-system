@@ -14,9 +14,36 @@ project:
     updated: 'Projet modifié avec succès !'
     deleted: 'Projet supprimé avec succès !'
     no_data_to_analyze: 'Aucune donnée de projet à analyser. Veuillez remplir le formulaire.'
+    enrichment_started: 'Enrichissement IA en cours... Veuillez patienter.'
+    enrichment_not_found: 'Résultats d''enrichissement introuvables. Veuillez réessayer.'
+    enrichment_failed: 'L''enrichissement IA a échoué. Veuillez réessayer.'
 
 goal:
   type:
     awareness: Notoriété
     conversion: Conversion
     retention: Fidélisation
+
+persona:
+  flash:
+    generation_started: 'Génération de personas en cours... Veuillez patienter.'
+    already_generated: 'Les personas ont déjà été générés pour ce projet.'
+    already_exists: 'Des personas existent déjà pour ce projet.'
+    no_personas: 'Aucun persona généré pour ce projet.'
+    generation_failed: 'La génération de personas a échoué. Veuillez réessayer.'
+
+strategy:
+  flash:
+    generation_started: 'Génération de stratégie en cours... Veuillez patienter.'
+    already_generated: 'La stratégie a déjà été générée pour ce projet.'
+    no_personas: 'Veuillez d''abord générer les personas avant la stratégie.'
+    no_strategy: 'Aucune stratégie générée pour ce projet.'
+    generation_failed: 'La génération de stratégie a échoué. Veuillez réessayer.'
+
+asset:
+  flash:
+    generation_started: 'Génération des assets en cours... Veuillez patienter.'
+    already_generated: 'Les assets ont déjà été générés pour ce projet.'
+    no_strategy: 'Veuillez d''abord générer la stratégie avant les assets.'
+    no_assets: 'Aucun asset généré pour ce projet.'
+    generation_failed: 'La génération des assets a échoué. Veuillez réessayer.'

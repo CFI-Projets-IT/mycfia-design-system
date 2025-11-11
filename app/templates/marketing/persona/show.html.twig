@@ -1,0 +1,190 @@
+{% extends 'layouts/home.html.twig' %}
+
+{% block title %}Personas Marketing - {{ project.name }}{% endblock %}
+
+{% block content %}
+<div class="container" style="max-width: 1400px;">
+    {# Breadcrumb #}
+    <div class="mb-4">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="{{ path('marketing_project_index') }}">Projets Marketing</a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a href="{{ path('marketing_project_show', {id: project.id}) }}">{{ project.name }}</a>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">Personas</li>
+            </ol>
+        </nav>
+    </div>
+
+    {# Header #}
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h2 class="mb-2">
+                        <i class="bi bi-people-fill text-primary"></i>
+                        {{ personas|length }} Personas Marketing Générés
+                    </h2>
+                    <p class="text-muted mb-0">
+                        Profils cibles détaillés pour optimiser votre stratégie marketing
+                    </p>
+                </div>
+                <div class="col-md-4 text-end">
+                    <span class="badge bg-success fs-6 mb-2">
+                        <i class="bi bi-check-circle-fill"></i> {{ project.status.label }}
+                    </span>
+                    <div class="d-grid gap-2">
+                        <a href="{{ path('marketing_strategy_new', {id: project.id}) }}"
+                           class="btn btn-primary">
+                            <i class="bi bi-graph-up-arrow"></i>
+                            Générer la stratégie marketing
+                        </a>
+                        <a href="{{ path('marketing_persona_generate', {id: project.id}) }}"
+                           class="btn btn-outline-secondary btn-sm">
+                            <i class="bi bi-arrow-clockwise"></i>
+                            Régénérer les personas
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {# Liste des Personas en cartes #}
+    <div class="row g-4">
+        {% for persona in personas %}
+            <div class="col-lg-6">
+                <div class="card h-100 shadow-sm border-0">
+                    {# Header Persona #}
+                    <div class="card-header bg-gradient text-white py-3"
+                         style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                        <div class="d-flex align-items-center justify-content-between">
+                            <div>
+                                <h4 class="mb-1">{{ persona.name }}</h4>
+                                <p class="mb-0 small opacity-75">
+                                    {{ persona.age }} ans • {{ persona.gender }} • {{ persona.job }}
+                                </p>
+                            </div>
+                            {% if persona.qualityScore %}
+                                <div class="text-center">
+                                    <div class="badge bg-light text-dark fw-bold fs-6">
+                                        {{ (persona.qualityScore * 100)|number_format(0) }}%
+                                    </div>
+                                    <small class="d-block text-white-50">Qualité</small>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="card-body p-4">
+                        {# Centres d'intérêt #}
+                        <div class="mb-4">
+                            <h6 class="fw-bold text-primary mb-2">
+                                <i class="bi bi-heart-fill"></i> Centres d'intérêt
+                            </h6>
+                            <p class="text-muted mb-0">
+                                {{ persona.interests }}
+                            </p>
+                        </div>
+
+                        {# Comportements #}
+                        <div class="mb-4">
+                            <h6 class="fw-bold text-success mb-2">
+                                <i class="bi bi-graph-up"></i> Comportements d'achat
+                            </h6>
+                            <p class="text-muted mb-0">
+                                {{ persona.behaviors }}
+                            </p>
+                        </div>
+
+                        {# Motivations #}
+                        <div class="mb-4">
+                            <h6 class="fw-bold text-warning mb-2">
+                                <i class="bi bi-lightning-fill"></i> Motivations
+                            </h6>
+                            <p class="text-muted mb-0">
+                                {{ persona.motivations }}
+                            </p>
+                        </div>
+
+                        {# Points de douleur #}
+                        <div class="mb-0">
+                            <h6 class="fw-bold text-danger mb-2">
+                                <i class="bi bi-exclamation-triangle-fill"></i> Points de douleur
+                            </h6>
+                            <p class="text-muted mb-0">
+                                {{ persona.pains }}
+                            </p>
+                        </div>
+                    </div>
+
+                    {# Footer avec date de génération #}
+                    <div class="card-footer bg-light text-muted small">
+                        <i class="bi bi-clock"></i>
+                        Généré le {{ persona.createdAt|date('d/m/Y à H:i') }}
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    {# Informations contextuelles #}
+    <div class="card mt-4 border-0 bg-light">
+        <div class="card-body">
+            <h6 class="fw-bold mb-3">
+                <i class="bi bi-info-circle text-primary"></i>
+                Comment utiliser ces personas ?
+            </h6>
+            <div class="row g-3 small text-muted">
+                <div class="col-md-6">
+                    <h6 class="fw-bold text-dark">Étape suivante : Stratégie</h6>
+                    <ul class="mb-0">
+                        <li>Cliquez sur "Générer la stratégie marketing"</li>
+                        <li>L'IA analysera ces personas pour recommander les meilleurs canaux</li>
+                        <li>Budget optimisé par canal et persona</li>
+                    </ul>
+                </div>
+                <div class="col-md-6">
+                    <h6 class="fw-bold text-dark">Exploitation des données</h6>
+                    <ul class="mb-0">
+                        <li>Adaptez votre message aux motivations de chaque persona</li>
+                        <li>Résolvez leurs points de douleur dans vos contenus</li>
+                        <li>Utilisez les centres d'intérêt pour cibler vos publicités</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {# Infos projet #}
+    <div class="card mt-4 bg-primary text-white">
+        <div class="card-body">
+            <h6 class="fw-bold mb-3">
+                <i class="bi bi-briefcase-fill"></i>
+                Contexte du projet
+            </h6>
+            <div class="row g-3 small">
+                <div class="col-md-3">
+                    <strong>Entreprise</strong>
+                    <br>{{ project.companyName }}
+                </div>
+                <div class="col-md-3">
+                    <strong>Secteur</strong>
+                    <br>{{ project.sector }}
+                </div>
+                <div class="col-md-3">
+                    <strong>Objectif</strong>
+                    <br>{{ project.goalType.label }}
+                </div>
+                <div class="col-md-3">
+                    <strong>Budget</strong>
+                    <br>{{ project.budget|number_format(2, ',', ' ') }} €
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

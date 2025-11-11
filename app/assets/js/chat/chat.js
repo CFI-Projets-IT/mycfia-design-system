@@ -37,12 +37,14 @@ const state = {
  * Vérifier si les métadonnées contiennent des données de tableau.
  */
 function hasTableData(metadata) {
-    return metadata &&
-           metadata.table_data &&
-           Array.isArray(metadata.table_data.headers) &&
-           Array.isArray(metadata.table_data.rows) &&
-           metadata.table_data.headers.length > 0 &&
-           metadata.table_data.rows.length > 0;
+    return (
+        metadata &&
+        metadata.table_data &&
+        Array.isArray(metadata.table_data.headers) &&
+        Array.isArray(metadata.table_data.rows) &&
+        metadata.table_data.headers.length > 0 &&
+        metadata.table_data.rows.length > 0
+    );
 }
 
 /**
@@ -58,7 +60,7 @@ function renderDataTable(tableData) {
     const theadHtml = `
         <thead>
             <tr>
-                ${headers.map(header => `<th scope="col">${escapeHtml(header)}</th>`).join('')}
+                ${headers.map((header) => `<th scope="col">${escapeHtml(header)}</th>`).join('')}
                 <th scope="col" class="text-center export-column" style="width: 100px;">Export</th>
             </tr>
         </thead>
@@ -67,17 +69,19 @@ function renderDataTable(tableData) {
     // 2. Générer les lignes de données
     const tbodyHtml = `
         <tbody>
-            ${rows.map(row => {
-                return `
+            ${rows
+                .map((row) => {
+                    return `
                     <tr>
-                        ${headers.map((header, index) => {
-                            const key = Object.keys(row)[index];
-                            const value = row[key];
+                        ${headers
+                            .map((header, index) => {
+                                const key = Object.keys(row)[index];
+                                const value = row[key];
 
-                            // Si cette colonne a un lien cliquable configuré
-                            if (linkColumns && linkColumns[key] && value) {
-                                const prompt = linkColumns[key].replace(`{${key}}`, value);
-                                return `
+                                // Si cette colonne a un lien cliquable configuré
+                                if (linkColumns && linkColumns[key] && value) {
+                                    const prompt = linkColumns[key].replace(`{${key}}`, value);
+                                    return `
                                     <td>
                                         <a href="#"
                                            class="detail-link text-decoration-none fw-semibold"
@@ -88,11 +92,14 @@ function renderDataTable(tableData) {
                                         </a>
                                     </td>
                                 `;
-                            }
+                                }
 
-                            return `<td>${escapeHtml(value || '')}</td>`;
-                        }).join('')}
-                        ${mode !== 'DÉTAIL' ? `
+                                return `<td>${escapeHtml(value || '')}</td>`;
+                            })
+                            .join('')}
+                        ${
+                            mode !== 'DÉTAIL'
+                                ? `
                         <td class="export-column text-center">
                             <div class="d-flex gap-1 justify-content-center">
                                 <span
@@ -127,22 +134,28 @@ function renderDataTable(tableData) {
                                 </span>
                             </div>
                         </td>
-                        ` : '<td class="export-column"></td>'}
+                        `
+                                : '<td class="export-column"></td>'
+                        }
                     </tr>
                 `;
-            }).join('')}
+                })
+                .join('')}
         </tbody>
     `;
 
     // 3. Générer la ligne Total (optionnelle)
-    const tfootHtml = totalRow ? `
+    const tfootHtml = totalRow
+        ? `
         <tfoot>
             <tr class="table-total fw-bold">
-                ${headers.map((header, index) => {
-                    const key = Object.keys(totalRow)[index];
-                    const value = totalRow[key];
-                    return `<td>${escapeHtml(value || '')}</td>`;
-                }).join('')}
+                ${headers
+                    .map((header, index) => {
+                        const key = Object.keys(totalRow)[index];
+                        const value = totalRow[key];
+                        return `<td>${escapeHtml(value || '')}</td>`;
+                    })
+                    .join('')}
                 <td class="export-column text-center">
                     <div class="d-flex gap-1 justify-content-center">
                         <span
@@ -179,7 +192,8 @@ function renderDataTable(tableData) {
                 </td>
             </tr>
         </tfoot>
-    ` : '';
+    `
+        : '';
 
     // 4. Assembler le tableau complet
     return `
@@ -276,9 +290,9 @@ function initializeChatInterface() {
  */
 function updateChatDataWithConversation(conversationId, isFavorite) {
     const chatData = document.getElementById('chatData');
-    if (!chatData) return;
-
-    const context = chatData.dataset.context;
+    if (!chatData) {
+        return;
+    }
 
     chatData.dataset.loadedConversation = conversationId;
     chatData.dataset.isFavorite = isFavorite ? '1' : '0';
@@ -295,13 +309,17 @@ function injectFavoriteButton() {
     const chatData = document.getElementById('chatData');
     const container = document.getElementById('favoriteButtonContainer');
 
-    if (!chatData || !container) return;
+    if (!chatData || !container) {
+        return;
+    }
 
     const conversationId = chatData.dataset.loadedConversation;
     const isFavorite = chatData.dataset.isFavorite === '1';
     const favoriteUrl = chatData.dataset.favoriteUrl;
 
-    if (!conversationId || !favoriteUrl) return;
+    if (!conversationId || !favoriteUrl) {
+        return;
+    }
 
     // Nettoyer le conteneur avant d'ajouter le bouton
     container.innerHTML = '';
@@ -359,7 +377,7 @@ function initEventListeners() {
     elements.chatInput?.addEventListener('input', handleInputChange);
 
     // Quick questions
-    elements.quickQuestions?.forEach(btn => {
+    elements.quickQuestions?.forEach((btn) => {
         btn.addEventListener('click', () => {
             const question = btn.dataset.question;
             if (question) {
@@ -440,7 +458,7 @@ async function handleFormSubmit(e) {
             await handleSyncSubmit(question);
         }
     } catch (error) {
-        console.error('[Chat] Erreur lors de l\'envoi:', error);
+        console.error("[Chat] Erreur lors de l'envoi:", error);
         addErrorMessage(`Erreur d'envoi : ${error.message}`);
         setLoading(false);
     }
@@ -540,7 +558,7 @@ async function handleStreamingSubmit(question) {
                             headers: metadata.table_data.headers,
                             rows_count: metadata.table_data.rows?.length,
                             has_totalRow: !!metadata.table_data.totalRow,
-                            has_linkColumns: !!metadata.table_data.linkColumns
+                            has_linkColumns: !!metadata.table_data.linkColumns,
                         });
                     }
                     toolsUsed = metadata.tools_used || [];
@@ -592,7 +610,6 @@ async function handleStreamingSubmit(question) {
             eventSource.close();
             setLoading(false);
         };
-
     } catch (error) {
         console.error('[Chat] Streaming submit error:', error);
         addErrorMessage(`Erreur : ${error.message}`);
@@ -638,7 +655,6 @@ async function handleSyncSubmit(question) {
         });
 
         console.log('[Chat] Réponse reçue:', data);
-
     } catch (error) {
         console.error('[Chat] Erreur:', error);
         addErrorMessage(`Erreur : ${error.message}`);
@@ -670,7 +686,7 @@ function addUserMessage(text) {
     scrollToBottom();
 }
 
-function addAssistantMessage(text, metadata = {}, toolsUsed = []) {
+function addAssistantMessage(text, metadata = {}, _toolsUsed = []) {
     // Utiliser la structure du composant ChatMessageAssistant
     const logoUrl = state.assistantLogo || '/assets/images/assistant-picto.svg';
 
@@ -698,7 +714,7 @@ function addAssistantMessage(text, metadata = {}, toolsUsed = []) {
     if (tableHtml && window.bootstrap) {
         const lastMessage = elements.chatMessages.lastElementChild;
         const tooltipElements = lastMessage.querySelectorAll('[data-bs-toggle="tooltip"]');
-        tooltipElements.forEach(el => new window.bootstrap.Tooltip(el));
+        tooltipElements.forEach((el) => new window.bootstrap.Tooltip(el));
     }
 
     scrollToBottom();
@@ -753,7 +769,7 @@ function createStreamingMessageElement() {
 function updateStreamingMessage(messageElement, text) {
     const contentDiv = messageElement.querySelector('[data-streaming-content]');
     if (contentDiv) {
-        contentDiv.innerHTML = formatMessage(text) + '<span class="streaming-cursor">|</span>';
+        contentDiv.innerHTML = `${formatMessage(text)}<span class="streaming-cursor">|</span>`;
     }
 }
 
@@ -763,20 +779,20 @@ function updateStreamingMessage(messageElement, text) {
 function injectActionLinks(formattedHtml, actions) {
     // Créer une map invoice_id => prompt pour accès rapide
     const actionsMap = {};
-    actions.forEach(action => {
+    actions.forEach((action) => {
         actionsMap[action.invoice_id] = action.prompt;
     });
 
     // Regex pour détecter "Facture #12345" ou "**Facture #12345**"
     const facturePattern = /(\*\*)?Facture\s+#(\d+)(\*\*)?/gi;
 
-    return formattedHtml.replace(facturePattern, (match, bold1, invoiceId, bold2) => {
+    return formattedHtml.replace(facturePattern, (match, bold1, invoiceId, _bold2) => {
         const prompt = actionsMap[invoiceId];
         if (prompt) {
             // Générer un lien cliquable
             const link = `<a href="#" class="detail-link" data-action-prompt="${escapeHtml(prompt)}" data-entity-id="${invoiceId}" title="Cliquer pour voir les détails">📄</a>`;
             // Retourner le match original + le lien
-            return match + ' ' + link;
+            return `${match} ${link}`;
         }
         return match;
     });
@@ -785,7 +801,7 @@ function injectActionLinks(formattedHtml, actions) {
 /**
  * Finaliser un message streamé avec les métadonnées
  */
-function finalizeStreamingMessage(messageElement, text, metadata = {}, toolsUsed = []) {
+function finalizeStreamingMessage(messageElement, text, metadata = {}, _toolsUsed = []) {
     const contentDiv = messageElement.querySelector('[data-streaming-content]');
 
     if (contentDiv) {
@@ -793,8 +809,12 @@ function finalizeStreamingMessage(messageElement, text, metadata = {}, toolsUsed
         let formattedText = formatMessage(text);
 
         // Ajouter les liens d'actions cliquables si présents
-        if (metadata.suggested_actions && Array.isArray(metadata.suggested_actions) && metadata.suggested_actions.length > 0) {
-            console.log('[Chat] Injection de', metadata.suggested_actions.length, 'liens d\'actions');
+        if (
+            metadata.suggested_actions &&
+            Array.isArray(metadata.suggested_actions) &&
+            metadata.suggested_actions.length > 0
+        ) {
+            console.log('[Chat] Injection de', metadata.suggested_actions.length, "liens d'actions");
             formattedText = injectActionLinks(formattedText, metadata.suggested_actions);
         }
 
@@ -812,7 +832,7 @@ function finalizeStreamingMessage(messageElement, text, metadata = {}, toolsUsed
         // Initialiser les tooltips Bootstrap pour les éléments dynamiques du tableau
         if (tableHtml && window.bootstrap) {
             const tooltipElements = contentDiv.querySelectorAll('[data-bs-toggle="tooltip"]');
-            tooltipElements.forEach(el => new window.bootstrap.Tooltip(el));
+            tooltipElements.forEach((el) => new window.bootstrap.Tooltip(el));
         }
     }
 
@@ -858,7 +878,9 @@ function handleInputChange() {
 
 function setupTextareaAutoResize() {
     const textarea = elements.chatInput;
-    if (!textarea) return;
+    if (!textarea) {
+        return;
+    }
 
     textarea.addEventListener('input', () => {
         // Reset height pour recalculer
@@ -866,12 +888,14 @@ function setupTextareaAutoResize() {
 
         // Calculer la nouvelle hauteur
         const newHeight = Math.min(textarea.scrollHeight, 200);
-        textarea.style.height = newHeight + 'px';
+        textarea.style.height = `${newHeight}px`;
     });
 }
 
 function scrollToBottom() {
-    if (!elements.chatMessages) return;
+    if (!elements.chatMessages) {
+        return;
+    }
 
     // Utiliser requestAnimationFrame pour s'assurer que le DOM est mis à jour
     requestAnimationFrame(() => {
@@ -880,7 +904,7 @@ function scrollToBottom() {
             // Scroll fluide vers le bas avec scrollTo (meilleure compatibilité)
             elements.chatMessages.scrollTo({
                 top: elements.chatMessages.scrollHeight,
-                behavior: 'smooth'
+                behavior: 'smooth',
             });
         });
     });
@@ -909,7 +933,7 @@ function handleSuggestedActionClick(button) {
     const actionsContainer = button.closest('.chat-suggested-actions');
     if (actionsContainer) {
         const allButtons = actionsContainer.querySelectorAll('.suggested-action-btn');
-        allButtons.forEach(btn => {
+        allButtons.forEach((btn) => {
             btn.disabled = true;
             btn.classList.add('disabled');
         });
@@ -944,19 +968,13 @@ function formatMessage(text) {
     );
 
     // Convertir le code inline `code`
-    formatted = formatted.replace(
-        /`([^`]+)`/g,
-        '<code>$1</code>'
-    );
+    formatted = formatted.replace(/`([^`]+)`/g, '<code>$1</code>');
 
     // Convertir les listes
-    formatted = formatted.replace(
-        /^- (.+)$/gm,
-        '<li>$1</li>'
-    );
+    formatted = formatted.replace(/^- (.+)$/gm, '<li>$1</li>');
 
     if (formatted.includes('<li>')) {
-        formatted = '<ul>' + formatted.replace(/(<li>.*<\/li>)/g, '$1') + '</ul>';
+        formatted = `<ul>${formatted.replace(/(<li>.*<\/li>)/g, '$1')}</ul>`;
     }
 
     return formatted;
@@ -977,7 +995,8 @@ function handleClearChat() {
         // Supprimer tous les messages sauf le message de bienvenue
         const messages = elements.chatMessages.querySelectorAll('.chat-message');
         messages.forEach((msg, index) => {
-            if (index > 0) { // Garder le message de bienvenue (index 0)
+            if (index > 0) {
+                // Garder le message de bienvenue (index 0)
                 msg.remove();
             }
         });

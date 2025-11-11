@@ -12,6 +12,14 @@ framework:
     # Note that the session will be started ONLY if you read or write from it.
     session: true
 
+    # Configuration HTTP Client pour Symfony AI / Mistral API
+    # Timeout augmenté à 300s (5min) pour les requêtes IA longues (enrichissement, génération)
+    # L'API Mistral peut prendre jusqu'à 180s+ selon la charge et les tokens (4000 max)
+    http_client:
+        default_options:
+            timeout: 300        # Timeout total de la requête (5 minutes)
+            max_duration: 300   # Durée maximale (incluant redirects, etc.)
+
     #esi: true
     #fragments: true
 

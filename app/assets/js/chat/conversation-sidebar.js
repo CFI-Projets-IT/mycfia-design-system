@@ -84,7 +84,6 @@ async function toggleConversationFavorite(conversationId, favoriteUrl, iconEleme
         if (historyFrame) {
             historyFrame.reload();
         }
-
     } catch (error) {
         console.error('[ConversationSidebar] Erreur toggle favori:', error);
         alert('Erreur lors de la modification du statut favori.');
@@ -135,7 +134,6 @@ async function deleteConversation(conversationId, deleteUrl, conversationTitle) 
 
         // Rediriger vers le chat général
         window.location.href = '/chat/general';
-
     } catch (error) {
         console.error('[ConversationSidebar] Erreur suppression:', error);
         alert('Erreur lors de la suppression de la conversation.');

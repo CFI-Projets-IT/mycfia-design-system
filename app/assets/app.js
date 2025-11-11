@@ -32,7 +32,7 @@ import * as bootstrap from 'bootstrap';
 window.bootstrap = bootstrap;
 
 // Import des composants JavaScript
-import './js/division-selector.js';
+import './js/ui/division-selector.js';
 
 // Initialiser automatiquement les tooltips et popovers
 document.addEventListener('DOMContentLoaded', () => {

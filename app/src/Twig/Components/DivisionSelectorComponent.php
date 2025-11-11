@@ -47,7 +47,7 @@ final class DivisionSelectorComponent
             // Trouver la division actuelle
             foreach ($divisions as $division) {
                 if ($division->getIdDivision() === $currentTenantId) {
-                    return $division->getNomDivision() ?? sprintf('Division #%d', $currentTenantId);
+                    return $division->getNomDivision();
                 }
             }
 
