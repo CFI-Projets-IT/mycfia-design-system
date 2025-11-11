@@ -1468,12 +1468,12 @@
             "source": {
                 "type": "git",
                 "url": "git@gitlab.com:gorillias/marketing-ai-bundle.git",
-                "reference": "8680654334f042c466412ba0f17ce47825b3b1e2"
+                "reference": "96507e13076e6fac12af5ceb88707a1cf9da2cf4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://gitlab.com/api/v4/projects/gorillias%2Fmarketing-ai-bundle/repository/archive.zip?sha=8680654334f042c466412ba0f17ce47825b3b1e2",
-                "reference": "8680654334f042c466412ba0f17ce47825b3b1e2",
+                "url": "https://gitlab.com/api/v4/projects/gorillias%2Fmarketing-ai-bundle/repository/archive.zip?sha=96507e13076e6fac12af5ceb88707a1cf9da2cf4",
+                "reference": "96507e13076e6fac12af5ceb88707a1cf9da2cf4",
                 "shasum": ""
             },
             "require": {
@@ -1551,7 +1551,7 @@
                 "symfony",
                 "vector store"
             ],
-            "time": "2025-11-11T14:41:50+00:00"
+            "time": "2025-11-11T15:54:43+00:00"
         },
         {
             "name": "guzzlehttp/guzzle",
