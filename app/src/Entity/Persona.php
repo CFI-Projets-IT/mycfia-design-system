@@ -39,6 +39,12 @@ class Persona
     private string $name;
 
     /**
+     * Description détaillée du persona (biographie, contexte, expérience).
+     */
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $description = null;
+
+    /**
      * Âge du persona.
      */
     #[ORM\Column(type: Types::INTEGER)]
@@ -57,35 +63,30 @@ class Persona
     private string $job;
 
     /**
-     * Centres d'intérêt (JSON généré par l'IA).
+     * Données brutes complètes du persona (JSON).
+     * Contient : demographics, behaviors, pain_points, goals, etc.
+     * Structure enrichie du Marketing AI Bundle v3.3+.
+     *
+     * @var array<string, mixed>|null
      */
-    #[ORM\Column(type: Types::TEXT)]
-    private string $interests;
+    #[ORM\Column(type: Types::JSON, nullable: true)]
+    private ?array $rawData = null;
 
     /**
-     * Comportements d'achat et habitudes (JSON généré par l'IA).
-     */
-    #[ORM\Column(type: Types::TEXT)]
-    private string $behaviors;
-
-    /**
-     * Motivations principales (JSON généré par l'IA).
-     */
-    #[ORM\Column(type: Types::TEXT)]
-    private string $motivations;
-
-    /**
-     * Points de douleur / frustrations (JSON généré par l'IA).
-     */
-    #[ORM\Column(type: Types::TEXT)]
-    private string $pains;
-
-    /**
-     * Score de qualité du persona (0.0 à 1.0).
+     * Score de qualité du persona (0 à 100).
      * Calculé par l'agent IA selon pertinence et cohérence.
+     * Marketing AI Bundle v3.8.5+ : Score sur échelle 0-100.
      */
-    #[ORM\Column(type: Types::DECIMAL, precision: 3, scale: 2, nullable: true)]
+    #[ORM\Column(type: Types::DECIMAL, precision: 5, scale: 2, nullable: true)]
     private ?string $qualityScore = null;
+
+    /**
+     * Indique si ce persona est sélectionné pour la campagne marketing (v3.8.0).
+     * Permet à l'utilisateur de choisir quels personas cibler dans la stratégie et les assets.
+     * Par défaut false : tous les personas générés doivent être explicitement sélectionnés.
+     */
+    #[ORM\Column]
+    private bool $selected = false;
 
     /**
      * Date de génération du persona.
@@ -106,6 +107,10 @@ class Persona
 
     public function setProject(?Project $project): self
     {
+        if (null === $project) {
+            throw new \InvalidArgumentException('Project cannot be null');
+        }
+
         $this->project = $project;
 
         return $this;
@@ -119,6 +124,18 @@ class Persona
     public function setName(string $name): self
     {
         $this->name = $name;
+
+        return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): self
+    {
+        $this->description = $description;
 
         return $this;
     }
@@ -159,50 +176,20 @@ class Persona
         return $this;
     }
 
-    public function getInterests(): string
+    /**
+     * @return array<string, mixed>|null
+     */
+    public function getRawData(): ?array
     {
-        return $this->interests;
+        return $this->rawData;
     }
 
-    public function setInterests(string $interests): self
+    /**
+     * @param array<string, mixed>|null $rawData
+     */
+    public function setRawData(?array $rawData): self
     {
-        $this->interests = $interests;
-
-        return $this;
-    }
-
-    public function getBehaviors(): string
-    {
-        return $this->behaviors;
-    }
-
-    public function setBehaviors(string $behaviors): self
-    {
-        $this->behaviors = $behaviors;
-
-        return $this;
-    }
-
-    public function getMotivations(): string
-    {
-        return $this->motivations;
-    }
-
-    public function setMotivations(string $motivations): self
-    {
-        $this->motivations = $motivations;
-
-        return $this;
-    }
-
-    public function getPains(): string
-    {
-        return $this->pains;
-    }
-
-    public function setPains(string $pains): self
-    {
-        $this->pains = $pains;
+        $this->rawData = $rawData;
 
         return $this;
     }
@@ -215,6 +202,18 @@ class Persona
     public function setQualityScore(?string $qualityScore): self
     {
         $this->qualityScore = $qualityScore;
+
+        return $this;
+    }
+
+    public function isSelected(): bool
+    {
+        return $this->selected;
+    }
+
+    public function setSelected(bool $selected): self
+    {
+        $this->selected = $selected;
 
         return $this;
     }
