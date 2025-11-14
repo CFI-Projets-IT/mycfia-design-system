@@ -2,8 +2,10 @@
 
 {% block title %}Générer stratégie marketing - {{ project.name }}{% endblock %}
 
+{% block content_classes %} marketing-page{% endblock %}
+
 {% block content %}
-<div class="container" style="max-width: 900px;">
+<div class="container" style="max-width: 900px;" data-project-id="{{ project.id }}" data-competitors-input="{{ form.competitors.vars.id }}">
     {# Breadcrumb #}
     <div class="mb-4">
         <nav aria-label="breadcrumb">
@@ -27,7 +29,7 @@
                 Générer votre stratégie marketing IA
             </h2>
             <p class="text-muted mb-0">
-                Sélectionnez le persona cible et les canaux marketing pour générer une stratégie personnalisée
+                Sélectionnez les personas ciblés pour générer une stratégie marketing personnalisée
             </p>
         </div>
     </div>
@@ -37,44 +39,111 @@
         <div class="card-body p-4">
             {{ form_start(form) }}
 
-            {# Sélection du persona #}
+            {# Sélection des personas #}
             <div class="mb-4">
-                <h5 class="fw-bold text-primary mb-3">
-                    <i class="bi bi-person-circle"></i>
-                    Persona cible principal
+                <h5 class="fw-bold text-primary mb-3 pb-2 border-bottom">
+                    <i class="bi bi-people-fill"></i>
+                    Personas ciblés
                 </h5>
-                {{ form_row(form.persona, {
-                    'attr': {'class': 'form-select form-select-lg'}
-                }) }}
+                <p class="text-muted small mb-3">
+                    <i class="bi bi-info-circle"></i>
+                    Sélectionnez un ou plusieurs personas pour cette stratégie marketing. Vous devez choisir au moins un persona.
+                </p>
+
+                {# Grille de cartes pour les checkboxes personas #}
+                <div class="row g-3">
+                    {% for child in form.personas %}
+                        {# Parser le label pour extraire les infos (format: "Nom - Age ans, Métier") #}
+                        {% set labelParts = child.vars.label|split(' - ') %}
+                        {% set personaName = labelParts[0] %}
+                        {% set ageAndJob = labelParts[1]|default('')|split(', ') %}
+                        {% set personaAge = ageAndJob[0]|default('')|replace({' ans': ''}) %}
+                        {% set personaJob = ageAndJob[1]|default('') %}
+
+                        <div class="col-md-6 col-lg-4">
+                            <div class="card h-100 border persona-card">
+                                <label class="card-body p-3 cursor-pointer" for="{{ child.vars.id }}">
+                                    <div class="d-flex align-items-start justify-content-between mb-2">
+                                        <div class="d-flex align-items-center gap-2">
+                                            <i class="bi bi-person-circle text-primary fs-4"></i>
+                                            <strong class="fw-semibold">{{ personaName }}</strong>
+                                        </div>
+                                        {{ form_widget(child, {
+                                            attr: {class: 'form-check-input persona-checkbox'}
+                                        }) }}
+                                    </div>
+                                    <div class="small text-muted">
+                                        <div>
+                                            <i class="bi bi-calendar3"></i> {{ personaAge }} ans
+                                            • <i class="bi bi-briefcase"></i> {{ personaJob }}
+                                        </div>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
             </div>
 
             <hr class="my-4">
 
-            {# Sélection des canaux marketing #}
-            <div class="mb-4">
-                <h5 class="fw-bold text-primary mb-3">
-                    <i class="bi bi-broadcast"></i>
-                    Canaux marketing
-                </h5>
-                {{ form_row(form.channels, {
-                    'label': false,
-                    'row_attr': {'class': 'row g-3'}
-                }) }}
-            </div>
-
-            <hr class="my-4">
-
-            {# Analyse concurrentielle optionnelle #}
+            {# Analyse concurrentielle - WORKFLOW 2 ÉTAPES #}
             <div class="mb-4">
                 <h5 class="fw-bold text-primary mb-3">
                     <i class="bi bi-pie-chart"></i>
-                    Analyse concurrentielle (optionnel)
+                    Analyse concurrentielle
                 </h5>
-                {{ form_row(form.competitors) }}
-                <div class="form-text">
-                    <i class="bi bi-info-circle"></i>
-                    L'IA analysera vos concurrents pour identifier des opportunités de différenciation
+
+                {# Étape 1 : Bouton de détection interactive #}
+                <div class="mb-3">
+                    <button type="button" id="detectCompetitorsBtn" class="btn btn-outline-primary">
+                        <i class="bi bi-search"></i>
+                        Détecter les concurrents automatiquement
+                    </button>
+                    <div class="form-text">
+                        <i class="bi bi-info-circle"></i>
+                        L'IA va analyser votre site web et détecter vos principaux concurrents via Google Search.
+                    </div>
                 </div>
+
+                {# Zone d'affichage des résultats de détection #}
+                <div id="detectionResults" class="d-none mb-3">
+                    <div class="alert alert-info">
+                        <div class="d-flex align-items-center mb-2">
+                            <i class="bi bi-lightbulb-fill me-2"></i>
+                            <strong>Concurrents détectés</strong>
+                            <span id="detectionSource" class="badge bg-primary ms-2"></span>
+                        </div>
+                        <div id="detectionQuery" class="small text-muted mb-2"></div>
+                        <div id="competitorsList" class="mt-2"></div>
+                    </div>
+                </div>
+
+                {# Zone de chargement #}
+                <div id="detectionLoading" class="d-none mb-3">
+                    <div class="alert alert-primary">
+                        <div class="d-flex align-items-center">
+                            <div class="spinner-border spinner-border-sm me-2" role="status">
+                                <span class="visually-hidden">Chargement...</span>
+                            </div>
+                            <span>Analyse en cours... Scraping du site web et détection des concurrents</span>
+                        </div>
+                    </div>
+                </div>
+
+                {# Zone d'erreur #}
+                <div id="detectionError" class="d-none mb-3">
+                    <div class="alert alert-danger">
+                        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                        <span id="detectionErrorMessage"></span>
+                    </div>
+                </div>
+
+                {# Champ manuel (toujours affiché pour ajout/modification) #}
+                {{ form_row(form.competitors, {
+                    label: 'Concurrents (manuel ou validés)',
+                    help: 'Validez les concurrents détectés ci-dessus ou ajoutez-les manuellement (séparés par des virgules)'
+                }) }}
             </div>
 
             {# Actions #}
@@ -149,4 +218,67 @@
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        /* Style des cartes personas (même principe que asset-type-card) */
+        .persona-card {
+            transition: all 0.2s ease-in-out;
+            cursor: pointer;
+        }
+
+        .persona-card:hover {
+            border-color: var(--bs-primary) !important;
+            box-shadow: 0 0.125rem 0.5rem rgba(0, 123, 255, 0.25);
+            transform: translateY(-2px);
+        }
+
+        .persona-card label {
+            margin-bottom: 0;
+            user-select: none;
+        }
+
+        .persona-checkbox {
+            cursor: pointer;
+            width: 1.25rem;
+            height: 1.25rem;
+        }
+
+        .persona-card:has(.persona-checkbox:checked) {
+            border-color: var(--bs-primary) !important;
+            background-color: rgba(13, 110, 253, 0.05);
+            box-shadow: 0 0.25rem 0.75rem rgba(13, 110, 253, 0.3);
+        }
+
+        .cursor-pointer {
+            cursor: pointer;
+        }
+
+        /* Style pour les cartes de concurrents détectés */
+        .competitor-item {
+            padding: 0.75rem;
+            border: 1px solid #dee2e6;
+            border-radius: 0.375rem;
+            margin-bottom: 0.5rem;
+            transition: all 0.2s;
+        }
+
+        .competitor-item:hover {
+            border-color: var(--bs-primary);
+            background-color: rgba(13, 110, 253, 0.05);
+        }
+
+        .competitor-item.selected {
+            border-color: var(--bs-success);
+            background-color: rgba(25, 135, 84, 0.1);
+        }
+    </style>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {# Script de détection interactive des concurrents - Workflow 2 Étapes #}
+    <script src="{{ asset('js/marketing/strategy-detection.js') }}"></script>
 {% endblock %}

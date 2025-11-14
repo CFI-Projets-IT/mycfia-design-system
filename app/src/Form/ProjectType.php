@@ -237,6 +237,23 @@ class ProjectType extends AbstractType
                     ]),
                 ],
             ])
+            ->add('selectedAssetTypes', ChoiceType::class, [
+                'label' => 'Types d\'assets à générer',
+                'help' => 'Sélectionnez les canaux marketing pour vos contenus. Si aucun n\'est sélectionné, tous seront générés.',
+                'required' => false,
+                'multiple' => true,
+                'expanded' => true,
+                'choices' => [
+                    'Publication LinkedIn' => 'linkedin_post',
+                    'Publicité Google Ads' => 'google_ads',
+                    'Publication Facebook' => 'facebook_post',
+                    'Publication Instagram' => 'instagram_post',
+                    'Email marketing' => 'mail',
+                    'Publicité Bing Ads' => 'bing_ads',
+                    'Bannière IAB' => 'iab',
+                    'Article de blog' => 'article',
+                ],
+            ])
 
             // === Boutons Submit ===
             ->add('save', SubmitType::class, [

@@ -13,12 +13,19 @@ framework:
     session: true
 
     # Configuration HTTP Client pour Symfony AI / Mistral API
-    # Timeout augmenté à 300s (5min) pour les requêtes IA longues (enrichissement, génération)
-    # L'API Mistral peut prendre jusqu'à 180s+ selon la charge et les tokens (4000 max)
+    # Timeout augmenté pour les requêtes IA longues (enrichissement, génération multi-personas)
+    # L'API Mistral peut prendre jusqu'à 180s+ selon la charge et les tokens (12000 max pour personas)
     http_client:
         default_options:
             timeout: 300        # Timeout total de la requête (5 minutes)
             max_duration: 300   # Durée maximale (incluant redirects, etc.)
+
+        # Client HTTP dédié pour Mistral AI (multi-personas v3.4.0+)
+        scoped_clients:
+            mistral.http_client:
+                base_uri: 'https://api.mistral.ai'
+                timeout: 600        # 10 minutes pour générer jusqu'à 10 personas
+                max_duration: 600   # Durée max incluant ChromaDB RAG
 
     #esi: true
     #fragments: true

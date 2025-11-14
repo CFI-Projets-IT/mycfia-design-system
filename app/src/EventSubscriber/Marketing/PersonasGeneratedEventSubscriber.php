@@ -10,6 +10,7 @@ use App\Enum\ProjectStatus;
 use App\Repository\ProjectRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Gorillias\MarketingBundle\Event\TaskCompletedEvent;
+use Gorillias\MarketingBundle\StructuredOutput\PersonaStructuredOutput;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -45,7 +46,9 @@ final readonly class PersonasGeneratedEventSubscriber implements EventSubscriber
     public static function getSubscribedEvents(): array
     {
         return [
-            TaskCompletedEvent::class => 'onTaskCompleted',
+            // Priorité basse (0) pour s'exécuter APRÈS MercurePublisherSubscriber (priorité 10)
+            // Important car ce subscriber peut lancer des exceptions qui stopperaient la propagation
+            TaskCompletedEvent::class => ['onTaskCompleted', 0],
         ];
     }
 
@@ -110,7 +113,7 @@ final readonly class PersonasGeneratedEventSubscriber implements EventSubscriber
             $this->deleteExistingPersonas($project);
 
             // Créer et persister les nouvelles entités Persona
-            $personasCreated = $this->createPersonasFromResult($project, $result);
+            $personasCreated = $this->createPersonasFromResult($project, $result, $taskId);
 
             // Mettre à jour le statut du projet
             $project->setStatus(ProjectStatus::PERSONA_GENERATED);
@@ -161,100 +164,178 @@ final readonly class PersonasGeneratedEventSubscriber implements EventSubscriber
     /**
      * Crée les entités Persona depuis le résultat de l'agent IA.
      *
-     * Le résultat peut être un tableau de personas ou un tableau avec clé 'personas'.
+     * Gère les objets PersonaStructuredOutput (bundle v3.8.4+) :
+     * - $result peut être un objet PersonaStructuredOutput unique
+     * - $result peut être un tableau contenant plusieurs PersonaStructuredOutput
+     * - $result peut être un tableau avec clé 'personas' contenant des PersonaStructuredOutput
      *
-     * Structure attendue d'un persona :
-     * [
-     *   'name' => 'Sophie Tech Enthusiast',
-     *   'age' => 32,
-     *   'gender' => 'F',
-     *   'job' => 'CTO',
-     *   'interests' => 'Innovation, IA, développement durable' (string ou array),
-     *   'behaviors' => 'Recherche intensive avant achat' (string ou array),
-     *   'motivations' => 'ROI mesurable, sécurité' (string ou array),
-     *   'pains' => 'Infrastructure complexe, coûts imprévisibles' (string ou array),
-     *   'quality_score' => 0.85 (float)
-     * ]
+     * Structure PersonaStructuredOutput v3.8.4+ :
+     * {
+     *   name: string,
+     *   description: string,
+     *   demographics: PersonaDemographics (DTO imbriqué),
+     *   behaviors: PersonaBehaviors (DTO imbriqué),
+     *   painPoints: array<string>,
+     *   goals: array<string>,
+     *   selected: bool
+     * }
      *
-     * @param array<string, mixed> $result
+     * @param array<string, mixed>|PersonaStructuredOutput $result
      *
      * @return int Nombre de personas créés
      */
-    private function createPersonasFromResult(Project $project, array $result): int
+    private function createPersonasFromResult(Project $project, array|PersonaStructuredOutput $result, string $taskId): int
     {
-        // Le résultat peut avoir une clé 'personas' ou être directement le tableau de personas
-        $personasData = $result['personas'] ?? $result;
-
-        // Si c'est un seul persona (pas de tableau de tableaux), le wrapper dans un tableau
-        if (isset($personasData['name']) && is_string($personasData['name'])) {
-            $personasData = [$personasData];
-        }
+        // Déterminer les personas à traiter selon le format du résultat
+        $personasData = $this->normalizePersonasData($result);
 
         $count = 0;
 
         foreach ($personasData as $personaData) {
-            if (! is_array($personaData)) {
-                $this->logger->warning('Skipping invalid persona data (not array)', [
-                    'data_type' => gettype($personaData),
-                ]);
-
-                continue;
-            }
-
-            // Vérifier les champs obligatoires
-            if (! isset($personaData['name'], $personaData['age'], $personaData['gender'], $personaData['job'])) {
-                $this->logger->warning('Skipping persona with missing required fields', [
-                    'available_keys' => array_keys($personaData),
-                ]);
-
-                continue;
-            }
-
-            $persona = new Persona();
-            $persona->setProject($project);
-            $persona->setName((string) $personaData['name']);
-            $persona->setAge((int) $personaData['age']);
-            $persona->setGender((string) $personaData['gender']);
-            $persona->setJob((string) $personaData['job']);
-
-            // Champs JSON : convertir en string si array
-            $persona->setInterests($this->normalizeJsonField($personaData['interests'] ?? ''));
-            $persona->setBehaviors($this->normalizeJsonField($personaData['behaviors'] ?? ''));
-            $persona->setMotivations($this->normalizeJsonField($personaData['motivations'] ?? ''));
-            $persona->setPains($this->normalizeJsonField($personaData['pains'] ?? ''));
-
-            // Quality score optionnel
-            if (isset($personaData['quality_score'])) {
-                $persona->setQualityScore((string) $personaData['quality_score']);
-            }
-
-            $this->entityManager->persist($persona);
-            ++$count;
-
-            $this->logger->debug('Persona entity created', [
-                'name' => $persona->getName(),
-                'age' => $persona->getAge(),
-                'job' => $persona->getJob(),
-            ]);
+            // Toujours utiliser la version array après normalisation (via toArray())
+            // PHPStan : Après normalizePersonasData, $personaData est array<string, mixed>
+            $count += $this->createPersonaFromArray($project, $personaData, $taskId);
         }
 
         return $count;
     }
 
     /**
-     * Normalise un champ JSON : convertit array en JSON string, garde string tel quel.
+     * Normalise les données de personas pour obtenir un tableau itérable d'arrays.
+     *
+     * Convertit tous les DTOs StructuredOutput en arrays via toArray().
+     *
+     * @param array<string, mixed>|PersonaStructuredOutput $result
+     *
+     * @return array<array<string, mixed>>
      */
-    private function normalizeJsonField(mixed $value): string
+    private function normalizePersonasData(array|PersonaStructuredOutput $result): array
     {
-        if (is_array($value)) {
-            return json_encode($value, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+        // Cas 1 : Objet PersonaStructuredOutput unique
+        if ($result instanceof PersonaStructuredOutput) {
+            return [$result->toArray()];
         }
 
-        if (is_string($value)) {
-            return $value;
+        // Cas 2 : Tableau avec clé 'personas' contenant des StructuredOutput ou arrays
+        if (isset($result['personas']) && is_array($result['personas'])) {
+            return array_map(
+                fn ($persona) => $persona instanceof \Gorillias\MarketingBundle\StructuredOutput\PersonaItem
+                    ? $persona->toArray()
+                    : $persona,
+                $result['personas']
+            );
         }
 
-        // Fallback : convertir en string
-        return (string) $value;
+        // Cas 3 : Tableau direct de personas (StructuredOutput ou arrays)
+        if (! empty($result) && (reset($result) instanceof \Gorillias\MarketingBundle\StructuredOutput\PersonaItem || (is_array(reset($result)) && isset(reset($result)['name'])))) {
+            return array_map(
+                fn ($persona) => $persona instanceof \Gorillias\MarketingBundle\StructuredOutput\PersonaItem
+                    ? $persona->toArray()
+                    : $persona,
+                $result
+            );
+        }
+
+        // Cas 4 : Array mono-persona direct
+        if (isset($result['name']) && is_string($result['name'])) {
+            return [$result];
+        }
+
+        // Aucun format reconnu
+        return [];
+    }
+
+    /**
+     * Crée une entité Persona depuis un array (v3.8.4+).
+     *
+     * @param array<string, mixed> $personaData
+     *
+     * @return int 1 si persona créé, 0 si rejeté
+     */
+    private function createPersonaFromArray(Project $project, array $personaData, string $taskId): int
+    {
+        // Vérifier le champ obligatoire principal
+        if (! isset($personaData['name'])) {
+            $this->logger->warning('Skipping persona without name', [
+                'available_keys' => array_keys($personaData),
+                'task_id' => $taskId,
+            ]);
+
+            return 0;
+        }
+
+        // Rejeter les personas "Persona Default"
+        if ('Persona Default' === $personaData['name']) {
+            $this->logger->error('Skipping fallback persona - generation failed', [
+                'task_id' => $taskId,
+            ]);
+
+            return 0;
+        }
+
+        // Extraire demographics (objet structuré depuis v3.8.4)
+        $demographics = $personaData['demographics'] ?? [];
+        $age = $this->extractAge($demographics['age'] ?? null);
+        $gender = $demographics['gender'] ?? 'N/A';
+        $job = $demographics['profession'] ?? $demographics['job'] ?? 'Non spécifié';
+
+        // Créer l'entité
+        $persona = new Persona();
+        $persona->setProject($project);
+        $persona->setName((string) $personaData['name']);
+        $persona->setAge($age);
+        $persona->setGender($gender);
+        $persona->setJob((string) $job);
+
+        if (isset($personaData['description'])) {
+            $persona->setDescription((string) $personaData['description']);
+        }
+
+        // Récupérer quality_score depuis le bundle (v3.8.5+)
+        // Le bundle retourne 0-100, on le convertit en 0.0-1.0 pour la BDD (DECIMAL(3,2))
+        $qualityScore = $personaData['quality_score'] ?? 0.0;
+        $persona->setQualityScore((string) ($qualityScore / 100));
+
+        // Stocker rawData
+        $persona->setRawData($personaData);
+
+        $this->entityManager->persist($persona);
+
+        $this->logger->debug('Persona entity created', [
+            'name' => $persona->getName(),
+            'age' => $persona->getAge(),
+            'gender' => $persona->getGender(),
+            'job' => $persona->getJob(),
+            'quality_score' => $persona->getQualityScore(),
+        ]);
+
+        return 1;
+    }
+
+    /**
+     * Extrait l'âge depuis un range (ex: "38-45 ans") ou un nombre.
+     */
+    private function extractAge(string|int|null $ageData): int
+    {
+        if (null === $ageData) {
+            return 35; // Âge par défaut
+        }
+
+        // Si c'est déjà un int, le retourner directement
+        if (is_int($ageData)) {
+            return $ageData;
+        }
+
+        // Si c'est un range (ex: "38-45 ans"), prendre la moyenne
+        if (preg_match('/(\d+)-(\d+)/', $ageData, $matches)) {
+            return (int) round(((int) $matches[1] + (int) $matches[2]) / 2);
+        }
+
+        // Si c'est juste un nombre
+        if (preg_match('/\d+/', $ageData, $matches)) {
+            return (int) $matches[0];
+        }
+
+        return 35; // Âge par défaut si non parsable
     }
 }

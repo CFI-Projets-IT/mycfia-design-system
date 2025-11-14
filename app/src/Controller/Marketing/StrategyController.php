@@ -10,12 +10,16 @@ use App\Enum\ProjectStatus;
 use App\Form\StrategyGenerationType;
 use Doctrine\ORM\EntityManagerInterface;
 use Gorillias\MarketingBundle\Service\AgentTaskManager;
+use Gorillias\MarketingBundle\Tool\CompetitorIntelligenceTool;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -39,18 +43,72 @@ final class StrategyController extends AbstractController
         private readonly AgentTaskManager $agentTaskManager,
         private readonly EntityManagerInterface $entityManager,
         private readonly TranslatorInterface $translator,
+        private readonly CompetitorIntelligenceTool $competitorIntelligenceTool,
+        private readonly HttpClientInterface $httpClient,
+        private readonly LoggerInterface $logger,
         #[Autowire('%env(MERCURE_PUBLIC_URL)%')]
         private readonly string $mercurePublicUrl,
     ) {
     }
 
     /**
-     * Affiche le formulaire de génération de stratégie marketing.
+     * ÉTAPE 1 : Détection interactive des concurrents (Workflow v3.9.0).
+     *
+     * Utilise CompetitorIntelligenceTool::detectCompetitorsInteractive() pour :
+     * - Scraper le site web du projet
+     * - Extraire contexte SEO/GEO (keywords, target audience, geography)
+     * - Construire requête Google optimisée
+     * - Détecter concurrents pertinents via SerpApi
+     *
+     * Retourne JSON avec liste concurrents + métadonnées pour validation UI.
+     */
+    #[Route('/detect-competitors/{id}', name: 'detect_competitors', methods: ['POST'])]
+    public function detectCompetitors(Project $project): JsonResponse
+    {
+        $this->denyAccessUnlessGranted('edit', $project);
+
+        try {
+            // Utiliser les données enrichies déjà stockées en base de données
+            // au lieu de re-scraper (données de ProjectEnrichmentAgent avec Firecrawl)
+            $projectContext = [
+                'scraped_content' => $project->getScrapedContent(),
+                'project_context' => $project->getProjectContext(),
+            ];
+
+            // Appeler CompetitorIntelligenceTool pour détection enrichie
+            $detectionResult = $this->competitorIntelligenceTool->detectCompetitorsInteractive(
+                sector: $project->getSector(),
+                maxCompetitors: 5,
+                projectContext: $projectContext
+            );
+
+            return $this->json([
+                'success' => true,
+                'competitors' => $detectionResult['competitors'],
+                'search_query' => $detectionResult['search_query'],
+                'context_quality' => $detectionResult['context_quality'],
+                'source' => $detectionResult['source'],
+            ]);
+        } catch (\Throwable $e) {
+            return $this->json([
+                'success' => false,
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    /**
+     * Affiche le formulaire de génération de stratégie marketing avec validation concurrents (Workflow v3.9.0).
+     *
+     * Workflow 2 étapes :
+     * 1. Détection interactive (AJAX /detect-competitors)
+     * 2. Validation utilisateur + génération stratégie
      *
      * Permet de sélectionner :
-     * - Le persona principal à cibler
-     * - Les canaux marketing à utiliser (1 à 8)
-     * - Une liste optionnelle de concurrents pour analyse concurrentielle
+     * - Un ou plusieurs personas à cibler (sélection multiple)
+     * - Liste concurrents détectés automatiquement (validation/modification)
+     *
+     * Les canaux marketing sont récupérés depuis le projet (sélectionnés à la création).
      *
      * Validation : Projet doit avoir des personas générés.
      */
@@ -63,7 +121,16 @@ final class StrategyController extends AbstractController
         if ($project->getPersonas()->isEmpty()) {
             $this->addFlash('warning', $this->translator->trans('strategy.flash.no_personas', [], 'marketing'));
 
-            return $this->redirectToRoute('marketing_persona_generate', ['id' => $project->getId()]);
+            return $this->redirectToRoute('marketing_persona_configure', ['id' => $project->getId()]);
+        }
+
+        // Vérifier qu'au moins un persona est sélectionné
+        $selectedPersonas = $project->getPersonas()->filter(fn ($persona) => $persona->isSelected())->toArray();
+
+        if (empty($selectedPersonas)) {
+            $this->addFlash('warning', $this->translator->trans('strategy.flash.no_personas_selected', [], 'marketing'));
+
+            return $this->redirectToRoute('marketing_persona_show', ['id' => $project->getId()]);
         }
 
         // Vérifier le statut du projet
@@ -73,9 +140,8 @@ final class StrategyController extends AbstractController
             return $this->redirectToRoute('marketing_strategy_show', ['id' => $project->getId()]);
         }
 
-        // Créer le formulaire avec les personas disponibles
         $form = $this->createForm(StrategyGenerationType::class, null, [
-            'personas' => $project->getPersonas()->toArray(),
+            'personas' => $selectedPersonas,
         ]);
 
         $form->handleRequest($request);
@@ -83,38 +149,61 @@ final class StrategyController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
 
-            // PHPStan: après isValid(), getData() retourne toujours un array (le PHPDoc de Symfony ne le reflète pas)
-            /** @var array{persona: \App\Entity\Persona, channels?: array<string>, competitors?: string} $data */
+            // PHPStan: EntityType avec expanded: true retourne ArrayCollection, pas array
+            /** @var array{personas: \Doctrine\Common\Collections\Collection<int, \App\Entity\Persona>|array<\App\Entity\Persona>, competitors?: string} $data */
 
             /** @var User $user */
             $user = $this->getUser();
 
-            // Extraire les données du formulaire
-            $personaId = $data['persona']->getId();
-            $channels = $data['channels'] ?? [];
-            $competitors = isset($data['competitors']) ? explode(',', $data['competitors']) : [];
+            // Extraire les personas sélectionnés (ArrayCollection depuis formulaire avec expanded: true)
+            $selectedPersonasEntities = $data['personas'];
 
-            // Dispatcher la tâche asynchrone de génération via AgentTaskManager
-            $taskId = $this->agentTaskManager->dispatchStrategyAnalysis(
-                sector: $project->getSector(),
-                objectives: [$project->getDetailedObjectives()], // Array avec un élément
-                context: [
-                    'project_id' => $project->getId(),
-                    'project_name' => $project->getName(),
-                    'company_name' => $project->getCompanyName(),
-                    'persona_id' => $personaId,
-                    'personas' => $this->serializePersonas($project),
-                    'budget' => (int) ((float) $project->getBudget() * 100), // Centimes
-                    'duration_days' => $project->getStartDate()->diff($project->getEndDate())->days,
-                    'website_url' => $project->getWebsiteUrl(),
-                ],
+            // Convertir ArrayCollection en tableau si nécessaire
+            if ($selectedPersonasEntities instanceof \Doctrine\Common\Collections\Collection) {
+                $selectedPersonasEntities = $selectedPersonasEntities->toArray();
+            }
+
+            /** @var array<\App\Entity\Persona> $selectedPersonasEntities */
+            $personasIds = array_filter(
+                array_map(fn ($p) => $p->getId(), $selectedPersonasEntities),
+                fn ($id) => null !== $id
+            );
+
+            // Récupérer les canaux depuis le projet (sélectionnés à la création)
+            $channels = $project->getSelectedAssetTypes() ?? [];
+
+            $competitorsInput = isset($data['competitors']) ? trim($data['competitors']) : '';
+            $competitors = ! empty($competitorsInput)
+                ? array_map('trim', explode(',', $competitorsInput))
+                : []; // Vide = détection automatique par le bundle
+
+            // ÉTAPE 1 : Dispatcher l'analyse concurrentielle (OBLIGATOIRE)
+            // Le CompetitorToStrategySubscriber se chargera de :
+            // 1. Récupérer les données du projet via project_id
+            // 2. Construire le context de stratégie
+            // 3. Lancer StrategyAnalystAgent avec le context enrichi
+
+            $this->logger->info('🔍 TRACE: StrategyController - Avant dispatchCompetitorAnalysis', [
+                'project_id' => $project->getId(),
+                'market' => $project->getSector(),
+                'competitors_count' => count($competitors),
+            ]);
+
+            $taskId = $this->agentTaskManager->dispatchCompetitorAnalysis(
+                market: $project->getSector(),
+                competitors: $competitors, // Vide ou fournis - fonctionne dans les 2 cas
+                dimensions: ['positioning', 'pricing', 'messaging', 'channels'],
                 options: [
                     'user_id' => $user->getId(),
-                    'selected_channels' => $channels,
-                    'competitors' => array_map('trim', $competitors),
-                    'include_competitor_analysis' => ! empty($competitors),
+                    'project_id' => $project->getId(), // ✅ Copié automatiquement dans context par le bundle
+                    'max_competitors' => 5, // Limite détection auto
+                    'include_videos' => false, // Optimisation performance
                 ]
             );
+
+            $this->logger->info('🔍 TRACE: StrategyController - Après dispatchCompetitorAnalysis', [
+                'task_id' => $taskId,
+            ]);
 
             // Mettre à jour le statut du projet
             $project->setStatus(ProjectStatus::STRATEGY_IN_PROGRESS);
@@ -178,28 +267,116 @@ final class StrategyController extends AbstractController
     }
 
     /**
-     * Sérialise les personas en tableau pour le contexte de l'agent.
+     * Scrape le site web du projet pour extraire le contexte SEO/GEO.
      *
-     * @return array<int, array<string, mixed>>
+     * Extrait :
+     * - Métadonnées : title, description, keywords, language
+     * - Contenu textuel pour analyse LLM
+     *
+     * Utilisé pour enrichir la détection de concurrents avec :
+     * - product_keywords : Mots-clés produit/service
+     * - target_audience : Audience cible détectée
+     * - geography : Localisation géographique
+     * - business_model : Modèle économique identifié
+     *
+     * @return array<string, mixed> Context enrichi pour detectCompetitorsInteractive()
      */
-    private function serializePersonas(Project $project): array
+    private function scrapeProjectWebsite(Project $project): array
     {
-        $personas = [];
+        $websiteUrl = $project->getWebsiteUrl();
 
-        foreach ($project->getPersonas() as $persona) {
-            $personas[] = [
-                'id' => $persona->getId(),
-                'name' => $persona->getName(),
-                'age' => $persona->getAge(),
-                'gender' => $persona->getGender(),
-                'job' => $persona->getJob(),
-                'interests' => $persona->getInterests(),
-                'behaviors' => $persona->getBehaviors(),
-                'motivations' => $persona->getMotivations(),
-                'pains' => $persona->getPains(),
-            ];
+        // Si pas d'URL, retourner contexte vide (détection sans enrichissement)
+        if (! $websiteUrl) {
+            return [];
         }
 
-        return $personas;
+        try {
+            // Scraper le site web via HttpClient (simple fetch HTML)
+            $response = $this->httpClient->request('GET', $websiteUrl, [
+                'timeout' => 10,
+                'max_redirects' => 3,
+                'headers' => [
+                    'User-Agent' => 'Mozilla/5.0 (compatible; MyCfiaBot/1.0; +https://mycfia.com)',
+                ],
+            ]);
+
+            $htmlContent = $response->getContent();
+
+            // Extraire les métadonnées du HTML
+            $metadata = $this->extractMetadata($htmlContent);
+
+            // Retourner le contexte au format attendu par CompetitorIntelligenceTool
+            return [
+                'scraped_content' => [
+                    'metadata' => $metadata,
+                    'markdown' => $this->extractTextContent($htmlContent), // Contenu textuel simplifié
+                ],
+            ];
+        } catch (\Throwable $e) {
+            // En cas d'erreur de scraping, retourner contexte vide
+            // La détection fonctionnera avec les infos du projet uniquement
+            return [];
+        }
+    }
+
+    /**
+     * Extrait les métadonnées HTML (title, description, keywords, language).
+     *
+     * @return array<string, string|null>
+     */
+    private function extractMetadata(string $html): array
+    {
+        $metadata = [
+            'title' => null,
+            'description' => null,
+            'keywords' => null,
+            'language' => null,
+        ];
+
+        // Extraire le title
+        if (preg_match('/<title[^>]*>(.*?)<\/title>/is', $html, $matches)) {
+            $metadata['title'] = html_entity_decode(strip_tags($matches[1]), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+        }
+
+        // Extraire la description (meta description)
+        if (preg_match('/<meta[^>]+name=["\']description["\'][^>]+content=["\'](.*?)["\']/is', $html, $matches)) {
+            $metadata['description'] = html_entity_decode($matches[1], ENT_QUOTES | ENT_HTML5, 'UTF-8');
+        }
+
+        // Extraire les keywords (meta keywords)
+        if (preg_match('/<meta[^>]+name=["\']keywords["\'][^>]+content=["\'](.*?)["\']/is', $html, $matches)) {
+            $metadata['keywords'] = html_entity_decode($matches[1], ENT_QUOTES | ENT_HTML5, 'UTF-8');
+        }
+
+        // Extraire la langue (html lang attribute ou meta language)
+        if (preg_match('/<html[^>]+lang=["\']([a-z]{2}(?:-[A-Z]{2})?)["\']/', $html, $matches)) {
+            $metadata['language'] = $matches[1];
+        } elseif (preg_match('/<meta[^>]+http-equiv=["\']content-language["\'][^>]+content=["\'](.*?)["\']/is', $html, $matches)) {
+            $metadata['language'] = $matches[1];
+        }
+
+        return $metadata;
+    }
+
+    /**
+     * Extrait le contenu textuel du HTML (simplifié, sans balises).
+     *
+     * Utilisé pour analyse LLM du contexte business.
+     */
+    private function extractTextContent(string $html): string
+    {
+        // Supprimer les scripts, styles, commentaires
+        $cleaned = preg_replace('/<script[^>]*>.*?<\/script>/is', '', $html);
+        $cleaned = preg_replace('/<style[^>]*>.*?<\/style>/is', '', (string) $cleaned);
+        $cleaned = preg_replace('/<!--.*?-->/s', '', (string) $cleaned);
+
+        // Convertir en texte brut
+        $text = strip_tags((string) $cleaned);
+
+        // Nettoyer les espaces multiples
+        $text = preg_replace('/\s+/', ' ', $text) ?? '';
+
+        // Limiter à 2000 caractères (contexte suffisant pour LLM)
+        return trim(substr($text, 0, 2000));
     }
 }

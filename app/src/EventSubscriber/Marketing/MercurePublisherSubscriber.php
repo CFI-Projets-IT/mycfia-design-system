@@ -40,9 +40,11 @@ final readonly class MercurePublisherSubscriber implements EventSubscriberInterf
     public static function getSubscribedEvents(): array
     {
         return [
-            TaskStartedEvent::class => 'onTaskStarted',
-            TaskCompletedEvent::class => 'onTaskCompleted',
-            TaskFailedEvent::class => 'onTaskFailed',
+            // Priorité haute (10) pour publier à Mercure AVANT les autres subscribers
+            // qui pourraient lancer des exceptions (ex: PersonasGeneratedEventSubscriber)
+            TaskStartedEvent::class => ['onTaskStarted', 10],
+            TaskCompletedEvent::class => ['onTaskCompleted', 10],
+            TaskFailedEvent::class => ['onTaskFailed', 10],
         ];
     }
 
@@ -65,6 +67,7 @@ final readonly class MercurePublisherSubscriber implements EventSubscriberInterf
                 'timestamp' => (new \DateTimeImmutable())->format(\DateTimeInterface::ATOM),
             ]),
             private: false, // Public pour simplicité en développement (utiliser JWT en production)
+            type: 'TaskStartedEvent', // Définit le champ SSE "event:" pour que JavaScript puisse l'écouter
         );
 
         try {
@@ -93,6 +96,14 @@ final readonly class MercurePublisherSubscriber implements EventSubscriberInterf
         $taskId = $event->taskId;
         $executionTime = $event->getExecutionTime();
 
+        // DEBUG: Log au début pour vérifier que la méthode est appelée
+        $this->logger->debug('[MERCURE DEBUG] onTaskCompleted() appelée', [
+            'task_id' => $taskId,
+            'agent_name' => $event->agentName,
+            'has_result' => ! empty($event->result),
+            'execution_time' => $executionTime,
+        ]);
+
         $update = new Update(
             topics: "/tasks/{$taskId}",
             data: json_encode([
@@ -104,6 +115,7 @@ final readonly class MercurePublisherSubscriber implements EventSubscriberInterf
                 'timestamp' => (new \DateTimeImmutable())->format(\DateTimeInterface::ATOM),
             ]),
             private: false,
+            type: 'TaskCompletedEvent', // Définit le champ SSE "event:" pour que JavaScript puisse l'écouter
         );
 
         try {
@@ -142,6 +154,7 @@ final readonly class MercurePublisherSubscriber implements EventSubscriberInterf
                 'timestamp' => (new \DateTimeImmutable())->format(\DateTimeInterface::ATOM),
             ]),
             private: false,
+            type: 'TaskFailedEvent', // Définit le champ SSE "event:" pour que JavaScript puisse l'écouter
         );
 
         try {

@@ -2,6 +2,26 @@ ai:
     platform:
         mistral:
             api_key: '%env(MISTRAL_API_KEY)%'
+            http_client: 'mistral.http_client'
+
+    # Vectorizer pour embeddings (RAG PersonaKnowledgeStore, CompetitorDataStore, BrandGuidelinesStore)
+    vectorizer:
+        mistral_embeddings:
+            platform: 'ai.traceable_platform.mistral'
+            model: 'mistral-embed'
+
+    # Stores ChromaDB pour stockage vectoriel RAG
+    store:
+        chroma_db:
+            personas:
+                collection: 'marketing_personas'
+                client: 'Codewithkyrian\ChromaDB\Client'
+            competitors:
+                collection: 'competitor_intelligence'
+                client: 'Codewithkyrian\ChromaDB\Client'
+            brands:
+                collection: 'brand_guidelines'
+                client: 'Codewithkyrian\ChromaDB\Client'
 
     agent:
         # Agent spécialisé FACTURES

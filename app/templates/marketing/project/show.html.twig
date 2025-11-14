@@ -134,7 +134,7 @@
                     {% if project.personas|length > 0 %}
                         <a href="#personas" class="btn btn-sm btn-outline-primary">Voir les personas</a>
                     {% else %}
-                        <a href="{{ path('marketing_persona_generate', {id: project.id}) }}" class="btn btn-sm btn-primary">
+                        <a href="{{ path('marketing_persona_configure', {id: project.id}) }}" class="btn btn-sm btn-primary">
                             <i class="bi bi-magic"></i> Générer
                         </a>
                     {% endif %}
@@ -146,9 +146,9 @@
                     </div>
                     <h6>Stratégie</h6>
                     {% if project.strategies|length > 0 %}
-                        <a href="#strategy" class="btn btn-sm btn-outline-primary">Voir stratégie</a>
+                        <a href="{{ path('marketing_strategy_show', {id: project.id}) }}" class="btn btn-sm btn-outline-primary">Voir stratégie</a>
                     {% elseif project.personas|length > 0 %}
-                        <a href="{{ path('marketing_strategy_generate', {id: project.id}) }}" class="btn btn-sm btn-primary">
+                        <a href="{{ path('marketing_strategy_new', {id: project.id}) }}" class="btn btn-sm btn-primary">
                             <i class="bi bi-magic"></i> Générer
                         </a>
                     {% else %}
@@ -166,7 +166,7 @@
                     {% if project.assets|length > 0 %}
                         <a href="#assets" class="btn btn-sm btn-outline-primary">Voir assets</a>
                     {% elseif project.strategies|length > 0 %}
-                        <a href="{{ path('marketing_asset_generate', {id: project.id}) }}" class="btn btn-sm btn-primary">
+                        <a href="{{ path('marketing_asset_new', {id: project.id}) }}" class="btn btn-sm btn-primary">
                             <i class="bi bi-magic"></i> Générer
                         </a>
                     {% else %}
@@ -188,25 +188,36 @@
                 <div class="row g-3">
                     {% for persona in project.personas %}
                         <div class="col-md-6 col-lg-4">
-                            <div class="card h-100 border">
-                                <div class="card-body">
-                                    <h6 class="card-title">{{ persona.name }}</h6>
-                                    <p class="card-text text-muted small">{{ persona.description|u.truncate(120, '...') }}</p>
-                                    {% if persona.qualityScore %}
-                                        <div class="progress" style="height: 8px;">
-                                            <div class="progress-bar bg-success" role="progressbar"
-                                                 style="width: {{ (persona.qualityScore * 100)|round }}%"
-                                                 aria-valuenow="{{ (persona.qualityScore * 100)|round }}"
-                                                 aria-valuemin="0"
-                                                 aria-valuemax="100">
+                            <a href="{{ path('marketing_persona_detail', {id: persona.id}) }}" class="text-decoration-none">
+                                <div class="card h-100 border persona-card">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between align-items-start mb-2">
+                                            <h6 class="card-title text-dark mb-0">{{ persona.name }}</h6>
+                                            <i class="bi bi-arrow-right-circle text-primary"></i>
+                                        </div>
+                                        <p class="card-text text-muted small">
+                                            <i class="bi bi-briefcase"></i> {{ persona.job }}<br>
+                                            <i class="bi bi-calendar"></i> {{ persona.age }} ans
+                                            {% if persona.gender != 'N/A' %}<br>
+                                            <i class="bi bi-person"></i> {{ persona.gender }}
+                                            {% endif %}
+                                        </p>
+                                        {% if persona.qualityScore %}
+                                            <div class="progress" style="height: 8px;">
+                                                <div class="progress-bar bg-success" role="progressbar"
+                                                     style="width: {{ (persona.qualityScore * 100)|round }}%"
+                                                     aria-valuenow="{{ (persona.qualityScore * 100)|round }}"
+                                                     aria-valuemin="0"
+                                                     aria-valuemax="100">
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="text-muted small mt-1">
-                                            Qualité : {{ (persona.qualityScore * 100)|round }}%
-                                        </div>
-                                    {% endif %}
+                                            <div class="text-muted small mt-1">
+                                                Qualité : {{ (persona.qualityScore * 100)|round }}%
+                                            </div>
+                                        {% endif %}
+                                    </div>
                                 </div>
-                            </div>
+                            </a>
                         </div>
                     {% endfor %}
                 </div>

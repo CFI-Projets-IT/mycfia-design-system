@@ -4,13 +4,16 @@ declare(strict_types=1);
 
 namespace App\Controller\Marketing;
 
+use App\Entity\Persona;
 use App\Entity\Project;
 use App\Entity\User;
 use App\Enum\ProjectStatus;
+use App\Form\Marketing\PersonaGenerationConfigType;
 use Doctrine\ORM\EntityManagerInterface;
 use Gorillias\MarketingBundle\Service\AgentTaskManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
@@ -43,17 +46,16 @@ final class PersonaController extends AbstractController
     }
 
     /**
-     * Démarre la génération asynchrone des personas marketing.
+     * Affiche le formulaire de configuration pour la génération de personas.
      *
-     * Workflow :
-     * - Vérifie que le projet est en statut DRAFT ou ENRICHED
-     * - Dispatche la génération via AgentTaskManager
-     * - Redirige vers page d'attente avec Mercure EventSource
+     * Permet à l'utilisateur de choisir :
+     * - Le nombre de personas à générer (1-10)
+     * - Le seuil de qualité minimum (60-80%)
      *
-     * @param Project $project Projet pour lequel générer les personas
+     * @param Project $project Projet pour lequel configurer la génération
      */
-    #[Route('/generate/{id}', name: 'generate', methods: ['GET'])]
-    public function generate(Project $project): Response
+    #[Route('/configure/{id}', name: 'configure', methods: ['GET'])]
+    public function configure(Project $project): Response
     {
         $this->denyAccessUnlessGranted('edit', $project);
 
@@ -71,11 +73,79 @@ final class PersonaController extends AbstractController
             return $this->redirectToRoute('marketing_persona_show', ['id' => $project->getId()]);
         }
 
+        // Créer le formulaire de configuration
+        $form = $this->createForm(PersonaGenerationConfigType::class);
+
+        return $this->render('marketing/persona/configure.html.twig', [
+            'project' => $project,
+            'form' => $form,
+        ]);
+    }
+
+    /**
+     * Démarre la génération asynchrone des personas marketing.
+     *
+     * Workflow :
+     * - Vérifie que le projet est en statut DRAFT ou ENRICHED
+     * - Récupère la configuration (count, minQualityScore)
+     * - Dispatche la génération via AgentTaskManager
+     * - Redirige vers page d'attente avec Mercure EventSource
+     *
+     * @param Request $request Requête contenant la configuration
+     * @param Project $project Projet pour lequel générer les personas
+     */
+    #[Route('/generate/{id}', name: 'generate', methods: ['POST'])]
+    public function generate(Request $request, Project $project): Response
+    {
+        $this->denyAccessUnlessGranted('edit', $project);
+
+        // Vérifier statut projet : doit être DRAFT ou ENRICHED
+        if (! in_array($project->getStatus(), [ProjectStatus::DRAFT, ProjectStatus::ENRICHED], true)) {
+            $this->addFlash('warning', $this->translator->trans('persona.flash.already_generated', [], 'marketing'));
+
+            return $this->redirectToRoute('marketing_project_show', ['id' => $project->getId()]);
+        }
+
+        // Vérifier qu'il n'y a pas déjà des personas
+        if ($project->getPersonas()->count() > 0) {
+            $this->addFlash('info', $this->translator->trans('persona.flash.already_exists', [], 'marketing'));
+
+            return $this->redirectToRoute('marketing_persona_show', ['id' => $project->getId()]);
+        }
+
+        // Récupérer la configuration depuis le formulaire
+        $form = $this->createForm(PersonaGenerationConfigType::class);
+        $form->handleRequest($request);
+
+        // Valeurs par défaut si formulaire invalide
+        $count = $form->isSubmitted() && $form->isValid()
+            ? $form->get('count')->getData()
+            : 3;
+        $minQualityScore = $form->isSubmitted() && $form->isValid()
+            ? $form->get('minQualityScore')->getData()
+            : 70;
+
         // Construire description cible pour PersonaGeneratorAgent
         $targetDescription = $this->buildTargetDescription($project);
 
         /** @var User $user */
         $user = $this->getUser();
+
+        // FIX: Récupérer selectedAssetTypes depuis la session car $project->getSelectedAssetTypes()
+        // contient les indices (0,1,2) au lieu des vraies valeurs enum
+        // Les vraies valeurs ont été stockées dans project_data_for_enrichment lors de l'enrichissement
+        $selectedAssetTypes = [];
+        $sessionKeys = array_keys($request->getSession()->all());
+        foreach ($sessionKeys as $key) {
+            if (str_starts_with($key, 'project_data_for_enrichment_')) {
+                $projectData = $request->getSession()->get($key);
+                if (isset($projectData['selectedAssetTypes'])) {
+                    $selectedAssetTypes = $projectData['selectedAssetTypes'];
+
+                    break;
+                }
+            }
+        }
 
         // Dispatcher la tâche asynchrone de génération via AgentTaskManager
         $taskId = $this->agentTaskManager->dispatchPersonaGeneration(
@@ -84,10 +154,13 @@ final class PersonaController extends AbstractController
             options: [
                 'project_id' => $project->getId(),
                 'user_id' => $user->getId(),
+                'count' => $count,                              // 🆕 Nombre de personas (v3.4.0)
+                'min_quality_score' => (float) $minQualityScore, // 🆕 Seuil qualité (v3.4.0)
                 'detail_level' => 'standard',
                 'brand_context' => $project->getWebsiteUrl() ? 'url:'.$project->getWebsiteUrl() : null,
                 'objectives' => $project->getDetailedObjectives(),
                 'budget' => (int) ((float) $project->getBudget() * 100), // Centimes
+                'selected_asset_types' => $selectedAssetTypes, // ✅ Vraies valeurs enum depuis session
             ]
         );
 
@@ -140,6 +213,70 @@ final class PersonaController extends AbstractController
             'project' => $project,
             'personas' => $project->getPersonas(),
         ]);
+    }
+
+    /**
+     * Affiche le détail d'un persona spécifique.
+     *
+     * @param Persona $persona Persona à afficher
+     */
+    #[Route('/detail/{id}', name: 'detail', methods: ['GET'])]
+    public function detail(Persona $persona): Response
+    {
+        $project = $persona->getProject();
+        $this->denyAccessUnlessGranted('view', $project);
+
+        return $this->render('marketing/persona/detail.html.twig', [
+            'persona' => $persona,
+            'project' => $project,
+        ]);
+    }
+
+    /**
+     * Met à jour la sélection des personas pour la campagne marketing.
+     *
+     * Workflow v3.8.0 : ÉTAPE 2.5 - Sélection manuelle des personas.
+     * Cette méthode permet à l'utilisateur de choisir quels personas
+     * cibler dans la stratégie et les assets générés (-60% tokens).
+     *
+     * @param Request $request Requête contenant selected_personas[]
+     * @param Project $project Projet concerné
+     */
+    #[Route('/update-selection/{id}', name: 'update_selection', methods: ['POST'])]
+    public function updateSelection(Request $request, Project $project): Response
+    {
+        $this->denyAccessUnlessGranted('edit', $project);
+
+        // Récupérer les IDs des personas sélectionnés depuis le formulaire
+        $selectedPersonaIds = $request->request->all('selected_personas');
+
+        // Désélectionner tous les personas du projet
+        foreach ($project->getPersonas() as $persona) {
+            $persona->setSelected(false);
+        }
+
+        // Sélectionner uniquement les personas cochés
+        if (! empty($selectedPersonaIds)) {
+            foreach ($project->getPersonas() as $persona) {
+                if (in_array((string) $persona->getId(), $selectedPersonaIds, true)) {
+                    $persona->setSelected(true);
+                }
+            }
+        }
+
+        // Persister les changements
+        $this->entityManager->flush();
+
+        $selectedCount = count($selectedPersonaIds);
+        $totalCount = $project->getPersonas()->count();
+
+        $this->addFlash('success', $this->translator->trans(
+            'persona.flash.selection_updated',
+            ['%count%' => $selectedCount, '%total%' => $totalCount],
+            'marketing'
+        ));
+
+        return $this->redirectToRoute('marketing_persona_show', ['id' => $project->getId()]);
     }
 
     /**

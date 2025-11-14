@@ -147,6 +147,8 @@
    CONTAINER 1 : Header + Nav Tabs sticky en haut
    ==================================== */
 .sticky-top-container {
+    position: sticky;
+    top: 0;
     flex-shrink: 0; /* Ne pas rétrécir */
     z-index: 100;
     background-color: var(--theme-bg);
@@ -208,6 +210,7 @@
 /* Page marketing : contenu aligné en haut (pas centré verticalement) */
 .home-content.marketing-page {
     justify-content: flex-start;
+    padding-top: 1rem; /* Éviter que le contenu soit caché sous le header */
 }
 
 /* ====================================

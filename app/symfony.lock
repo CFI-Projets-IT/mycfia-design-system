@@ -60,7 +60,7 @@
         ]
     },
     "gorillias/marketing-ai-bundle": {
-        "version": "1.0.0"
+        "version": "dev-main"
     },
     "phpstan/phpstan": {
         "version": "2.1",

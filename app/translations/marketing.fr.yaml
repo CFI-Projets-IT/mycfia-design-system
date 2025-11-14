@@ -31,12 +31,14 @@ persona:
     already_exists: 'Des personas existent déjà pour ce projet.'
     no_personas: 'Aucun persona généré pour ce projet.'
     generation_failed: 'La génération de personas a échoué. Veuillez réessayer.'
+    selection_updated: '%count% persona(s) sélectionné(s) sur %total% pour la stratégie marketing.'
 
 strategy:
   flash:
     generation_started: 'Génération de stratégie en cours... Veuillez patienter.'
     already_generated: 'La stratégie a déjà été générée pour ce projet.'
     no_personas: 'Veuillez d''abord générer les personas avant la stratégie.'
+    no_personas_selected: 'Veuillez sélectionner au moins un persona avant de générer la stratégie.'
     no_strategy: 'Aucune stratégie générée pour ce projet.'
     generation_failed: 'La génération de stratégie a échoué. Veuillez réessayer.'
 

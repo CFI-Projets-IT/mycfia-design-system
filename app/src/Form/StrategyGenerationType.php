@@ -7,7 +7,6 @@ namespace App\Form;
 use App\Entity\Persona;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -17,9 +16,11 @@ use Symfony\Component\Validator\Constraints as Assert;
  * Formulaire de génération de stratégie marketing.
  *
  * Permet de sélectionner :
- * - Le persona principal à cibler
- * - Les canaux marketing à utiliser (1 à 8 canaux)
+ * - Un ou plusieurs personas à cibler (sélection multiple)
  * - Une liste optionnelle de concurrents pour analyse concurrentielle
+ *
+ * Les canaux marketing sont désormais sélectionnés à la création du projet
+ * et récupérés depuis $project->getSelectedChannels().
  *
  * Utilisé dans StrategyController.new() pour dispatcher vers StrategyAnalystAgent.
  *
@@ -33,36 +34,14 @@ class StrategyGenerationType extends AbstractType
         $personas = $options['personas'];
 
         $builder
-            ->add('persona', EntityType::class, [
+            ->add('personas', EntityType::class, [
                 'class' => Persona::class,
-                'label' => 'Persona ciblé',
-                'help' => 'Sélectionnez le persona principal pour cette stratégie',
+                'label' => 'Personas ciblés',
+                'help' => 'Sélectionnez un ou plusieurs personas pour cette stratégie (maintenez Ctrl/Cmd pour sélection multiple)',
                 'choices' => $personas,
                 'choice_label' => function (Persona $persona): string {
                     return $persona->getName().' - '.$persona->getAge().' ans, '.$persona->getJob();
                 },
-                'placeholder' => 'Choisissez un persona',
-                'required' => true,
-                'attr' => [
-                    'class' => 'form-select',
-                ],
-                'constraints' => [
-                    new Assert\NotNull(['message' => 'Le persona est obligatoire']),
-                ],
-            ])
-            ->add('channels', ChoiceType::class, [
-                'label' => 'Canaux marketing',
-                'help' => 'Sélectionnez les canaux que vous souhaitez utiliser (1 à 8)',
-                'choices' => [
-                    'Google Ads' => 'google_ads',
-                    'LinkedIn Ads' => 'linkedin_ads',
-                    'Facebook Ads' => 'facebook_ads',
-                    'Instagram Ads' => 'instagram_ads',
-                    'Email Marketing' => 'email',
-                    'Bing Ads' => 'bing_ads',
-                    'Display IAB' => 'display_iab',
-                    'Content Marketing (Articles SEO)' => 'content_marketing',
-                ],
                 'multiple' => true,
                 'expanded' => true,
                 'required' => true,
@@ -70,12 +49,10 @@ class StrategyGenerationType extends AbstractType
                     'class' => 'form-label fw-semibold',
                 ],
                 'constraints' => [
-                    new Assert\NotBlank(['message' => 'Sélectionnez au moins un canal']),
+                    new Assert\NotBlank(['message' => 'Sélectionnez au moins un persona']),
                     new Assert\Count([
                         'min' => 1,
-                        'max' => 8,
-                        'minMessage' => 'Sélectionnez au moins {{ limit }} canal',
-                        'maxMessage' => 'Vous ne pouvez pas sélectionner plus de {{ limit }} canaux',
+                        'minMessage' => 'Sélectionnez au moins {{ limit }} persona',
                     ]),
                 ],
             ])

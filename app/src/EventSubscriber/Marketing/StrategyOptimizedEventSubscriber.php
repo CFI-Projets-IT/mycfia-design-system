@@ -157,33 +157,34 @@ final readonly class StrategyOptimizedEventSubscriber implements EventSubscriber
     /**
      * Crée l'entité Strategy depuis le résultat de l'agent IA.
      *
-     * Le résultat peut être un objet stratégie ou un tableau avec clé 'strategy'.
-     *
-     * Structure attendue d'une stratégie :
+     * Bundle v3.6.0+ utilise StrategyStructuredOutput :
      * [
-     *   'positioning' => 'Positionnement stratégique...' (string),
-     *   'key_messages' => 'Messages clés...' (string ou array),
-     *   'recommended_channels' => 'Canaux recommandés...' (string ou array),
-     *   'timeline' => 'Planning de diffusion...' (string ou array),
-     *   'budget_allocation' => 'Répartition budgétaire...' (string ou array),
-     *   'kpis' => 'KPIs suggérés...' (string ou array),
-     *   'quality_score' => 0.92 (float)
+     *   'strategy' => 'Description narrative de la stratégie' (string),
+     *   'tactics' => ['Tactique 1', 'Tactique 2', ...] (array<string>),
+     *   'kpis' => ['traffic' => '+50%', 'leads' => '100/mois', ...] (array<string, mixed>),
+     *   'risks' => ['Risque 1', 'Risque 2', ...] (array<string>),
+     *   'recommendations' => ['Recommandation 1', ...] (array<string>)
      * ]
+     *
+     * Mapping vers l'entité Strategy (ancienne structure) :
+     * - strategy → positioning
+     * - tactics → keyMessages (JSON)
+     * - recommendations → recommendedChannels (JSON)
+     * - risks → timeline (JSON)
+     * - kpis → kpis (JSON)
+     * - budget_allocation → "À définir" (pas dans nouveau format)
      *
      * @param array<string, mixed> $result
      */
     private function createStrategyFromResult(\App\Entity\Project $project, array $result): void
     {
-        // Le résultat peut avoir une clé 'strategy' ou être directement la stratégie
-        $strategyData = $result['strategy'] ?? $result;
-
-        // Vérifier les champs obligatoires
-        $requiredFields = ['positioning', 'key_messages', 'recommended_channels', 'timeline', 'budget_allocation', 'kpis'];
+        // Vérifier les champs obligatoires du nouveau format StrategyStructuredOutput
+        $requiredFields = ['strategy', 'tactics', 'kpis', 'risks', 'recommendations'];
         foreach ($requiredFields as $field) {
-            if (! isset($strategyData[$field])) {
-                $this->logger->warning('Strategy missing required field', [
+            if (! isset($result[$field])) {
+                $this->logger->warning('Strategy missing required field (StructuredOutput)', [
                     'field' => $field,
-                    'available_keys' => array_keys($strategyData),
+                    'available_keys' => array_keys($result),
                 ]);
 
                 throw new \LogicException("Strategy data missing required field: {$field}");
@@ -192,23 +193,27 @@ final readonly class StrategyOptimizedEventSubscriber implements EventSubscriber
 
         $strategy = new Strategy();
         $strategy->setProject($project);
-        $strategy->setPositioning($this->normalizeJsonField($strategyData['positioning']));
-        $strategy->setKeyMessages($this->normalizeJsonField($strategyData['key_messages']));
-        $strategy->setRecommendedChannels($this->normalizeJsonField($strategyData['recommended_channels']));
-        $strategy->setTimeline($this->normalizeJsonField($strategyData['timeline']));
-        $strategy->setBudgetAllocation($this->normalizeJsonField($strategyData['budget_allocation']));
-        $strategy->setKpis($this->normalizeJsonField($strategyData['kpis']));
 
-        // Quality score optionnel
-        if (isset($strategyData['quality_score'])) {
-            $strategy->setQualityScore((string) $strategyData['quality_score']);
+        // Mapping nouveau format → ancienne entité
+        $strategy->setPositioning($result['strategy']); // Description narrative
+        $strategy->setKeyMessages($this->normalizeJsonField($result['tactics'])); // Tactiques en JSON
+        $strategy->setRecommendedChannels($this->normalizeJsonField($result['recommendations'])); // Recommandations en JSON
+        $strategy->setTimeline($this->normalizeJsonField($result['risks'])); // Risques en JSON (temporaire)
+        $strategy->setBudgetAllocation('À définir selon budget projet'); // En attente intégration BudgetOptimizerTool dans bundle
+        $strategy->setKpis($this->normalizeJsonField($result['kpis'])); // KPIs en JSON
+
+        // Quality score optionnel (pas encore dans StrategyStructuredOutput)
+        if (isset($result['quality_score'])) {
+            $strategy->setQualityScore((string) ($result['quality_score'] / 100)); // 0-100 → 0.0-1.0
         }
 
         $this->entityManager->persist($strategy);
 
-        $this->logger->debug('Strategy entity created', [
+        $this->logger->debug('Strategy entity created from StructuredOutput', [
             'project_id' => $project->getId(),
-            'quality_score' => $strategy->getQualityScore(),
+            'has_tactics' => ! empty($result['tactics']),
+            'has_recommendations' => ! empty($result['recommendations']),
+            'kpis_count' => is_array($result['kpis']) ? count($result['kpis']) : 0,
         ]);
     }
 
@@ -218,7 +223,12 @@ final readonly class StrategyOptimizedEventSubscriber implements EventSubscriber
     private function normalizeJsonField(mixed $value): string
     {
         if (is_array($value)) {
-            return json_encode($value, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+            $json = json_encode($value, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+            if (false === $json) {
+                throw new \RuntimeException('Failed to encode array to JSON: '.json_last_error_msg());
+            }
+
+            return $json;
         }
 
         if (is_string($value)) {

@@ -58,6 +58,17 @@ export function initMarketingProjectEnrichment(config) {
         const formData = new FormData(form);
         formData.append('analyze', '1'); // Marqueur pour détection côté serveur
 
+        // FIX: FormData sérialise les checkboxes avec leurs indices (0, 1, 2...) au lieu des valeurs enum
+        // On doit supprimer les valeurs auto-sérialisées et reconstruire manuellement avec les vraies valeurs
+        formData.delete('project[selectedAssetTypes][]');
+
+        // Récupérer toutes les checkboxes cochées des selectedAssetTypes
+        const assetCheckboxes = form.querySelectorAll('input[type="checkbox"][name="project[selectedAssetTypes][]"]:checked');
+        assetCheckboxes.forEach((checkbox) => {
+            // Utiliser la valeur réelle de la checkbox (ex: "linkedin_post", pas "0")
+            formData.append('project[selectedAssetTypes][]', checkbox.value);
+        });
+
         console.log('=== FormData envoyé ===');
         for (const [key, value] of formData.entries()) {
             console.log(`${key}:`, value instanceof File ? value.name : value);
@@ -128,36 +139,28 @@ export function initMarketingProjectEnrichment(config) {
 
         eventSource = new EventSource(url);
 
-        // Mercure envoie tous les événements via le type 'message' par défaut
-        eventSource.onmessage = (event) => {
-            try {
-                const data = JSON.parse(event.data);
-                console.log('📨 Événement Mercure reçu:', data);
+        // Écouter les événements spécifiques du bundle avec types SSE
+        eventSource.addEventListener('TaskStartedEvent', (event) => {
+            console.log('🟢 TaskStartedEvent reçu');
+            const data = JSON.parse(event.data);
+            console.log('📨 Données:', data);
+        });
 
-                switch (data.type) {
-                    case 'TaskStartedEvent':
-                        console.log('🟢 TaskStartedEvent reçu');
-                        break;
+        eventSource.addEventListener('TaskCompletedEvent', (event) => {
+            console.log('✅ TaskCompletedEvent reçu');
+            const data = JSON.parse(event.data);
+            console.log('📨 Données:', data);
+            closeEventSource();
+            fetchEnrichmentResults(taskId);
+        });
 
-                    case 'TaskCompletedEvent':
-                        console.log('✅ TaskCompletedEvent reçu');
-                        closeEventSource();
-                        fetchEnrichmentResults(taskId);
-                        break;
-
-                    case 'TaskFailedEvent':
-                        console.error('❌ TaskFailedEvent reçu');
-                        closeEventSource();
-                        showError("L'enrichissement a échoué. Veuillez réessayer.");
-                        break;
-
-                    default:
-                        console.warn('⚠️ Type événement inconnu:', data.type);
-                }
-            } catch (error) {
-                console.error('❌ Erreur parsing événement Mercure:', error);
-            }
-        };
+        eventSource.addEventListener('TaskFailedEvent', (event) => {
+            console.error('❌ TaskFailedEvent reçu');
+            const data = JSON.parse(event.data);
+            console.log('📨 Données erreur:', data);
+            closeEventSource();
+            showError("L'enrichissement a échoué. Veuillez réessayer.");
+        });
 
         eventSource.onerror = (error) => {
             console.error('❌ EventSource error:', error);
@@ -272,78 +275,6 @@ export function initMarketingProjectEnrichment(config) {
     }
 
     /**
-     * Formate les objectifs SMART depuis un objet complexe vers du texte lisible (conservé pour acceptEnrichment)
-     * @param {Object} objectives - Objet smart_objectives_detailed
-     * @returns {string} Texte formaté
-     */
-    function formatSmartObjectives(objectives) {
-        let text = '';
-
-        // Gérer les deux formats : principal / objectif_principal
-        const principal = objectives.principal || objectives.objectif_principal;
-
-        if (principal) {
-            text += '=== OBJECTIF PRINCIPAL ===\n\n';
-            text += (principal.description || '') + '\n\n';
-
-            // Métriques (ancien format : metriques_concretes, nouveau : metriques.quantitatives + qualitatives)
-            if (principal.metriques) {
-                if (principal.metriques.quantitatives && principal.metriques.quantitatives.length > 0) {
-                    text += 'MÉTRIQUES QUANTITATIVES:\n';
-                    principal.metriques.quantitatives.forEach((metrique) => {
-                        text += `• ${metrique}\n`;
-                    });
-                    text += '\n';
-                }
-
-                if (principal.metriques.qualitatives && principal.metriques.qualitatives.length > 0) {
-                    text += 'MÉTRIQUES QUALITATIVES:\n';
-                    principal.metriques.qualitatives.forEach((metrique) => {
-                        text += `• ${metrique}\n`;
-                    });
-                    text += '\n';
-                }
-            } else if (principal.metriques_concretes) {
-                text += 'MÉTRIQUES CONCRÈTES:\n';
-                Object.entries(principal.metriques_concretes).forEach(([key, value]) => {
-                    text += `• ${key.replace(/_/g, ' ')}: ${value}\n`;
-                });
-                text += '\n';
-            }
-
-            // Critères (nouveau format : critères_succes)
-            if (principal.critères_succes && principal.critères_succes.length > 0) {
-                text += 'CRITÈRES DE SUCCÈS:\n';
-                principal.critères_succes.forEach((critere) => {
-                    if (typeof critere === 'string') {
-                        text += `• ${critere}\n`;
-                    } else if (critere.critere) {
-                        text += `• ${critere.critere}\n`;
-                    }
-                });
-                text += '\n';
-            } else if (principal.critères_mesurables) {
-                text += 'CRITÈRES MESURABLES:\n';
-                Object.entries(principal.critères_mesurables).forEach(([key, value]) => {
-                    text += `• ${key.replace(/_/g, ' ')}: ${value}\n`;
-                });
-                text += '\n';
-            }
-        }
-
-        // Objectifs secondaires (ancien : objectifs_secondaires, nouveau : secondaires)
-        const secondaires = objectives.secondaires || objectives.objectifs_secondaires;
-        if (secondaires && secondaires.length > 0) {
-            text += '\n=== OBJECTIFS SECONDAIRES ===\n\n';
-            secondaires.forEach((obj, index) => {
-                text += `${index + 1}. ${obj.description || obj.objectif || JSON.stringify(obj)}\n\n`;
-            });
-        }
-
-        return text.trim();
-    }
-
-    /**
      * Affiche les noms alternatifs avec radio buttons
      * @param {Array<string>} names - Liste des noms alternatifs
      */
@@ -364,24 +295,6 @@ export function initMarketingProjectEnrichment(config) {
     }
 
     /**
-     * Affiche une liste d'éléments
-     * @param {string} containerId - ID du conteneur
-     * @param {Array<string>} items - Liste des éléments
-     * @param {string} textClass - Classe CSS pour le texte
-     */
-    function renderList(containerId, items, textClass) {
-        const container = document.getElementById(containerId);
-
-        if (items && items.length > 0) {
-            container.innerHTML = `<ul class="mb-0">${items
-                .map((item) => `<li class="${textClass} mb-2">${escapeHtml(item)}</li>`)
-                .join('')}</ul>`;
-        } else {
-            container.innerHTML = '<p class="text-muted">Aucune donnée disponible</p>';
-        }
-    }
-
-    /**
      * Affiche les métriques et analytics dans un conteneur formaté
      * @param {string} containerId - ID du conteneur
      * @param {Object} results - Résultats complets d'enrichissement
@@ -399,7 +312,8 @@ export function initMarketingProjectEnrichment(config) {
             if (quantitatives && Object.keys(quantitatives).length > 0) {
                 html += '<div class="col-md-6">';
                 html += '<div class="card h-100 border-primary">';
-                html += '<div class="card-header bg-primary text-white fw-bold"><i class="bi bi-graph-up"></i> Métriques Quantitatives</div>';
+                html +=
+                    '<div class="card-header bg-primary text-white fw-bold"><i class="bi bi-graph-up"></i> Métriques Quantitatives</div>';
                 html += '<div class="card-body"><table class="table table-sm table-borderless mb-0">';
                 Object.entries(quantitatives).forEach(([key, value]) => {
                     const label = key.replace(/_/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase());
@@ -413,7 +327,8 @@ export function initMarketingProjectEnrichment(config) {
             if (qualitatives && Object.keys(qualitatives).length > 0) {
                 html += '<div class="col-md-6">';
                 html += '<div class="card h-100 border-success">';
-                html += '<div class="card-header bg-success text-white fw-bold"><i class="bi bi-clipboard-check"></i> Métriques Qualitatives</div>';
+                html +=
+                    '<div class="card-header bg-success text-white fw-bold"><i class="bi bi-clipboard-check"></i> Métriques Qualitatives</div>';
                 html += '<div class="card-body"><table class="table table-sm table-borderless mb-0">';
                 Object.entries(qualitatives).forEach(([key, value]) => {
                     const label = key.replace(/_/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase());
@@ -426,7 +341,8 @@ export function initMarketingProjectEnrichment(config) {
         // === Colonne 1 : Budget Analysis ===
         html += '<div class="col-md-6">';
         html += '<div class="card h-100 border-success">';
-        html += '<div class="card-header bg-success text-white fw-bold"><i class="bi bi-cash-stack"></i> Analyse Budget</div>';
+        html +=
+            '<div class="card-header bg-success text-white fw-bold"><i class="bi bi-cash-stack"></i> Analyse Budget</div>';
         html += '<div class="card-body">';
 
         // v3.1.0 : Les données budget sont au niveau racine de results
@@ -450,7 +366,8 @@ export function initMarketingProjectEnrichment(config) {
         // === Colonne 2 : Timeline Analysis ===
         html += '<div class="col-md-6">';
         html += '<div class="card h-100 border-primary">';
-        html += '<div class="card-header bg-primary text-white fw-bold"><i class="bi bi-calendar-range"></i> Analyse Timeline</div>';
+        html +=
+            '<div class="card-header bg-primary text-white fw-bold"><i class="bi bi-calendar-range"></i> Analyse Timeline</div>';
         html += '<div class="card-body">';
 
         // v3.1.0 : Les données timeline sont au niveau racine de results
@@ -479,7 +396,8 @@ export function initMarketingProjectEnrichment(config) {
         // Infos Techniques (tokens, durée, modèle) - Pleine largeur
         html += '<div class="col-12">';
         html += '<div class="card border-secondary">';
-        html += '<div class="card-header bg-secondary text-white fw-bold"><i class="bi bi-cpu"></i> Informations Techniques</div>';
+        html +=
+            '<div class="card-header bg-secondary text-white fw-bold"><i class="bi bi-cpu"></i> Informations Techniques</div>';
         html += '<div class="card-body">';
         html += '<div class="row">';
 
@@ -531,7 +449,8 @@ export function initMarketingProjectEnrichment(config) {
         if (results.warnings?.length > 0) {
             html += '<div class="row mt-3"><div class="col-12">';
             html += '<div class="card border-danger">';
-            html += '<div class="card-header bg-danger text-white fw-bold"><i class="bi bi-exclamation-triangle-fill"></i> Avertissements</div>';
+            html +=
+                '<div class="card-header bg-danger text-white fw-bold"><i class="bi bi-exclamation-triangle-fill"></i> Avertissements</div>';
             html += '<div class="card-body"><ul class="mb-0">';
             results.warnings.forEach((warning) => {
                 html += `<li class="text-danger">${escapeHtml(String(warning))}</li>`;
@@ -576,9 +495,7 @@ export function initMarketingProjectEnrichment(config) {
         }
 
         // v3.1.0: recommendations est maintenant un simple array de strings
-        const html = recommendations
-            .map((rec) => `<li class="text-success mb-3">${escapeHtml(rec)}</li>`)
-            .join('');
+        const html = recommendations.map((rec) => `<li class="text-success mb-3">${escapeHtml(rec)}</li>`).join('');
 
         container.innerHTML = `<ul class="mb-0">${html}</ul>`;
     }
@@ -598,9 +515,7 @@ export function initMarketingProjectEnrichment(config) {
         }
 
         // v3.1.0: factors est maintenant un simple array de strings
-        const html = factors
-            .map((factor) => `<li class="text-info mb-3">${escapeHtml(factor)}</li>`)
-            .join('');
+        const html = factors.map((factor) => `<li class="text-info mb-3">${escapeHtml(factor)}</li>`).join('');
 
         container.innerHTML = `<ul class="mb-0">${html}</ul>`;
     }

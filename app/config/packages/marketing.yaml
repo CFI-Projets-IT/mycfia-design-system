@@ -40,18 +40,20 @@ marketing:
     #         connection: '%env(CHROMA_URL)%'
 
     # ========================================================================
-    # AGENTS IA - Configuration des 4 agents marketing
+    # AGENTS IA - Configuration des 5 agents marketing
     # ========================================================================
     # Tous utilisent Mistral Large (mistral-large-latest)
     # ========================================================================
     agents:
-        # Agent 1 : Génération de Personas
-        # Durée estimée : ~50-60s | Coût moyen : ~$0.005
+        # Agent 1 : Génération de Personas (Multi-Personas v3.4.0)
+        # Durée estimée : ~85s pour 3 personas | Coût moyen : ~$0.04
         persona:
             platform: 'mistral'
             model: 'mistral-large-latest'
             temperature: 0.7            # Créativité modérée pour personas réalistes
-            max_tokens: 4000
+            max_tokens: 12000           # Augmenté pour multi-personas (3 personas par défaut)
+            default_count: 3            # Générer 3 personas par défaut
+            min_quality_score: 70.0     # Seuil qualité strict (0-100)
 
         # Agent 2 : Analyse Stratégique
         # Durée estimée : ~55-60s | Coût moyen : ~$0.006
@@ -76,6 +78,15 @@ marketing:
             model: 'mistral-large-latest'
             temperature: 0.8            # Créativité élevée pour contenu marketing
             max_tokens: 8000
+
+        # Agent 5 : Analyse Contexte Projet (nouveau v3.11.0)
+        # Durée estimée : ~5-10s | Coût moyen : ~$0.002
+        # Analyse LLM du contexte projet (audience, business model, géographie)
+        project_context:
+            platform: 'mistral'
+            model: 'mistral-large-latest'
+            temperature: 0.3            # Précision élevée pour analyse contexte
+            max_tokens: 2000
 
     # ========================================================================
     # ASSET BUILDERS - Configuration des 8 builders multi-canal

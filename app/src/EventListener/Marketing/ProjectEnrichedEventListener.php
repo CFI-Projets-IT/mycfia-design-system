@@ -49,9 +49,25 @@ final readonly class ProjectEnrichedEventListener
         // DEBUG : Logger la structure complète des données reçues
         $this->logger->debug('ProjectEnrichedEventListener: Structure données reçues', [
             'enrichedData_keys' => array_keys($enrichedData),
+            'has_scraped_content' => isset($enrichedData['scraped_content']),
+            'has_dev' => isset($enrichedData['dev']),
+            'has_dev_brand_identity' => isset($enrichedData['dev']['brand_identity']),
             'ai_suggestions_keys' => array_keys($enrichedData['ai_suggestions'] ?? []),
-            'ai_suggestions_dump' => json_encode($enrichedData['ai_suggestions'] ?? [], JSON_PRETTY_PRINT),
         ]);
+
+        // DEBUG : Logger scraped_content si présent
+        if (isset($enrichedData['scraped_content'])) {
+            $this->logger->debug('ProjectEnrichedEventListener: scraped_content trouvé', [
+                'scraped_content_keys' => array_keys($enrichedData['scraped_content']),
+                'has_metadata' => isset($enrichedData['scraped_content']['metadata']),
+                'has_markdown' => isset($enrichedData['scraped_content']['markdown']),
+                'has_project_context' => isset($enrichedData['scraped_content']['project_context']),
+            ]);
+        } else {
+            $this->logger->warning('ProjectEnrichedEventListener: scraped_content MANQUANT', [
+                'task_id' => $taskId,
+            ]);
+        }
 
         // Gestion des cas d'erreur : si ai_suggestions contient 'error', l'enrichissement a échoué
         $hasError = ! empty($enrichedData['ai_suggestions']['error']);
@@ -109,7 +125,56 @@ final readonly class ProjectEnrichedEventListener
             'alternative_names_count' => count($resultsData['alternative_names']),
             'recommendations_count' => count($resultsData['strategic_recommendations']),
             'success_factors_count' => count($resultsData['success_factors']),
-            'consistency_score' => $resultsData['consistency_score'],
         ]);
+
+        // WORKAROUND : Stocker les metadata dans les résultats en cache au lieu de la BDD
+        // car le projet n'existe pas encore en base (il sera créé après acceptation de la modal)
+        // Les metadata seront récupérées et sauvegardées dans acceptEnrichment()
+
+        // 1. Brand Metadata (dev.brand_identity) - Bundle v3.9.0
+        if (isset($enrichedData['dev']['brand_identity'])) {
+            $resultsData['brand_metadata'] = $enrichedData['dev']['brand_identity'];
+
+            $this->logger->info('ProjectEnrichedEventListener: Brand metadata ajoutées au cache', [
+                'task_id' => $taskId,
+                'brand_name' => $enrichedData['dev']['brand_identity']['brand_name'] ?? 'N/A',
+                'quality_score' => $enrichedData['dev']['brand_identity']['analysis_quality_score'] ?? 0,
+            ]);
+        }
+
+        // 2. Scraped Content (scraped_content) - Bundle v3.10.0+
+        if (isset($enrichedData['scraped_content'])) {
+            $resultsData['scraped_content'] = $enrichedData['scraped_content'];
+
+            $this->logger->info('ProjectEnrichedEventListener: Scraped content ajouté au cache', [
+                'task_id' => $taskId,
+                'has_metadata' => isset($enrichedData['scraped_content']['metadata']),
+                'has_markdown' => isset($enrichedData['scraped_content']['markdown']),
+                'language' => $enrichedData['scraped_content']['metadata']['language'] ?? 'N/A',
+            ]);
+        }
+
+        // 3. Project Context (scraped_content.project_context) - Bundle v3.11.0+
+        if (isset($enrichedData['scraped_content']['project_context'])) {
+            $resultsData['project_context'] = $enrichedData['scraped_content']['project_context'];
+
+            $this->logger->info('ProjectEnrichedEventListener: Project context ajouté au cache', [
+                'task_id' => $taskId,
+                'target_audience' => $enrichedData['scraped_content']['project_context']['targetAudience'] ?? 'N/A',
+                'business_model' => $enrichedData['scraped_content']['project_context']['businessModel'] ?? 'N/A',
+                'geography' => $enrichedData['scraped_content']['project_context']['geography'] ?? 'N/A',
+                'confidence_level' => $enrichedData['scraped_content']['project_context']['confidenceLevel'] ?? 'N/A',
+            ]);
+        }
+
+        // Mettre à jour le cache avec toutes les metadata collectées
+        if (isset($resultsData['brand_metadata']) || isset($resultsData['scraped_content']) || isset($resultsData['project_context'])) {
+            $this->cache->delete($cacheKey);
+            $this->cache->get($cacheKey, function (ItemInterface $item) use ($resultsData) {
+                $item->expiresAfter(3600); // TTL 1 heure
+
+                return $resultsData;
+            });
+        }
     }
 }

@@ -13,6 +13,7 @@ use App\Repository\ProjectRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Gorillias\MarketingBundle\Service\AgentTaskManager;
 use Psr\Cache\InvalidArgumentException;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -50,6 +51,7 @@ final class ProjectController extends AbstractController
         private readonly AgentTaskManager $agentTaskManager,
         private readonly TranslatorInterface $translator,
         private readonly CacheInterface $cache,
+        private readonly LoggerInterface $logger,
     ) {
     }
 
@@ -111,10 +113,31 @@ final class ProjectController extends AbstractController
                 // Calculer la durée de campagne en jours
                 $durationDays = $project->getStartDate()->diff($project->getEndDate())->days;
 
+                // PHPStan : diff()->days peut être int|false, garantir int
+                if (false === $durationDays) {
+                    $durationDays = 30; // Valeur par défaut si calcul échoue
+                }
+
                 /** @var User $user */
                 $user = $this->getUser();
 
+                // FIX: Récupérer selectedAssetTypes depuis les données RAW de la requête
+                // car Symfony Form ChoiceType avec expanded:true stocke les indices (0,1,2) dans l'entité
+                // au lieu des vraies valeurs enum (linkedin_post, google_ads)
+                $rawData = $request->request->all();
+                $selectedAssetTypes = $rawData['project']['selectedAssetTypes'] ?? [];
+
+                // S'assurer que c'est un tableau de strings
+                if (is_array($selectedAssetTypes)) {
+                    $selectedAssetTypes = array_values(array_filter($selectedAssetTypes, 'is_string'));
+                } else {
+                    $selectedAssetTypes = [];
+                }
+
                 // Dispatcher la tâche asynchrone d'enrichissement IA via AgentTaskManager
+                // Bundle v3.9.1 : Correction du bug de désalignement des paramètres
+                // Le paramètre $selectedAssetTypes est maintenant correctement géré
+                // Le bundle gère automatiquement le scraping du websiteUrl si fourni
                 $taskId = $this->agentTaskManager->dispatchProjectEnrichment(
                     projectName: $project->getName(),
                     companyName: $project->getCompanyName(),
@@ -123,7 +146,8 @@ final class ProjectController extends AbstractController
                     goalType: $project->getGoalType()->value,
                     detailedObjectives: $project->getDetailedObjectives(),
                     durationDays: $durationDays,
-                    websiteUrl: $project->getWebsiteUrl(),
+                    websiteUrl: $project->getWebsiteUrl(), // Bundle scrape automatiquement
+                    selectedAssetTypes: $selectedAssetTypes, // ✅ v3.9.1 : paramètre ajouté
                     options: [
                         'user_id' => $user->getId(),
                     ]
@@ -142,6 +166,7 @@ final class ProjectController extends AbstractController
                     'startDate' => $project->getStartDate(),
                     'endDate' => $project->getEndDate(),
                     'websiteUrl' => $project->getWebsiteUrl(),
+                    'selectedAssetTypes' => $selectedAssetTypes, // ✅ Vraies valeurs enum, pas les indices
                 ]);
 
                 // Retourner une réponse JSON avec le taskId pour abonnement Mercure
@@ -169,7 +194,7 @@ final class ProjectController extends AbstractController
 
                 $this->addFlash('success', $this->translator->trans('project.flash.created', [], 'marketing'));
 
-                return $this->redirectToRoute('marketing_persona_generate', ['id' => $project->getId()]);
+                return $this->redirectToRoute('marketing_persona_configure', ['id' => $project->getId()]);
             }
         }
 
@@ -247,6 +272,7 @@ final class ProjectController extends AbstractController
         $project->setStartDate($projectData['startDate']);
         $project->setEndDate($projectData['endDate']);
         $project->setWebsiteUrl($projectData['websiteUrl']);
+        $project->setSelectedAssetTypes($projectData['selectedAssetTypes'] ?? null);
 
         /** @var User $user */
         $user = $this->getUser();
@@ -258,6 +284,47 @@ final class ProjectController extends AbstractController
         $project->setTenant($tenant);
         $project->setStatus(ProjectStatus::ENRICHED);
 
+        // Récupérer les metadata depuis le cache (ajoutées par ProjectEnrichedEventListener)
+        $cacheKey = 'enrichment_results_'.$taskId;
+
+        try {
+            $enrichmentResults = $this->cache->get($cacheKey, function () {
+                throw new \RuntimeException('Cache miss');
+            });
+
+            // 1. Brand Metadata (Bundle v3.9.0)
+            if (isset($enrichmentResults['brand_metadata'])) {
+                $project->setBrandMetadata($enrichmentResults['brand_metadata']);
+                $this->logger->info('ProjectController: Brand metadata sauvegardées', [
+                    'task_id' => $taskId,
+                    'brand_name' => $enrichmentResults['brand_metadata']['brand_name'] ?? 'N/A',
+                ]);
+            }
+
+            // 2. Scraped Content (Bundle v3.10.0+)
+            if (isset($enrichmentResults['scraped_content'])) {
+                $project->setScrapedContent($enrichmentResults['scraped_content']);
+                $this->logger->info('ProjectController: Scraped content sauvegardé', [
+                    'task_id' => $taskId,
+                    'language' => $enrichmentResults['scraped_content']['metadata']['language'] ?? 'N/A',
+                ]);
+            }
+
+            // 3. Project Context (Bundle v3.11.0+)
+            if (isset($enrichmentResults['project_context'])) {
+                $project->setProjectContext($enrichmentResults['project_context']);
+                $this->logger->info('ProjectController: Project context sauvegardé', [
+                    'task_id' => $taskId,
+                    'geography' => $enrichmentResults['project_context']['geography'] ?? 'N/A',
+                    'confidence' => $enrichmentResults['project_context']['confidenceLevel'] ?? 'N/A',
+                ]);
+            }
+        } catch (\RuntimeException $e) {
+            $this->logger->warning('ProjectController: Impossible de récupérer metadata du cache', [
+                'task_id' => $taskId,
+            ]);
+        }
+
         $this->entityManager->persist($project);
         $this->entityManager->flush();
 
@@ -268,7 +335,7 @@ final class ProjectController extends AbstractController
         return new JsonResponse([
             'success' => true,
             'message' => $this->translator->trans('project.flash.created_with_ai', [], 'marketing'),
-            'redirectUrl' => $this->generateUrl('marketing_persona_generate', ['id' => $project->getId()]),
+            'redirectUrl' => $this->generateUrl('marketing_persona_configure', ['id' => $project->getId()]),
         ]);
     }
 
@@ -332,7 +399,8 @@ final class ProjectController extends AbstractController
     {
         $this->denyAccessUnlessGranted('delete', $project);
 
-        if ($this->isCsrfTokenValid('delete'.$project->getId(), $request->request->get('_token'))) {
+        $token = $request->request->get('_token');
+        if (is_string($token) && $this->isCsrfTokenValid('delete'.$project->getId(), $token)) {
             $this->entityManager->remove($project);
             $this->entityManager->flush();
 

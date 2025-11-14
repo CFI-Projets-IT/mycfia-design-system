@@ -287,6 +287,37 @@
                         </div>
                     </div>
 
+                    {# Section 6: Types d'assets marketing (v3.5.0) #}
+                    <div class="mb-4">
+                        <h5 class="fw-bold mb-3 pb-2 border-bottom">
+                            <i class="bi bi-files text-info"></i>
+                            Types d'assets marketing à générer
+                        </h5>
+                        <p class="text-muted small mb-3">
+                            <i class="bi bi-info-circle"></i>
+                            Sélectionnez les canaux pour lesquels générer des contenus marketing. Si aucun n'est sélectionné, tous seront générés.
+                        </p>
+
+                        {# Grille de cartes pour les checkboxes #}
+                        <div class="row g-3">
+                            {% for child in form.selectedAssetTypes %}
+                                <div class="col-md-6 col-lg-3">
+                                    <div class="card h-100 border asset-type-card">
+                                        <label class="card-body d-flex align-items-center justify-content-between p-3 cursor-pointer" for="{{ child.vars.id }}">
+                                            <div class="d-flex align-items-center gap-2">
+                                                <i class="bi bi-{% if 'linkedin' in child.vars.value %}linkedin{% elseif 'google' in child.vars.value or 'bing' in child.vars.value %}megaphone{% elseif 'facebook' in child.vars.value %}facebook{% elseif 'instagram' in child.vars.value %}instagram{% elseif 'mail' in child.vars.value %}envelope{% elseif 'iab' in child.vars.value %}badge-ad{% else %}file-text{% endif %} text-primary fs-4"></i>
+                                                <span class="fw-semibold">{{ child.vars.label }}</span>
+                                            </div>
+                                            {{ form_widget(child, {
+                                                attr: {class: 'form-check-input asset-type-checkbox'}
+                                            }) }}
+                                        </label>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
                     {# Form Actions #}
                     <div class="d-flex gap-2 justify-content-between mt-4 pt-4 border-top">
                         <a href="{{ path('marketing_project_index') }}" class="btn btn-outline-secondary px-4">

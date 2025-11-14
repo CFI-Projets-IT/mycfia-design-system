@@ -2,6 +2,22 @@
 
 {% block title %}Personas Marketing - {{ project.name }}{% endblock %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .avatar-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 14px;
+        }
+    </style>
+{% endblock %}
+
 {% block content %}
 <div class="container" style="max-width: 1400px;">
     {# Breadcrumb #}
@@ -42,7 +58,7 @@
                             <i class="bi bi-graph-up-arrow"></i>
                             Générer la stratégie marketing
                         </a>
-                        <a href="{{ path('marketing_persona_generate', {id: project.id}) }}"
+                        <a href="{{ path('marketing_persona_configure', {id: project.id}) }}"
                            class="btn btn-outline-secondary btn-sm">
                             <i class="bi bi-arrow-clockwise"></i>
                             Régénérer les personas
@@ -53,138 +69,345 @@
         </div>
     </div>
 
-    {# Liste des Personas en cartes #}
-    <div class="row g-4">
-        {% for persona in personas %}
-            <div class="col-lg-6">
-                <div class="card h-100 shadow-sm border-0">
-                    {# Header Persona #}
-                    <div class="card-header bg-gradient text-white py-3"
-                         style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
-                        <div class="d-flex align-items-center justify-content-between">
-                            <div>
-                                <h4 class="mb-1">{{ persona.name }}</h4>
-                                <p class="mb-0 small opacity-75">
-                                    {{ persona.age }} ans • {{ persona.gender }} • {{ persona.job }}
-                                </p>
-                            </div>
-                            {% if persona.qualityScore %}
-                                <div class="text-center">
-                                    <div class="badge bg-light text-dark fw-bold fs-6">
-                                        {{ (persona.qualityScore * 100)|number_format(0) }}%
-                                    </div>
-                                    <small class="d-block text-white-50">Qualité</small>
-                                </div>
-                            {% endif %}
-                        </div>
-                    </div>
-
-                    <div class="card-body p-4">
-                        {# Centres d'intérêt #}
-                        <div class="mb-4">
-                            <h6 class="fw-bold text-primary mb-2">
-                                <i class="bi bi-heart-fill"></i> Centres d'intérêt
-                            </h6>
-                            <p class="text-muted mb-0">
-                                {{ persona.interests }}
-                            </p>
-                        </div>
-
-                        {# Comportements #}
-                        <div class="mb-4">
-                            <h6 class="fw-bold text-success mb-2">
-                                <i class="bi bi-graph-up"></i> Comportements d'achat
-                            </h6>
-                            <p class="text-muted mb-0">
-                                {{ persona.behaviors }}
-                            </p>
-                        </div>
-
-                        {# Motivations #}
-                        <div class="mb-4">
-                            <h6 class="fw-bold text-warning mb-2">
-                                <i class="bi bi-lightning-fill"></i> Motivations
-                            </h6>
-                            <p class="text-muted mb-0">
-                                {{ persona.motivations }}
-                            </p>
-                        </div>
-
-                        {# Points de douleur #}
-                        <div class="mb-0">
-                            <h6 class="fw-bold text-danger mb-2">
-                                <i class="bi bi-exclamation-triangle-fill"></i> Points de douleur
-                            </h6>
-                            <p class="text-muted mb-0">
-                                {{ persona.pains }}
-                            </p>
-                        </div>
-                    </div>
-
-                    {# Footer avec date de génération #}
-                    <div class="card-footer bg-light text-muted small">
-                        <i class="bi bi-clock"></i>
-                        Généré le {{ persona.createdAt|date('d/m/Y à H:i') }}
-                    </div>
-                </div>
+    {# Tableau des Personas avec Sélection #}
+    <div class="card shadow-sm">
+        <div class="card-header bg-light">
+            <div class="d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">
+                    <i class="bi bi-check2-square text-success"></i>
+                    Sélectionnez les personas à cibler
+                </h5>
+                <small class="text-muted">
+                    <i class="bi bi-info-circle"></i>
+                    Choisissez les personas pertinents pour votre stratégie
+                </small>
             </div>
-        {% endfor %}
-    </div>
-
-    {# Informations contextuelles #}
-    <div class="card mt-4 border-0 bg-light">
-        <div class="card-body">
-            <h6 class="fw-bold mb-3">
-                <i class="bi bi-info-circle text-primary"></i>
-                Comment utiliser ces personas ?
-            </h6>
-            <div class="row g-3 small text-muted">
-                <div class="col-md-6">
-                    <h6 class="fw-bold text-dark">Étape suivante : Stratégie</h6>
-                    <ul class="mb-0">
-                        <li>Cliquez sur "Générer la stratégie marketing"</li>
-                        <li>L'IA analysera ces personas pour recommander les meilleurs canaux</li>
-                        <li>Budget optimisé par canal et persona</li>
-                    </ul>
+        </div>
+        <div class="card-body p-0">
+            <form method="post" action="{{ path('marketing_persona_update_selection', {id: project.id}) }}" id="personaSelectionForm">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th class="ps-4 text-center" style="width: 50px;">
+                                    <input type="checkbox" id="selectAll" class="form-check-input" title="Tout sélectionner">
+                                </th>
+                                <th>Nom</th>
+                                <th>Âge</th>
+                                <th>Métier</th>
+                                <th>Score Qualité</th>
+                                <th>Date génération</th>
+                                <th class="text-end pe-4">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for persona in personas %}
+                                <tr>
+                                    <td class="ps-4 text-center">
+                                        <input type="checkbox"
+                                               name="selected_personas[]"
+                                               value="{{ persona.id }}"
+                                               class="form-check-input persona-checkbox"
+                                               {% if persona.selected %}checked{% endif %}>
+                                    </td>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <div class="avatar-circle bg-primary text-white me-3">
+                                                {{ persona.name|slice(0, 2)|upper }}
+                                            </div>
+                                            <div>
+                                                <div class="fw-semibold">{{ persona.name|replace({'_': ' '}) }}</div>
+                                                <small class="text-muted">{{ persona.gender }}</small>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>{{ persona.age }} ans</td>
+                                    <td>
+                                        <span class="badge bg-light text-dark">{{ persona.job }}</span>
+                                    </td>
+                                    <td>
+                                        {% if persona.qualityScore %}
+                                            <div class="progress" style="width: 80px; height: 8px;">
+                                                <div class="progress-bar bg-success"
+                                                     role="progressbar"
+                                                     style="width: {{ (persona.qualityScore * 100)|number_format(0) }}%"
+                                                     aria-valuenow="{{ (persona.qualityScore * 100)|number_format(0) }}"
+                                                     aria-valuemin="0"
+                                                     aria-valuemax="100"></div>
+                                            </div>
+                                            <small class="text-muted">{{ (persona.qualityScore * 100)|number_format(0) }}%</small>
+                                        {% else %}
+                                            <span class="text-muted">N/A</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <small class="text-muted">
+                                            <i class="bi bi-clock"></i>
+                                            {{ persona.createdAt|date('d/m/Y H:i') }}
+                                        </small>
+                                    </td>
+                                    <td class="text-end pe-4">
+                                        <button type="button"
+                                                class="btn btn-sm btn-primary"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#personaModal{{ persona.id }}">
+                                            <i class="bi bi-eye"></i> Voir
+                                        </button>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
                 </div>
-                <div class="col-md-6">
-                    <h6 class="fw-bold text-dark">Exploitation des données</h6>
-                    <ul class="mb-0">
-                        <li>Adaptez votre message aux motivations de chaque persona</li>
-                        <li>Résolvez leurs points de douleur dans vos contenus</li>
-                        <li>Utilisez les centres d'intérêt pour cibler vos publicités</li>
-                    </ul>
+                <div class="card-footer bg-light d-flex justify-content-between align-items-center">
+                    <small class="text-muted">
+                        <i class="bi bi-info-circle"></i>
+                        <span id="selectedCount">0</span> persona(s) sélectionné(s)
+                    </small>
+                    <button type="submit" class="btn btn-success btn-lg">
+                        <i class="bi bi-check-circle"></i> Valider la sélection
+                    </button>
                 </div>
-            </div>
+            </form>
         </div>
     </div>
 
-    {# Infos projet #}
-    <div class="card mt-4 bg-primary text-white">
-        <div class="card-body">
-            <h6 class="fw-bold mb-3">
-                <i class="bi bi-briefcase-fill"></i>
-                Contexte du projet
-            </h6>
-            <div class="row g-3 small">
-                <div class="col-md-3">
-                    <strong>Entreprise</strong>
-                    <br>{{ project.companyName }}
+    {# Section "Comment utiliser" et "Contexte" en dessous du tableau #}
+    <div class="row g-4 mt-4">
+        {# Comment utiliser ces personas #}
+        <div class="col-lg-6">
+            <div class="card border-0 bg-light">
+                <div class="card-body">
+                    <h6 class="fw-bold mb-3">
+                        <i class="bi bi-info-circle text-primary"></i>
+                        Comment utiliser ces personas ?
+                    </h6>
+                    <div class="row g-3 small text-muted">
+                        <div class="col-12">
+                            <h6 class="fw-bold text-dark">Étape suivante : Stratégie</h6>
+                            <ul class="mb-0">
+                                <li>Cliquez sur "Générer la stratégie marketing"</li>
+                                <li>L'IA analysera ces personas pour recommander les meilleurs canaux</li>
+                                <li>Budget optimisé par canal et persona</li>
+                            </ul>
+                        </div>
+                        <div class="col-12">
+                            <h6 class="fw-bold text-dark">Exploitation des données</h6>
+                            <ul class="mb-0">
+                                <li>Adaptez votre message aux motivations de chaque persona</li>
+                                <li>Résolvez leurs points de douleur dans vos contenus</li>
+                                <li>Utilisez les centres d'intérêt pour cibler vos publicités</li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
-                <div class="col-md-3">
-                    <strong>Secteur</strong>
-                    <br>{{ project.sector }}
-                </div>
-                <div class="col-md-3">
-                    <strong>Objectif</strong>
-                    <br>{{ project.goalType.label }}
-                </div>
-                <div class="col-md-3">
-                    <strong>Budget</strong>
-                    <br>{{ project.budget|number_format(2, ',', ' ') }} €
+            </div>
+        </div>
+
+        {# Contexte du projet #}
+        <div class="col-lg-6">
+            <div class="card bg-primary text-white">
+                <div class="card-body">
+                    <h6 class="fw-bold mb-3">
+                        <i class="bi bi-briefcase-fill"></i>
+                        Contexte du projet
+                    </h6>
+                    <div class="row g-3 small">
+                        <div class="col-md-6">
+                            <strong>Entreprise</strong>
+                            <br>{{ project.companyName }}
+                        </div>
+                        <div class="col-md-6">
+                            <strong>Secteur</strong>
+                            <br>{{ project.sector }}
+                        </div>
+                        <div class="col-md-6">
+                            <strong>Objectif</strong>
+                            <br>{{ project.goalType.label }}
+                        </div>
+                        <div class="col-md-6">
+                            <strong>Budget</strong>
+                            <br>{{ project.budget|number_format(2, ',', ' ') }} €
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block modals %}
+    {# Modales pour chaque Persona #}
+    {% for persona in personas %}
+        <div class="modal fade" id="personaModal{{ persona.id }}" tabindex="-1" aria-labelledby="personaModalLabel{{ persona.id }}" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="modal-header bg-primary text-white">
+                        <div>
+                            <h5 class="modal-title" id="personaModalLabel{{ persona.id }}">
+                                {{ persona.name|replace({'_': ' '}) }}
+                            </h5>
+                            <small class="opacity-75">
+                                {{ persona.age }} ans • {{ persona.gender }} • {{ persona.job }}
+                            </small>
+                        </div>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        {# Profil #}
+                        {% if persona.description %}
+                            <div class="mb-4">
+                                <h6 class="fw-bold text-primary mb-2">
+                                    <i class="bi bi-person-badge"></i> Profil
+                                </h6>
+                                <p class="text-muted">{{ persona.description }}</p>
+                            </div>
+                        {% endif %}
+
+                        {# Comportements #}
+                        {% if persona.rawData and persona.rawData.behaviors is defined %}
+                            <div class="mb-4">
+                                <h6 class="fw-bold text-success mb-2">
+                                    <i class="bi bi-graph-up"></i> Comportements
+                                </h6>
+                                {% if persona.rawData.behaviors is iterable and persona.rawData.behaviors is not mapping %}
+                                    <ul class="list-unstyled mb-0">
+                                        {% for behavior in persona.rawData.behaviors %}
+                                            <li class="text-muted mb-1">
+                                                <i class="bi bi-check-circle-fill text-success me-1"></i>
+                                                {{ behavior }}
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                {% elseif persona.rawData.behaviors is mapping %}
+                                    {% if persona.rawData.behaviors.digital_habits is defined %}
+                                        <div class="mb-3">
+                                            <strong class="text-muted d-block mb-2"><i class="bi bi-phone"></i> Habitudes digitales :</strong>
+                                            <ul class="list-unstyled ms-3">
+                                                {% for habit in persona.rawData.behaviors.digital_habits %}
+                                                    <li class="text-muted mb-1"><i class="bi bi-check-circle-fill text-success me-1"></i> {{ habit }}</li>
+                                                {% endfor %}
+                                            </ul>
+                                        </div>
+                                    {% endif %}
+                                    {% if persona.rawData.behaviors.preferred_channels is defined %}
+                                        <div class="mb-3">
+                                            <strong class="text-muted d-block mb-2"><i class="bi bi-broadcast"></i> Canaux préférés :</strong>
+                                            <ul class="list-unstyled ms-3">
+                                                {% for channel in persona.rawData.behaviors.preferred_channels %}
+                                                    <li class="text-muted mb-1"><i class="bi bi-check-circle-fill text-success me-1"></i> {{ channel }}</li>
+                                                {% endfor %}
+                                            </ul>
+                                        </div>
+                                    {% endif %}
+                                    {% if persona.rawData.behaviors.influencers is defined %}
+                                        <div class="mb-0">
+                                            <strong class="text-muted d-block mb-2"><i class="bi bi-people"></i> Influenceurs :</strong>
+                                            <ul class="list-unstyled ms-3">
+                                                {% for influencer in persona.rawData.behaviors.influencers %}
+                                                    <li class="text-muted mb-1"><i class="bi bi-check-circle-fill text-success me-1"></i> {{ influencer }}</li>
+                                                {% endfor %}
+                                            </ul>
+                                        </div>
+                                    {% endif %}
+                                {% else %}
+                                    <p class="text-muted mb-0">{{ persona.rawData.behaviors }}</p>
+                                {% endif %}
+                            </div>
+                        {% endif %}
+
+                        {# Points de douleur #}
+                        {% if persona.rawData and persona.rawData.pain_points is defined %}
+                            <div class="mb-4">
+                                <h6 class="fw-bold text-danger mb-2">
+                                    <i class="bi bi-exclamation-triangle-fill"></i> Points de douleur
+                                </h6>
+                                {% if persona.rawData.pain_points is iterable %}
+                                    <ul class="list-unstyled mb-0">
+                                        {% for pain in persona.rawData.pain_points %}
+                                            <li class="text-muted mb-1">
+                                                <i class="bi bi-x-circle-fill text-danger me-1"></i>
+                                                {{ pain }}
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                {% else %}
+                                    <p class="text-muted mb-0">{{ persona.rawData.pain_points }}</p>
+                                {% endif %}
+                            </div>
+                        {% endif %}
+
+                        {# Objectifs #}
+                        {% if persona.rawData and persona.rawData.goals is defined %}
+                            <div class="mb-0">
+                                <h6 class="fw-bold text-warning mb-2">
+                                    <i class="bi bi-lightning-fill"></i> Objectifs
+                                </h6>
+                                {% if persona.rawData.goals is iterable %}
+                                    <ul class="list-unstyled mb-0">
+                                        {% for goal in persona.rawData.goals %}
+                                            <li class="text-muted mb-1">
+                                                <i class="bi bi-star-fill text-warning me-1"></i>
+                                                {{ goal }}
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                {% else %}
+                                    <p class="text-muted mb-0">{{ persona.rawData.goals }}</p>
+                                {% endif %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="modal-footer bg-light">
+                        <small class="text-muted me-auto">
+                            <i class="bi bi-clock"></i>
+                            Généré le {{ persona.createdAt|date('d/m/Y à H:i') }}
+                        </small>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const selectAllCheckbox = document.getElementById('selectAll');
+            const personaCheckboxes = document.querySelectorAll('.persona-checkbox');
+            const selectedCountSpan = document.getElementById('selectedCount');
+
+            // Fonction pour mettre à jour le compteur
+            function updateSelectedCount() {
+                const checkedCount = document.querySelectorAll('.persona-checkbox:checked').length;
+                selectedCountSpan.textContent = checkedCount;
+
+                // Mettre à jour l'état de la checkbox "Tout sélectionner"
+                const allChecked = checkedCount === personaCheckboxes.length;
+                const someChecked = checkedCount > 0 && checkedCount < personaCheckboxes.length;
+                selectAllCheckbox.checked = allChecked;
+                selectAllCheckbox.indeterminate = someChecked;
+            }
+
+            // Gestionnaire pour la checkbox "Tout sélectionner"
+            selectAllCheckbox.addEventListener('change', function() {
+                const isChecked = this.checked;
+                personaCheckboxes.forEach(checkbox => {
+                    checkbox.checked = isChecked;
+                });
+                updateSelectedCount();
+            });
+
+            // Gestionnaire pour chaque checkbox individuelle
+            personaCheckboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', updateSelectedCount);
+            });
+
+            // Initialiser le compteur au chargement
+            updateSelectedCount();
+        });
+    </script>
 {% endblock %}

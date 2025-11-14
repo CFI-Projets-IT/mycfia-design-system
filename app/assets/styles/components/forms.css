@@ -132,3 +132,56 @@ textarea.form-control {
     content: ' *';
     color: #dc3545;
 }
+
+/* ====================================
+   Asset Type Cards (Marketing Forms)
+   ==================================== */
+
+.asset-type-card {
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.asset-type-card:hover {
+    border-color: var(--bs-primary) !important;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+}
+
+.asset-type-card:has(.form-check-input:checked) {
+    background-color: rgba(13, 110, 253, 0.05);
+    border-color: var(--bs-primary) !important;
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.15);
+}
+
+.asset-type-checkbox {
+    cursor: pointer;
+    width: 1.25rem;
+    height: 1.25rem;
+}
+
+.cursor-pointer {
+    cursor: pointer;
+}
+
+/* ====================================
+   Persona Cards
+   ==================================== */
+
+.persona-card {
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.persona-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    border-color: var(--bs-primary) !important;
+}
+
+.persona-card .bi-arrow-right-circle {
+    transition: transform 0.3s ease;
+}
+
+.persona-card:hover .bi-arrow-right-circle {
+    transform: translateX(4px);
+}

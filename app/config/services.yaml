@@ -128,3 +128,41 @@ services:
             $eventDispatcher: '@event_dispatcher'
             $logger: '@monolog.logger.marketing.task'
         tags: ['messenger.message_handler']
+
+    # ========================================================================
+    # Mistral HTTP Client Configuration (Utilise timeout framework.yaml)
+    # ========================================================================
+    # Le client utilise automatiquement timeout: 300s configuré dans framework.yaml
+    # Suffisant pour multi-personas (3-10 personas en ~85s chacune)
+    # ========================================================================
+    mistral.http_client:
+        alias: 'http_client'  # Utilise le client HTTP par défaut (timeout: 300s)
+
+    # ========================================================================
+    # ChromaDB Client Configuration
+    # ========================================================================
+    # Client ChromaDB pour le stockage vectoriel RAG (Marketing AI Bundle v3.4.0+)
+    # Utilisé par PersonaKnowledgeStore, CompetitorDataStore, BrandGuidelinesStore
+    # ========================================================================
+
+    # HTTP Client pour ChromaDB
+    chroma.http_client:
+        class: GuzzleHttp\Client
+        arguments:
+            $config:
+                base_uri: '%env(CHROMA_URL)%'
+                timeout: 30
+                headers:
+                    Content-Type: 'application/json'
+
+    # ChromaDB API Client
+    Codewithkyrian\ChromaDB\Generated\ChromaApiClient:
+        arguments:
+            $httpClient: '@chroma.http_client'
+
+    # ChromaDB Client principal
+    Codewithkyrian\ChromaDB\Client:
+        arguments:
+            $apiClient: '@Codewithkyrian\ChromaDB\Generated\ChromaApiClient'
+            $database: 'marketing'
+            $tenant: 'default_tenant'

@@ -23,6 +23,8 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Index(name: 'idx_project_user_tenant', columns: ['user_id', 'tenant_id'])]
 #[ORM\Index(name: 'idx_project_status', columns: ['status'])]
 #[ORM\Index(name: 'idx_project_created', columns: ['created_at'])]
+#[ORM\Index(name: 'idx_project_language', columns: ['language'])]
+#[ORM\Index(name: 'idx_project_keywords_volume', columns: ['keywords_avg_volume'])]
 #[ORM\HasLifecycleCallbacks]
 class Project
 {
@@ -119,6 +121,187 @@ class Project
      */
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $websiteUrl = null;
+
+    /**
+     * Types d'assets marketing sélectionnés par l'utilisateur.
+     * Liste des canaux marketing pour lesquels générer des assets.
+     * Exemples: ['linkedin_post', 'google_ads', 'facebook_post', 'instagram_post', 'mail', 'bing_ads', 'iab', 'article']
+     * Permet d'optimiser le contexte des agents IA dès l'étape 1 (enrichissement).
+     *
+     * @var array<string>|null
+     */
+    #[ORM\Column(type: Types::JSON, nullable: true)]
+    private ?array $selectedAssetTypes = null;
+
+    // ========================================
+    // COLONNES REQUÊTABLES - Enrichissement v3.19.0+
+    // ========================================
+
+    /**
+     * Langue détectée du site web (ISO 639-1).
+     * Permet filtrage projets par langue (ex: 'fr', 'en', 'es').
+     */
+    #[ORM\Column(length: 10, nullable: true)]
+    private ?string $language = null;
+
+    /**
+     * Couleur principale de la marque (hex).
+     * Permet filtrage/recherche par couleur dominante pour cohérence visuelle.
+     */
+    #[ORM\Column(length: 7, nullable: true)]
+    private ?string $brandPrimaryColor = null;
+
+    /**
+     * Indique si un screenshot du site est disponible.
+     */
+    #[ORM\Column(type: Types::BOOLEAN)]
+    private bool $hasScreenshot = false;
+
+    /**
+     * Indique si les données branding Firecrawl sont disponibles.
+     */
+    #[ORM\Column(type: Types::BOOLEAN)]
+    private bool $hasBranding = false;
+
+    /**
+     * Volume de recherche mensuel moyen des keywords Google Ads.
+     * Permet trier projets par potentiel SEO.
+     */
+    #[ORM\Column(type: Types::INTEGER, nullable: true)]
+    private ?int $keywordsAvgVolume = null;
+
+    /**
+     * Coût par clic moyen des keywords Google Ads (en euros).
+     * Permet estimer budget Google Ads minimum.
+     */
+    #[ORM\Column(type: Types::DECIMAL, precision: 6, scale: 2, nullable: true)]
+    private ?string $keywordsAvgCpc = null;
+
+    // ========================================
+    // CHAMPS JSON STRUCTURÉS - Enrichissement v3.19.0+
+    // ========================================
+
+    /**
+     * Identité visuelle complète de la marque (Bundle v3.19.0+).
+     * Contient couleurs, typographie, personality, assets visuels.
+     * Utilisé pour génération assets avec cohérence visuelle.
+     *
+     * Structure :
+     * - brand_name : Nom de la marque
+     * - url : URL analysée
+     * - colorScheme : 'light'|'dark'
+     * - colors : {primary, accent, background, textPrimary, link}
+     * - fonts : [{family, role}]
+     * - typography : {fontFamilies, fontSizes, fontStack}
+     * - personality : {tone, energy, targetAudience}
+     * - images : {logo, favicon}
+     * - confidence : {colors, overall}
+     * - analyzed_at : Date analyse
+     * - analysis_quality_score : Score qualité 0-1
+     *
+     * @var array<string, mixed>|null
+     */
+    #[ORM\Column(type: Types::JSON, nullable: true)]
+    private ?array $brandIdentity = null;
+
+    /**
+     * Intelligence business extraite du site web (Bundle v3.19.0+).
+     * Combine extraction Firecrawl structurée + analyse contexte LLM.
+     * Utilisé pour affichage enrichi et pré-remplissage assets.
+     *
+     * Structure :
+     * EXTRACTION FIRECRAWL (8 champs) :
+     * - mainOffering : Offre principale (produit/service/programme)
+     * - targetMarket : Marché/audience cible
+     * - geographicMarket : Zone géographique
+     * - keyFeatures : Caractéristiques clés [array]
+     * - pricingInformation : Info pricing si disponible
+     * - timelineAvailability : Durée/disponibilité si mentionné
+     * - valuePropositions : Propositions de valeur [array]
+     * - callToAction : CTA ou méthode contact
+     *
+     * ANALYSE CONTEXTE LLM (5 champs) :
+     * - sector : Secteur activité détecté
+     * - targetAudience : Audience cible (B2B/B2C/SMB/Enterprise)
+     * - businessModel : Modèle économique (SaaS/E-commerce/Services)
+     * - geography : Zone géographique principale
+     * - confidenceLevel : Niveau confiance analyse (high|medium|low)
+     *
+     * @var array<string, mixed>|null
+     */
+    #[ORM\Column(type: Types::JSON, nullable: true)]
+    private ?array $businessIntelligence = null;
+
+    /**
+     * Keywords Google Ads avec métriques (Bundle v3.19.0+).
+     * Top 50 keywords + métriques agrégées sur les 100 récupérés.
+     * Utilisé pour budget Ads, SEO, analyse concurrence, suggestions contenu.
+     *
+     * Structure :
+     * - keywords : Top 50 [{keyword, volume, competition, cpc}]
+     * - metrics : {
+     *     total_keywords, avg_volume, avg_cpc,
+     *     high_competition_count, total_search_volume,
+     *     high_competition_percentage
+     *   }
+     *
+     * @var array<string, mixed>|null
+     */
+    #[ORM\Column(type: Types::JSON, nullable: true)]
+    private ?array $keywordsData = null;
+
+    /**
+     * Suggestions IA générées lors de l'enrichissement (Bundle v3.19.0+).
+     * Contient noms créatifs, objectifs SMART, recommandations stratégiques.
+     * Utilisé pour suggestions utilisateur et aide à la décision.
+     *
+     * Structure :
+     * - creative_name_alternatives : [3 noms campagne créatifs]
+     * - smart_objectives_detailed : Objectifs reformulés SMART
+     * - strategic_recommendations : [3-5 actions stratégiques]
+     * - success_factors : [3-5 KPIs à surveiller]
+     *
+     * @var array<string, mixed>|null
+     */
+    #[ORM\Column(type: Types::JSON, nullable: true)]
+    private ?array $aiEnrichment = null;
+
+    /**
+     * Contenu brut scrappé du site web (Bundle v3.10.0+).
+     * Données source pour debug et ré-analyse si besoin.
+     *
+     * Structure :
+     * - metadata : {title, description, keywords, ogImage, favicon}
+     * - markdown : Contenu complet markdown (peut être volumineux)
+     *
+     * @var array<string, mixed>|null
+     */
+    #[ORM\Column(type: Types::JSON, nullable: true)]
+    private ?array $scrapedContent = null;
+
+    /**
+     * Screenshot base64 du site web (Bundle v3.19.0+).
+     * Référence visuelle, extraction couleurs fallback.
+     * Séparé pour performance (50-200 KB).
+     */
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $screenshot = null;
+
+    /**
+     * Métriques techniques de l'enrichissement IA.
+     * Utilisé pour dashboard admin et optimisation coûts LLM.
+     *
+     * Structure :
+     * - tokens_used : {input, output, total}
+     * - cost : Coût en euros
+     * - duration_ms : Temps exécution
+     * - model_used : Modèle LLM utilisé
+     * - retry_attempts : Nombre tentatives
+     *
+     * @var array<string, mixed>|null
+     */
+    #[ORM\Column(type: Types::JSON, nullable: true)]
+    private ?array $enrichmentMetrics = null;
 
     /**
      * Statut actuel du projet dans le workflow de génération.
@@ -366,6 +549,224 @@ class Project
     public function setWebsiteUrl(?string $websiteUrl): self
     {
         $this->websiteUrl = $websiteUrl;
+
+        return $this;
+    }
+
+    /**
+     * @return array<string>|null
+     */
+    public function getSelectedAssetTypes(): ?array
+    {
+        return $this->selectedAssetTypes;
+    }
+
+    /**
+     * @param array<string>|null $selectedAssetTypes
+     */
+    public function setSelectedAssetTypes(?array $selectedAssetTypes): self
+    {
+        $this->selectedAssetTypes = $selectedAssetTypes;
+
+        return $this;
+    }
+
+    // ========================================
+    // GETTERS/SETTERS - COLONNES REQUÊTABLES
+    // ========================================
+
+    public function getLanguage(): ?string
+    {
+        return $this->language;
+    }
+
+    public function setLanguage(?string $language): self
+    {
+        $this->language = $language;
+
+        return $this;
+    }
+
+    public function getBrandPrimaryColor(): ?string
+    {
+        return $this->brandPrimaryColor;
+    }
+
+    public function setBrandPrimaryColor(?string $brandPrimaryColor): self
+    {
+        $this->brandPrimaryColor = $brandPrimaryColor;
+
+        return $this;
+    }
+
+    public function isHasScreenshot(): bool
+    {
+        return $this->hasScreenshot;
+    }
+
+    public function setHasScreenshot(bool $hasScreenshot): self
+    {
+        $this->hasScreenshot = $hasScreenshot;
+
+        return $this;
+    }
+
+    public function isHasBranding(): bool
+    {
+        return $this->hasBranding;
+    }
+
+    public function setHasBranding(bool $hasBranding): self
+    {
+        $this->hasBranding = $hasBranding;
+
+        return $this;
+    }
+
+    public function getKeywordsAvgVolume(): ?int
+    {
+        return $this->keywordsAvgVolume;
+    }
+
+    public function setKeywordsAvgVolume(?int $keywordsAvgVolume): self
+    {
+        $this->keywordsAvgVolume = $keywordsAvgVolume;
+
+        return $this;
+    }
+
+    public function getKeywordsAvgCpc(): ?string
+    {
+        return $this->keywordsAvgCpc;
+    }
+
+    public function setKeywordsAvgCpc(?string $keywordsAvgCpc): self
+    {
+        $this->keywordsAvgCpc = $keywordsAvgCpc;
+
+        return $this;
+    }
+
+    // ========================================
+    // GETTERS/SETTERS - CHAMPS JSON
+    // ========================================
+
+    /**
+     * @return array<string, mixed>|null
+     */
+    public function getBrandIdentity(): ?array
+    {
+        return $this->brandIdentity;
+    }
+
+    /**
+     * @param array<string, mixed>|null $brandIdentity
+     */
+    public function setBrandIdentity(?array $brandIdentity): self
+    {
+        $this->brandIdentity = $brandIdentity;
+
+        return $this;
+    }
+
+    /**
+     * @return array<string, mixed>|null
+     */
+    public function getBusinessIntelligence(): ?array
+    {
+        return $this->businessIntelligence;
+    }
+
+    /**
+     * @param array<string, mixed>|null $businessIntelligence
+     */
+    public function setBusinessIntelligence(?array $businessIntelligence): self
+    {
+        $this->businessIntelligence = $businessIntelligence;
+
+        return $this;
+    }
+
+    /**
+     * @return array<string, mixed>|null
+     */
+    public function getKeywordsData(): ?array
+    {
+        return $this->keywordsData;
+    }
+
+    /**
+     * @param array<string, mixed>|null $keywordsData
+     */
+    public function setKeywordsData(?array $keywordsData): self
+    {
+        $this->keywordsData = $keywordsData;
+
+        return $this;
+    }
+
+    /**
+     * @return array<string, mixed>|null
+     */
+    public function getAiEnrichment(): ?array
+    {
+        return $this->aiEnrichment;
+    }
+
+    /**
+     * @param array<string, mixed>|null $aiEnrichment
+     */
+    public function setAiEnrichment(?array $aiEnrichment): self
+    {
+        $this->aiEnrichment = $aiEnrichment;
+
+        return $this;
+    }
+
+    /**
+     * @return array<string, mixed>|null
+     */
+    public function getScrapedContent(): ?array
+    {
+        return $this->scrapedContent;
+    }
+
+    /**
+     * @param array<string, mixed>|null $scrapedContent
+     */
+    public function setScrapedContent(?array $scrapedContent): self
+    {
+        $this->scrapedContent = $scrapedContent;
+
+        return $this;
+    }
+
+    public function getScreenshot(): ?string
+    {
+        return $this->screenshot;
+    }
+
+    public function setScreenshot(?string $screenshot): self
+    {
+        $this->screenshot = $screenshot;
+
+        return $this;
+    }
+
+    /**
+     * @return array<string, mixed>|null
+     */
+    public function getEnrichmentMetrics(): ?array
+    {
+        return $this->enrichmentMetrics;
+    }
+
+    /**
+     * @param array<string, mixed>|null $enrichmentMetrics
+     */
+    public function setEnrichmentMetrics(?array $enrichmentMetrics): self
+    {
+        $this->enrichmentMetrics = $enrichmentMetrics;
 
         return $this;
     }

@@ -111,16 +111,16 @@ final readonly class GeneratePersonasMessageHandler
                 $persona = new Persona();
                 $persona->setProject($project);
 
-                // Champs directs (strings)
-                $persona->setAge($personaData['demographics']['age'] ?? '');
-                $persona->setGender($personaData['demographics']['gender'] ?? '');
-                $persona->setJob($personaData['demographics']['job'] ?? '');
+                // Champs typés pour les données importantes
+                $demographics = $personaData['demographics'];
+                $persona->setName($personaData['name']);
+                $persona->setDescription($personaData['description']);
+                $persona->setAge(is_numeric($demographics['age'] ?? 0) ? (int) $demographics['age'] : 35);
+                $persona->setGender($demographics['gender'] ?? 'N/A');
+                $persona->setJob($demographics['job'] ?? $demographics['profession'] ?? 'Non spécifié');
 
-                // Champs TEXT stockant JSON (json_encode des arrays)
-                $persona->setInterests(json_encode($personaData['demographics'], JSON_THROW_ON_ERROR));
-                $persona->setBehaviors(json_encode($personaData['behaviors'], JSON_THROW_ON_ERROR));
-                $persona->setMotivations(json_encode($personaData['goals'], JSON_THROW_ON_ERROR));
-                $persona->setPains(json_encode($personaData['pain_points'], JSON_THROW_ON_ERROR));
+                // Stocker toutes les données complètes en JSON
+                $persona->setRawData($personaData);
 
                 // Calculer le score de qualité via l'analyse du bundle (retourne 0-100, converti en 0-1)
                 $qualityScore = $this->personaGenerator->analyzePersonaQuality($personaData) / 100;
