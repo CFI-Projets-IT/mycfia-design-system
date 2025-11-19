@@ -2,8 +2,10 @@
 
 {% block title %}Stratégie Marketing - {{ project.name }}{% endblock %}
 
+{% block content_classes %} marketing-page{% endblock %}
+
 {% block content %}
-<div class="container" style="max-width: 1400px;">
+<div class="container-fluid" style="max-width: 1400px;">
     {# Breadcrumb #}
     <div class="mb-4">
         <nav aria-label="breadcrumb">
@@ -111,7 +113,7 @@
             </div>
         </div>
 
-        {# Répartition budgétaire #}
+        {# Répartition budgétaire v3.29.0 #}
         <div class="col-lg-6">
             <div class="card shadow-sm h-100">
                 <div class="card-header bg-warning text-white py-3">
@@ -121,9 +123,70 @@
                     </h5>
                 </div>
                 <div class="card-body p-4">
-                    <div style="white-space: pre-line;">
-                        {{ strategy.budgetAllocation }}
-                    </div>
+                    {% set budgetData = strategy.budgetAllocationData %}
+                    {% if budgetData and budgetData.allocation is defined %}
+                        {# Métriques globales #}
+                        <div class="row mb-3">
+                            <div class="col-4 text-center">
+                                <div class="fw-bold text-primary fs-5">{{ budgetData.total_budget|number_format(0, ',', ' ') }} €</div>
+                                <small class="text-muted">Budget total</small>
+                            </div>
+                            <div class="col-4 text-center">
+                                <div class="fw-bold text-success fs-5">{{ budgetData.total_expected_leads }}</div>
+                                <small class="text-muted">Leads attendus</small>
+                            </div>
+                            <div class="col-4 text-center">
+                                <div class="fw-bold text-info fs-5">{{ budgetData.confidence_score }}%</div>
+                                <small class="text-muted">Confiance</small>
+                            </div>
+                        </div>
+
+                        {# Tableau allocation par canal #}
+                        <div class="table-responsive">
+                            <table class="table table-sm table-striped mb-3">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th>Canal</th>
+                                        <th class="text-end">Budget</th>
+                                        <th class="text-end">CPL</th>
+                                        <th class="text-end">Leads</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for channel, data in budgetData.allocation %}
+                                        <tr>
+                                            <td>
+                                                {% if data.category == 'main' %}
+                                                    <span class="badge bg-primary me-1">P</span>
+                                                {% elseif data.category == 'secondary' %}
+                                                    <span class="badge bg-secondary me-1">S</span>
+                                                {% else %}
+                                                    <span class="badge bg-warning me-1">E</span>
+                                                {% endif %}
+                                                {{ channel|replace({'_': ' '})|title }}
+                                            </td>
+                                            <td class="text-end">{{ data.budget|number_format(0, ',', ' ') }} €</td>
+                                            <td class="text-end">{{ data.cpl }} €</td>
+                                            <td class="text-end">{{ data.expected_leads }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+
+                        {# Recommandations budgétaires #}
+                        {% if budgetData.recommendations is defined and budgetData.recommendations|length > 0 %}
+                            <div class="alert alert-info py-2 mb-0">
+                                <small>
+                                    {% for rec in budgetData.recommendations %}
+                                        <div>{{ rec }}</div>
+                                    {% endfor %}
+                                </small>
+                            </div>
+                        {% endif %}
+                    {% else %}
+                        <p class="text-muted mb-0">Allocation budgétaire non disponible</p>
+                    {% endif %}
                 </div>
             </div>
         </div>

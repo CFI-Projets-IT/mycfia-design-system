@@ -90,7 +90,7 @@ class CompetitorAnalysis
         return $this->project;
     }
 
-    public function setProject(?Project $project): self
+    public function setProject(Project $project): self
     {
         $this->project = $project;
 
@@ -100,6 +100,53 @@ class CompetitorAnalysis
     public function getCompetitors(): string
     {
         return $this->competitors;
+    }
+
+    /**
+     * Retourne la liste des concurrents sous forme de tableau.
+     *
+     * Depuis v3.27.0 : retourne les objets complets avec toutes les métadonnées.
+     * Pour l'affichage simple, utiliser getCompetitorsNames().
+     *
+     * @return array<int, array<string, mixed>>
+     */
+    public function getCompetitorsArray(): array
+    {
+        try {
+            $decoded = json_decode($this->competitors, true, 512, JSON_THROW_ON_ERROR);
+
+            return is_array($decoded) ? $decoded : [];
+        } catch (\JsonException $e) {
+            return [];
+        }
+    }
+
+    /**
+     * Retourne uniquement les noms des concurrents pour l'affichage.
+     *
+     * Extrait le titre ou le domaine de chaque concurrent.
+     * Utilisé pour la compatibilité d'affichage dans les templates.
+     *
+     * @return array<int, string>
+     */
+    public function getCompetitorsNames(): array
+    {
+        $competitors = $this->getCompetitorsArray();
+        $names = [];
+
+        foreach ($competitors as $competitor) {
+            // Nouveau format v3.27.0 : objet avec métadonnées
+            if (isset($competitor['title'])) {
+                $names[] = $competitor['title'] ?: ($competitor['domain'] ?? 'N/A');
+            } elseif (isset($competitor['domain'])) {
+                $names[] = $competitor['domain'];
+            } else {
+                // Fallback pour format inconnu
+                $names[] = 'N/A';
+            }
+        }
+
+        return $names;
     }
 
     public function setCompetitors(string $competitors): self

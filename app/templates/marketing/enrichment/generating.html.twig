@@ -1,6 +1,6 @@
 {% extends 'layouts/home.html.twig' %}
 
-{% block title %}Génération en cours - {{ project.name }}{% endblock %}
+{% block title %}Enrichissement en cours - {{ project.name }}{% endblock %}
 
 {% block content %}
 <div class="container" style="max-width: 900px;">
@@ -10,81 +10,86 @@
                 <li class="breadcrumb-item">
                     <a href="{{ path('marketing_project_index') }}">Projets Marketing</a>
                 </li>
-                <li class="breadcrumb-item">
-                    <a href="{{ path('marketing_project_show', {id: project.id}) }}">{{ project.name }}</a>
-                </li>
-                <li class="breadcrumb-item active" aria-current="page">Génération en cours</li>
+                <li class="breadcrumb-item active" aria-current="page">Enrichissement en cours</li>
             </ol>
         </nav>
     </div>
 
     <div class="card shadow-sm"
-         data-controller="marketing-persona"
-         data-marketing-persona-project-id-value="{{ project.id }}"
-         data-marketing-persona-task-id-value="{{ taskId }}"
-         data-marketing-persona-stage-value="personas"
-         data-marketing-persona-mercure-url-value="{{ mercureUrl }}"
-         data-marketing-persona-next-url-value="{{ path('marketing_persona_show', {id: project.id}) }}">
+         data-controller="marketing-enrichment"
+         data-marketing-enrichment-project-id-value="{{ project.id }}"
+         data-marketing-enrichment-task-id-value="{{ taskId }}"
+         data-marketing-enrichment-mercure-url-value="{{ mercureUrl }}"
+         data-marketing-enrichment-next-url-value="{{ path('marketing_project_enrichment_review', {taskId: taskId}) }}">
 
         <div class="card-header bg-primary text-white">
             <div class="d-flex align-items-center">
-                <div class="spinner-border spinner-border-sm me-3" role="status" data-marketing-persona-target="spinner">
+                <div class="spinner-border spinner-border-sm me-3" role="status" data-marketing-enrichment-target="spinner">
                     <span class="visually-hidden">Chargement...</span>
                 </div>
                 <div>
-                    <h5 class="mb-0">Génération de Personas IA en cours...</h5>
-                    <small>Notre agent IA analyse votre secteur</small>
+                    <h5 class="mb-0">Enrichissement IA en cours...</h5>
+                    <small>Notre agent IA analyse votre projet</small>
                 </div>
             </div>
         </div>
 
         <div class="card-body p-4">
-            <div data-marketing-persona-target="statusMessage">
+            <div data-marketing-enrichment-target="statusMessage">
                 <div class="text-center py-5">
                     <i class="bi bi-robot text-primary mb-3" style="font-size: 4rem;"></i>
                     <h4 class="mb-3">L'IA travaille pour vous</h4>
                     <p class="text-muted mb-4">
-                        Mistral Large analyse votre secteur et génère des personas détaillés<br>
-                        Temps estimé : 30 à 60 secondes par persona
+                        Mistral Large analyse votre projet et génère des suggestions enrichies<br>
+                        Temps estimé : 30 à 60 secondes
                     </p>
 
-                    <div class="progress mb-3" style="height: 25px;">
-                        <div class="progress-bar progress-bar-striped progress-bar-animated bg-primary"
-                             role="progressbar"
-                             style="width: 0%"
-                             data-marketing-persona-target="progressBar">
-                            <span data-marketing-persona-target="progressText">0%</span>
+                    <div class="d-flex justify-content-center gap-4 mb-4">
+                        <div class="text-center">
+                            <div class="spinner-border text-primary mb-2" role="status">
+                                <span class="visually-hidden">Analyse...</span>
+                            </div>
+                            <div class="small text-muted">Analyse des données</div>
                         </div>
                     </div>
 
-                    <div class="text-muted small" data-marketing-persona-target="progressMessage">
-                        Initialisation...
+                    <div class="progress mb-3" style="height: 6px;">
+                        <div class="progress-bar progress-bar-striped progress-bar-animated bg-primary"
+                             role="progressbar"
+                             style="width: 100%">
+                        </div>
+                    </div>
+
+                    <div class="text-muted small">
+                        <i class="bi bi-clock"></i>
+                        Temps écoulé : <span data-marketing-enrichment-target="elapsedTime">0s</span>
                     </div>
                 </div>
             </div>
 
-            <div class="d-none" data-marketing-persona-target="successMessage">
+            <div class="d-none" data-marketing-enrichment-target="successMessage">
                 <div class="alert alert-success text-center">
                     <i class="bi bi-check-circle-fill fs-1 text-success d-block mb-3"></i>
-                    <h4 class="mb-3">Personas générés avec succès !</h4>
-                    <p class="mb-3" data-marketing-persona-target="resultSummary"></p>
-                    <a href="{{ path('marketing_project_show', {id: project.id}) }}" class="btn btn-success">
-                        <i class="bi bi-arrow-right-circle"></i> Voir les personas
-                    </a>
+                    <h4 class="mb-3">Enrichissement terminé avec succès !</h4>
+                    <p class="mb-3" data-marketing-enrichment-target="resultSummary"></p>
+                    <div class="spinner-border text-success mb-3" role="status">
+                        <span class="visually-hidden">Redirection...</span>
+                    </div>
+                    <p class="text-muted small">Redirection vers la page de révision...</p>
                 </div>
             </div>
 
-            <div class="d-none" data-marketing-persona-target="errorMessage">
+            <div class="d-none" data-marketing-enrichment-target="errorMessage">
                 <div class="alert alert-danger text-center">
                     <i class="bi bi-exclamation-triangle-fill fs-1 text-danger d-block mb-3"></i>
-                    <h4 class="mb-3">Erreur lors de la génération</h4>
-                    <p class="mb-3" data-marketing-persona-target="errorDetails"></p>
+                    <h4 class="mb-3">Erreur lors de l'enrichissement</h4>
+                    <p class="mb-3" data-marketing-enrichment-target="errorDetails"></p>
                     <div class="d-flex gap-2 justify-content-center">
                         <a href="{{ path('home_index') }}" class="btn btn-danger">
                             <i class="bi bi-house"></i> Retour à l'accueil
                         </a>
-                        <a href="{{ path('marketing_project_show', {id: project.id}) }}" class="btn btn-outline-secondary">
-                            <i class="bi bi-arrow-left"></i> Retour au projet
+                        <a href="{{ path('marketing_project_new') }}" class="btn btn-outline-secondary">
+                            <i class="bi bi-arrow-left"></i> Créer un nouveau projet
                         </a>
                     </div>
                 </div>
@@ -99,11 +104,11 @@
                 </div>
                 <div class="col-4">
                     <div class="text-muted small">Temps écoulé</div>
-                    <div class="fw-semibold" data-marketing-persona-target="elapsedTime">0s</div>
+                    <div class="fw-semibold" data-marketing-enrichment-target="elapsedTime">0s</div>
                 </div>
                 <div class="col-4">
                     <div class="text-muted small">Statut</div>
-                    <div class="fw-semibold" data-marketing-persona-target="status">En cours</div>
+                    <div class="fw-semibold" data-marketing-enrichment-target="status">En cours</div>
                 </div>
             </div>
         </div>

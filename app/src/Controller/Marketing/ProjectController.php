@@ -6,21 +6,21 @@ namespace App\Controller\Marketing;
 
 use App\Entity\Division;
 use App\Entity\Project;
+use App\Entity\ProjectEnrichmentDraft;
 use App\Entity\User;
 use App\Enum\ProjectStatus;
 use App\Form\ProjectType;
+use App\Repository\ProjectEnrichmentDraftRepository;
 use App\Repository\ProjectRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Gorillias\MarketingBundle\Service\AgentTaskManager;
-use Psr\Cache\InvalidArgumentException;
-use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Contracts\Cache\CacheInterface;
+use Symfony\Contracts\Cache\ItemInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -47,11 +47,11 @@ final class ProjectController extends AbstractController
 {
     public function __construct(
         private readonly ProjectRepository $projectRepository,
+        private readonly ProjectEnrichmentDraftRepository $enrichmentDraftRepository,
         private readonly EntityManagerInterface $entityManager,
         private readonly AgentTaskManager $agentTaskManager,
         private readonly TranslatorInterface $translator,
         private readonly CacheInterface $cache,
-        private readonly LoggerInterface $logger,
     ) {
     }
 
@@ -90,24 +90,17 @@ final class ProjectController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted()) {
-            // Détecter si c'est une requête AJAX d'enrichissement
-            $isAjaxEnrichment = $request->isXmlHttpRequest() && $request->request->has('analyze');
+            // Détecter si c'est le bouton "Analyser et améliorer avec l'IA"
+            $isEnrichmentRequest = $form->has('analyze') && $form->get('analyze')->isSubmitted();
 
-            if ($isAjaxEnrichment) {
-
+            if ($isEnrichmentRequest) {
                 // Validation du formulaire
                 if (! $form->isValid()) {
-                    // Retourner les erreurs de validation en JSON pour AJAX
-                    $errors = [];
-                    foreach ($form->getErrors(true) as $error) {
-                        $errors[] = $error->getMessage();
-                    }
+                    $this->addFlash('error', 'Le formulaire contient des erreurs. Veuillez les corriger avant de continuer.');
 
-                    return new JsonResponse([
-                        'success' => false,
-                        'error' => 'Le formulaire contient des erreurs : '.implode(', ', $errors),
-                        'validation_errors' => $errors,
-                    ], 422);
+                    return $this->render('marketing/project/new.html.twig', [
+                        'form' => $form,
+                    ]);
                 }
 
                 // Calculer la durée de campagne en jours
@@ -121,6 +114,9 @@ final class ProjectController extends AbstractController
                 /** @var User $user */
                 $user = $this->getUser();
 
+                /** @var Division $tenant */
+                $tenant = $user->getDivision();
+
                 // FIX: Récupérer selectedAssetTypes depuis les données RAW de la requête
                 // car Symfony Form ChoiceType avec expanded:true stocke les indices (0,1,2) dans l'entité
                 // au lieu des vraies valeurs enum (linkedin_post, google_ads)
@@ -133,6 +129,16 @@ final class ProjectController extends AbstractController
                 } else {
                     $selectedAssetTypes = [];
                 }
+
+                // NOUVEAU WORKFLOW : Créer le projet en base AVANT l'enrichissement
+                // Cela permet à l'EventListener de créer un ProjectEnrichmentDraft lié au projet
+                $project->setUser($user);
+                $project->setTenant($tenant);
+                $project->setStatus(ProjectStatus::DRAFT);
+                $project->setSelectedAssetTypes($selectedAssetTypes);
+
+                $this->entityManager->persist($project);
+                $this->entityManager->flush();
 
                 // Dispatcher la tâche asynchrone d'enrichissement IA via AgentTaskManager
                 // Bundle v3.9.1 : Correction du bug de désalignement des paramètres
@@ -153,27 +159,18 @@ final class ProjectController extends AbstractController
                     ]
                 );
 
-                // Stocker les données du projet en session pour utilisation après enrichissement
-                $request->getSession()->set('project_data_for_enrichment_'.$taskId, [
-                    'name' => $project->getName(),
-                    'companyName' => $project->getCompanyName(),
-                    'sector' => $project->getSector(),
-                    'description' => $project->getDescription(),
-                    'productInfo' => $project->getProductInfo(),
-                    'goalType' => $project->getGoalType(),
-                    'detailedObjectives' => $project->getDetailedObjectives(),
-                    'budget' => $project->getBudget(),
-                    'startDate' => $project->getStartDate(),
-                    'endDate' => $project->getEndDate(),
-                    'websiteUrl' => $project->getWebsiteUrl(),
-                    'selectedAssetTypes' => $selectedAssetTypes, // ✅ Vraies valeurs enum, pas les indices
-                ]);
+                // Stocker l'ID du projet en cache pour l'EventListener (nouveau workflow)
+                // L'EventListener récupérera ce mapping pour créer le ProjectEnrichmentDraft
+                $this->cache->get('project_id_for_task_'.$taskId, function (ItemInterface $item) use ($project) {
+                    $item->expiresAfter(3600); // TTL 1 heure
 
-                // Retourner une réponse JSON avec le taskId pour abonnement Mercure
-                return new JsonResponse([
-                    'success' => true,
+                    return $project->getId();
+                });
+
+                // Rediriger vers la page de génération avec Mercure
+                return $this->redirectToRoute('marketing_project_enrichment_generating', [
+                    'id' => $project->getId(),
                     'taskId' => $taskId,
-                    'message' => $this->translator->trans('project.flash.enrichment_started', [], 'marketing'),
                 ]);
             }
 
@@ -200,142 +197,283 @@ final class ProjectController extends AbstractController
 
         return $this->render('marketing/project/new.html.twig', [
             'form' => $form,
-            'mercure_public_url' => $_ENV['MERCURE_PUBLIC_URL'] ?? 'http://localhost:82/.well-known/mercure',
         ]);
     }
 
     /**
-     * Récupère les résultats d'enrichissement IA depuis le cache.
+     * Lance l'enrichissement IA sur un projet existant.
      *
-     * Route AJAX appelée par JavaScript après réception de l'événement Mercure ProjectEnrichedEvent.
+     * Route POST pour démarrer l'analyse IA d'un projet déjà créé.
+     * Utilisé notamment depuis la page show.html.twig pour les projets sans personas.
      *
-     * @return JsonResponse Résultats enrichissement ou erreur
+     * Workflow :
+     * 1. Récupération du projet existant
+     * 2. Dispatch de la tâche d'enrichissement
+     * 3. Redirection vers la page de génération avec Mercure SSE
      *
-     * @throws InvalidArgumentException
+     * @return Response Redirection vers enrichment_generating
      */
-    #[Route('/enrichment/{taskId}/results', name: 'enrichment_results', methods: ['GET'])]
-    public function getEnrichmentResults(string $taskId): JsonResponse
+    #[Route('/{id}/enrichment/start', name: 'enrichment_start', methods: ['POST'])]
+    public function startEnrichment(Request $request, Project $project): Response
     {
-        // Récupérer les résultats depuis le cache (stockés par ProjectEnrichedEventListener)
-        $cacheKey = 'enrichment_results_'.$taskId;
+        $this->denyAccessUnlessGranted('edit', $project);
 
-        try {
-            $enrichmentResults = $this->cache->get($cacheKey, function () {
-                throw new \RuntimeException('Cache miss');
-            });
-        } catch (\RuntimeException) {
-            return new JsonResponse([
-                'success' => false,
-                'error' => $this->translator->trans('project.flash.enrichment_not_found', [], 'marketing'),
-            ], 404);
+        // Vérifier CSRF
+        $token = $request->request->get('_token');
+        if (! is_string($token) || ! $this->isCsrfTokenValid('enrichment_start_'.$project->getId(), $token)) {
+            $this->addFlash('error', $this->translator->trans('security.invalid_csrf_token', [], 'security'));
+
+            return $this->redirectToRoute('marketing_project_show', ['id' => $project->getId()]);
         }
 
-        return new JsonResponse([
-            'success' => true,
-            'results' => $enrichmentResults,
-        ]);
-    }
+        // Calculer la durée de campagne en jours
+        $durationDays = $project->getStartDate()->diff($project->getEndDate())->days;
 
-    /**
-     * Accepte les suggestions d'enrichissement IA et crée le projet.
-     *
-     * @return JsonResponse Succès avec redirect URL ou erreur
-     */
-    #[Route('/enrichment/{taskId}/accept', name: 'enrichment_accept', methods: ['POST'])]
-    public function acceptEnrichment(Request $request, string $taskId): JsonResponse
-    {
-        // Récupérer les données originales du projet
-        $projectData = $request->getSession()->get('project_data_for_enrichment_'.$taskId);
-
-        if (! $projectData) {
-            return new JsonResponse([
-                'success' => false,
-                'error' => $this->translator->trans('project.flash.no_data_to_analyze', [], 'marketing'),
-            ], 404);
+        // PHPStan : diff()->days peut être int|false, garantir int
+        if (false === $durationDays) {
+            $durationDays = 30; // Valeur par défaut si calcul échoue
         }
-
-        // Récupérer les données soumises depuis la modal (nom et objectifs modifiés)
-        $data = json_decode($request->getContent(), true);
-
-        // Créer le projet avec les données enrichies
-        $project = new Project();
-        $project->setName($data['name'] ?? $projectData['name']);
-        $project->setDetailedObjectives($data['detailedObjectives'] ?? $projectData['detailedObjectives']);
-
-        // Champs non modifiés (valeurs originales)
-        $project->setCompanyName($projectData['companyName']);
-        $project->setSector($projectData['sector']);
-        $project->setDescription($projectData['description']);
-        $project->setProductInfo($projectData['productInfo']);
-        $project->setGoalType($projectData['goalType']);
-        $project->setBudget($projectData['budget']);
-        $project->setStartDate($projectData['startDate']);
-        $project->setEndDate($projectData['endDate']);
-        $project->setWebsiteUrl($projectData['websiteUrl']);
-        $project->setSelectedAssetTypes($projectData['selectedAssetTypes'] ?? null);
 
         /** @var User $user */
         $user = $this->getUser();
 
-        /** @var Division $tenant */
-        $tenant = $user->getDivision();
+        // Récupérer les selectedAssetTypes depuis le projet
+        $selectedAssetTypes = $project->getSelectedAssetTypes() ?? [];
 
-        $project->setUser($user);
-        $project->setTenant($tenant);
-        $project->setStatus(ProjectStatus::ENRICHED);
+        // Dispatcher la tâche asynchrone d'enrichissement IA
+        $taskId = $this->agentTaskManager->dispatchProjectEnrichment(
+            projectName: $project->getName(),
+            companyName: $project->getCompanyName(),
+            sector: $project->getSector(),
+            budget: (int) ((float) $project->getBudget() * 100), // Convertir en centimes
+            goalType: $project->getGoalType()->value,
+            detailedObjectives: $project->getDetailedObjectives(),
+            durationDays: $durationDays,
+            websiteUrl: $project->getWebsiteUrl(),
+            selectedAssetTypes: $selectedAssetTypes,
+            options: [
+                'user_id' => $user->getId(),
+            ]
+        );
 
-        // Récupérer les metadata depuis le cache (ajoutées par ProjectEnrichedEventListener)
-        $cacheKey = 'enrichment_results_'.$taskId;
+        // Stocker l'ID du projet en cache pour l'EventListener
+        $this->cache->get('project_id_for_task_'.$taskId, function (ItemInterface $item) use ($project) {
+            $item->expiresAfter(3600); // TTL 1 heure
 
-        try {
-            $enrichmentResults = $this->cache->get($cacheKey, function () {
-                throw new \RuntimeException('Cache miss');
-            });
+            return $project->getId();
+        });
 
-            // 1. Brand Metadata (Bundle v3.9.0)
-            if (isset($enrichmentResults['brand_metadata'])) {
-                $project->setBrandMetadata($enrichmentResults['brand_metadata']);
-                $this->logger->info('ProjectController: Brand metadata sauvegardées', [
-                    'task_id' => $taskId,
-                    'brand_name' => $enrichmentResults['brand_metadata']['brand_name'] ?? 'N/A',
-                ]);
-            }
+        $this->addFlash('success', $this->translator->trans('project.flash.enrichment_started', [], 'marketing'));
 
-            // 2. Scraped Content (Bundle v3.10.0+)
-            if (isset($enrichmentResults['scraped_content'])) {
-                $project->setScrapedContent($enrichmentResults['scraped_content']);
-                $this->logger->info('ProjectController: Scraped content sauvegardé', [
-                    'task_id' => $taskId,
-                    'language' => $enrichmentResults['scraped_content']['metadata']['language'] ?? 'N/A',
-                ]);
-            }
+        // Rediriger vers la page de génération avec Mercure
+        return $this->redirectToRoute('marketing_project_enrichment_generating', [
+            'id' => $project->getId(),
+            'taskId' => $taskId,
+        ]);
+    }
 
-            // 3. Project Context (Bundle v3.11.0+)
-            if (isset($enrichmentResults['project_context'])) {
-                $project->setProjectContext($enrichmentResults['project_context']);
-                $this->logger->info('ProjectController: Project context sauvegardé', [
-                    'task_id' => $taskId,
-                    'geography' => $enrichmentResults['project_context']['geography'] ?? 'N/A',
-                    'confidence' => $enrichmentResults['project_context']['confidenceLevel'] ?? 'N/A',
-                ]);
-            }
-        } catch (\RuntimeException $e) {
-            $this->logger->warning('ProjectController: Impossible de récupérer metadata du cache', [
-                'task_id' => $taskId,
-            ]);
+    /**
+     * Affiche la page de génération d'enrichissement avec loader Mercure.
+     */
+    #[Route('/{id}/enrichment/generating/{taskId}', name: 'enrichment_generating', methods: ['GET'])]
+    public function generateEnrichment(Project $project, string $taskId): Response
+    {
+        $this->denyAccessUnlessGranted('edit', $project);
+
+        return $this->render('marketing/enrichment/generating.html.twig', [
+            'project' => $project,
+            'taskId' => $taskId,
+            'mercureUrl' => $_ENV['MERCURE_PUBLIC_URL'] ?? 'http://localhost/.well-known/mercure',
+        ]);
+    }
+
+    /**
+     * Affiche la page de révision de l'enrichissement en attente de validation.
+     *
+     * Workflow nouveau (v3.21.0+) :
+     * 1. ProjectEnrichedEvent crée ProjectEnrichmentDraft avec statut ENRICHED_PENDING
+     * 2. L'utilisateur consulte les données enrichies organisées en 5 onglets
+     * 3. Actions possibles : Valider ou Régénérer
+     *
+     * @return Response Template review avec données draft organisées en onglets
+     */
+    #[Route('/enrichment/{taskId}/review', name: 'enrichment_review', methods: ['GET'])]
+    public function reviewEnrichment(string $taskId): Response
+    {
+        $draft = $this->enrichmentDraftRepository->findOneByTaskId($taskId);
+
+        if (! $draft) {
+            $this->addFlash('error', $this->translator->trans('project.flash.enrichment_not_found', [], 'marketing'));
+
+            return $this->redirectToRoute('marketing_project_index');
         }
 
-        $this->entityManager->persist($project);
+        $project = $draft->getProject();
+        $this->denyAccessUnlessGranted('edit', $project);
+
+        return $this->render('marketing/enrichment/review.html.twig', [
+            'project' => $project,
+            'draft' => $draft,
+            'enrichmentData' => $draft->getEnrichmentData(),
+            'taskId' => $taskId,
+        ]);
+    }
+
+    /**
+     * Valide l'enrichissement, copie les données dans le projet et lance la génération de personas.
+     *
+     * @return Response Redirection vers page de génération personas
+     */
+    #[Route('/enrichment/{taskId}/validate', name: 'enrichment_validate', methods: ['POST'])]
+    public function validateEnrichment(Request $request, string $taskId): Response
+    {
+        $draft = $this->enrichmentDraftRepository->findOneByTaskId($taskId);
+
+        if (! $draft) {
+            $this->addFlash('error', $this->translator->trans('project.flash.enrichment_not_found', [], 'marketing'));
+
+            return $this->redirectToRoute('marketing_project_index');
+        }
+
+        $project = $draft->getProject();
+        $this->denyAccessUnlessGranted('edit', $project);
+
+        // Vérifier CSRF
+        $token = $request->request->get('_token');
+        if (! is_string($token) || ! $this->isCsrfTokenValid('validate_enrichment_'.$taskId, $token)) {
+            $this->addFlash('error', $this->translator->trans('security.invalid_csrf_token', [], 'security'));
+
+            return $this->redirectToRoute('marketing_project_enrichment_review', ['taskId' => $taskId]);
+        }
+
+        // Récupérer le nom alternatif sélectionné (obligatoire)
+        $selectedName = $request->request->get('selectedName');
+        if (! $selectedName || ! is_string($selectedName)) {
+            $this->addFlash('error', $this->translator->trans('project.flash.name_selection_required', [], 'marketing'));
+
+            return $this->redirectToRoute('marketing_project_enrichment_review', ['taskId' => $taskId]);
+        }
+
+        // Mettre à jour le nom du projet avec le nom sélectionné
+        $project->setName($selectedName);
+
+        // Copier les données du draft vers le projet
+        $enrichmentData = $draft->getEnrichmentData();
+
+        // ✅ Brand Identity depuis dev.brand_identity (Bundle v3.22.0)
+        if (isset($enrichmentData['dev']['brand_identity'])) {
+            $project->setBrandIdentity($enrichmentData['dev']['brand_identity']);
+        }
+
+        // ✅ Business Intelligence depuis dev.project_context (Bundle v3.22.0)
+        if (isset($enrichmentData['dev']['project_context'])) {
+            $project->setBusinessIntelligence($enrichmentData['dev']['project_context']);
+        }
+
+        // ✅ Mots-clés Google Ads depuis scraped_content.google_ads_keywords (Bundle v3.22.0)
+        if (isset($enrichmentData['scraped_content']['google_ads_keywords'])) {
+            $project->setKeywordsData($enrichmentData['scraped_content']['google_ads_keywords']);
+        }
+
+        // ✅ Contenu scrapé complet
+        if (isset($enrichmentData['scraped_content'])) {
+            $project->setScrapedContent($enrichmentData['scraped_content']);
+        }
+
+        // ✅ Suggestions AI depuis ai_suggestions (Bundle v3.22.0)
+        if (isset($enrichmentData['ai_suggestions'])) {
+            $project->setAiEnrichment($enrichmentData['ai_suggestions']);
+        }
+
+        // Mettre à jour le statut du draft et du projet
+        $draft->setStatus('validated');
+        $project->setStatus(ProjectStatus::ENRICHED);
+
         $this->entityManager->flush();
 
-        // Nettoyer la session
-        $request->getSession()->remove('project_data_for_enrichment_'.$taskId);
-        $request->getSession()->remove('enrichment_results_'.$taskId);
+        // Dispatcher la génération de personas avec valeurs par défaut
+        $targetDescription = $this->buildTargetDescription($project);
 
-        return new JsonResponse([
-            'success' => true,
-            'message' => $this->translator->trans('project.flash.created_with_ai', [], 'marketing'),
-            'redirectUrl' => $this->generateUrl('marketing_persona_configure', ['id' => $project->getId()]),
+        $personaTaskId = $this->agentTaskManager->dispatchPersonaGeneration(
+            sector: $project->getSector(),
+            target: $targetDescription,
+            options: [
+                'count' => 5,
+                'min_quality_score' => 70,
+                'project_id' => $project->getId(),
+            ]
+        );
+
+        $this->addFlash('success', $this->translator->trans('project.flash.enrichment_validated', [], 'marketing'));
+
+        return $this->redirectToRoute('marketing_persona_generating', [
+            'id' => $project->getId(),
+            'taskId' => $personaTaskId,
+        ]);
+    }
+
+    /**
+     * Régénère l'enrichissement du projet.
+     *
+     * @return Response Redirection vers page de génération enrichissement
+     */
+    #[Route('/enrichment/{taskId}/regenerate', name: 'enrichment_regenerate', methods: ['POST'])]
+    public function regenerateEnrichment(Request $request, string $taskId): Response
+    {
+        $draft = $this->enrichmentDraftRepository->findOneByTaskId($taskId);
+
+        if (! $draft) {
+            $this->addFlash('error', $this->translator->trans('project.flash.enrichment_not_found', [], 'marketing'));
+
+            return $this->redirectToRoute('marketing_project_index');
+        }
+
+        $project = $draft->getProject();
+        $this->denyAccessUnlessGranted('edit', $project);
+
+        // Vérifier CSRF
+        $token = $request->request->get('_token');
+        if (! is_string($token) || ! $this->isCsrfTokenValid('regenerate_enrichment_'.$taskId, $token)) {
+            $this->addFlash('error', $this->translator->trans('security.invalid_csrf_token', [], 'security'));
+
+            return $this->redirectToRoute('marketing_project_enrichment_review', ['taskId' => $taskId]);
+        }
+
+        // Marquer le draft actuel comme régénéré
+        $draft->setStatus('regenerated');
+        $this->entityManager->flush();
+
+        // Calculer duration en jours
+        $diff = $project->getStartDate()->diff($project->getEndDate());
+        $durationDays = false !== $diff->days ? $diff->days : 0;
+
+        // Redispatcher l'enrichissement
+        $newTaskId = $this->agentTaskManager->dispatchProjectEnrichment(
+            projectName: $project->getName(),
+            companyName: $project->getCompanyName(),
+            sector: $project->getSector(),
+            budget: (int) ((float) $project->getBudget() * 100), // Centimes
+            goalType: $project->getGoalType()->value,
+            detailedObjectives: $project->getDetailedObjectives(),
+            durationDays: $durationDays,
+            websiteUrl: $project->getWebsiteUrl(),
+            selectedAssetTypes: $project->getSelectedAssetTypes() ?? []
+        );
+
+        // Stocker l'ID du projet en cache pour l'EventListener (nouveau workflow)
+        // L'EventListener récupérera ce mapping pour mettre à jour le draft existant
+        $this->cache->get('project_id_for_task_'.$newTaskId, function (ItemInterface $item) use ($project) {
+            $item->expiresAfter(3600); // TTL 1 heure
+
+            return $project->getId();
+        });
+
+        $this->addFlash('info', $this->translator->trans('project.flash.enrichment_regenerating', [], 'marketing'));
+
+        // Rediriger vers la page de génération avec Mercure
+        return $this->redirectToRoute('marketing_project_enrichment_generating', [
+            'id' => $project->getId(),
+            'taskId' => $newTaskId,
         ]);
     }
 
@@ -354,6 +492,32 @@ final class ProjectController extends AbstractController
         return $this->render('marketing/project/show.html.twig', [
             'project' => $project,
         ]);
+    }
+
+    /**
+     * Construit une description cible pour la génération de personas.
+     *
+     * @param Project $project Projet source
+     *
+     * @return string Description narrative pour l'agent IA
+     */
+    private function buildTargetDescription(Project $project): string
+    {
+        $parts = [];
+
+        if ($project->getSector()) {
+            $parts[] = sprintf('Secteur : %s', $project->getSector());
+        }
+
+        if ($project->getDetailedObjectives()) {
+            $parts[] = sprintf('Objectifs : %s', $project->getDetailedObjectives());
+        }
+
+        if ($project->getProductInfo()) {
+            $parts[] = sprintf('Produit/Service : %s', $project->getProductInfo());
+        }
+
+        return implode('. ', $parts);
     }
 
     /**

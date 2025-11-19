@@ -10,6 +10,7 @@ use App\Enum\ProjectStatus;
 use App\Form\StrategyGenerationType;
 use Doctrine\ORM\EntityManagerInterface;
 use Gorillias\MarketingBundle\Service\AgentTaskManager;
+use Gorillias\MarketingBundle\Tool\BudgetOptimizerTool;
 use Gorillias\MarketingBundle\Tool\CompetitorIntelligenceTool;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -44,6 +45,7 @@ final class StrategyController extends AbstractController
         private readonly EntityManagerInterface $entityManager,
         private readonly TranslatorInterface $translator,
         private readonly CompetitorIntelligenceTool $competitorIntelligenceTool,
+        private readonly BudgetOptimizerTool $budgetOptimizerTool,
         private readonly HttpClientInterface $httpClient,
         private readonly LoggerInterface $logger,
         #[Autowire('%env(MERCURE_PUBLIC_URL)%')]
@@ -72,7 +74,8 @@ final class StrategyController extends AbstractController
             // au lieu de re-scraper (données de ProjectEnrichmentAgent avec Firecrawl)
             $projectContext = [
                 'scraped_content' => $project->getScrapedContent(),
-                'project_context' => $project->getProjectContext(),
+                // TODO: getProjectContext() n'existe pas encore dans l'entité Project
+                'project_context' => null,
             ];
 
             // Appeler CompetitorIntelligenceTool pour détection enrichie
@@ -98,7 +101,226 @@ final class StrategyController extends AbstractController
     }
 
     /**
+     * Page récapitulative avant génération de stratégie (Workflow v3.28.0).
+     *
+     * Affiche un récapitulatif complet du projet :
+     * - Informations projet (secteur, budget, objectif)
+     * - Personas sélectionnés (avec modal détails)
+     * - Concurrents validés (avec modal métadonnées complètes)
+     *
+     * Permet de lancer la génération de stratégie après validation visuelle.
+     */
+    #[Route('/recap/{id}', name: 'recap', methods: ['GET', 'POST'])]
+    public function recap(Request $request, Project $project): Response
+    {
+        $startTime = microtime(true);
+        $this->logger->info('⏱️ PERF: StrategyController::recap - START', [
+            'project_id' => $project->getId(),
+            'method' => $request->getMethod(),
+        ]);
+
+        $this->denyAccessUnlessGranted('edit', $project);
+
+        // Vérifier que les personas ont été générés
+        if ($project->getPersonas()->isEmpty()) {
+            $this->addFlash('warning', $this->translator->trans('strategy.flash.no_personas', [], 'marketing'));
+
+            return $this->redirectToRoute('marketing_persona_configure', ['id' => $project->getId()]);
+        }
+
+        // Vérifier qu'au moins un persona est sélectionné
+        $afterPersonasCheck = microtime(true);
+        $selectedPersonas = $project->getPersonas()->filter(fn ($persona) => $persona->isSelected())->toArray();
+        $afterPersonasFilter = microtime(true);
+
+        $this->logger->info('⏱️ PERF: StrategyController::recap - PERSONAS FILTERED', [
+            'personas_count' => count($selectedPersonas),
+            'filter_duration_ms' => round(($afterPersonasFilter - $afterPersonasCheck) * 1000, 2),
+            'elapsed_ms' => round(($afterPersonasFilter - $startTime) * 1000, 2),
+        ]);
+
+        if (empty($selectedPersonas)) {
+            $this->addFlash('warning', $this->translator->trans('strategy.flash.no_personas_selected', [], 'marketing'));
+
+            return $this->redirectToRoute('marketing_persona_show', ['id' => $project->getId()]);
+        }
+
+        // Vérifier que les concurrents ont été validés
+        $competitorAnalysis = $project->getCompetitorAnalysis();
+
+        if (null === $competitorAnalysis) {
+            $this->addFlash('warning', 'Vous devez d\'abord détecter et valider les concurrents avant de générer la stratégie.');
+
+            return $this->redirectToRoute('marketing_competitor_detect', ['id' => $project->getId()]);
+        }
+
+        // Vérifier le statut du projet
+        if (! in_array($project->getStatus(), [ProjectStatus::PERSONA_GENERATED, ProjectStatus::COMPETITOR_VALIDATED], true)) {
+            $this->addFlash('info', $this->translator->trans('strategy.flash.already_generated', [], 'marketing'));
+
+            return $this->redirectToRoute('marketing_strategy_show', ['id' => $project->getId()]);
+        }
+
+        // Traiter la soumission pour lancer la génération
+        if ($request->isMethod('POST')) {
+            // Vérifier CSRF
+            $token = $request->request->get('_token');
+            if (! is_string($token) || ! $this->isCsrfTokenValid('generate_strategy_'.$project->getId(), $token)) {
+                $this->addFlash('error', $this->translator->trans('security.invalid_csrf_token', [], 'security'));
+
+                return $this->redirectToRoute('marketing_strategy_recap', ['id' => $project->getId()]);
+            }
+
+            /** @var User $user */
+            $user = $this->getUser();
+
+            // Construire le contexte de stratégie avec les données du projet
+            $personasData = [];
+            foreach ($selectedPersonas as $persona) {
+                $rawData = $persona->getRawData() ?? [];
+                $personasData[] = [
+                    'id' => $persona->getId(),
+                    'name' => $persona->getName(),
+                    'age' => $persona->getAge(),
+                    'gender' => $persona->getGender(),
+                    'job' => $persona->getJob(),
+                    'description' => $persona->getDescription(),
+                    'demographics' => $rawData['demographics'] ?? [],
+                    'behaviors' => $rawData['behaviors'] ?? [],
+                    'pain_points' => $rawData['pain_points'] ?? [],
+                    'goals' => $rawData['goals'] ?? [],
+                    'selected' => true,
+                ];
+            }
+
+            $personasIds = array_filter(
+                array_map(fn ($p) => $p->getId(), $selectedPersonas),
+                fn ($id) => null !== $id
+            );
+
+            $selectedAssetTypes = $project->getSelectedAssetTypes() ?? [];
+            $scrapedContent = $project->getScrapedContent();
+            $competitors = $competitorAnalysis->getCompetitorsArray();
+
+            // v3.29.0 : Mapper les asset types vers les canaux du BudgetOptimizerTool
+            $channelMapping = [
+                'linkedin_post' => 'linkedin',
+                'google_ads' => 'google_ads',
+                'facebook_ad' => 'facebook',
+                'instagram_post' => 'instagram',
+                'email' => 'email',
+                'twitter_post' => 'twitter',
+                'blog_article' => 'content',
+                'landing_page' => 'content',
+            ];
+
+            $budgetChannels = [];
+            foreach ($selectedAssetTypes as $assetType) {
+                if (isset($channelMapping[$assetType])) {
+                    $budgetChannels[] = $channelMapping[$assetType];
+                }
+            }
+            $budgetChannels = array_unique($budgetChannels);
+
+            // v3.29.0 : Calculer métriques concurrentielles pour le BudgetOptimizerTool
+            $competitorsWithSEA = count(array_filter($competitors, fn ($c) => $c['has_ads'] ?? false));
+            $highThreatCompetitors = count(array_filter($competitors, fn ($c) => ($c['validation']['alignmentScore'] ?? 0) >= 80));
+
+            // v3.29.0 : Calculer l'allocation budgétaire optimisée
+            $budgetResult = $this->budgetOptimizerTool->optimizeBudgetWithBenchmarks(
+                sector: $project->getSector(),
+                channels: $budgetChannels,
+                budget: (int) $project->getBudget(), // Budget en euros
+                competitorsWithSEA: $competitorsWithSEA,
+                highThreatCompetitors: $highThreatCompetitors
+            );
+
+            $this->logger->info('🔍 TRACE: StrategyController::recap - Budget allocation calculated (v3.29.0)', [
+                'total_budget' => $budgetResult['total_budget'],
+                'total_expected_leads' => $budgetResult['total_expected_leads'],
+                'confidence_score' => $budgetResult['confidence_score'],
+                'channels_count' => count($budgetChannels),
+            ]);
+
+            // v3.29.0 : Sauvegarder l'allocation budgétaire dans le Project (persistance)
+            $project->setBudgetAllocation([
+                'allocation' => $budgetResult['allocation'],
+                'total_budget' => $budgetResult['total_budget'],
+                'total_expected_leads' => $budgetResult['total_expected_leads'],
+                'confidence_score' => $budgetResult['confidence_score'],
+                'regulated' => $budgetResult['regulated'],
+                'recommendations' => $budgetResult['recommendations'],
+            ]);
+
+            // Extraire les domaines pour dispatchCompetitorAnalysis (attend array<string>)
+            $competitorDomains = array_map(
+                fn ($c) => $c['domain'] ?? $c['title'] ?? 'unknown',
+                $competitors
+            );
+
+            $this->logger->info('🔍 TRACE: StrategyController::recap - Avant dispatchCompetitorAnalysis', [
+                'project_id' => $project->getId(),
+                'sector' => $project->getSector(),
+                'competitors_count' => count($competitorDomains),
+                'personas_count' => count($personasData),
+            ]);
+
+            // Dispatcher l'analyse concurrentielle (chaînera automatiquement vers StrategyAnalystAgent)
+            // CompetitorToStrategySubscriber se charge de construire le context et chaîner
+            $taskId = $this->agentTaskManager->dispatchCompetitorAnalysis(
+                market: $project->getSector(),
+                competitors: $competitorDomains,
+                dimensions: ['positioning', 'pricing', 'messaging', 'channels'],
+                options: [
+                    'user_id' => $user->getId(),
+                    'project_id' => $project->getId(),
+                    'max_competitors' => 5,
+                    'include_videos' => false,
+                ]
+            );
+
+            $this->logger->info('🔍 TRACE: StrategyController::recap - Après dispatchCompetitorAnalysis', [
+                'task_id' => $taskId,
+            ]);
+
+            // Mettre à jour le statut du projet
+            $project->setStatus(ProjectStatus::STRATEGY_IN_PROGRESS);
+            $this->entityManager->flush();
+
+            $this->addFlash('info', $this->translator->trans('strategy.flash.generation_started', [], 'marketing'));
+
+            // Rediriger vers la page d'attente avec EventSource Mercure
+            return $this->redirectToRoute('marketing_strategy_generating', [
+                'id' => $project->getId(),
+                'taskId' => $taskId,
+            ]);
+        }
+
+        // Affichage GET : page récapitulative
+        $beforeRender = microtime(true);
+        $this->logger->info('⏱️ PERF: StrategyController::recap - BEFORE RENDER', [
+            'elapsed_ms' => round(($beforeRender - $startTime) * 1000, 2),
+        ]);
+
+        $response = $this->render('marketing/strategy/recap.html.twig', [
+            'project' => $project,
+            'selectedPersonas' => $selectedPersonas,
+            'competitorAnalysis' => $competitorAnalysis,
+        ]);
+
+        $afterRender = microtime(true);
+        $this->logger->info('⏱️ PERF: StrategyController::recap - AFTER RENDER', [
+            'render_duration_ms' => round(($afterRender - $beforeRender) * 1000, 2),
+            'total_duration_ms' => round(($afterRender - $startTime) * 1000, 2),
+        ]);
+
+        return $response;
+    }
+
+    /**
      * Affiche le formulaire de génération de stratégie marketing avec validation concurrents (Workflow v3.9.0).
+     *
+     * @deprecated Remplacé par recap() dans le nouveau workflow v3.28.0
      *
      * Workflow 2 étapes :
      * 1. Détection interactive (AJAX /detect-competitors)
@@ -133,8 +355,17 @@ final class StrategyController extends AbstractController
             return $this->redirectToRoute('marketing_persona_show', ['id' => $project->getId()]);
         }
 
+        // NOUVEAU WORKFLOW : Vérifier que les concurrents ont été validés
+        $competitorAnalysis = $project->getCompetitorAnalysis();
+
+        if (null === $competitorAnalysis) {
+            $this->addFlash('warning', 'Vous devez d\'abord détecter et valider les concurrents avant de générer la stratégie.');
+
+            return $this->redirectToRoute('marketing_competitor_detect', ['id' => $project->getId()]);
+        }
+
         // Vérifier le statut du projet
-        if (! in_array($project->getStatus(), [ProjectStatus::PERSONA_GENERATED], true)) {
+        if (! in_array($project->getStatus(), [ProjectStatus::PERSONA_GENERATED, ProjectStatus::COMPETITOR_VALIDATED], true)) {
             $this->addFlash('info', $this->translator->trans('strategy.flash.already_generated', [], 'marketing'));
 
             return $this->redirectToRoute('marketing_strategy_show', ['id' => $project->getId()]);
@@ -172,10 +403,14 @@ final class StrategyController extends AbstractController
             // Récupérer les canaux depuis le projet (sélectionnés à la création)
             $channels = $project->getSelectedAssetTypes() ?? [];
 
-            $competitorsInput = isset($data['competitors']) ? trim($data['competitors']) : '';
-            $competitors = ! empty($competitorsInput)
-                ? array_map('trim', explode(',', $competitorsInput))
-                : []; // Vide = détection automatique par le bundle
+            // Récupérer les concurrents depuis CompetitorAnalysis (déjà validés)
+            $competitorAnalysisData = $project->getCompetitorAnalysis();
+            $competitors = [];
+
+            if (null !== $competitorAnalysisData) {
+                $competitorsJson = $competitorAnalysisData->getCompetitors();
+                $competitors = json_decode($competitorsJson, true, 512, JSON_THROW_ON_ERROR);
+            }
 
             // ÉTAPE 1 : Dispatcher l'analyse concurrentielle (OBLIGATOIRE)
             // Le CompetitorToStrategySubscriber se chargera de :

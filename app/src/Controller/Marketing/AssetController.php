@@ -72,15 +72,22 @@ final class AssetController extends AbstractController
             return $this->redirectToRoute('marketing_strategy_new', ['id' => $project->getId()]);
         }
 
-        // Vérifier le statut du projet
-        if (! in_array($project->getStatus(), [ProjectStatus::STRATEGY_GENERATED], true)) {
-            $this->addFlash('info', $this->translator->trans('asset.flash.already_generated', [], 'marketing'));
+        // Vérifier le statut du projet - permettre la génération si stratégie générée ou assets déjà générés
+        $allowedStatuses = [
+            ProjectStatus::STRATEGY_GENERATED,
+            ProjectStatus::ASSETS_IN_PROGRESS,
+            ProjectStatus::ASSETS_GENERATED,
+        ];
+        if (! in_array($project->getStatus(), $allowedStatuses, true)) {
+            $this->addFlash('warning', $this->translator->trans('asset.flash.no_strategy', [], 'marketing'));
 
-            return $this->redirectToRoute('marketing_asset_show', ['id' => $project->getId()]);
+            return $this->redirectToRoute('marketing_strategy_new', ['id' => $project->getId()]);
         }
 
-        // Créer le formulaire
-        $form = $this->createForm(AssetGenerationType::class);
+        // Créer le formulaire avec les types d'assets sélectionnés du projet
+        $form = $this->createForm(AssetGenerationType::class, null, [
+            'selected_asset_types' => $project->getSelectedAssetTypes(),
+        ]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -93,6 +100,8 @@ final class AssetController extends AbstractController
             $user = $this->getUser();
 
             // Préparer le brief de création
+            // Note: strategy doit être encodé en JSON car le bundle attend des strings
+            $strategyData = $this->serializeStrategy($project);
             $brief = [
                 'project_id' => $project->getId(),
                 'project_name' => $project->getName(),
@@ -100,12 +109,14 @@ final class AssetController extends AbstractController
                 'sector' => $project->getSector(),
                 'goal_type' => $project->getGoalType()->value,
                 'budget' => (int) ((float) $project->getBudget() * 100),
-                'strategy' => $this->serializeStrategy($project),
+                'strategy' => json_encode($strategyData, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) ?: '{}',
             ];
 
             // Options de génération
+            // Note: project_id doit être dans options car le bundle extrait le context depuis options
             $options = [
                 'user_id' => $user->getId(),
+                'project_id' => $project->getId(),
                 'variations' => $data['numberOfVariations'],
                 'tone_of_voice' => $data['toneOfVoice'] ?? null,
                 'additional_context' => $data['additionalContext'] ?? '',
@@ -216,8 +227,8 @@ final class AssetController extends AbstractController
      *
      * @return Response Redirection vers page projet avec message confirmation
      */
-    #[Route('/{assetId}/approve', name: 'approve', methods: ['POST'])]
-    public function approve(Request $request, Project $project, Asset $asset): Response
+    #[Route('/{id}/{assetId}/approve', name: 'approve', methods: ['POST'])]
+    public function approve(Request $request, Project $project, #[\Symfony\Bridge\Doctrine\Attribute\MapEntity(id: 'assetId')] Asset $asset): Response
     {
         $this->denyAccessUnlessGranted('edit', $project);
 
@@ -225,7 +236,9 @@ final class AssetController extends AbstractController
             throw $this->createNotFoundException('Cet asset n\'appartient pas à ce projet.');
         }
 
-        if (! $this->isCsrfTokenValid('approve'.$asset->getId(), $request->request->get('_token'))) {
+        /** @var string|null $token */
+        $token = $request->request->get('_token');
+        if (! $this->isCsrfTokenValid('approve'.$asset->getId(), $token)) {
             $this->addFlash('error', 'Token CSRF invalide.');
 
             return $this->redirectToRoute('marketing_project_show', ['id' => $project->getId()]);
@@ -268,8 +281,8 @@ final class AssetController extends AbstractController
      *
      * @return Response Redirection vers page projet avec message confirmation
      */
-    #[Route('/{assetId}/reject', name: 'reject', methods: ['POST'])]
-    public function reject(Request $request, Project $project, Asset $asset): Response
+    #[Route('/{id}/{assetId}/reject', name: 'reject', methods: ['POST'])]
+    public function reject(Request $request, Project $project, #[\Symfony\Bridge\Doctrine\Attribute\MapEntity(id: 'assetId')] Asset $asset): Response
     {
         $this->denyAccessUnlessGranted('edit', $project);
 
@@ -277,7 +290,9 @@ final class AssetController extends AbstractController
             throw $this->createNotFoundException('Cet asset n\'appartient pas à ce projet.');
         }
 
-        if (! $this->isCsrfTokenValid('reject'.$asset->getId(), $request->request->get('_token'))) {
+        /** @var string|null $token */
+        $token = $request->request->get('_token');
+        if (! $this->isCsrfTokenValid('reject'.$asset->getId(), $token)) {
             $this->addFlash('error', 'Token CSRF invalide.');
 
             return $this->redirectToRoute('marketing_project_show', ['id' => $project->getId()]);

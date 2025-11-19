@@ -114,14 +114,23 @@ final readonly class CompetitorToStrategySubscriber implements EventSubscriberIn
             $strategyContext = $this->buildStrategyContext($project);
             $strategyObjectives = ['main' => $project->getDetailedObjectives()];
 
-            // ÉTAPE 2 : Injecter competitor_analysis dans le context
+            // ÉTAPE 2 : Injecter competitor_analysis dans le context (backward compatibility)
             $strategyContext['competitor_analysis'] = $competitorAnalysisResult;
+
+            // v3.28.0 : Récupérer les concurrents validés depuis l'entité CompetitorAnalysis (format Tool)
+            // Le template strategy_analyst_user.md.twig attend context.competitors avec domain, has_ads, validation
+            // Ne PAS utiliser $competitorAnalysisResult['competitors'] qui est la sortie LLM (format arrays indexés)
+            $competitorAnalysis = $project->getCompetitorAnalysis();
+            if ($competitorAnalysis) {
+                $strategyContext['competitors'] = $competitorAnalysis->getCompetitorsArray();
+            }
 
             $this->logger->info('CompetitorToStrategySubscriber: Dispatching strategy analysis with competitor context', [
                 'task_id' => $taskId,
                 'project_id' => $projectId,
                 'sector' => $project->getSector(),
-                'competitors_analyzed' => count($competitorAnalysisResult['competitors'] ?? []),
+                'competitors_from_entity' => count($strategyContext['competitors'] ?? []),
+                'competitors_injected_v3_28' => isset($strategyContext['competitors']),
             ]);
 
             // ÉTAPE 3 : Dispatcher la génération de stratégie avec context enrichi
@@ -170,9 +179,11 @@ final readonly class CompetitorToStrategySubscriber implements EventSubscriberIn
             'project_name' => $project->getName(),
         ]);
 
-        // Récupérer les personas sélectionnés
+        // Récupérer les personas sélectionnés uniquement
         $personasData = [];
-        foreach ($project->getPersonas() as $persona) {
+        $selectedPersonas = $project->getPersonas()->filter(fn ($p) => $p->isSelected());
+
+        foreach ($selectedPersonas as $persona) {
             $rawData = $persona->getRawData() ?? [];
             $personasData[] = [
                 'id' => $persona->getId(),
@@ -185,12 +196,13 @@ final readonly class CompetitorToStrategySubscriber implements EventSubscriberIn
                 'behaviors' => $rawData['behaviors'] ?? [],
                 'pain_points' => $rawData['pain_points'] ?? [],
                 'goals' => $rawData['goals'] ?? [],
+                'selected' => true, // Requis par StrategyAnalystAgent du bundle
             ];
         }
 
-        // Récupérer les IDs des personas
+        // Récupérer les IDs des personas sélectionnés
         $personasIds = array_filter(
-            array_map(fn ($p) => $p->getId(), $project->getPersonas()->toArray()),
+            array_map(fn ($p) => $p->getId(), $selectedPersonas->toArray()),
             fn ($id) => null !== $id
         );
 
@@ -198,14 +210,13 @@ final readonly class CompetitorToStrategySubscriber implements EventSubscriberIn
         $channels = $project->getSelectedAssetTypes() ?? [];
 
         $scrapedContent = $project->getScrapedContent();
-        $projectContext = $project->getProjectContext();
+        // TODO: getProjectContext() n'existe pas encore dans l'entité Project
+        $projectContext = null;
 
         $this->logger->info('🔍 TRACE: Données récupérées depuis le projet', [
             'project_id' => $project->getId(),
             'has_scraped_content' => null !== $scrapedContent,
-            'has_project_context' => null !== $projectContext,
             'scraped_language' => $scrapedContent['metadata']['language'] ?? 'N/A',
-            'project_geography' => $projectContext['geography'] ?? 'N/A',
         ]);
 
         return [

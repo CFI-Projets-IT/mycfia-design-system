@@ -87,64 +87,39 @@
 
             <hr class="my-4">
 
-            {# Analyse concurrentielle - WORKFLOW 2 ÉTAPES #}
-            <div class="mb-4">
-                <h5 class="fw-bold text-primary mb-3">
-                    <i class="bi bi-pie-chart"></i>
-                    Analyse concurrentielle
-                </h5>
-
-                {# Étape 1 : Bouton de détection interactive #}
-                <div class="mb-3">
-                    <button type="button" id="detectCompetitorsBtn" class="btn btn-outline-primary">
-                        <i class="bi bi-search"></i>
-                        Détecter les concurrents automatiquement
-                    </button>
-                    <div class="form-text">
-                        <i class="bi bi-info-circle"></i>
-                        L'IA va analyser votre site web et détecter vos principaux concurrents via Google Search.
-                    </div>
-                </div>
-
-                {# Zone d'affichage des résultats de détection #}
-                <div id="detectionResults" class="d-none mb-3">
-                    <div class="alert alert-info">
-                        <div class="d-flex align-items-center mb-2">
-                            <i class="bi bi-lightbulb-fill me-2"></i>
-                            <strong>Concurrents détectés</strong>
-                            <span id="detectionSource" class="badge bg-primary ms-2"></span>
-                        </div>
-                        <div id="detectionQuery" class="small text-muted mb-2"></div>
-                        <div id="competitorsList" class="mt-2"></div>
-                    </div>
-                </div>
-
-                {# Zone de chargement #}
-                <div id="detectionLoading" class="d-none mb-3">
-                    <div class="alert alert-primary">
-                        <div class="d-flex align-items-center">
-                            <div class="spinner-border spinner-border-sm me-2" role="status">
-                                <span class="visually-hidden">Chargement...</span>
+            {# Concurrents déjà validés #}
+            {% if project.competitorAnalysis %}
+                {% set competitors = project.competitorAnalysis.competitorsNames %}
+                <div class="mb-4">
+                    <h5 class="fw-bold text-primary mb-3">
+                        <i class="bi bi-building"></i>
+                        Concurrents identifiés
+                    </h5>
+                    <div class="alert alert-success">
+                        <div class="d-flex align-items-start">
+                            <i class="bi bi-check-circle-fill fs-4 me-3"></i>
+                            <div class="flex-grow-1">
+                                <h6 class="alert-heading mb-2">
+                                    {{ competitors|length }} concurrent(s) validé(s)
+                                </h6>
+                                <div class="d-flex flex-wrap gap-2">
+                                    {% for competitor in competitors %}
+                                        <span class="badge bg-primary fs-6">
+                                            <i class="bi bi-building"></i> {{ competitor }}
+                                        </span>
+                                    {% endfor %}
+                                </div>
+                                <div class="mt-2">
+                                    <a href="{{ path('marketing_competitor_detect', {id: project.id}) }}"
+                                       class="btn btn-sm btn-outline-primary">
+                                        <i class="bi bi-pencil"></i> Modifier les concurrents
+                                    </a>
+                                </div>
                             </div>
-                            <span>Analyse en cours... Scraping du site web et détection des concurrents</span>
                         </div>
                     </div>
                 </div>
-
-                {# Zone d'erreur #}
-                <div id="detectionError" class="d-none mb-3">
-                    <div class="alert alert-danger">
-                        <i class="bi bi-exclamation-triangle-fill me-2"></i>
-                        <span id="detectionErrorMessage"></span>
-                    </div>
-                </div>
-
-                {# Champ manuel (toujours affiché pour ajout/modification) #}
-                {{ form_row(form.competitors, {
-                    label: 'Concurrents (manuel ou validés)',
-                    help: 'Validez les concurrents détectés ci-dessus ou ajoutez-les manuellement (séparés par des virgules)'
-                }) }}
-            </div>
+            {% endif %}
 
             {# Actions #}
             <div class="d-grid gap-2 mt-4">
@@ -255,30 +230,9 @@
         .cursor-pointer {
             cursor: pointer;
         }
-
-        /* Style pour les cartes de concurrents détectés */
-        .competitor-item {
-            padding: 0.75rem;
-            border: 1px solid #dee2e6;
-            border-radius: 0.375rem;
-            margin-bottom: 0.5rem;
-            transition: all 0.2s;
-        }
-
-        .competitor-item:hover {
-            border-color: var(--bs-primary);
-            background-color: rgba(13, 110, 253, 0.05);
-        }
-
-        .competitor-item.selected {
-            border-color: var(--bs-success);
-            background-color: rgba(25, 135, 84, 0.1);
-        }
     </style>
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
-    {# Script de détection interactive des concurrents - Workflow 2 Étapes #}
-    <script src="{{ asset('js/marketing/strategy-detection.js') }}"></script>
 {% endblock %}

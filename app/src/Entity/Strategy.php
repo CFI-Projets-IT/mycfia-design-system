@@ -152,6 +152,22 @@ class Strategy
         return $this->budgetAllocation;
     }
 
+    /**
+     * Retourne les données d'allocation budgétaire décodées (v3.29.0).
+     *
+     * @return array<string, mixed>|null
+     */
+    public function getBudgetAllocationData(): ?array
+    {
+        if (empty($this->budgetAllocation)) {
+            return null;
+        }
+
+        $data = json_decode($this->budgetAllocation, true);
+
+        return is_array($data) ? $data : null;
+    }
+
     public function setBudgetAllocation(string $budgetAllocation): self
     {
         $this->budgetAllocation = $budgetAllocation;

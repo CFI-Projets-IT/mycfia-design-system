@@ -107,7 +107,7 @@ final readonly class StrategyOptimizedEventSubscriber implements EventSubscriber
             $this->deleteExistingStrategy($project);
 
             // Créer et persister la nouvelle entité Strategy
-            $this->createStrategyFromResult($project, $result);
+            $this->createStrategyFromResult($project, $result, $context);
 
             // Mettre à jour le statut du projet
             $project->setStatus(ProjectStatus::STRATEGY_GENERATED);
@@ -172,11 +172,12 @@ final readonly class StrategyOptimizedEventSubscriber implements EventSubscriber
      * - recommendations → recommendedChannels (JSON)
      * - risks → timeline (JSON)
      * - kpis → kpis (JSON)
-     * - budget_allocation → "À définir" (pas dans nouveau format)
+     * - budget_allocation → v3.29.0 depuis contexte BudgetOptimizerTool
      *
      * @param array<string, mixed> $result
+     * @param array<string, mixed> $context
      */
-    private function createStrategyFromResult(\App\Entity\Project $project, array $result): void
+    private function createStrategyFromResult(\App\Entity\Project $project, array $result, array $context = []): void
     {
         // Vérifier les champs obligatoires du nouveau format StrategyStructuredOutput
         $requiredFields = ['strategy', 'tactics', 'kpis', 'risks', 'recommendations'];
@@ -199,7 +200,11 @@ final readonly class StrategyOptimizedEventSubscriber implements EventSubscriber
         $strategy->setKeyMessages($this->normalizeJsonField($result['tactics'])); // Tactiques en JSON
         $strategy->setRecommendedChannels($this->normalizeJsonField($result['recommendations'])); // Recommandations en JSON
         $strategy->setTimeline($this->normalizeJsonField($result['risks'])); // Risques en JSON (temporaire)
-        $strategy->setBudgetAllocation('À définir selon budget projet'); // En attente intégration BudgetOptimizerTool dans bundle
+
+        // v3.29.0 : Allocation budgétaire depuis Project (persistée avant dispatch)
+        $budgetAllocation = $project->getBudgetAllocation();
+        $strategy->setBudgetAllocation($this->normalizeJsonField($budgetAllocation ?: 'Non calculé'));
+
         $strategy->setKpis($this->normalizeJsonField($result['kpis'])); // KPIs en JSON
 
         // Quality score optionnel (pas encore dans StrategyStructuredOutput)

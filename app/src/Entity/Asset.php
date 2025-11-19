@@ -109,7 +109,7 @@ class Asset
         return $this->project;
     }
 
-    public function setProject(?Project $project): self
+    public function setProject(Project $project): self
     {
         $this->project = $project;
 
@@ -208,5 +208,37 @@ class Asset
     public function getUpdatedAt(): \DateTimeImmutable
     {
         return $this->updatedAt;
+    }
+
+    /**
+     * Retourne le contenu décodé en tableau.
+     *
+     * @return array<string, mixed>|null
+     */
+    public function getContentArray(): ?array
+    {
+        if ('' === $this->content) {
+            return null;
+        }
+
+        $decoded = json_decode($this->content, true);
+
+        return is_array($decoded) ? $decoded : null;
+    }
+
+    /**
+     * Retourne les variations décodées en tableau.
+     *
+     * @return array<int, array<string, mixed>>|null
+     */
+    public function getVariationsArray(): ?array
+    {
+        if (null === $this->variations || '' === $this->variations) {
+            return null;
+        }
+
+        $decoded = json_decode($this->variations, true);
+
+        return is_array($decoded) ? $decoded : null;
     }
 }

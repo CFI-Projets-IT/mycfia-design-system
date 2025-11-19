@@ -20,9 +20,10 @@
 
     <div class="card shadow-sm"
          data-controller="marketing-generation"
+         data-marketing-generation-task-id-value="{{ taskId }}"
          data-marketing-generation-project-id-value="{{ project.id }}"
          data-marketing-generation-stage-value="assets"
-         data-marketing-generation-mercure-url-value="{{ mercurePublicUrl }}"
+         data-marketing-generation-mercure-url-value="{{ mercureUrl }}"
          data-marketing-generation-next-url-value="{{ path('marketing_project_show', {id: project.id}) }}"
          data-marketing-generation-multiple-value="true">
 
@@ -93,7 +94,7 @@
                     <h4 class="mb-3">Erreur lors de la génération</h4>
                     <p class="mb-3" data-marketing-generation-target="errorDetails"></p>
                     <div class="d-flex gap-2 justify-content-center">
-                        <a href="{{ path('marketing_asset_generate', {id: project.id}) }}" class="btn btn-danger">
+                        <a href="{{ path('marketing_asset_new', {id: project.id}) }}" class="btn btn-danger">
                             <i class="bi bi-arrow-counterclockwise"></i> Réessayer
                         </a>
                         <a href="{{ path('marketing_project_show', {id: project.id}) }}" class="btn btn-outline-secondary">

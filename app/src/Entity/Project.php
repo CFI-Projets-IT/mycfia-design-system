@@ -280,12 +280,12 @@ class Project
     private ?array $scrapedContent = null;
 
     /**
-     * Screenshot base64 du site web (Bundle v3.19.0+).
-     * Référence visuelle, extraction couleurs fallback.
-     * Séparé pour performance (50-200 KB).
+     * URL du screenshot du site web (Bundle v3.19.0+).
+     * Référence visuelle stockée en filesystem/S3, extraction couleurs fallback.
+     * Scalable pour applications commerciales (évite blob en DB).
      */
-    #[ORM\Column(type: Types::TEXT, nullable: true)]
-    private ?string $screenshot = null;
+    #[ORM\Column(type: Types::STRING, length: 500, nullable: true)]
+    private ?string $screenshotUrl = null;
 
     /**
      * Métriques techniques de l'enrichissement IA.
@@ -302,6 +302,23 @@ class Project
      */
     #[ORM\Column(type: Types::JSON, nullable: true)]
     private ?array $enrichmentMetrics = null;
+
+    /**
+     * Allocation budgétaire optimisée par canal (Bundle v3.29.0).
+     * Calculée par BudgetOptimizerTool avec benchmarks sectoriels.
+     *
+     * Structure :
+     * - allocation : {channel => {budget, cpl, expected_leads, category}}
+     * - total_budget : Budget total en euros
+     * - total_expected_leads : Nombre total de leads attendus
+     * - confidence_score : Score de confiance 0-100
+     * - regulated : Secteur régulé (bool)
+     * - recommendations : Recommandations budgétaires [array]
+     *
+     * @var array<string, mixed>|null
+     */
+    #[ORM\Column(type: Types::JSON, nullable: true)]
+    private ?array $budgetAllocation = null;
 
     /**
      * Statut actuel du projet dans le workflow de génération.
@@ -390,6 +407,39 @@ class Project
     public function setUpdatedAtValue(): void
     {
         $this->updatedAt = new \DateTimeImmutable();
+    }
+
+    /**
+     * Synchronise automatiquement les colonnes SQL dénormalisées avec les données JSON.
+     * Évite désynchronisation entre colonnes requêtables et champs JSON source.
+     * Appelé automatiquement avant persist/update par Doctrine.
+     */
+    #[ORM\PrePersist]
+    #[ORM\PreUpdate]
+    public function syncDenormalizedColumns(): void
+    {
+        // Sync keywords metrics (keywordsData JSON → colonnes SQL)
+        if (null !== $this->keywordsData && isset($this->keywordsData['metrics'])) {
+            $metrics = $this->keywordsData['metrics'];
+            $this->keywordsAvgVolume = isset($metrics['avg_volume']) ? (int) $metrics['avg_volume'] : null;
+            $this->keywordsAvgCpc = isset($metrics['avg_cpc']) ? (string) $metrics['avg_cpc'] : null;
+        }
+
+        // Sync brand primary color (brandIdentity JSON → colonne SQL)
+        if (null !== $this->brandIdentity && isset($this->brandIdentity['colors']['primary'])) {
+            $this->brandPrimaryColor = $this->brandIdentity['colors']['primary'];
+        }
+
+        // Sync language (scrapedContent JSON → colonne SQL)
+        if (null !== $this->scrapedContent && isset($this->scrapedContent['metadata']['language'])) {
+            $this->language = $this->scrapedContent['metadata']['language'];
+        }
+
+        // Sync boolean flags
+        $this->hasScreenshot = null !== $this->screenshotUrl;
+        $this->hasBranding = null !== $this->brandIdentity
+            && isset($this->brandIdentity['colors'])
+            && isset($this->brandIdentity['fonts']);
     }
 
     public function getId(): ?int
@@ -741,14 +791,14 @@ class Project
         return $this;
     }
 
-    public function getScreenshot(): ?string
+    public function getScreenshotUrl(): ?string
     {
-        return $this->screenshot;
+        return $this->screenshotUrl;
     }
 
-    public function setScreenshot(?string $screenshot): self
+    public function setScreenshotUrl(?string $screenshotUrl): self
     {
-        $this->screenshot = $screenshot;
+        $this->screenshotUrl = $screenshotUrl;
 
         return $this;
     }
@@ -767,6 +817,24 @@ class Project
     public function setEnrichmentMetrics(?array $enrichmentMetrics): self
     {
         $this->enrichmentMetrics = $enrichmentMetrics;
+
+        return $this;
+    }
+
+    /**
+     * @return array<string, mixed>|null
+     */
+    public function getBudgetAllocation(): ?array
+    {
+        return $this->budgetAllocation;
+    }
+
+    /**
+     * @param array<string, mixed>|null $budgetAllocation
+     */
+    public function setBudgetAllocation(?array $budgetAllocation): self
+    {
+        $this->budgetAllocation = $budgetAllocation;
 
         return $this;
     }

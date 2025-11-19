@@ -276,7 +276,7 @@ final class PersonaController extends AbstractController
             'marketing'
         ));
 
-        return $this->redirectToRoute('marketing_persona_show', ['id' => $project->getId()]);
+        return $this->redirectToRoute('marketing_competitor_detect', ['id' => $project->getId()]);
     }
 
     /**

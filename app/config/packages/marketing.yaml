@@ -136,3 +136,37 @@ marketing:
             article_seo:
                 enabled: true
                 recommendation_level: 0.7
+
+    # ========================================================================
+    # TOOLS - Configuration des outils marketing (v3.23.0)
+    # ========================================================================
+    # CompetitorIntelligenceTool avec fallback SerpAPI-only
+    # ========================================================================
+    tools:
+        competitor_intelligence:
+            # Configuration SerpAPI (Phase 1)
+            serpapi:
+                max_pages: 3                # 1-3 pages (3 = 300 résultats max)
+                num_per_page: 100           # 100 résultats par page (maximum)
+                filter: 0                   # Désactiver filtrage SerpAPI natif
+                excluded_domains:           # Domaines exclus automatiquement
+                    - wikipedia.org
+                    - linkedin.com
+                    - facebook.com
+                    - glassdoor.com
+                    - indeed.com
+
+            # Configuration Keywords (v3.26.0)
+            keywords:
+                sort_by: 'volume'           # volume|order
+                max_keywords: 20            # 5-50
+                filters:                    # Filtrage commercial (v3.26.0)
+                    min_volume: 80          # Volume recherche mensuel minimum (B2B Premium)
+                    competition: ['HIGH']   # Seulement marchés très concurrentiels
+                    min_cpc: 1.5            # CPC minimum 1.50€ (B2B haut de gamme)
+
+            # Configuration Firecrawl (Phase 3)
+            firecrawl:
+                enabled: true               # Activer Firecrawl si disponible
+                timeout: 30                 # Timeout scraping (5-120 secondes)
+                fallback_enabled: true      # Fallback SerpAPI-only si Firecrawl down

@@ -18,35 +18,63 @@ use Symfony\Component\Validator\Constraints as Assert;
  * Permet de paramétrer la génération automatique d'assets multi-canal
  * par les AssetBuilders du Marketing AI Bundle.
  *
+ * Les types d'assets proposés sont filtrés selon les sélections
+ * faites lors de la création du projet (selectedAssetTypes).
+ *
  * @extends AbstractType<mixed>
  */
 class AssetGenerationType extends AbstractType
 {
+    /**
+     * Mapping complet des types d'assets avec leurs labels.
+     *
+     * @var array<string, string>
+     */
+    private const ASSET_TYPE_LABELS = [
+        'google_ads' => 'Google Ads (publicité search)',
+        'linkedin_post' => 'LinkedIn Post (réseau professionnel)',
+        'facebook_post' => 'Facebook Post (réseau social)',
+        'instagram_post' => 'Instagram Post (réseau social visuel)',
+        'mail' => 'Email marketing',
+        'bing_ads' => 'Bing Ads (publicité search alternative)',
+        'iab_banner' => 'IAB Banner (bannière publicitaire)',
+        'article_seo' => 'Article SEO (contenu blog)',
+    ];
+
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        // Récupérer les types d'assets sélectionnés du projet
+        /** @var array<string>|null $selectedAssetTypes */
+        $selectedAssetTypes = $options['selected_asset_types'];
+
+        // Construire les choix en filtrant selon la sélection du projet
+        $choices = [];
+        if (! empty($selectedAssetTypes)) {
+            // Utiliser uniquement les types sélectionnés lors de la création du projet
+            foreach ($selectedAssetTypes as $type) {
+                if (isset(self::ASSET_TYPE_LABELS[$type])) {
+                    $choices[self::ASSET_TYPE_LABELS[$type]] = $type;
+                }
+            }
+        } else {
+            // Fallback : tous les types disponibles
+            $choices = array_flip(self::ASSET_TYPE_LABELS);
+        }
+
         $builder
             ->add('assetTypes', ChoiceType::class, [
                 'label' => 'Types d\'assets à générer',
                 'help' => 'Sélectionnez les types de contenu marketing à générer automatiquement',
                 'multiple' => true,
                 'expanded' => true,
-                'choices' => [
-                    'Google Ads (publicité search)' => 'google_ads',
-                    'LinkedIn Post (réseau professionnel)' => 'linkedin_post',
-                    'Facebook Post (réseau social)' => 'facebook_post',
-                    'Instagram Post (réseau social visuel)' => 'instagram_post',
-                    'Email marketing' => 'mail',
-                    'Bing Ads (publicité search alternative)' => 'bing_ads',
-                    'IAB Banner (bannière publicitaire)' => 'iab_banner',
-                    'Article SEO (contenu blog)' => 'article_seo',
-                ],
+                'choices' => $choices,
                 'constraints' => [
                     new Assert\NotBlank([
                         'message' => 'Vous devez sélectionner au moins un type d\'asset',
                     ]),
                     new Assert\Count([
                         'min' => 1,
-                        'max' => 8,
+                        'max' => count($choices),
                         'minMessage' => 'Vous devez sélectionner au moins {{ limit }} type d\'asset',
                         'maxMessage' => 'Vous ne pouvez sélectionner que {{ limit }} types maximum',
                     ]),
@@ -108,6 +136,9 @@ class AssetGenerationType extends AbstractType
         $resolver->setDefaults([
             // Pas de data_class car ce formulaire ne mappe pas une entité
             // Il sert uniquement de DTO pour les paramètres de génération
+            'selected_asset_types' => null,
         ]);
+
+        $resolver->setAllowedTypes('selected_asset_types', ['array', 'null']);
     }
 }

@@ -2,6 +2,8 @@
 
 {% block title %}Personas Marketing - {{ project.name }}{% endblock %}
 
+{% block content_classes %} marketing-page{% endblock %}
+
 {% block stylesheets %}
     {{ parent() }}
     <style>
@@ -19,7 +21,7 @@
 {% endblock %}
 
 {% block content %}
-<div class="container" style="max-width: 1400px;">
+<div class="container-fluid" style="max-width: 1400px;">
     {# Breadcrumb #}
     <div class="mb-4">
         <nav aria-label="breadcrumb">
@@ -53,11 +55,6 @@
                         <i class="bi bi-check-circle-fill"></i> {{ project.status.label }}
                     </span>
                     <div class="d-grid gap-2">
-                        <a href="{{ path('marketing_strategy_new', {id: project.id}) }}"
-                           class="btn btn-primary">
-                            <i class="bi bi-graph-up-arrow"></i>
-                            Générer la stratégie marketing
-                        </a>
                         <a href="{{ path('marketing_persona_configure', {id: project.id}) }}"
                            class="btn btn-outline-secondary btn-sm">
                             <i class="bi bi-arrow-clockwise"></i>
@@ -164,8 +161,8 @@
                         <i class="bi bi-info-circle"></i>
                         <span id="selectedCount">0</span> persona(s) sélectionné(s)
                     </small>
-                    <button type="submit" class="btn btn-success btn-lg">
-                        <i class="bi bi-check-circle"></i> Valider la sélection
+                    <button type="submit" class="btn btn-primary btn-lg">
+                        <i class="bi bi-building"></i> Valider la sélection et Détecter les concurrents
                     </button>
                 </div>
             </form>
@@ -372,42 +369,3 @@
     {% endfor %}
 {% endblock %}
 
-{% block javascripts %}
-    {{ parent() }}
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const selectAllCheckbox = document.getElementById('selectAll');
-            const personaCheckboxes = document.querySelectorAll('.persona-checkbox');
-            const selectedCountSpan = document.getElementById('selectedCount');
-
-            // Fonction pour mettre à jour le compteur
-            function updateSelectedCount() {
-                const checkedCount = document.querySelectorAll('.persona-checkbox:checked').length;
-                selectedCountSpan.textContent = checkedCount;
-
-                // Mettre à jour l'état de la checkbox "Tout sélectionner"
-                const allChecked = checkedCount === personaCheckboxes.length;
-                const someChecked = checkedCount > 0 && checkedCount < personaCheckboxes.length;
-                selectAllCheckbox.checked = allChecked;
-                selectAllCheckbox.indeterminate = someChecked;
-            }
-
-            // Gestionnaire pour la checkbox "Tout sélectionner"
-            selectAllCheckbox.addEventListener('change', function() {
-                const isChecked = this.checked;
-                personaCheckboxes.forEach(checkbox => {
-                    checkbox.checked = isChecked;
-                });
-                updateSelectedCount();
-            });
-
-            // Gestionnaire pour chaque checkbox individuelle
-            personaCheckboxes.forEach(checkbox => {
-                checkbox.addEventListener('change', updateSelectedCount);
-            });
-
-            // Initialiser le compteur au chargement
-            updateSelectedCount();
-        });
-    </script>
-{% endblock %}

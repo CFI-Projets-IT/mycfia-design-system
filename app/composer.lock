@@ -1965,12 +1965,12 @@
             "source": {
                 "type": "git",
                 "url": "git@gitlab.com:gorillias/marketing-ai-bundle.git",
-                "reference": "06317df0661391f2d46984f2a8b04a1a39f45df6"
+                "reference": "0921e6f21fdab43f9a194f217e383d7f4dcc7086"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://gitlab.com/api/v4/projects/gorillias%2Fmarketing-ai-bundle/repository/archive.zip?sha=06317df0661391f2d46984f2a8b04a1a39f45df6",
-                "reference": "06317df0661391f2d46984f2a8b04a1a39f45df6",
+                "url": "https://gitlab.com/api/v4/projects/gorillias%2Fmarketing-ai-bundle/repository/archive.zip?sha=0921e6f21fdab43f9a194f217e383d7f4dcc7086",
+                "reference": "0921e6f21fdab43f9a194f217e383d7f4dcc7086",
                 "shasum": ""
             },
             "require": {
@@ -2049,7 +2049,7 @@
                 "symfony",
                 "vector store"
             ],
-            "time": "2025-11-14T11:44:29+00:00"
+            "time": "2025-11-19T10:41:51+00:00"
         },
         {
             "name": "grpc/grpc",
@@ -2702,16 +2702,16 @@
         },
         {
             "name": "phpdocumentor/reflection-docblock",
-            "version": "5.6.3",
+            "version": "5.6.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpDocumentor/ReflectionDocBlock.git",
-                "reference": "94f8051919d1b0369a6bcc7931d679a511c03fe9"
+                "reference": "90a04bcbf03784066f16038e87e23a0a83cee3c2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpDocumentor/ReflectionDocBlock/zipball/94f8051919d1b0369a6bcc7931d679a511c03fe9",
-                "reference": "94f8051919d1b0369a6bcc7931d679a511c03fe9",
+                "url": "https://api.github.com/repos/phpDocumentor/ReflectionDocBlock/zipball/90a04bcbf03784066f16038e87e23a0a83cee3c2",
+                "reference": "90a04bcbf03784066f16038e87e23a0a83cee3c2",
                 "shasum": ""
             },
             "require": {
@@ -2760,22 +2760,22 @@
             "description": "With this component, a library can provide support for annotations via DocBlocks or otherwise retrieve information that is embedded in a DocBlock.",
             "support": {
                 "issues": "https://github.com/phpDocumentor/ReflectionDocBlock/issues",
-                "source": "https://github.com/phpDocumentor/ReflectionDocBlock/tree/5.6.3"
+                "source": "https://github.com/phpDocumentor/ReflectionDocBlock/tree/5.6.4"
             },
-            "time": "2025-08-01T19:43:32+00:00"
+            "time": "2025-11-17T21:13:10+00:00"
         },
         {
             "name": "phpdocumentor/type-resolver",
-            "version": "1.10.0",
+            "version": "1.10.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpDocumentor/TypeResolver.git",
-                "reference": "679e3ce485b99e84c775d28e2e96fade9a7fb50a"
+                "reference": "431c02da15e566adb0ad9c5030fa6f6204d9de9e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpDocumentor/TypeResolver/zipball/679e3ce485b99e84c775d28e2e96fade9a7fb50a",
-                "reference": "679e3ce485b99e84c775d28e2e96fade9a7fb50a",
+                "url": "https://api.github.com/repos/phpDocumentor/TypeResolver/zipball/431c02da15e566adb0ad9c5030fa6f6204d9de9e",
+                "reference": "431c02da15e566adb0ad9c5030fa6f6204d9de9e",
                 "shasum": ""
             },
             "require": {
@@ -2818,9 +2818,9 @@
             "description": "A PSR-5 based resolver of Class names, Types and Structural Element Names",
             "support": {
                 "issues": "https://github.com/phpDocumentor/TypeResolver/issues",
-                "source": "https://github.com/phpDocumentor/TypeResolver/tree/1.10.0"
+                "source": "https://github.com/phpDocumentor/TypeResolver/tree/1.10.1"
             },
-            "time": "2024-11-09T15:12:26+00:00"
+            "time": "2025-11-18T07:51:16+00:00"
         },
         {
             "name": "phpstan/phpdoc-parser",
@@ -3620,12 +3620,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/ai-agent.git",
-                "reference": "98bc96ef6b988633c4a7696b230066a0b485231c"
+                "reference": "b1c61c8f0af9a7b02e033b950348271153da598d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/ai-agent/zipball/98bc96ef6b988633c4a7696b230066a0b485231c",
-                "reference": "98bc96ef6b988633c4a7696b230066a0b485231c",
+                "url": "https://api.github.com/repos/symfony/ai-agent/zipball/b1c61c8f0af9a7b02e033b950348271153da598d",
+                "reference": "b1c61c8f0af9a7b02e033b950348271153da598d",
                 "shasum": ""
             },
             "require": {
@@ -3710,7 +3710,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-11-14T07:52:06+00:00"
+            "time": "2025-11-14T20:25:09+00:00"
         },
         {
             "name": "symfony/ai-bundle",
@@ -3718,12 +3718,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/ai-bundle.git",
-                "reference": "09fe275cfdee3725e8c43ce8ae2eb577a6fa4231"
+                "reference": "9e22e09973fb7a9ccf0a03a055a034a275ece64a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/ai-bundle/zipball/09fe275cfdee3725e8c43ce8ae2eb577a6fa4231",
-                "reference": "09fe275cfdee3725e8c43ce8ae2eb577a6fa4231",
+                "url": "https://api.github.com/repos/symfony/ai-bundle/zipball/9e22e09973fb7a9ccf0a03a055a034a275ece64a",
+                "reference": "9e22e09973fb7a9ccf0a03a055a034a275ece64a",
                 "shasum": ""
             },
             "require": {
@@ -3797,7 +3797,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-11-09T23:02:00+00:00"
+            "time": "2025-11-15T08:21:23+00:00"
         },
         {
             "name": "symfony/ai-chat",
@@ -3805,12 +3805,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/ai-chat.git",
-                "reference": "8c5a0032aba6e8415a529c8994e1a3124d2ce459"
+                "reference": "0c5554000220174b3f6a91e961b29833e1e56758"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/ai-chat/zipball/8c5a0032aba6e8415a529c8994e1a3124d2ce459",
-                "reference": "8c5a0032aba6e8415a529c8994e1a3124d2ce459",
+                "url": "https://api.github.com/repos/symfony/ai-chat/zipball/0c5554000220174b3f6a91e961b29833e1e56758",
+                "reference": "0c5554000220174b3f6a91e961b29833e1e56758",
                 "shasum": ""
             },
             "require": {
@@ -3888,7 +3888,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-11-07T12:51:09+00:00"
+            "time": "2025-11-14T07:56:39+00:00"
         },
         {
             "name": "symfony/ai-platform",
@@ -3896,12 +3896,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/ai-platform.git",
-                "reference": "64c7a4e9ba4a2ccedb8e3e4f94225a5125f3b78e"
+                "reference": "95c14c280d0d0aa98308505eef87e888b386eeff"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/ai-platform/zipball/64c7a4e9ba4a2ccedb8e3e4f94225a5125f3b78e",
-                "reference": "64c7a4e9ba4a2ccedb8e3e4f94225a5125f3b78e",
+                "url": "https://api.github.com/repos/symfony/ai-platform/zipball/95c14c280d0d0aa98308505eef87e888b386eeff",
+                "reference": "95c14c280d0d0aa98308505eef87e888b386eeff",
                 "shasum": ""
             },
             "require": {
@@ -4011,7 +4011,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-11-12T23:52:30+00:00"
+            "time": "2025-11-14T20:25:09+00:00"
         },
         {
             "name": "symfony/ai-store",

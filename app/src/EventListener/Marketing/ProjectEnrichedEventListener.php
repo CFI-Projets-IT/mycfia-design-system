@@ -4,6 +4,11 @@ declare(strict_types=1);
 
 namespace App\EventListener\Marketing;
 
+use App\Entity\Project;
+use App\Entity\ProjectEnrichmentDraft;
+use App\Enum\ProjectStatus;
+use App\Repository\ProjectRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Gorillias\MarketingBundle\Event\TaskCompletedEvent;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
@@ -11,25 +16,28 @@ use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\Cache\ItemInterface;
 
 /**
- * Écoute l'événement TaskCompletedEvent pour stocker les résultats d'enrichissement en cache.
+ * Écoute l'événement TaskCompletedEvent pour créer un ProjectEnrichmentDraft.
  *
- * Après enrichissement IA d'un projet via ProjectEnrichmentAgent (Mistral Large Latest),
- * les résultats sont stockés en cache (TTL 1h) pour récupération via AJAX et affichage dans la modal.
- *
- * Workflow :
- * 1. AgentTaskManager dispatche ProjectEnrichmentAgent
- * 2. Worker exécute l'enrichissement (5-15s)
- * 3. TaskCompletedEvent dispatché avec taskId + résultats
- * 4. Ce listener stocke en cache : 'enrichment_results_{taskId}' (TTL 3600s)
- * 5. JavaScript Mercure reçoit notification → AJAX GET /enrichment/{taskId}/results
- * 6. Modal affiche les 3 noms + recommendations + facteurs clés de succès
+ * Nouveau workflow (v3.21.0+) :
+ * 1. Le projet est créé en base AVANT l'enrichissement (status DRAFT)
+ * 2. AgentTaskManager dispatche ProjectEnrichmentAgent
+ * 3. Worker exécute l'enrichissement (5-15s)
+ * 4. TaskCompletedEvent dispatché avec taskId + résultats
+ * 5. Ce listener crée un ProjectEnrichmentDraft avec les données enrichies
+ * 6. Le projet passe au statut ENRICHED_PENDING
+ * 7. L'utilisateur voit la page de révision avec 5 onglets
+ * 8. L'utilisateur valide ou régénère l'enrichissement
  */
 #[AsEventListener(event: TaskCompletedEvent::class)]
-final readonly class ProjectEnrichedEventListener
+final class ProjectEnrichedEventListener
 {
     public function __construct(
-        private CacheInterface $cache,
-        private LoggerInterface $logger,
+        private readonly CacheInterface $cache,
+        private readonly LoggerInterface $logger,
+        /** @phpstan-ignore-next-line */
+        private readonly EntityManagerInterface $entityManager,
+        /** @phpstan-ignore-next-line */
+        private readonly ProjectRepository $projectRepository,
     ) {
     }
 
@@ -42,6 +50,71 @@ final readonly class ProjectEnrichedEventListener
 
         $taskId = $event->taskId;
         $enrichedData = $event->result;
+
+        // NOUVEAU WORKFLOW : Récupérer le projet depuis le cache et créer/mettre à jour un ProjectEnrichmentDraft
+        try {
+            $projectId = $this->cache->get('project_id_for_task_'.$taskId, function () {
+                throw new \RuntimeException('Project ID not found in cache for this taskId');
+            });
+
+            /** @var Project|null $project */
+            $project = $this->projectRepository->find($projectId);
+
+            if (! $project) {
+                $this->logger->error('ProjectEnrichedEventListener: Projet non trouvé', [
+                    'task_id' => $taskId,
+                    'project_id' => $projectId,
+                ]);
+
+                return;
+            }
+
+            // Récupérer le draft existant ou en créer un nouveau (gestion régénération)
+            $draftRepository = $this->entityManager->getRepository(ProjectEnrichmentDraft::class);
+            $draft = $draftRepository->findOneBy(['project' => $project]);
+
+            if (null === $draft) {
+                // Créer un nouveau draft si premier enrichissement
+                $draft = new ProjectEnrichmentDraft();
+                $draft->setProject($project);
+                $this->entityManager->persist($draft);
+                $this->logger->info('ProjectEnrichedEventListener: Nouveau draft créé', [
+                    'task_id' => $taskId,
+                    'project_id' => $project->getId(),
+                ]);
+            } else {
+                // Mettre à jour le draft existant (cas de régénération)
+                $this->logger->info('ProjectEnrichedEventListener: Draft existant mis à jour', [
+                    'task_id' => $taskId,
+                    'project_id' => $project->getId(),
+                    'draft_id' => $draft->getId(),
+                ]);
+            }
+
+            // Mettre à jour les données du draft
+            $draft->setTaskId($taskId);
+            $draft->setEnrichmentData($enrichedData);
+            $draft->setStatus('pending');
+            $draft->setEnrichedAt(new \DateTimeImmutable());
+
+            // Changer le statut du projet vers ENRICHED_PENDING
+            $project->setStatus(ProjectStatus::ENRICHED_PENDING);
+
+            $this->entityManager->flush();
+
+            $this->logger->info('ProjectEnrichedEventListener: Draft et statut mis à jour', [
+                'task_id' => $taskId,
+                'project_id' => $project->getId(),
+                'draft_id' => $draft->getId(),
+                'project_status' => $project->getStatus()->value,
+            ]);
+        } catch (\Exception $e) {
+            $this->logger->error('ProjectEnrichedEventListener: Erreur lors de la création du draft', [
+                'task_id' => $taskId,
+                'error' => $e->getMessage(),
+            ]);
+            // Continuer pour maintenir la compatibilité avec l'ancien workflow (cache)
+        }
 
         // Stocker les résultats en cache avec clé basée sur taskId (TTL 1 heure)
         $cacheKey = 'enrichment_results_'.$taskId;

@@ -166,3 +166,19 @@ services:
             $apiClient: '@Codewithkyrian\ChromaDB\Generated\ChromaApiClient'
             $database: 'marketing'
             $tenant: 'default_tenant'
+
+    # ========================================================================
+    # Screenshot Storage Service - Production Ready
+    # ========================================================================
+    # Stockage screenshots sur filesystem local avec abstraction S3-ready
+    # Migration future : créer S3ScreenshotStorage implémentant l'interface
+    # ========================================================================
+
+    # Interface screenshot storage (pour DI)
+    App\Service\Screenshot\ScreenshotStorageInterface:
+        class: App\Service\Screenshot\FilesystemScreenshotStorage
+
+    # Implémentation filesystem
+    App\Service\Screenshot\FilesystemScreenshotStorage:
+        arguments:
+            $publicDir: '%kernel.project_dir%/public'

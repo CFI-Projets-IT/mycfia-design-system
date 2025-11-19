@@ -1,9 +1,14 @@
 project:
   status:
     draft: Brouillon
+    enriched: Enrichi par IA
+    enriched_pending: En attente de validation
+    persona_in_progress: Génération personas...
     persona_generated: Personas générés
+    competitor_validated: Concurrents validés
+    strategy_in_progress: Génération stratégie...
     strategy_generated: Stratégie générée
-    assets_generating: Assets en cours
+    assets_in_progress: Génération assets...
     assets_generated: Assets générés
     ready_to_publish: Prêt à publier
     published: Publié
@@ -17,6 +22,9 @@ project:
     enrichment_started: 'Enrichissement IA en cours... Veuillez patienter.'
     enrichment_not_found: 'Résultats d''enrichissement introuvables. Veuillez réessayer.'
     enrichment_failed: 'L''enrichissement IA a échoué. Veuillez réessayer.'
+    enrichment_validated: 'Enrichissement validé avec succès ! Génération des personas en cours...'
+    enrichment_regenerating: 'Nouvelle analyse IA en cours... Les résultats actuels seront remplacés.'
+    name_selection_required: 'Vous devez sélectionner un nom alternatif avant de valider.'
 
 goal:
   type:
@@ -49,3 +57,18 @@ asset:
     no_strategy: 'Veuillez d''abord générer la stratégie avant les assets.'
     no_assets: 'Aucun asset généré pour ce projet.'
     generation_failed: 'La génération des assets a échoué. Veuillez réessayer.'
+
+  type:
+    google_ads: Google Ads
+    linkedin_post: LinkedIn Post
+    facebook_post: Facebook Post
+    instagram_post: Instagram Post
+    mail: Email Marketing
+    bing_ads: Bing Ads
+    iab_banner: Bannière IAB
+    article_seo: Article SEO
+
+  status:
+    draft: Brouillon
+    approved: Approuvé
+    rejected: Rejeté

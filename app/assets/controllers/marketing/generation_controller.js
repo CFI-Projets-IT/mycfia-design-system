@@ -37,33 +37,48 @@ export default class extends Controller {
         const topic = `/tasks/${this.taskIdValue}`;
         const url = `${this.mercureUrlValue}?topic=${encodeURIComponent(topic)}`;
 
-        console.log('Connecting to Mercure:', url);
-        console.log('Topic:', topic);
+        console.log('[MERCURE DEBUG] Connecting to Mercure:', url);
+        console.log('[MERCURE DEBUG] Task ID:', this.taskIdValue);
+        console.log('[MERCURE DEBUG] Topic:', topic);
+        console.log('[MERCURE DEBUG] Mercure URL base:', this.mercureUrlValue);
 
         this.eventSource = new EventSource(url);
 
+        // Log de connexion
+        this.eventSource.onopen = () => {
+            console.log('[MERCURE DEBUG] EventSource connection opened');
+        };
+
+        // Écouter TOUS les messages (debug)
+        this.eventSource.onmessage = (event) => {
+            console.log('[MERCURE DEBUG] Generic message received:', event);
+            console.log('[MERCURE DEBUG] Message data:', event.data);
+            console.log('[MERCURE DEBUG] Message type:', event.type);
+        };
+
         // Écouter les événements spécifiques du bundle
         this.eventSource.addEventListener('TaskStartedEvent', (event) => {
-            console.log('TaskStartedEvent received:', event.data);
+            console.log('[MERCURE DEBUG] TaskStartedEvent received:', event.data);
             const data = JSON.parse(event.data);
             this.handleStart(data);
         });
 
         this.eventSource.addEventListener('TaskCompletedEvent', (event) => {
-            console.log('TaskCompletedEvent received:', event.data);
+            console.log('[MERCURE DEBUG] TaskCompletedEvent received:', event.data);
             const data = JSON.parse(event.data);
             this.handleComplete(data);
         });
 
         this.eventSource.addEventListener('TaskFailedEvent', (event) => {
-            console.error('TaskFailedEvent received:', event.data);
+            console.error('[MERCURE DEBUG] TaskFailedEvent received:', event.data);
             const data = JSON.parse(event.data);
             this.handleError(data);
         });
 
         this.eventSource.onerror = (error) => {
-            console.error('EventSource error:', error);
-            // EventSource tente de se reconnecter automatiquement
+            console.error('[MERCURE DEBUG] EventSource error:', error);
+            console.error('[MERCURE DEBUG] EventSource readyState:', this.eventSource.readyState);
+            // 0 = CONNECTING, 1 = OPEN, 2 = CLOSED
         };
 
         // Timeout après 3 minutes (génération peut prendre du temps)
@@ -86,19 +101,17 @@ export default class extends Controller {
      * On attend que le statut projet change avant de rediriger
      */
     handleComplete(data) {
-        console.log('Task terminée:', data.agent_name);
+        console.log('[MERCURE DEBUG] handleComplete called');
+        console.log('[MERCURE DEBUG] Task terminée:', data.agentName);
+        console.log('[MERCURE DEBUG] Generation type:', this.generationTypeValue);
+        console.log('[MERCURE DEBUG] Full data:', JSON.stringify(data, null, 2));
 
-        if (this.generationTypeValue === 'strategy') {
-            // Pour la stratégie, on attend un peu pour que StrategyAnalyst se termine
-            // et que la stratégie soit sauvegardée en BDD
-            console.log('Waiting for strategy to be saved...');
-            setTimeout(() => {
-                this.checkStrategyStatus();
-            }, 2000);
-        } else {
-            // Pour les autres types, redirection immédiate
+        // Redirection directe après réception du TaskCompletedEvent
+        // La stratégie est sauvegardée en BDD par le bundle avant l'envoi de l'événement
+        console.log('[MERCURE DEBUG] Task completed, redirecting in 1s...');
+        setTimeout(() => {
             this.showSuccess(data);
-        }
+        }, 1000);
     }
 
     /**
@@ -107,26 +120,40 @@ export default class extends Controller {
     async checkStrategyStatus() {
         try {
             const projectId = this.extractProjectId();
-            const response = await fetch(`/marketing/project/${projectId}`, {
+            console.log('[MERCURE DEBUG] checkStrategyStatus - projectId:', projectId);
+            console.log('[MERCURE DEBUG] checkStrategyStatus - fetching /marketing/projects/' + projectId);
+
+            const response = await fetch(`/marketing/projects/${projectId}`, {
                 method: 'GET',
                 headers: {
                     'X-Requested-With': 'XMLHttpRequest'
                 }
             });
 
+            console.log('[MERCURE DEBUG] checkStrategyStatus - response status:', response.status);
+
             if (response.ok) {
                 const html = await response.text();
+                console.log('[MERCURE DEBUG] checkStrategyStatus - HTML length:', html.length);
+                console.log('[MERCURE DEBUG] checkStrategyStatus - contains marketing_strategy_show:', html.includes('marketing_strategy_show'));
+                console.log('[MERCURE DEBUG] checkStrategyStatus - contains strategy_generated:', html.includes('strategy_generated'));
+
                 // Si la page contient le lien vers la stratégie, c'est prêt
                 if (html.includes('marketing_strategy_show') || html.includes('strategy_generated')) {
-                    console.log('Strategy saved, redirecting...');
+                    console.log('[MERCURE DEBUG] Strategy saved, redirecting...');
                     this.showSuccess({});
                 } else {
                     // Réessayer après 1 seconde
+                    console.log('[MERCURE DEBUG] Strategy not ready, retrying in 1s...');
                     setTimeout(() => this.checkStrategyStatus(), 1000);
                 }
+            } else {
+                console.error('[MERCURE DEBUG] checkStrategyStatus - response not OK:', response.status);
+                // Rediriger quand même après un délai
+                setTimeout(() => this.showSuccess({}), 3000);
             }
         } catch (error) {
-            console.error('Error checking strategy status:', error);
+            console.error('[MERCURE DEBUG] Error checking strategy status:', error);
             // Rediriger quand même après timeout
             setTimeout(() => this.showSuccess({}), 3000);
         }

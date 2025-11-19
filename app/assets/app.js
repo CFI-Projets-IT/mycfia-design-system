@@ -33,6 +33,10 @@ window.bootstrap = bootstrap;
 
 // Import des composants JavaScript
 import './js/ui/division-selector.js';
+import './js/marketing/competitor-detection.js';
+import './js/marketing/enrichment-review.js';
+import './js/marketing/persona-selection.js';
+import './js/marketing/persona-configure.js';
 
 // Initialiser automatiquement les tooltips et popovers
 document.addEventListener('DOMContentLoaded', () => {
