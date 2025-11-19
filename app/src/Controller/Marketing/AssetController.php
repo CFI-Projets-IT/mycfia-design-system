@@ -12,6 +12,7 @@ use App\Enum\ProjectStatus;
 use App\Form\AssetGenerationType;
 use Doctrine\ORM\EntityManagerInterface;
 use Gorillias\MarketingBundle\Service\AgentTaskManager;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\Request;
@@ -40,10 +41,26 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 #[IsGranted('ROLE_USER')]
 final class AssetController extends AbstractController
 {
+    /**
+     * Mapping des types d'assets internes vers types bundle.
+     *
+     * Le bundle attend 'email' mais l'app utilise 'mail' historiquement.
+     */
+    private const ASSET_TYPE_MAPPING = [
+        'mail' => 'email',
+    ];
+
+    /**
+     * Configuration du retry pour la génération d'assets.
+     */
+    private const MAX_RETRIES = 3;
+    private const RETRY_DELAY_MS = 1000;
+
     public function __construct(
         private readonly AgentTaskManager $agentTaskManager,
         private readonly EntityManagerInterface $entityManager,
         private readonly TranslatorInterface $translator,
+        private readonly LoggerInterface $logger,
         #[Autowire('%env(MERCURE_PUBLIC_URL)%')]
         private readonly string $mercurePublicUrl,
     ) {
@@ -99,18 +116,8 @@ final class AssetController extends AbstractController
             /** @var User $user */
             $user = $this->getUser();
 
-            // Préparer le brief de création
-            // Note: strategy doit être encodé en JSON car le bundle attend des strings
-            $strategyData = $this->serializeStrategy($project);
-            $brief = [
-                'project_id' => $project->getId(),
-                'project_name' => $project->getName(),
-                'company_name' => $project->getCompanyName(),
-                'sector' => $project->getSector(),
-                'goal_type' => $project->getGoalType()->value,
-                'budget' => (int) ((float) $project->getBudget() * 100),
-                'strategy' => json_encode($strategyData, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) ?: '{}',
-            ];
+            // Préparer le brief de création enrichi
+            $brief = $this->buildEnrichedBrief($project);
 
             // Options de génération
             // Note: project_id doit être dans options car le bundle extrait le context depuis options
@@ -122,14 +129,16 @@ final class AssetController extends AbstractController
                 'additional_context' => $data['additionalContext'] ?? '',
             ];
 
-            // Dispatcher une tâche pour chaque type d'asset (ContentCreatorAgent génère un type à la fois)
+            // Dispatcher une tâche pour chaque type d'asset avec retry logic
             $taskIds = [];
             foreach ($data['assetTypes'] as $assetType) {
-                $taskIds[] = $this->agentTaskManager->dispatchContentCreation(
-                    assetType: $assetType,
-                    brief: $brief,
-                    options: $options
-                );
+                // Mapper le type d'asset (mail → email)
+                $bundleAssetType = self::ASSET_TYPE_MAPPING[$assetType] ?? $assetType;
+
+                $taskId = $this->dispatchWithRetry($bundleAssetType, $brief, $options);
+                if (null !== $taskId) {
+                    $taskIds[] = $taskId;
+                }
             }
 
             // Mettre à jour le statut du projet
@@ -189,6 +198,180 @@ final class AssetController extends AbstractController
             'project' => $project,
             'assets' => $project->getAssets(),
         ]);
+    }
+
+    /**
+     * Construit un brief enrichi avec toutes les données projet pour le bundle.
+     *
+     * Inclut :
+     * - Données de base du projet
+     * - Description et informations produit
+     * - Identité visuelle (brandIdentity)
+     * - Intelligence business
+     * - Keywords Google Ads
+     * - Stratégie sérialisée
+     * - Personas sélectionnés
+     * - Analyse concurrentielle
+     * - Données d'enrichissement IA
+     * - Budget allocation avec CPL calculé par BudgetOptimizer
+     *
+     * @return array<string, mixed>
+     */
+    private function buildEnrichedBrief(Project $project): array
+    {
+        // Données de base obligatoires
+        $brief = [
+            'project_id' => $project->getId(),
+            'project_name' => $project->getName(),
+            'company_name' => $project->getCompanyName(),
+            'sector' => $project->getSector(),
+            'goal_type' => $project->getGoalType()->value,
+            'budget' => (int) ((float) $project->getBudget() * 100),
+            'description' => $project->getDescription(),
+            'product_info' => $project->getProductInfo(),
+            'detailed_objectives' => $project->getDetailedObjectives(),
+            'start_date' => $project->getStartDate()->format('Y-m-d'),
+            'end_date' => $project->getEndDate()->format('Y-m-d'),
+        ];
+
+        // URL du site web
+        if ($project->getWebsiteUrl()) {
+            $brief['website_url'] = $project->getWebsiteUrl();
+        }
+
+        // Langue détectée
+        if ($project->getLanguage()) {
+            $brief['language'] = $project->getLanguage();
+        }
+
+        // Identité visuelle complète (couleurs, fonts, personality)
+        $brandIdentity = $project->getBrandIdentity();
+        if (! empty($brandIdentity)) {
+            $brief['brand_identity'] = $brandIdentity;
+        }
+
+        // Intelligence business (mainOffering, targetMarket, etc.)
+        $businessIntelligence = $project->getBusinessIntelligence();
+        if (! empty($businessIntelligence)) {
+            $brief['business_intelligence'] = $businessIntelligence;
+        }
+
+        // Keywords Google Ads avec métriques
+        $keywordsData = $project->getKeywordsData();
+        if (! empty($keywordsData)) {
+            $brief['keywords_data'] = $keywordsData;
+        }
+
+        // Données d'enrichissement IA (suggestions, recommandations)
+        $aiEnrichment = $project->getAiEnrichment();
+        if (! empty($aiEnrichment)) {
+            $brief['ai_enrichment'] = $aiEnrichment;
+        }
+
+        // Personas sélectionnés avec rawData complet
+        $selectedPersonas = [];
+        foreach ($project->getPersonas() as $persona) {
+            if ($persona->isSelected()) {
+                $selectedPersonas[] = [
+                    'name' => $persona->getName(),
+                    'job' => $persona->getJob(),
+                    'age' => $persona->getAge(),
+                    'gender' => $persona->getGender(),
+                    'description' => $persona->getDescription(),
+                    'quality_score' => $persona->getQualityScore(),
+                    'raw_data' => $persona->getRawData(),
+                ];
+            }
+        }
+        if (! empty($selectedPersonas)) {
+            $brief['personas'] = $selectedPersonas;
+        }
+
+        // Analyse concurrentielle
+        $competitorAnalysis = $project->getCompetitorAnalysis();
+        if (null !== $competitorAnalysis) {
+            $brief['competitor_analysis'] = [
+                'competitors' => $competitorAnalysis->getCompetitorsArray(),
+                'strengths' => $competitorAnalysis->getStrengths(),
+                'weaknesses' => $competitorAnalysis->getWeaknesses(),
+                'market_positioning' => $competitorAnalysis->getMarketPositioning(),
+                'differentiation_opportunities' => $competitorAnalysis->getDifferentiationOpportunities(),
+                'marketing_strategies' => $competitorAnalysis->getMarketingStrategies(),
+            ];
+        }
+
+        // Stratégie avec budget allocation (inclut CPL du BudgetOptimizer)
+        $strategyData = $this->serializeStrategy($project);
+        $brief['strategy'] = json_encode($strategyData, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) ?: '{}';
+
+        // Budget allocation directement depuis le projet (CPL calculé par BudgetOptimizer)
+        $budgetAllocation = $project->getBudgetAllocation();
+        if (! empty($budgetAllocation)) {
+            $brief['budget_allocation'] = $budgetAllocation;
+        }
+
+        return $brief;
+    }
+
+    /**
+     * Dispatch une tâche de génération avec retry logic.
+     *
+     * Implémente un backoff exponentiel en cas d'échec.
+     *
+     * @param array<string, mixed> $brief
+     * @param array<string, mixed> $options
+     */
+    private function dispatchWithRetry(string $assetType, array $brief, array $options): ?string
+    {
+        $lastException = null;
+
+        for ($attempt = 1; $attempt <= self::MAX_RETRIES; ++$attempt) {
+            try {
+                $taskId = $this->agentTaskManager->dispatchContentCreation(
+                    assetType: $assetType,
+                    brief: $brief,
+                    options: $options
+                );
+
+                $this->logger->info('Asset generation dispatched successfully', [
+                    'asset_type' => $assetType,
+                    'task_id' => $taskId,
+                    'attempt' => $attempt,
+                ]);
+
+                return $taskId;
+            } catch (\Throwable $e) {
+                $lastException = $e;
+
+                $this->logger->warning('Asset generation dispatch failed', [
+                    'asset_type' => $assetType,
+                    'attempt' => $attempt,
+                    'max_retries' => self::MAX_RETRIES,
+                    'error' => $e->getMessage(),
+                ]);
+
+                if ($attempt < self::MAX_RETRIES) {
+                    // Backoff exponentiel
+                    usleep(self::RETRY_DELAY_MS * 1000 * $attempt);
+                }
+            }
+        }
+
+        // Toutes les tentatives ont échoué
+        // $lastException est garanti non-null ici car on entre dans cette partie
+        // seulement si toutes les tentatives ont échoué (au moins une exception catchée)
+        /** @var \Throwable $lastException */
+        $this->logger->error('Asset generation failed after all retries', [
+            'asset_type' => $assetType,
+            'max_retries' => self::MAX_RETRIES,
+            'error' => $lastException->getMessage(),
+        ]);
+
+        $this->addFlash('error', $this->translator->trans('asset.flash.generation_failed', [
+            '%type%' => $assetType,
+        ], 'marketing'));
+
+        return null;
     }
 
     /**

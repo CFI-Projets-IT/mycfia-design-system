@@ -56,7 +56,7 @@ asset:
     already_generated: 'Les assets ont déjà été générés pour ce projet.'
     no_strategy: 'Veuillez d''abord générer la stratégie avant les assets.'
     no_assets: 'Aucun asset généré pour ce projet.'
-    generation_failed: 'La génération des assets a échoué. Veuillez réessayer.'
+    generation_failed: 'La génération de l''asset %type% a échoué après plusieurs tentatives. Veuillez réessayer.'
 
   type:
     google_ads: Google Ads
