@@ -132,12 +132,19 @@ final class ProjectController extends AbstractController
                     $selectedAssetTypes = [];
                 }
 
+                // Mapper les types d'assets : mail → email (le bundle attend 'email')
+                $assetTypeMapping = ['mail' => 'email'];
+                $mappedAssetTypes = array_map(
+                    fn (string $type) => $assetTypeMapping[$type] ?? $type,
+                    $selectedAssetTypes
+                );
+
                 // NOUVEAU WORKFLOW : Créer le projet en base AVANT l'enrichissement
                 // Cela permet à l'EventListener de créer un ProjectEnrichmentDraft lié au projet
                 $project->setUser($user);
                 $project->setTenant($tenant);
                 $project->setStatus(ProjectStatus::DRAFT);
-                $project->setSelectedAssetTypes($selectedAssetTypes);
+                $project->setSelectedAssetTypes($mappedAssetTypes);
 
                 $this->entityManager->persist($project);
                 $this->entityManager->flush();
