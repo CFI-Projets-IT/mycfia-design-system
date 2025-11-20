@@ -1,0 +1,696 @@
+{% extends 'layouts/home.html.twig' %}
+
+{% block title %}Révision Enrichissement - {{ project.name }}{% endblock %}
+
+{% block content %}
+<div class="container" style="max-width: 1200px;">
+    {# Breadcrumb #}
+    <div class="mb-4">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="{{ path('marketing_project_index') }}">Projets Marketing</a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a href="{{ path('marketing_project_show', {id: project.id}) }}">{{ project.name }}</a>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">Révision Enrichissement</li>
+            </ol>
+        </nav>
+    </div>
+
+    {# En-tête #}
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h2 class="mb-2">
+                        <i class="bi bi-check2-square text-warning"></i>
+                        Révision de l'Enrichissement IA
+                    </h2>
+                    <p class="text-muted mb-0">
+                        Vérifiez les données générées par l'IA avant de continuer vers la génération de personas
+                    </p>
+                </div>
+                <div class="col-md-4 text-end">
+                    <span class="badge {{ project.status.badgeClass }} fs-6">
+                        <i class="bi bi-hourglass-split"></i> {{ project.status.label }}
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {# Onglets de révision #}
+    <div class="card shadow-sm">
+        <div class="card-body p-0">
+            {# Navigation onglets #}
+            <ul class="nav nav-tabs nav-fill border-bottom-0" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="business-tab" data-bs-toggle="tab" data-bs-target="#business" type="button" role="tab" aria-controls="business" aria-selected="true">
+                        <i class="bi bi-briefcase-fill"></i>
+                        <span class="d-none d-md-inline ms-1">Informations Business</span>
+                        <span class="d-inline d-md-none ms-1">Business</span>
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="branding-tab" data-bs-toggle="tab" data-bs-target="#branding" type="button" role="tab" aria-controls="branding" aria-selected="false">
+                        <i class="bi bi-palette-fill"></i>
+                        <span class="d-none d-md-inline ms-1">Branding</span>
+                        <span class="d-inline d-md-none ms-1">Branding</span>
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="recommendations-tab" data-bs-toggle="tab" data-bs-target="#recommendations" type="button" role="tab" aria-controls="recommendations" aria-selected="false">
+                        <i class="bi bi-lightbulb-fill"></i>
+                        <span class="d-none d-md-inline ms-1">Recommandations</span>
+                        <span class="d-inline d-md-none ms-1">Reco.</span>
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="keywords-tab" data-bs-toggle="tab" data-bs-target="#keywords" type="button" role="tab" aria-controls="keywords" aria-selected="false">
+                        <i class="bi bi-google"></i>
+                        <span class="d-none d-md-inline ms-1">Mots-clés Google Ads</span>
+                        <span class="d-inline d-md-none ms-1">Ads</span>
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="content-tab" data-bs-toggle="tab" data-bs-target="#content" type="button" role="tab" aria-controls="content" aria-selected="false">
+                        <i class="bi bi-file-text-fill"></i>
+                        <span class="d-none d-md-inline ms-1">Contenu Scrappé</span>
+                        <span class="d-inline d-md-none ms-1">Contenu</span>
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="metrics-tab" data-bs-toggle="tab" data-bs-target="#metrics" type="button" role="tab" aria-controls="metrics" aria-selected="false">
+                        <i class="bi bi-graph-up"></i>
+                        <span class="d-none d-md-inline ms-1">Métriques</span>
+                        <span class="d-inline d-md-none ms-1">Métriques</span>
+                    </button>
+                </li>
+            </ul>
+
+            {# Contenu des onglets #}
+            <div class="tab-content p-4">
+                {# Onglet 1 : Informations Business #}
+                <div class="tab-pane fade show active" id="business" role="tabpanel" aria-labelledby="business-tab">
+                    <h5 class="fw-bold text-primary mb-3 pb-2 border-bottom">
+                        <i class="bi bi-briefcase"></i> Informations Business
+                    </h5>
+
+                    {% if enrichmentData.ai_suggestions.smart_objectives_detailed is defined and enrichmentData.ai_suggestions.smart_objectives_detailed %}
+                        <div class="mb-4">
+                            <h6 class="fw-semibold text-dark">
+                                <i class="bi bi-bullseye"></i> Objectifs SMART Détaillés
+                            </h6>
+                            <div class="alert alert-info">
+                                {{ enrichmentData.ai_suggestions.smart_objectives_detailed }}
+                            </div>
+                        </div>
+                    {% endif %}
+
+                    {% if enrichmentData.dev.project_context is defined %}
+                        <div class="mb-4">
+                            <h6 class="fw-semibold text-dark">
+                                <i class="bi bi-gear-fill"></i> Contexte du Projet
+                            </h6>
+                            <div class="row g-3">
+                                {% if enrichmentData.dev.project_context.sector is defined %}
+                                    <div class="col-md-6">
+                                        <div class="card border-primary">
+                                            <div class="card-body">
+                                                <small class="text-muted d-block mb-1">Secteur</small>
+                                                <strong class="text-primary">{{ enrichmentData.dev.project_context.sector }}</strong>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                                {% if enrichmentData.dev.project_context.targetAudience is defined %}
+                                    <div class="col-md-6">
+                                        <div class="card border-primary">
+                                            <div class="card-body">
+                                                <small class="text-muted d-block mb-1">Audience Cible</small>
+                                                <strong class="text-primary">{{ enrichmentData.dev.project_context.targetAudience }}</strong>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                                {% if enrichmentData.dev.project_context.businessModel is defined %}
+                                    <div class="col-md-6">
+                                        <div class="card border-primary">
+                                            <div class="card-body">
+                                                <small class="text-muted d-block mb-1">Modèle Business</small>
+                                                <strong class="text-primary">{{ enrichmentData.dev.project_context.businessModel }}</strong>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                                {% if enrichmentData.dev.project_context.geography is defined %}
+                                    <div class="col-md-6">
+                                        <div class="card border-primary">
+                                            <div class="card-body">
+                                                <small class="text-muted d-block mb-1">Géographie</small>
+                                                <strong class="text-primary">{{ enrichmentData.dev.project_context.geography }}</strong>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endif %}
+
+                    {% if enrichmentData.scraped_content.metadata is defined %}
+                        <div class="mb-4">
+                            <h6 class="fw-semibold text-dark">
+                                <i class="bi bi-info-circle-fill"></i> Métadonnées du Site Web
+                            </h6>
+                            <div class="alert alert-light">
+                                {% if enrichmentData.scraped_content.metadata.language is defined %}
+                                    <strong>Langue :</strong> {{ enrichmentData.scraped_content.metadata.language|upper }}<br>
+                                {% endif %}
+                                {% if enrichmentData.scraped_content.metadata.charset is defined %}
+                                    <strong>Encodage :</strong> {{ enrichmentData.scraped_content.metadata.charset }}<br>
+                                {% endif %}
+                                {% if enrichmentData.scraped_content.metadata.title is defined %}
+                                    <strong>Titre :</strong> {{ enrichmentData.scraped_content.metadata.title }}<br>
+                                {% endif %}
+                                {% if enrichmentData.scraped_content.metadata.description is defined %}
+                                    <strong>Description :</strong> {{ enrichmentData.scraped_content.metadata.description }}
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+
+                {# Onglet 2 : Branding #}
+                <div class="tab-pane fade" id="branding" role="tabpanel" aria-labelledby="branding-tab">
+                    <h5 class="fw-bold text-primary mb-3 pb-2 border-bottom">
+                        <i class="bi bi-palette"></i> Identité de Marque
+                    </h5>
+
+                    {% if enrichmentData.dev.brand_identity is defined %}
+                        {% set brandData = enrichmentData.dev.brand_identity %}
+
+                        {% if brandData.brand_name is defined %}
+                            <div class="mb-4">
+                                <h6 class="fw-semibold text-dark">
+                                    <i class="bi bi-tag-fill"></i> Nom de Marque Détecté
+                                </h6>
+                                <div class="alert alert-success">
+                                    <h4 class="mb-0">{{ brandData.brand_name }}</h4>
+                                </div>
+                            </div>
+                        {% endif %}
+
+                        {% if brandData.url is defined %}
+                            <div class="mb-4">
+                                <h6 class="fw-semibold text-dark">
+                                    <i class="bi bi-link-45deg"></i> URL Analysée
+                                </h6>
+                                <a href="{{ brandData.url }}" target="_blank" class="btn btn-outline-primary btn-sm">
+                                    {{ brandData.url }}
+                                    <i class="bi bi-box-arrow-up-right ms-1"></i>
+                                </a>
+                            </div>
+                        {% endif %}
+
+                        {% if brandData.content_preview is defined %}
+                            <div class="mb-4">
+                                <h6 class="fw-semibold text-dark">
+                                    <i class="bi bi-file-text"></i> Aperçu du Contenu
+                                </h6>
+                                <div class="alert alert-light small">
+                                    {{ brandData.content_preview }}
+                                </div>
+                            </div>
+                        {% endif %}
+
+                        {% if brandData.visual_identity is defined %}
+                            <div class="mb-4">
+                                <h6 class="fw-semibold text-dark">
+                                    <i class="bi bi-paint-bucket"></i> Identité Visuelle
+                                </h6>
+                                <div class="card">
+                                    <div class="card-body">
+                                        {% if brandData.visual_identity.design_style is defined %}
+                                            <p class="mb-2"><strong>Style de design :</strong> {{ brandData.visual_identity.design_style }}</p>
+                                        {% endif %}
+                                        {% if brandData.visual_identity.typography is defined %}
+                                            <p class="mb-0"><strong>Typographie :</strong> {{ brandData.visual_identity.typography }}</p>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% endif %}
+
+                    {% if enrichmentData.ai_suggestions.creative_name_alternatives is defined and enrichmentData.ai_suggestions.creative_name_alternatives is iterable %}
+                        <div class="mb-4">
+                            <h6 class="fw-semibold text-dark">
+                                <i class="bi bi-stars"></i> Suggestions de Noms Alternatifs
+                                <span class="badge bg-danger ms-2">Sélection obligatoire</span>
+                            </h6>
+                            <p class="text-muted small mb-3">
+                                <i class="bi bi-info-circle"></i>
+                                Veuillez sélectionner un nom pour votre projet parmi les suggestions ci-dessous
+                            </p>
+                            <div class="list-group" id="alternative-names-list">
+                                {% for altName in enrichmentData.ai_suggestions.creative_name_alternatives %}
+                                    <label class="list-group-item list-group-item-action cursor-pointer">
+                                        <div class="d-flex align-items-center">
+                                            <input class="form-check-input me-3" type="radio" name="selectedName" value="{{ altName }}" id="name-{{ loop.index }}" required>
+                                            <div class="flex-grow-1">
+                                                <div class="fw-semibold">{{ altName }}</div>
+                                            </div>
+                                            <i class="bi bi-check-circle-fill text-success fs-4 d-none selected-indicator"></i>
+                                        </div>
+                                    </label>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+
+                {# Onglet 3 : Recommandations Stratégiques #}
+                <div class="tab-pane fade" id="recommendations" role="tabpanel" aria-labelledby="recommendations-tab">
+                    <h5 class="fw-bold text-primary mb-3 pb-2 border-bottom">
+                        <i class="bi bi-lightbulb"></i> Recommandations Stratégiques
+                    </h5>
+
+                    {% if enrichmentData.ai_suggestions.strategic_recommendations is defined and enrichmentData.ai_suggestions.strategic_recommendations is iterable %}
+                        <div class="mb-4">
+                            <div class="list-group">
+                                {% for recommendation in enrichmentData.ai_suggestions.strategic_recommendations %}
+                                    <div class="list-group-item">
+                                        <div class="d-flex w-100 justify-content-between align-items-start">
+                                            <div>
+                                                <i class="bi bi-check-circle-fill text-success me-2"></i>
+                                                {{ recommendation }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="alert alert-warning">
+                            <i class="bi bi-exclamation-triangle"></i>
+                            Aucune recommandation stratégique générée lors de l'enrichissement.
+                        </div>
+                    {% endif %}
+
+                    {% if enrichmentData.ai_suggestions.success_factors is defined and enrichmentData.ai_suggestions.success_factors is iterable %}
+                        <div class="mb-4">
+                            <h6 class="fw-semibold text-dark">
+                                <i class="bi bi-trophy-fill text-warning"></i> Facteurs Clés de Succès
+                            </h6>
+                            <div class="list-group">
+                                {% for factor in enrichmentData.ai_suggestions.success_factors %}
+                                    <div class="list-group-item">
+                                        <i class="bi bi-star-fill text-warning me-2"></i>
+                                        {{ factor }}
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+
+                {# Onglet 4 : Mots-clés Google Ads #}
+                <div class="tab-pane fade" id="keywords" role="tabpanel" aria-labelledby="keywords-tab">
+                    <h5 class="fw-bold text-primary mb-3 pb-2 border-bottom">
+                        <i class="bi bi-google"></i> Mots-clés Google Ads (SerpAPI)
+                    </h5>
+
+                    {% if enrichmentData.scraped_content.google_ads_keywords is defined %}
+                        {% set googleAdsData = enrichmentData.scraped_content.google_ads_keywords %}
+
+                        {# Métriques agrégées #}
+                        {% if googleAdsData.metrics is defined %}
+                            <div class="mb-4">
+                                <h6 class="fw-semibold text-dark">
+                                    <i class="bi bi-bar-chart-fill"></i> Métriques Globales
+                                </h6>
+                                <div class="row g-3">
+                                    <div class="col-md-3">
+                                        <div class="card border-primary">
+                                            <div class="card-body text-center">
+                                                <h4 class="text-primary mb-0">{{ googleAdsData.metrics.total_keywords }}</h4>
+                                                <small class="text-muted">Mots-clés totaux</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="card border-info">
+                                            <div class="card-body text-center">
+                                                <h4 class="text-info mb-0">{{ googleAdsData.metrics.total_search_volume|number_format(0, ',', ' ') }}</h4>
+                                                <small class="text-muted">Volume total/mois</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="card border-success">
+                                            <div class="card-body text-center">
+                                                <h4 class="text-success mb-0">{{ googleAdsData.metrics.avg_cpc|number_format(2, ',', ' ') }}€</h4>
+                                                <small class="text-muted">CPC moyen</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="card border-danger">
+                                            <div class="card-body text-center">
+                                                <h4 class="text-danger mb-0">{{ googleAdsData.metrics.high_competition_percentage|number_format(0) }}%</h4>
+                                                <small class="text-muted">Concurrence élevée</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+
+                        {# Tableau des mots-clés #}
+                        {% if googleAdsData.keywords is defined and googleAdsData.keywords is iterable %}
+                            <div class="mb-4">
+                                <h6 class="fw-semibold text-dark">
+                                    <i class="bi bi-table"></i> Top 100 Mots-clés Google Ads
+                                </h6>
+                                <div class="alert alert-info small mb-3">
+                                    <i class="bi bi-info-circle"></i>
+                                    Les mots-clés sont triés par volume de recherche mensuel. Les données proviennent de SerpAPI.
+                                </div>
+                                <div class="table-responsive" style="max-height: 600px; overflow-y: auto;">
+                                    <table class="table table-sm table-hover table-striped">
+                                        <thead class="table-dark sticky-top">
+                                            <tr>
+                                                <th style="width: 5%;">#</th>
+                                                <th style="width: 45%;">Mot-clé</th>
+                                                <th class="text-end" style="width: 20%;">Volume/mois</th>
+                                                <th class="text-center" style="width: 15%;">Concurrence</th>
+                                                <th class="text-end" style="width: 15%;">CPC</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for keyword in googleAdsData.keywords %}
+                                                <tr>
+                                                    <td class="text-muted">{{ loop.index }}</td>
+                                                    <td>
+                                                        <strong>{{ keyword.keyword }}</strong>
+                                                    </td>
+                                                    <td class="text-end">
+                                                        <span class="badge bg-info">
+                                                            {{ keyword.volume|number_format(0, ',', ' ') }}
+                                                        </span>
+                                                    </td>
+                                                    <td class="text-center">
+                                                        {% if keyword.competition == 'HIGH' %}
+                                                            <span class="badge bg-danger">Élevée</span>
+                                                        {% elseif keyword.competition == 'MEDIUM' %}
+                                                            <span class="badge bg-warning text-dark">Moyenne</span>
+                                                        {% elseif keyword.competition == 'LOW' %}
+                                                            <span class="badge bg-success">Faible</span>
+                                                        {% else %}
+                                                            <span class="badge bg-secondary">{{ keyword.competition }}</span>
+                                                        {% endif %}
+                                                    </td>
+                                                    <td class="text-end">
+                                                        <span class="badge bg-success">
+                                                            {{ keyword.cpc|number_format(2, ',', ' ') }}€
+                                                        </span>
+                                                    </td>
+                                                </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% else %}
+                        <div class="alert alert-warning">
+                            <i class="bi bi-exclamation-triangle"></i>
+                            Aucune donnée Google Ads disponible pour ce projet.
+                        </div>
+                    {% endif %}
+                </div>
+
+                {# Onglet 5 : Contenu Scrappé #}
+                <div class="tab-pane fade" id="content" role="tabpanel" aria-labelledby="content-tab">
+                    <h5 class="fw-bold text-primary mb-3 pb-2 border-bottom">
+                        <i class="bi bi-file-text"></i> Contenu Scrappé du Site Web
+                    </h5>
+
+                    {% if enrichmentData.scraped_content.markdown is defined and enrichmentData.scraped_content.markdown %}
+                        <div class="mb-4">
+                            <h6 class="fw-semibold text-dark">
+                                <i class="bi bi-code-square"></i> Contenu Markdown
+                            </h6>
+                            <div class="alert alert-light" style="max-height: 500px; overflow-y: auto;">
+                                <pre class="mb-0" style="white-space: pre-wrap; font-size: 0.85rem;">{{ enrichmentData.scraped_content.markdown }}</pre>
+                            </div>
+                        </div>
+                    {% endif %}
+
+                    {% if enrichmentData.scraped_content.project_context is defined %}
+                        <div class="mb-4">
+                            <h6 class="fw-semibold text-dark">
+                                <i class="bi bi-diagram-3-fill"></i> Contexte Projet Extrait
+                            </h6>
+                            <div class="row g-3">
+                                {% if enrichmentData.scraped_content.project_context.sector is defined %}
+                                    <div class="col-md-6">
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <small class="text-muted">Secteur</small><br>
+                                                <strong>{{ enrichmentData.scraped_content.project_context.sector }}</strong>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                                {% if enrichmentData.scraped_content.project_context.targetAudience is defined %}
+                                    <div class="col-md-6">
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <small class="text-muted">Audience</small><br>
+                                                <strong>{{ enrichmentData.scraped_content.project_context.targetAudience }}</strong>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                                {% if enrichmentData.scraped_content.project_context.businessModel is defined %}
+                                    <div class="col-md-6">
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <small class="text-muted">Modèle Business</small><br>
+                                                <strong>{{ enrichmentData.scraped_content.project_context.businessModel }}</strong>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                                {% if enrichmentData.scraped_content.project_context.confidenceLevel is defined %}
+                                    <div class="col-md-6">
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <small class="text-muted">Niveau de Confiance</small><br>
+                                                <span class="badge bg-{{ enrichmentData.scraped_content.project_context.confidenceLevel == 'high' ? 'success' : (enrichmentData.scraped_content.project_context.confidenceLevel == 'medium' ? 'warning' : 'danger') }}">
+                                                    {{ enrichmentData.scraped_content.project_context.confidenceLevel|upper }}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endif %}
+
+                    {% if (enrichmentData.scraped_content.markdown is not defined or not enrichmentData.scraped_content.markdown) and (enrichmentData.scraped_content.project_context is not defined) %}
+                        <div class="alert alert-warning">
+                            <i class="bi bi-exclamation-triangle"></i>
+                            Aucun contenu scrappé disponible.
+                        </div>
+                    {% endif %}
+                </div>
+
+                {# Onglet 5 : Métriques #}
+                <div class="tab-pane fade" id="metrics" role="tabpanel" aria-labelledby="metrics-tab">
+                    <h5 class="fw-bold text-primary mb-3 pb-2 border-bottom">
+                        <i class="bi bi-graph-up"></i> Métriques et Benchmarks
+                    </h5>
+
+                    {# Métriques Budgétaires #}
+                    <div class="mb-4">
+                        <h6 class="fw-semibold text-dark">
+                            <i class="bi bi-cash-stack"></i> Métriques Budgétaires
+                        </h6>
+                        <div class="row g-3">
+                            {% if enrichmentData.budget_per_month is defined %}
+                                <div class="col-md-3">
+                                    <div class="card border-success">
+                                        <div class="card-body text-center">
+                                            <h3 class="text-success mb-0">{{ enrichmentData.budget_per_month }}€</h3>
+                                            <small class="text-muted">Budget / Mois</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endif %}
+                            {% if enrichmentData.budget_per_day is defined %}
+                                <div class="col-md-3">
+                                    <div class="card border-success">
+                                        <div class="card-body text-center">
+                                            <h3 class="text-success mb-0">{{ enrichmentData.budget_per_day }}€</h3>
+                                            <small class="text-muted">Budget / Jour</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endif %}
+                            {% if enrichmentData.campaign_weeks is defined %}
+                                <div class="col-md-3">
+                                    <div class="card border-info">
+                                        <div class="card-body text-center">
+                                            <h3 class="text-info mb-0">{{ enrichmentData.campaign_weeks }}</h3>
+                                            <small class="text-muted">Semaines</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endif %}
+                            {% if enrichmentData.campaign_months is defined %}
+                                <div class="col-md-3">
+                                    <div class="card border-info">
+                                        <div class="card-body text-center">
+                                            <h3 class="text-info mb-0">{{ enrichmentData.campaign_months }}</h3>
+                                            <small class="text-muted">Mois</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    {# Métriques Techniques #}
+                    <div class="mb-4">
+                        <h6 class="fw-semibold text-dark">
+                            <i class="bi bi-cpu-fill"></i> Métriques Techniques de l'Enrichissement
+                        </h6>
+                        <div class="table-responsive">
+                            <table class="table table-sm table-striped">
+                                <tbody>
+                                    {% if enrichmentData.model_used is defined %}
+                                        <tr>
+                                            <td><strong>Modèle IA Utilisé</strong></td>
+                                            <td class="text-end">
+                                                <span class="badge bg-dark">{{ enrichmentData.model_used }}</span>
+                                            </td>
+                                        </tr>
+                                    {% endif %}
+                                    {% if enrichmentData.tokens_used is defined %}
+                                        <tr>
+                                            <td><strong>Tokens Consommés</strong></td>
+                                            <td class="text-end">
+                                                <span class="badge bg-secondary">
+                                                    {% if enrichmentData.tokens_used.total is defined %}
+                                                        {{ enrichmentData.tokens_used.total }} total
+                                                    {% else %}
+                                                        N/A
+                                                    {% endif %}
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    {% endif %}
+                                    {% if enrichmentData.tokens_used.input is defined %}
+                                        <tr>
+                                            <td class="ps-4">Tokens Input</td>
+                                            <td class="text-end">{{ enrichmentData.tokens_used.input }}</td>
+                                        </tr>
+                                    {% endif %}
+                                    {% if enrichmentData.tokens_used.output is defined %}
+                                        <tr>
+                                            <td class="ps-4">Tokens Output</td>
+                                            <td class="text-end">{{ enrichmentData.tokens_used.output }}</td>
+                                        </tr>
+                                    {% endif %}
+                                    {% if enrichmentData.duration_ms is defined %}
+                                        <tr>
+                                            <td><strong>Durée d'Exécution</strong></td>
+                                            <td class="text-end">
+                                                <span class="badge bg-primary">
+                                                    {{ (enrichmentData.duration_ms / 1000)|round(2) }} secondes
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    {% endif %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {# Actions #}
+    <div class="card mt-4 shadow-sm bg-light border-0">
+        <div class="card-body">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <h6 class="fw-bold mb-2">
+                        <i class="bi bi-info-circle text-primary"></i> Prochaine étape
+                    </h6>
+                    <p class="text-muted mb-0 small">
+                        Validez ces données pour lancer la génération de 3 personas qualité premium (score ≥ 70)
+                    </p>
+                </div>
+                <div class="col-md-6">
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <button type="button" class="btn btn-outline-warning" data-bs-toggle="modal" data-bs-target="#regenerateModal">
+                            <i class="bi bi-arrow-clockwise"></i> Régénérer
+                        </button>
+
+                        <form method="post" action="{{ path('marketing_project_enrichment_validate', {taskId: taskId}) }}" class="d-inline" id="validation-form">
+                            <input type="hidden" name="_token" value="{{ csrf_token('validate_enrichment_' ~ taskId) }}">
+                            <input type="hidden" name="selectedName" id="selected-name-input" value="">
+                            <button type="submit" class="btn btn-primary" id="validate-button" disabled>
+                                <i class="bi bi-check-lg"></i> Valider et générer les personas
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block modals %}
+{# Modal de confirmation pour régénération #}
+<div class="modal fade" id="regenerateModal" tabindex="-1" aria-labelledby="regenerateModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-warning text-dark">
+                <h5 class="modal-title" id="regenerateModalLabel">
+                    <i class="bi bi-exclamation-triangle-fill"></i> Confirmer la Régénération
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+            </div>
+            <div class="modal-body">
+                <p class="mb-3">
+                    <strong>Êtes-vous sûr de vouloir régénérer l'enrichissement ?</strong>
+                </p>
+                <p class="text-muted small mb-0">
+                    Cette action va lancer une nouvelle analyse complète de votre projet.
+                    Les données actuellement affichées seront remplacées par les nouvelles données générées.
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="bi bi-x-circle"></i> Annuler
+                </button>
+                <form method="post" action="{{ path('marketing_project_enrichment_regenerate', {taskId: taskId}) }}" class="d-inline">
+                    <input type="hidden" name="_token" value="{{ csrf_token('regenerate_enrichment_' ~ taskId) }}">
+                    <button type="submit" class="btn btn-warning">
+                        <i class="bi bi-arrow-clockwise"></i> Confirmer la régénération
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

@@ -240,7 +240,7 @@
 }
 
 /* Badge "En cours..." pour message streaming */
-[data-message-type="assistant-streaming"] .badge {
+[data-message-type='assistant-streaming'] .badge {
     animation: pulse 1.5s ease-in-out infinite;
 }
 
@@ -368,7 +368,7 @@ button:focus-visible,
         opacity: 1;
     }
 
-    [data-message-type="assistant-streaming"] .badge {
+    [data-message-type='assistant-streaming'] .badge {
         animation: none;
     }
 

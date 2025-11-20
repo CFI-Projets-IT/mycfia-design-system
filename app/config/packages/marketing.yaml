@@ -1,0 +1,172 @@
+# Configuration Gorillias Marketing AI Bundle v2.3.0
+# Documentation : vendor/gorillias/marketing-ai-bundle/README.md
+
+marketing:
+    # ========================================================================
+    # LLM PROVIDERS - Configuration des fournisseurs LLM
+    # ========================================================================
+    # Tous configurés pour utiliser Mistral (98.75% succès benchmark)
+    # Pricing : Input $2/1M tokens, Output $6/1M tokens
+    # ========================================================================
+    llm:
+        default_provider: 'mistral'
+
+        providers:
+            # Provider Mistral (principal)
+            mistral:
+                api_key: '%env(MISTRAL_API_KEY)%'
+                model: 'mistral-large-latest'
+                temperature: 0.7
+                max_tokens: 4000
+
+    # ========================================================================
+    # STORES - Configuration du stockage vectoriel (OPTIONNEL)
+    # ========================================================================
+    # Type 'memory' par défaut (pas de persistance)
+    # Type 'chroma' pour ChromaDB (nécessite ChromaDB installé)
+    #
+    # IMPORTANT : Le bundle fonctionne parfaitement sans stores persistants
+    # Benchmark : 98.75% succès avec type 'memory'
+    # ========================================================================
+    stores:
+        document_store:
+            type: 'memory'              # Options : memory, chroma, pinecone, qdrant
+            connection: null            # null pour memory, URL pour chroma
+
+    # Si vous souhaitez activer ChromaDB (optionnel) :
+    # stores:
+    #     document_store:
+    #         type: 'chroma'
+    #         connection: '%env(CHROMA_URL)%'
+
+    # ========================================================================
+    # AGENTS IA - Configuration des 5 agents marketing
+    # ========================================================================
+    # Tous utilisent Mistral Large (mistral-large-latest)
+    # ========================================================================
+    agents:
+        # Agent 1 : Génération de Personas (Multi-Personas v3.4.0)
+        # Durée estimée : ~85s pour 3 personas | Coût moyen : ~$0.04
+        persona:
+            platform: 'mistral'
+            model: 'mistral-large-latest'
+            temperature: 0.7            # Créativité modérée pour personas réalistes
+            max_tokens: 12000           # Augmenté pour multi-personas (3 personas par défaut)
+            default_count: 3            # Générer 3 personas par défaut
+            min_quality_score: 70.0     # Seuil qualité strict (0-100)
+
+        # Agent 2 : Analyse Stratégique
+        # Durée estimée : ~55-60s | Coût moyen : ~$0.006
+        strategy:
+            platform: 'mistral'
+            model: 'mistral-large-latest'
+            temperature: 0.3            # Précision élevée pour stratégies
+            max_tokens: 6000
+
+        # Agent 3 : Analyse Concurrentielle
+        # Durée estimée : ~35-40s | Coût moyen : ~$0.004
+        competitor:
+            platform: 'mistral'
+            model: 'mistral-large-latest'
+            temperature: 0.5            # Équilibre analyse/créativité
+            max_tokens: 5000
+
+        # Agent 4 : Création de Contenu (utilisé par 8 AssetBuilders)
+        # Durée estimée : 17-200s selon type | Coût moyen : $0.0037-0.0233
+        content:
+            platform: 'mistral'
+            model: 'mistral-large-latest'
+            temperature: 0.8            # Créativité élevée pour contenu marketing
+            max_tokens: 8000
+
+        # Agent 5 : Analyse Contexte Projet (nouveau v3.11.0)
+        # Durée estimée : ~5-10s | Coût moyen : ~$0.002
+        # Analyse LLM du contexte projet (audience, business model, géographie)
+        project_context:
+            platform: 'mistral'
+            model: 'mistral-large-latest'
+            temperature: 0.3            # Précision élevée pour analyse contexte
+            max_tokens: 2000
+
+    # ========================================================================
+    # ASSET BUILDERS - Configuration des 8 builders multi-canal
+    # ========================================================================
+    # Benchmark réel (10 itérations par builder) avec Mistral Large :
+    # - GoogleAds    : 17.6s avg, $0.0037 (10/10 ✅)
+    # - FacebookPost : 23.8s avg, $0.0052 (10/10 ✅)
+    # - BingAds      : 26.1s avg, $0.0052 (10/10 ✅)
+    # - InstagramPost: 29.5s avg, $0.0046 (10/10 ✅)
+    # - LinkedinPost : 48.0s avg, $0.0064 (9/10 ⚠️)
+    # - Mail         : 54.3s avg, $0.0075 (10/10 ✅)
+    # - IAB          : 96.0s avg, $0.0113 (10/10 ✅)
+    # - Article      : 200.9s avg, $0.0233 (10/10 ✅)
+    # ========================================================================
+    asset_builders:
+        auto_discovery: true            # Découverte automatique des builders
+
+        builders:
+            google_ads:
+                enabled: true
+                recommendation_level: 0.7
+
+            linkedin_post:
+                enabled: true
+                recommendation_level: 0.7
+
+            facebook_post:
+                enabled: true
+                recommendation_level: 0.7
+
+            instagram_post:
+                enabled: true
+                recommendation_level: 0.7
+
+            mail:
+                enabled: true
+                recommendation_level: 0.7
+
+            bing_ads:
+                enabled: true
+                recommendation_level: 0.7
+
+            iab_banner:
+                enabled: true
+                recommendation_level: 0.7
+
+            article_seo:
+                enabled: true
+                recommendation_level: 0.7
+
+    # ========================================================================
+    # TOOLS - Configuration des outils marketing (v3.23.0)
+    # ========================================================================
+    # CompetitorIntelligenceTool avec fallback SerpAPI-only
+    # ========================================================================
+    tools:
+        competitor_intelligence:
+            # Configuration SerpAPI (Phase 1)
+            serpapi:
+                max_pages: 3                # 1-3 pages (3 = 300 résultats max)
+                num_per_page: 100           # 100 résultats par page (maximum)
+                filter: 0                   # Désactiver filtrage SerpAPI natif
+                excluded_domains:           # Domaines exclus automatiquement
+                    - wikipedia.org
+                    - linkedin.com
+                    - facebook.com
+                    - glassdoor.com
+                    - indeed.com
+
+            # Configuration Keywords (v3.26.0)
+            keywords:
+                sort_by: 'volume'           # volume|order
+                max_keywords: 20            # 5-50
+                filters:                    # Filtrage commercial (v3.26.0)
+                    min_volume: 80          # Volume recherche mensuel minimum (B2B Premium)
+                    competition: ['HIGH']   # Seulement marchés très concurrentiels
+                    min_cpc: 1.5            # CPC minimum 1.50€ (B2B haut de gamme)
+
+            # Configuration Firecrawl (Phase 3)
+            firecrawl:
+                enabled: true               # Activer Firecrawl si disponible
+                timeout: 30                 # Timeout scraping (5-120 secondes)
+                fallback_enabled: true      # Fallback SerpAPI-only si Firecrawl down

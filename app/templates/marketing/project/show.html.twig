@@ -1,0 +1,1437 @@
+{% extends 'layouts/home.html.twig' %}
+
+{% block title %}{{ project.name }} - Projet Marketing{% endblock %}
+
+{% block content_classes %} marketing-page{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="mb-4">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="{{ path('marketing_project_index') }}">Projets Marketing</a>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">{{ project.name }}</li>
+            </ol>
+        </nav>
+
+        <div class="d-flex justify-content-between align-items-start">
+            <div>
+                <h1 class="h3 mb-1">{{ project.name }}</h1>
+                <div class="d-flex align-items-center gap-2 mb-2">
+                    <span class="badge bg-secondary">
+                        {% if project.goalType == constant('App\\Enum\\GoalType::AWARENESS') %}
+                            <i class="bi bi-megaphone"></i> Notoriété
+                        {% elseif project.goalType == constant('App\\Enum\\GoalType::CONVERSION') %}
+                            <i class="bi bi-graph-up-arrow"></i> Conversion
+                        {% else %}
+                            <i class="bi bi-heart"></i> Fidélisation
+                        {% endif %}
+                    </span>
+                    <span class="text-muted">•</span>
+                    <span class="text-muted">Créé le {{ project.createdAt|date('d/m/Y') }}</span>
+                </div>
+            </div>
+            <div class="d-flex gap-2">
+                <span class="badge {{ project.status.badgeClass }} fs-6">
+                    {{ ('project.status.' ~ project.status.value)|trans({}, 'marketing') }}
+                </span>
+            </div>
+        </div>
+    </div>
+
+    {# Workflow Stepper #}
+    <div class="row g-3 mb-4 justify-content-center">
+        {# Étape 1 : Projet #}
+        <div class="col-6 col-md-2">
+            <div class="card border-success h-100">
+                <div class="card-body py-3 text-center">
+                    <div class="rounded-circle bg-success text-white d-inline-flex align-items-center justify-content-center mb-2" style="width: 36px; height: 36px;">
+                        <i class="bi bi-check-lg"></i>
+                    </div>
+                    <div class="small fw-semibold">Projet</div>
+                    <div class="text-success small">Créé</div>
+                </div>
+            </div>
+        </div>
+
+        {# Étape 2 : Personas #}
+        <div class="col-6 col-md-2">
+            {% if project.personas|length > 0 %}
+                <div class="card border-success h-100">
+                    <div class="card-body py-3 text-center">
+                        <div class="rounded-circle bg-success text-white d-inline-flex align-items-center justify-content-center mb-2" style="width: 36px; height: 36px;">
+                            <i class="bi bi-check-lg"></i>
+                        </div>
+                        <div class="small fw-semibold">Personas</div>
+                        <a href="#personas" class="btn btn-sm btn-outline-success py-0 px-2 mt-1">Voir</a>
+                    </div>
+                </div>
+            {% else %}
+                <div class="card border-primary h-100">
+                    <div class="card-body py-3 text-center">
+                        <div class="rounded-circle bg-primary text-white d-inline-flex align-items-center justify-content-center mb-2" style="width: 36px; height: 36px;">
+                            <span class="fw-bold small">2</span>
+                        </div>
+                        <div class="small fw-semibold">Personas</div>
+                        <form method="post" action="{{ path('marketing_project_enrichment_start', {id: project.id}) }}" class="d-inline">
+                            <input type="hidden" name="_token" value="{{ csrf_token('enrichment_start_' ~ project.id) }}">
+                            <button type="submit" class="btn btn-sm btn-primary py-0 px-2 mt-1">
+                                <i class="bi bi-magic"></i>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+
+        {# Étape 3 : Concurrents #}
+        <div class="col-6 col-md-2">
+            {% if project.competitorAnalysis %}
+                <div class="card border-success h-100">
+                    <div class="card-body py-3 text-center">
+                        <div class="rounded-circle bg-success text-white d-inline-flex align-items-center justify-content-center mb-2" style="width: 36px; height: 36px;">
+                            <i class="bi bi-check-lg"></i>
+                        </div>
+                        <div class="small fw-semibold">Concurrents</div>
+                        <a href="{{ path('marketing_competitor_detect', {id: project.id}) }}" class="btn btn-sm btn-outline-success py-0 px-2 mt-1">Modifier</a>
+                    </div>
+                </div>
+            {% elseif project.personas|length > 0 %}
+                {% set hasSelectedPersonas = false %}
+                {% for persona in project.personas %}
+                    {% if persona.selected %}
+                        {% set hasSelectedPersonas = true %}
+                    {% endif %}
+                {% endfor %}
+                <div class="card border-primary h-100">
+                    <div class="card-body py-3 text-center">
+                        <div class="rounded-circle bg-primary text-white d-inline-flex align-items-center justify-content-center mb-2" style="width: 36px; height: 36px;">
+                            <span class="fw-bold small">3</span>
+                        </div>
+                        <div class="small fw-semibold">Concurrents</div>
+                        {% if hasSelectedPersonas %}
+                            <a href="{{ path('marketing_competitor_detect', {id: project.id}) }}" class="btn btn-sm btn-primary py-0 px-2 mt-1">
+                                <i class="bi bi-search"></i>
+                            </a>
+                        {% else %}
+                            <a href="{{ path('marketing_persona_show', {id: project.id}) }}" class="btn btn-sm btn-warning py-0 px-2 mt-1">
+                                <i class="bi bi-exclamation"></i>
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+            {% else %}
+                <div class="card border-secondary h-100">
+                    <div class="card-body py-3 text-center">
+                        <div class="rounded-circle bg-secondary text-white d-inline-flex align-items-center justify-content-center mb-2" style="width: 36px; height: 36px;">
+                            <i class="bi bi-lock"></i>
+                        </div>
+                        <div class="small fw-semibold text-muted">Concurrents</div>
+                        <div class="text-muted small">Verrouillé</div>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+
+        {# Étape 4 : Stratégie #}
+        <div class="col-6 col-md-2">
+            {% if project.strategies|length > 0 %}
+                <div class="card border-success h-100">
+                    <div class="card-body py-3 text-center">
+                        <div class="rounded-circle bg-success text-white d-inline-flex align-items-center justify-content-center mb-2" style="width: 36px; height: 36px;">
+                            <i class="bi bi-check-lg"></i>
+                        </div>
+                        <div class="small fw-semibold">Stratégie</div>
+                        <a href="{{ path('marketing_strategy_show', {id: project.id}) }}" class="btn btn-sm btn-outline-success py-0 px-2 mt-1">Voir</a>
+                    </div>
+                </div>
+            {% elseif project.competitorAnalysis %}
+                <div class="card border-primary h-100">
+                    <div class="card-body py-3 text-center">
+                        <div class="rounded-circle bg-primary text-white d-inline-flex align-items-center justify-content-center mb-2" style="width: 36px; height: 36px;">
+                            <span class="fw-bold small">4</span>
+                        </div>
+                        <div class="small fw-semibold">Stratégie</div>
+                        <a href="{{ path('marketing_strategy_recap', {id: project.id}) }}" class="btn btn-sm btn-primary py-0 px-2 mt-1">
+                            <i class="bi bi-magic"></i>
+                        </a>
+                    </div>
+                </div>
+            {% else %}
+                <div class="card border-secondary h-100">
+                    <div class="card-body py-3 text-center">
+                        <div class="rounded-circle bg-secondary text-white d-inline-flex align-items-center justify-content-center mb-2" style="width: 36px; height: 36px;">
+                            <i class="bi bi-lock"></i>
+                        </div>
+                        <div class="small fw-semibold text-muted">Stratégie</div>
+                        <div class="text-muted small">Verrouillé</div>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+
+        {# Étape 5 : Assets #}
+        <div class="col-6 col-md-2">
+            {% if project.assets|length > 0 %}
+                <div class="card border-success h-100">
+                    <div class="card-body py-3 text-center">
+                        <div class="rounded-circle bg-success text-white d-inline-flex align-items-center justify-content-center mb-2" style="width: 36px; height: 36px;">
+                            <i class="bi bi-check-lg"></i>
+                        </div>
+                        <div class="small fw-semibold">Assets</div>
+                        <div class="d-flex gap-1 justify-content-center mt-1">
+                            <a href="#assets" class="btn btn-sm btn-outline-success py-0 px-2">Voir</a>
+                            <a href="{{ path('marketing_asset_new', {id: project.id}) }}" class="btn btn-sm btn-success py-0 px-1">
+                                <i class="bi bi-plus"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            {% elseif project.strategies|length > 0 %}
+                <div class="card border-primary h-100">
+                    <div class="card-body py-3 text-center">
+                        <div class="rounded-circle bg-primary text-white d-inline-flex align-items-center justify-content-center mb-2" style="width: 36px; height: 36px;">
+                            <span class="fw-bold small">5</span>
+                        </div>
+                        <div class="small fw-semibold">Assets</div>
+                        <a href="{{ path('marketing_asset_new', {id: project.id}) }}" class="btn btn-sm btn-primary py-0 px-2 mt-1">
+                            <i class="bi bi-magic"></i>
+                        </a>
+                    </div>
+                </div>
+            {% else %}
+                <div class="card border-secondary h-100">
+                    <div class="card-body py-3 text-center">
+                        <div class="rounded-circle bg-secondary text-white d-inline-flex align-items-center justify-content-center mb-2" style="width: 36px; height: 36px;">
+                            <i class="bi bi-lock"></i>
+                        </div>
+                        <div class="small fw-semibold text-muted">Assets</div>
+                        <div class="text-muted small">Verrouillé</div>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    {# Cards principales #}
+    <div class="row g-3 mb-4 justify-content-center">
+        <div class="col-6 col-md-3">
+            <div class="card">
+                <div class="card-body py-3 text-center">
+                    <div class="d-flex align-items-center justify-content-center gap-2 mb-1">
+                        <i class="bi bi-cash-coin text-success fs-4"></i>
+                        <span class="text-muted small">Budget</span>
+                    </div>
+                    <div class="fs-4 fw-semibold">{{ project.budget|number_format(0, ',', ' ') }} €</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-6 col-md-3">
+            <div class="card">
+                <div class="card-body py-3 text-center">
+                    <div class="d-flex align-items-center justify-content-center gap-2 mb-1">
+                        <i class="bi bi-people text-primary fs-4"></i>
+                        <span class="text-muted small">Personas</span>
+                    </div>
+                    <div class="fs-4 fw-semibold">{{ project.personas|length }}</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-6 col-md-3">
+            <div class="card">
+                <div class="card-body py-3 text-center">
+                    <div class="d-flex align-items-center justify-content-center gap-2 mb-1">
+                        <i class="bi bi-file-earmark-text text-info fs-4"></i>
+                        <span class="text-muted small">Assets</span>
+                    </div>
+                    <div class="fs-4 fw-semibold">{{ project.assets|length }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {# Cards par type d'asset #}
+    {% if project.assets|length > 0 %}
+        {% set assetsByType = {} %}
+        {% for asset in project.assets %}
+            {% set type = asset.assetType %}
+            {% if assetsByType[type] is defined %}
+                {% set assetsByType = assetsByType|merge({(type): assetsByType[type] + 1}) %}
+            {% else %}
+                {% set assetsByType = assetsByType|merge({(type): 1}) %}
+            {% endif %}
+        {% endfor %}
+
+        <div class="row g-3 mb-4 justify-content-center">
+            {% for type, count in assetsByType %}
+                {% set assetIcon = 'bi-file-earmark' %}
+                {% set assetColor = 'text-secondary' %}
+                {% set assetLabel = type %}
+                {% if type == 'google_ads' %}
+                    {% set assetIcon = 'bi-google' %}
+                    {% set assetColor = 'text-danger' %}
+                    {% set assetLabel = 'Google Ads' %}
+                {% elseif type == 'linkedin_post' %}
+                    {% set assetIcon = 'bi-linkedin' %}
+                    {% set assetColor = 'text-primary' %}
+                    {% set assetLabel = 'LinkedIn' %}
+                {% elseif type == 'facebook_post' %}
+                    {% set assetIcon = 'bi-facebook' %}
+                    {% set assetColor = 'text-primary' %}
+                    {% set assetLabel = 'Facebook' %}
+                {% elseif type == 'instagram_post' %}
+                    {% set assetIcon = 'bi-instagram' %}
+                    {% set assetColor = 'text-danger' %}
+                    {% set assetLabel = 'Instagram' %}
+                {% elseif type == 'mail' %}
+                    {% set assetIcon = 'bi-envelope' %}
+                    {% set assetColor = 'text-warning' %}
+                    {% set assetLabel = 'Email' %}
+                {% elseif type == 'bing_ads' %}
+                    {% set assetIcon = 'bi-microsoft' %}
+                    {% set assetColor = 'text-info' %}
+                    {% set assetLabel = 'Bing Ads' %}
+                {% elseif type == 'iab_banner' %}
+                    {% set assetIcon = 'bi-display' %}
+                    {% set assetColor = 'text-success' %}
+                    {% set assetLabel = 'Bannière IAB' %}
+                {% elseif type == 'article_seo' %}
+                    {% set assetIcon = 'bi-newspaper' %}
+                    {% set assetColor = 'text-dark' %}
+                    {% set assetLabel = 'Article SEO' %}
+                {% endif %}
+
+                <div class="col-6 col-md-3">
+                    <div class="card">
+                        <div class="card-body py-3 text-center">
+                            <div class="d-flex align-items-center justify-content-center gap-2 mb-1">
+                                <i class="{{ assetIcon }} {{ assetColor }} fs-4"></i>
+                                <span class="text-muted small">{{ assetLabel }}</span>
+                            </div>
+                            <div class="fs-4 fw-semibold">{{ count }}</div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    {# Section Détails du Projet #}
+    <div class="card mb-4">
+        <div class="card-header">
+            <h5 class="mb-0">Détails du Projet</h5>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                {# Entreprise et Secteur #}
+                <div class="col-md-6 mb-3">
+                    <div class="text-muted small mb-1">
+                        <i class="bi bi-building"></i> Entreprise
+                    </div>
+                    <div class="fw-semibold">{{ project.companyName }}</div>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <div class="text-muted small mb-1">
+                        <i class="bi bi-tag"></i> Secteur d'activité
+                    </div>
+                    <div>
+                        <span class="badge bg-info">{{ project.sector }}</span>
+                    </div>
+                </div>
+
+                {# Description #}
+                <div class="col-md-12 mb-3">
+                    <div class="text-muted small mb-1">
+                        <i class="bi bi-card-text"></i> Description du projet
+                    </div>
+                    <div>{{ project.description|nl2br }}</div>
+                </div>
+
+                {# Produit/Service #}
+                <div class="col-md-12 mb-3">
+                    <div class="text-muted small mb-1">
+                        <i class="bi bi-box-seam"></i> Produit/Service
+                    </div>
+                    <div>{{ project.productInfo|nl2br }}</div>
+                </div>
+
+                {# Objectifs #}
+                <div class="col-md-4 mb-3">
+                    <div class="text-muted small mb-1">
+                        <i class="bi bi-bullseye"></i> Objectif principal
+                    </div>
+                    <div>
+                        <span class="badge bg-warning">
+                            {{ ('goal.type.' ~ project.goalType.value)|trans({}, 'marketing') }}
+                        </span>
+                    </div>
+                </div>
+
+                <div class="col-md-8 mb-3">
+                    <div class="text-muted small mb-1">
+                        <i class="bi bi-list-check"></i> Objectifs détaillés (SMART)
+                    </div>
+                    <div class="small">{{ project.detailedObjectives|nl2br }}</div>
+                </div>
+
+                {# Budget et Timeline #}
+                <div class="col-md-4 mb-3">
+                    <div class="text-muted small mb-1">
+                        <i class="bi bi-currency-euro"></i> Budget total
+                    </div>
+                    <div class="fs-5 fw-semibold text-success">{{ project.budget|number_format(2, ',', ' ') }} €</div>
+                </div>
+
+                <div class="col-md-4 mb-3">
+                    <div class="text-muted small mb-1">
+                        <i class="bi bi-calendar-event"></i> Date de début
+                    </div>
+                    <div>{{ project.startDate|date('d/m/Y') }}</div>
+                </div>
+
+                <div class="col-md-4 mb-3">
+                    <div class="text-muted small mb-1">
+                        <i class="bi bi-calendar-check"></i> Date de fin
+                    </div>
+                    <div>{{ project.endDate|date('d/m/Y') }}</div>
+                    <div class="small text-muted">
+                        Durée : {{ project.startDate.diff(project.endDate).days }} jours
+                    </div>
+                </div>
+
+                {# URL Site Web (si présent) #}
+                {% if project.websiteUrl %}
+                    <div class="col-md-12 mb-3">
+                        <div class="text-muted small mb-1">
+                            <i class="bi bi-link-45deg"></i> Site web
+                        </div>
+                        <div>
+                            <a href="{{ project.websiteUrl }}" target="_blank" class="text-decoration-none">
+                                {{ project.websiteUrl }}
+                                <i class="bi bi-box-arrow-up-right small"></i>
+                            </a>
+                        </div>
+                    </div>
+                {% endif %}
+
+                {# Métadonnées #}
+                <div class="col-md-6 mb-3 pt-3 border-top">
+                    <div class="text-muted small mb-1">
+                        <i class="bi bi-calendar-plus"></i> Date de création
+                    </div>
+                    <div>{{ project.createdAt|date('d/m/Y à H:i') }}</div>
+                </div>
+
+                <div class="col-md-6 mb-3 pt-3 border-top">
+                    <div class="text-muted small mb-1">
+                        <i class="bi bi-calendar-check"></i> Dernière mise à jour
+                    </div>
+                    <div>{{ project.updatedAt|date('d/m/Y à H:i') }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {# Section Données Enrichies (si disponible) #}
+    {% if project.brandIdentity or project.businessIntelligence or project.keywordsData or project.aiEnrichment %}
+        <div class="card mb-4">
+            <div class="card-header bg-light">
+                <h5 class="mb-0">
+                    <i class="bi bi-stars text-warning"></i>
+                    Données Enrichies par IA
+                </h5>
+            </div>
+            <div class="card-body p-0">
+                {# Navigation onglets #}
+                <ul class="nav nav-tabs nav-fill border-bottom-0" role="tablist">
+                    {% if project.businessIntelligence %}
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="business-tab" data-bs-toggle="tab" data-bs-target="#business" type="button" role="tab">
+                                <i class="bi bi-briefcase-fill"></i>
+                                <span class="d-none d-md-inline ms-1">Intelligence Business</span>
+                                <span class="d-inline d-md-none ms-1">Business</span>
+                            </button>
+                        </li>
+                    {% endif %}
+                    {% if project.brandIdentity %}
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link {% if not project.businessIntelligence %}active{% endif %}" id="branding-tab" data-bs-toggle="tab" data-bs-target="#branding" type="button" role="tab">
+                                <i class="bi bi-palette-fill"></i>
+                                <span class="d-none d-md-inline ms-1">Identité de Marque</span>
+                                <span class="d-inline d-md-none ms-1">Marque</span>
+                            </button>
+                        </li>
+                    {% endif %}
+                    {% if project.keywordsData %}
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="keywords-tab" data-bs-toggle="tab" data-bs-target="#keywords" type="button" role="tab">
+                                <i class="bi bi-google"></i>
+                                <span class="d-none d-md-inline ms-1">Keywords Google Ads</span>
+                                <span class="d-inline d-md-none ms-1">Ads</span>
+                            </button>
+                        </li>
+                    {% endif %}
+                    {% if project.aiEnrichment %}
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="recommendations-tab" data-bs-toggle="tab" data-bs-target="#recommendations" type="button" role="tab">
+                                <i class="bi bi-lightbulb-fill"></i>
+                                <span class="d-none d-md-inline ms-1">Suggestions IA</span>
+                                <span class="d-inline d-md-none ms-1">IA</span>
+                            </button>
+                        </li>
+                    {% endif %}
+                </ul>
+
+                {# Contenu des onglets #}
+                <div class="tab-content p-4">
+                    {# Onglet Intelligence Business #}
+                    {% if project.businessIntelligence %}
+                        <div class="tab-pane fade show active" id="business" role="tabpanel">
+                            <h5 class="fw-bold text-primary mb-3">
+                                <i class="bi bi-briefcase"></i> Intelligence Business
+                            </h5>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <div class="card border-start border-primary border-3">
+                                        <div class="card-body">
+                                            <h6 class="text-muted mb-2"><i class="bi bi-people"></i> Audience Cible</h6>
+                                            <p class="mb-0">{{ project.businessIntelligence.targetAudience ?? 'Non définie' }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="card border-start border-info border-3">
+                                        <div class="card-body">
+                                            <h6 class="text-muted mb-2"><i class="bi bi-diagram-3"></i> Modèle Économique</h6>
+                                            <p class="mb-0">{{ project.businessIntelligence.businessModel ?? 'Non défini' }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="card border-start border-success border-3">
+                                        <div class="card-body">
+                                            <h6 class="text-muted mb-2"><i class="bi bi-tag"></i> Secteur</h6>
+                                            <p class="mb-0">{{ project.businessIntelligence.sector ?? 'Non défini' }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="card border-start border-warning border-3">
+                                        <div class="card-body">
+                                            <h6 class="text-muted mb-2"><i class="bi bi-geo-alt"></i> Géographie</h6>
+                                            <p class="mb-0">{{ project.businessIntelligence.geography ?? 'Non définie' }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+
+                    {# Onglet Identité de Marque #}
+                    {% if project.brandIdentity %}
+                        <div class="tab-pane fade {% if not project.businessIntelligence %}show active{% endif %}" id="branding" role="tabpanel">
+                            <h5 class="fw-bold text-primary mb-3">
+                                <i class="bi bi-palette"></i> Identité de Marque
+                            </h5>
+                            <div class="row g-3">
+                                <div class="col-md-12">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <h6 class="mb-3"><i class="bi bi-building"></i> Marque : {{ project.brandIdentity.brand_name ?? 'N/A' }}</h6>
+                                            {% if project.brandIdentity.colors is defined %}
+                                                <h6 class="text-muted mb-2">Couleurs</h6>
+                                                <div class="d-flex gap-2 mb-3">
+                                                    {% if project.brandIdentity.colors.primary is defined %}
+                                                        <div class="text-center">
+                                                            <div style="width: 60px; height: 60px; background-color: {{ project.brandIdentity.colors.primary }}; border: 1px solid #ddd; border-radius: 4px;"></div>
+                                                            <small class="text-muted d-block mt-1">Primaire</small>
+                                                            <code class="small">{{ project.brandIdentity.colors.primary }}</code>
+                                                        </div>
+                                                    {% endif %}
+                                                    {% if project.brandIdentity.colors.accent is defined %}
+                                                        <div class="text-center">
+                                                            <div style="width: 60px; height: 60px; background-color: {{ project.brandIdentity.colors.accent }}; border: 1px solid #ddd; border-radius: 4px;"></div>
+                                                            <small class="text-muted d-block mt-1">Accent</small>
+                                                            <code class="small">{{ project.brandIdentity.colors.accent }}</code>
+                                                        </div>
+                                                    {% endif %}
+                                                </div>
+                                            {% endif %}
+                                            {% if project.brandIdentity.fonts is defined %}
+                                                <h6 class="text-muted mb-2">Typographie</h6>
+                                                <ul class="list-unstyled">
+                                                    {% for font in project.brandIdentity.fonts %}
+                                                        <li><i class="bi bi-fonts"></i> {{ font.family }} <small class="text-muted">({{ font.role }})</small></li>
+                                                    {% endfor %}
+                                                </ul>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+
+                    {# Onglet Keywords Google Ads #}
+                    {% if project.keywordsData %}
+                        <div class="tab-pane fade" id="keywords" role="tabpanel">
+                            <h5 class="fw-bold text-primary mb-3">
+                                <i class="bi bi-google"></i> Keywords Google Ads
+                            </h5>
+                            {% if project.keywordsData.metrics is defined %}
+                                <div class="row g-3 mb-4">
+                                    <div class="col-md-3">
+                                        <div class="card bg-light">
+                                            <div class="card-body text-center">
+                                                <div class="text-muted small">Volume moyen</div>
+                                                <div class="fs-4 fw-bold text-primary">{{ project.keywordsData.metrics.avg_volume|number_format(0, ',', ' ') }}</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="card bg-light">
+                                            <div class="card-body text-center">
+                                                <div class="text-muted small">CPC moyen</div>
+                                                <div class="fs-4 fw-bold text-success">{{ project.keywordsData.metrics.avg_cpc|number_format(2, ',', ' ') }} €</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="card bg-light">
+                                            <div class="card-body text-center">
+                                                <div class="text-muted small">Total keywords</div>
+                                                <div class="fs-4 fw-bold">{{ project.keywordsData.metrics.total_keywords }}</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="card bg-light">
+                                            <div class="card-body text-center">
+                                                <div class="text-muted small">Haute compétition</div>
+                                                <div class="fs-4 fw-bold text-danger">{{ project.keywordsData.metrics.high_competition_percentage|number_format(0) }}%</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endif %}
+                            {% if project.keywordsData.keywords is defined %}
+                                <h6 class="mb-3">{{ project.keywordsData.keywords|length }} Keywords Google Ads</h6>
+                                <div class="table-responsive" style="max-height: 500px; overflow-y: auto;">
+                                    <table class="table table-sm table-hover">
+                                        <thead class="sticky-top bg-white">
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Mot-clé</th>
+                                                <th class="text-end">Volume</th>
+                                                <th class="text-end">CPC (€)</th>
+                                                <th class="text-center">Compétition</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for kw in project.keywordsData.keywords %}
+                                                <tr>
+                                                    <td class="text-muted">{{ loop.index }}</td>
+                                                    <td><strong>{{ kw.keyword }}</strong></td>
+                                                    <td class="text-end">{{ kw.volume|number_format(0, ',', ' ') }}</td>
+                                                    <td class="text-end">{{ kw.cpc|number_format(2, ',', ' ') }}</td>
+                                                    <td class="text-center">
+                                                        <span class="badge bg-{{ kw.competition == 'HIGH' ? 'danger' : (kw.competition == 'MEDIUM' ? 'warning' : 'success') }}">
+                                                            {{ kw.competition }}
+                                                        </span>
+                                                    </td>
+                                                </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+
+                    {# Onglet Suggestions IA #}
+                    {% if project.aiEnrichment %}
+                        <div class="tab-pane fade" id="recommendations" role="tabpanel">
+                            <h5 class="fw-bold text-primary mb-3">
+                                <i class="bi bi-lightbulb"></i> Suggestions IA
+                            </h5>
+                            {% if project.aiEnrichment.creative_name_alternatives is defined %}
+                                <div class="mb-4">
+                                    <h6 class="text-muted mb-2"><i class="bi bi-magic"></i> Noms Créatifs Alternatifs</h6>
+                                    <ul class="list-group">
+                                        {% for name in project.aiEnrichment.creative_name_alternatives %}
+                                            <li class="list-group-item">{{ name }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            {% endif %}
+                            {% if project.aiEnrichment.smart_objectives_detailed is defined %}
+                                <div class="mb-4">
+                                    <h6 class="text-muted mb-2"><i class="bi bi-bullseye"></i> Objectifs SMART Détaillés</h6>
+                                    <div class="card border-primary">
+                                        <div class="card-body">
+                                            {{ project.aiEnrichment.smart_objectives_detailed|nl2br }}
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endif %}
+                            {% if project.aiEnrichment.strategic_recommendations is defined %}
+                                <div class="mb-4">
+                                    <h6 class="text-muted mb-2"><i class="bi bi-clipboard-check"></i> Recommandations Stratégiques</h6>
+                                    <ul class="list-group">
+                                        {% for recommendation in project.aiEnrichment.strategic_recommendations %}
+                                            <li class="list-group-item">
+                                                <i class="bi bi-check-circle text-success"></i> {{ recommendation }}
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            {% endif %}
+                            {% if project.aiEnrichment.success_factors is defined %}
+                                <div class="mb-0">
+                                    <h6 class="text-muted mb-2"><i class="bi bi-star"></i> Facteurs de Succès</h6>
+                                    <ul class="list-group">
+                                        {% for factor in project.aiEnrichment.success_factors %}
+                                            <li class="list-group-item">
+                                                <i class="bi bi-star-fill text-warning"></i> {{ factor }}
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    {% if project.personas|length > 0 %}
+        <div class="card mb-4" id="personas">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Personas Générés</h5>
+                <a href="{{ path('marketing_persona_show', {id: project.id}) }}" class="btn btn-sm btn-outline-primary">
+                    <i class="bi bi-gear"></i> Configurer
+                </a>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th class="px-3">Nom</th>
+                                <th>Métier</th>
+                                <th>Âge</th>
+                                <th>Genre</th>
+                                <th>Qualité</th>
+                                <th>Sélectionné</th>
+                                <th class="text-end pe-3">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for persona in project.personas %}
+                                <tr>
+                                    <td class="px-3">
+                                        <div class="fw-semibold">{{ persona.name }}</div>
+                                    </td>
+                                    <td>
+                                        <span class="text-muted small">
+                                            <i class="bi bi-briefcase"></i> {{ persona.job }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="text-muted small">{{ persona.age }} ans</span>
+                                    </td>
+                                    <td>
+                                        {% if persona.gender != 'N/A' %}
+                                            <span class="text-muted small">
+                                                <i class="bi bi-person"></i> {{ persona.gender }}
+                                            </span>
+                                        {% else %}
+                                            <span class="text-muted small">-</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if persona.qualityScore %}
+                                            {% set scorePercent = (persona.qualityScore * 100)|round %}
+                                            <div class="d-flex align-items-center gap-2">
+                                                <div class="progress flex-grow-1" style="height: 6px; width: 60px;">
+                                                    <div class="progress-bar bg-{{ scorePercent >= 80 ? 'success' : (scorePercent >= 50 ? 'warning' : 'danger') }}"
+                                                         role="progressbar"
+                                                         style="width: {{ scorePercent }}%">
+                                                    </div>
+                                                </div>
+                                                <span class="small text-muted">{{ scorePercent }}%</span>
+                                            </div>
+                                        {% else %}
+                                            <span class="text-muted small">-</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if persona.selected %}
+                                            <span class="badge bg-success"><i class="bi bi-check-lg"></i></span>
+                                        {% else %}
+                                            <span class="badge bg-secondary"><i class="bi bi-x-lg"></i></span>
+                                        {% endif %}
+                                    </td>
+                                    <td class="text-end pe-3">
+                                        <button type="button" class="btn btn-sm btn-outline-primary"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#personaModal{{ persona.id }}"
+                                                title="Voir les détails">
+                                            <i class="bi bi-eye"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    {# Section Assets Générés #}
+    {% if project.assets|length > 0 %}
+        <div class="card mb-4" id="assets">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Assets Marketing Générés</h5>
+                <a href="{{ path('marketing_asset_new', {id: project.id}) }}" class="btn btn-sm btn-outline-primary">
+                    <i class="bi bi-plus-circle"></i> Générer plus
+                </a>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th class="px-3">Type</th>
+                                <th>Canal</th>
+                                <th>Qualité</th>
+                                <th>Statut</th>
+                                <th>Date création</th>
+                                <th class="text-end pe-3">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for asset in project.assets %}
+                                <tr>
+                                    <td class="px-3">
+                                        {% set assetIcon = 'bi-file-earmark' %}
+                                        {% if asset.assetType == 'google_ads' %}
+                                            {% set assetIcon = 'bi-google' %}
+                                        {% elseif asset.assetType == 'linkedin_post' %}
+                                            {% set assetIcon = 'bi-linkedin' %}
+                                        {% elseif asset.assetType == 'facebook_post' %}
+                                            {% set assetIcon = 'bi-facebook' %}
+                                        {% elseif asset.assetType == 'instagram_post' %}
+                                            {% set assetIcon = 'bi-instagram' %}
+                                        {% elseif asset.assetType == 'mail' %}
+                                            {% set assetIcon = 'bi-envelope' %}
+                                        {% elseif asset.assetType == 'bing_ads' %}
+                                            {% set assetIcon = 'bi-microsoft' %}
+                                        {% elseif asset.assetType == 'iab_banner' %}
+                                            {% set assetIcon = 'bi-display' %}
+                                        {% elseif asset.assetType == 'article_seo' %}
+                                            {% set assetIcon = 'bi-newspaper' %}
+                                        {% endif %}
+                                        <div class="fw-semibold">
+                                            <i class="{{ assetIcon }} text-primary"></i>
+                                            {{ ('asset.type.' ~ asset.assetType)|trans({}, 'marketing') }}
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <span class="text-muted small">
+                                            <i class="bi bi-tag"></i> {{ asset.channel }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        {% if asset.qualityScore %}
+                                            {% set scorePercent = (asset.qualityScore * 100)|round %}
+                                            <div class="d-flex align-items-center gap-2">
+                                                <div class="progress flex-grow-1" style="height: 6px; width: 60px;">
+                                                    <div class="progress-bar bg-{{ scorePercent >= 80 ? 'success' : (scorePercent >= 50 ? 'warning' : 'danger') }}"
+                                                         role="progressbar"
+                                                         style="width: {{ scorePercent }}%">
+                                                    </div>
+                                                </div>
+                                                <span class="small text-muted">{{ scorePercent }}%</span>
+                                            </div>
+                                        {% else %}
+                                            <span class="text-muted small">-</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-{{ asset.status.value == 'approved' ? 'success' : (asset.status.value == 'rejected' ? 'danger' : 'secondary') }}">
+                                            {{ ('asset.status.' ~ asset.status.value)|trans({}, 'marketing') }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="text-muted small">
+                                            <i class="bi bi-calendar"></i>
+                                            {{ asset.createdAt|date('d/m/Y H:i') }}
+                                        </span>
+                                    </td>
+                                    <td class="text-end pe-3">
+                                        <div class="d-flex gap-1 justify-content-end">
+                                            <button type="button" class="btn btn-sm btn-outline-primary"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#assetModal{{ asset.id }}"
+                                                    title="Voir">
+                                                <i class="bi bi-eye"></i>
+                                            </button>
+                                            {% if asset.status.value == 'draft' %}
+                                                <form method="post" action="{{ path('marketing_asset_approve', {id: project.id, assetId: asset.id}) }}" class="d-inline">
+                                                    <input type="hidden" name="_token" value="{{ csrf_token('approve' ~ asset.id) }}">
+                                                    <button type="submit" class="btn btn-sm btn-success" title="Approuver">
+                                                        <i class="bi bi-check-lg"></i>
+                                                    </button>
+                                                </form>
+                                                <form method="post" action="{{ path('marketing_asset_reject', {id: project.id, assetId: asset.id}) }}" class="d-inline">
+                                                    <input type="hidden" name="_token" value="{{ csrf_token('reject' ~ asset.id) }}">
+                                                    <button type="submit" class="btn btn-sm btn-danger" title="Rejeter">
+                                                        <i class="bi bi-x-lg"></i>
+                                                    </button>
+                                                </form>
+                                            {% endif %}
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block modals %}
+{# Modals pour afficher le détail des personas #}
+{% if project.personas|length > 0 %}
+    {% for persona in project.personas %}
+        <div class="modal fade" id="personaModal{{ persona.id }}" tabindex="-1" aria-labelledby="personaModalLabel{{ persona.id }}" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="personaModalLabel{{ persona.id }}">
+                            <i class="bi bi-person-circle text-primary"></i> {{ persona.name }}
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                    </div>
+                    <div class="modal-body">
+                        {# Informations de base #}
+                        <div class="row mb-4">
+                            <div class="col-md-4">
+                                <div class="text-muted small mb-1"><i class="bi bi-briefcase"></i> Métier</div>
+                                <div class="fw-semibold">{{ persona.job }}</div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="text-muted small mb-1"><i class="bi bi-calendar"></i> Âge</div>
+                                <div class="fw-semibold">{{ persona.age }} ans</div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="text-muted small mb-1"><i class="bi bi-person"></i> Genre</div>
+                                <div class="fw-semibold">{{ persona.gender != 'N/A' ? persona.gender : '-' }}</div>
+                            </div>
+                        </div>
+
+                        {# Score de qualité #}
+                        {% if persona.qualityScore %}
+                            {% set scorePercent = (persona.qualityScore * 100)|round %}
+                            <div class="mb-4">
+                                <div class="text-muted small mb-2"><i class="bi bi-speedometer2"></i> Score de qualité</div>
+                                <div class="d-flex align-items-center gap-3">
+                                    <div class="progress flex-grow-1" style="height: 10px;">
+                                        <div class="progress-bar bg-{{ scorePercent >= 80 ? 'success' : (scorePercent >= 50 ? 'warning' : 'danger') }}"
+                                             role="progressbar"
+                                             style="width: {{ scorePercent }}%">
+                                        </div>
+                                    </div>
+                                    <span class="fw-semibold">{{ scorePercent }}%</span>
+                                </div>
+                            </div>
+                        {% endif %}
+
+                        {# Description #}
+                        {% if persona.description %}
+                            <div class="mb-4">
+                                <div class="text-muted small mb-2"><i class="bi bi-card-text"></i> Description</div>
+                                <div class="bg-light p-3 rounded">{{ persona.description|nl2br }}</div>
+                            </div>
+                        {% endif %}
+
+                        {# Données détaillées depuis rawData #}
+                        {% if persona.rawData %}
+                            {% if persona.rawData.pain_points is defined and persona.rawData.pain_points %}
+                                <div class="mb-4">
+                                    <div class="text-muted small mb-2"><i class="bi bi-exclamation-triangle text-danger"></i> Points de douleur</div>
+                                    <ul class="list-group list-group-flush">
+                                        {% for pain in persona.rawData.pain_points %}
+                                            {% if pain is iterable %}
+                                                {% for subPain in pain %}
+                                                    <li class="list-group-item bg-light">
+                                                        <i class="bi bi-dash"></i> {{ subPain }}
+                                                    </li>
+                                                {% endfor %}
+                                            {% else %}
+                                                <li class="list-group-item bg-light">
+                                                    <i class="bi bi-dash"></i> {{ pain }}
+                                                </li>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            {% endif %}
+
+                            {% if persona.rawData.goals is defined and persona.rawData.goals %}
+                                <div class="mb-4">
+                                    <div class="text-muted small mb-2"><i class="bi bi-bullseye text-success"></i> Objectifs</div>
+                                    <ul class="list-group list-group-flush">
+                                        {% for goal in persona.rawData.goals %}
+                                            {% if goal is iterable %}
+                                                {% for subGoal in goal %}
+                                                    <li class="list-group-item bg-light">
+                                                        <i class="bi bi-check-circle text-success"></i> {{ subGoal }}
+                                                    </li>
+                                                {% endfor %}
+                                            {% else %}
+                                                <li class="list-group-item bg-light">
+                                                    <i class="bi bi-check-circle text-success"></i> {{ goal }}
+                                                </li>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            {% endif %}
+
+                            {% if persona.rawData.behaviors is defined and persona.rawData.behaviors %}
+                                <div class="mb-4">
+                                    <div class="text-muted small mb-2"><i class="bi bi-activity text-info"></i> Comportements</div>
+                                    <ul class="list-group list-group-flush">
+                                        {% for behavior in persona.rawData.behaviors %}
+                                            {% if behavior is iterable %}
+                                                {% for subBehavior in behavior %}
+                                                    <li class="list-group-item bg-light">
+                                                        <i class="bi bi-arrow-right"></i> {{ subBehavior }}
+                                                    </li>
+                                                {% endfor %}
+                                            {% else %}
+                                                <li class="list-group-item bg-light">
+                                                    <i class="bi bi-arrow-right"></i> {{ behavior }}
+                                                </li>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            {% endif %}
+
+                            {% if persona.rawData.channels is defined and persona.rawData.channels %}
+                                <div class="mb-4">
+                                    <div class="text-muted small mb-2"><i class="bi bi-broadcast text-primary"></i> Canaux préférés</div>
+                                    <div class="d-flex flex-wrap gap-2">
+                                        {% for channel in persona.rawData.channels %}
+                                            {% if channel is iterable %}
+                                                {% for subChannel in channel %}
+                                                    <span class="badge bg-primary">{{ subChannel }}</span>
+                                                {% endfor %}
+                                            {% else %}
+                                                <span class="badge bg-primary">{{ channel }}</span>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            {% endif %}
+
+                            {% if persona.rawData.motivations is defined and persona.rawData.motivations %}
+                                <div class="mb-4">
+                                    <div class="text-muted small mb-2"><i class="bi bi-lightning text-warning"></i> Motivations</div>
+                                    <ul class="list-group list-group-flush">
+                                        {% for motivation in persona.rawData.motivations %}
+                                            {% if motivation is iterable %}
+                                                {% for subMotivation in motivation %}
+                                                    <li class="list-group-item bg-light">
+                                                        <i class="bi bi-star text-warning"></i> {{ subMotivation }}
+                                                    </li>
+                                                {% endfor %}
+                                            {% else %}
+                                                <li class="list-group-item bg-light">
+                                                    <i class="bi bi-star text-warning"></i> {{ motivation }}
+                                                </li>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            {% endif %}
+                        {% endif %}
+
+                        {# Statut de sélection #}
+                        <div class="border-top pt-3 mt-3">
+                            <div class="d-flex align-items-center justify-content-between">
+                                <div class="text-muted small">
+                                    <i class="bi bi-calendar-plus"></i> Créé le {{ persona.createdAt|date('d/m/Y à H:i') }}
+                                </div>
+                                {% if persona.selected %}
+                                    <span class="badge bg-success"><i class="bi bi-check-lg"></i> Sélectionné</span>
+                                {% else %}
+                                    <span class="badge bg-secondary"><i class="bi bi-x-lg"></i> Non sélectionné</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                        <a href="{{ path('marketing_persona_show', {id: project.id}) }}" class="btn btn-primary">
+                            <i class="bi bi-gear"></i> Configurer les personas
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+{% endif %}
+
+{# Modals pour afficher le contenu des assets #}
+{% if project.assets|length > 0 %}
+    {% for asset in project.assets %}
+        <div class="modal fade" id="assetModal{{ asset.id }}" tabindex="-1" aria-labelledby="assetModalLabel{{ asset.id }}" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="assetModalLabel{{ asset.id }}">
+                            {{ ('asset.type.' ~ asset.assetType)|trans({}, 'marketing') }}
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                    </div>
+                    <div class="modal-body">
+                        {% set content = asset.contentArray %}
+                        {% if content %}
+                            {# Google Ads #}
+                            {% if asset.assetType == 'google_ads' %}
+                                {% if content.headlines is defined %}
+                                    <div class="mb-4">
+                                        <h6 class="text-primary mb-2"><i class="bi bi-type-h1"></i> Titres</h6>
+                                        <div class="d-flex flex-wrap gap-2">
+                                            {% for headline in content.headlines %}
+                                                <span class="badge bg-primary fs-6 fw-normal">{{ headline }}</span>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                {% endif %}
+                                {% if content.descriptions is defined %}
+                                    <div class="mb-4">
+                                        <h6 class="text-primary mb-2"><i class="bi bi-card-text"></i> Descriptions</h6>
+                                        {% for desc in content.descriptions %}
+                                            <div class="bg-light p-2 rounded mb-2">{{ desc }}</div>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                                {% if content.keywords is defined %}
+                                    <div class="mb-4">
+                                        <h6 class="text-primary mb-2"><i class="bi bi-tags"></i> Mots-clés</h6>
+                                        <div class="d-flex flex-wrap gap-1">
+                                            {% for kw in content.keywords %}
+                                                <span class="badge bg-secondary">{{ kw }}</span>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                {% endif %}
+                                {% if content.call_to_action is defined %}
+                                    <div class="mb-4">
+                                        <h6 class="text-primary mb-2"><i class="bi bi-cursor"></i> Call to Action</h6>
+                                        <span class="badge bg-success fs-6">{{ content.call_to_action }}</span>
+                                    </div>
+                                {% endif %}
+
+                            {# LinkedIn Post #}
+                            {% elseif asset.assetType == 'linkedin_post' %}
+                                {% if content.hook is defined %}
+                                    <div class="mb-4">
+                                        <h6 class="text-primary mb-2"><i class="bi bi-lightning"></i> Accroche</h6>
+                                        <div class="bg-warning bg-opacity-10 p-3 rounded border-start border-warning border-3">
+                                            {{ content.hook }}
+                                        </div>
+                                    </div>
+                                {% endif %}
+                                {% if content.body is defined %}
+                                    <div class="mb-4">
+                                        <h6 class="text-primary mb-2"><i class="bi bi-body-text"></i> Corps du message</h6>
+                                        <div class="bg-light p-3 rounded">{{ content.body|nl2br }}</div>
+                                    </div>
+                                {% endif %}
+                                {% if content.hashtags is defined %}
+                                    <div class="mb-4">
+                                        <h6 class="text-primary mb-2"><i class="bi bi-hash"></i> Hashtags</h6>
+                                        <div class="d-flex flex-wrap gap-1">
+                                            {% for tag in content.hashtags %}
+                                                <span class="badge bg-info">{{ tag starts with '#' ? tag : '#' ~ tag }}</span>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                {% endif %}
+                                {% if content.call_to_action is defined %}
+                                    <div class="mb-4">
+                                        <h6 class="text-primary mb-2"><i class="bi bi-cursor"></i> Call to Action</h6>
+                                        <span class="badge bg-success fs-6">{{ content.call_to_action }}</span>
+                                    </div>
+                                {% endif %}
+
+                            {# Facebook Post #}
+                            {% elseif asset.assetType == 'facebook_post' %}
+                                {% if content.text is defined or content.body is defined %}
+                                    <div class="mb-4">
+                                        <h6 class="text-primary mb-2"><i class="bi bi-body-text"></i> Texte du post</h6>
+                                        <div class="bg-light p-3 rounded">{{ (content.text ?? content.body)|nl2br }}</div>
+                                    </div>
+                                {% endif %}
+                                {% if content.headline is defined %}
+                                    <div class="mb-4">
+                                        <h6 class="text-primary mb-2"><i class="bi bi-type-h1"></i> Titre</h6>
+                                        <div class="fs-5 fw-semibold">{{ content.headline }}</div>
+                                    </div>
+                                {% endif %}
+                                {% if content.link_description is defined %}
+                                    <div class="mb-4">
+                                        <h6 class="text-primary mb-2"><i class="bi bi-link-45deg"></i> Description du lien</h6>
+                                        <div class="text-muted">{{ content.link_description }}</div>
+                                    </div>
+                                {% endif %}
+
+                            {# Instagram Post #}
+                            {% elseif asset.assetType == 'instagram_post' %}
+                                {% if content.caption is defined %}
+                                    <div class="mb-4">
+                                        <h6 class="text-primary mb-2"><i class="bi bi-chat-quote"></i> Légende</h6>
+                                        <div class="bg-light p-3 rounded">{{ content.caption|nl2br }}</div>
+                                    </div>
+                                {% endif %}
+                                {% if content.hashtags is defined %}
+                                    <div class="mb-4">
+                                        <h6 class="text-primary mb-2"><i class="bi bi-hash"></i> Hashtags</h6>
+                                        <div class="d-flex flex-wrap gap-1">
+                                            {% for tag in content.hashtags %}
+                                                <span class="badge bg-gradient" style="background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);">
+                                                    {{ tag starts with '#' ? tag : '#' ~ tag }}
+                                                </span>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                {% endif %}
+                                {% if content.image_description is defined %}
+                                    <div class="mb-4">
+                                        <h6 class="text-primary mb-2"><i class="bi bi-image"></i> Description de l'image</h6>
+                                        <div class="text-muted fst-italic">{{ content.image_description }}</div>
+                                    </div>
+                                {% endif %}
+
+                            {# Email #}
+                            {% elseif asset.assetType == 'mail' %}
+                                {% if content.subject is defined %}
+                                    <div class="mb-4">
+                                        <h6 class="text-primary mb-2"><i class="bi bi-envelope"></i> Objet</h6>
+                                        <div class="bg-primary bg-opacity-10 p-3 rounded fw-semibold">{{ content.subject }}</div>
+                                    </div>
+                                {% endif %}
+                                {% if content.preview_text is defined %}
+                                    <div class="mb-4">
+                                        <h6 class="text-primary mb-2"><i class="bi bi-eye"></i> Texte d'aperçu</h6>
+                                        <div class="text-muted fst-italic">{{ content.preview_text }}</div>
+                                    </div>
+                                {% endif %}
+                                {% if content.body is defined %}
+                                    <div class="mb-4">
+                                        <h6 class="text-primary mb-2"><i class="bi bi-body-text"></i> Corps de l'email</h6>
+                                        <div class="bg-light p-3 rounded border">{{ content.body|nl2br }}</div>
+                                    </div>
+                                {% endif %}
+                                {% if content.call_to_action is defined %}
+                                    <div class="mb-4">
+                                        <h6 class="text-primary mb-2"><i class="bi bi-cursor"></i> Call to Action</h6>
+                                        <button class="btn btn-primary" disabled>{{ content.call_to_action }}</button>
+                                    </div>
+                                {% endif %}
+
+                            {# Bing Ads #}
+                            {% elseif asset.assetType == 'bing_ads' %}
+                                {% if content.titles is defined or content.headlines is defined %}
+                                    <div class="mb-4">
+                                        <h6 class="text-primary mb-2"><i class="bi bi-type-h1"></i> Titres</h6>
+                                        <div class="d-flex flex-wrap gap-2">
+                                            {% for title in (content.titles ?? content.headlines) %}
+                                                <span class="badge bg-info fs-6 fw-normal">{{ title }}</span>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                {% endif %}
+                                {% if content.descriptions is defined %}
+                                    <div class="mb-4">
+                                        <h6 class="text-primary mb-2"><i class="bi bi-card-text"></i> Descriptions</h6>
+                                        {% for desc in content.descriptions %}
+                                            <div class="bg-light p-2 rounded mb-2">{{ desc }}</div>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+
+                            {# IAB Banner #}
+                            {% elseif asset.assetType == 'iab_banner' %}
+                                {% if content.headline is defined %}
+                                    <div class="mb-4">
+                                        <h6 class="text-primary mb-2"><i class="bi bi-type-h1"></i> Titre</h6>
+                                        <div class="fs-4 fw-bold">{{ content.headline }}</div>
+                                    </div>
+                                {% endif %}
+                                {% if content.subheadline is defined %}
+                                    <div class="mb-4">
+                                        <h6 class="text-primary mb-2"><i class="bi bi-type-h2"></i> Sous-titre</h6>
+                                        <div class="fs-5">{{ content.subheadline }}</div>
+                                    </div>
+                                {% endif %}
+                                {% if content.body is defined %}
+                                    <div class="mb-4">
+                                        <h6 class="text-primary mb-2"><i class="bi bi-body-text"></i> Texte</h6>
+                                        <div class="bg-light p-3 rounded">{{ content.body }}</div>
+                                    </div>
+                                {% endif %}
+                                {% if content.call_to_action is defined %}
+                                    <div class="mb-4">
+                                        <h6 class="text-primary mb-2"><i class="bi bi-cursor"></i> Call to Action</h6>
+                                        <button class="btn btn-warning" disabled>{{ content.call_to_action }}</button>
+                                    </div>
+                                {% endif %}
+                                {% if content.size is defined %}
+                                    <div class="mb-4">
+                                        <h6 class="text-primary mb-2"><i class="bi bi-aspect-ratio"></i> Format</h6>
+                                        <span class="badge bg-secondary">{{ content.size }}</span>
+                                    </div>
+                                {% endif %}
+
+                            {# Article SEO #}
+                            {% elseif asset.assetType == 'article_seo' %}
+                                {% if content.title is defined %}
+                                    <div class="mb-4">
+                                        <h6 class="text-primary mb-2"><i class="bi bi-newspaper"></i> Titre de l'article</h6>
+                                        <div class="fs-4 fw-bold">{{ content.title }}</div>
+                                    </div>
+                                {% endif %}
+                                {% if content.meta_description is defined %}
+                                    <div class="mb-4">
+                                        <h6 class="text-primary mb-2"><i class="bi bi-search"></i> Meta Description</h6>
+                                        <div class="bg-light p-3 rounded border-start border-success border-3">{{ content.meta_description }}</div>
+                                    </div>
+                                {% endif %}
+                                {% if content.introduction is defined %}
+                                    <div class="mb-4">
+                                        <h6 class="text-primary mb-2"><i class="bi bi-blockquote-left"></i> Introduction</h6>
+                                        <div class="bg-light p-3 rounded">{{ content.introduction|nl2br }}</div>
+                                    </div>
+                                {% endif %}
+                                {% if content.sections is defined %}
+                                    <div class="mb-4">
+                                        <h6 class="text-primary mb-2"><i class="bi bi-list-nested"></i> Sections</h6>
+                                        {% for section in content.sections %}
+                                            <div class="card mb-2">
+                                                <div class="card-header bg-light py-2">
+                                                    <strong>{{ section.heading ?? section.title ?? 'Section' }}</strong>
+                                                </div>
+                                                <div class="card-body">
+                                                    {{ (section.content ?? section.body ?? '')|nl2br }}
+                                                </div>
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                                {% if content.keywords is defined %}
+                                    <div class="mb-4">
+                                        <h6 class="text-primary mb-2"><i class="bi bi-tags"></i> Mots-clés SEO</h6>
+                                        <div class="d-flex flex-wrap gap-1">
+                                            {% for kw in content.keywords %}
+                                                <span class="badge bg-success">{{ kw }}</span>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                {% endif %}
+
+                            {# Fallback générique #}
+                            {% else %}
+                                {% for key, value in content %}
+                                    <div class="mb-3">
+                                        <h6 class="text-primary mb-2">{{ key|replace({'_': ' '})|title }}</h6>
+                                        <div>
+                                            {% if value is iterable %}
+                                                <ul class="list-group list-group-flush">
+                                                    {% for item in value %}
+                                                        <li class="list-group-item bg-light">
+                                                            {% if item is iterable %}
+                                                                {{ item|json_encode }}
+                                                            {% else %}
+                                                                {{ item }}
+                                                            {% endif %}
+                                                        </li>
+                                                    {% endfor %}
+                                                </ul>
+                                            {% else %}
+                                                <div class="bg-light p-2 rounded">{{ value|nl2br }}</div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            {% endif %}
+                        {% else %}
+                            <pre class="bg-light p-3 rounded">{{ asset.content }}</pre>
+                        {% endif %}
+
+                        {% set variations = asset.variationsArray %}
+                        {% if variations %}
+                            <hr>
+                            <h6 class="text-primary"><i class="bi bi-layers"></i> Variations</h6>
+                            {% for i, variation in variations %}
+                                <div class="card mb-2">
+                                    <div class="card-header bg-light py-2">
+                                        <strong>Variation {{ i + 1 }}</strong>
+                                    </div>
+                                    <div class="card-body">
+                                        {% for key, value in variation %}
+                                            <div class="mb-2">
+                                                <strong class="text-muted small">{{ key|replace({'_': ' '})|title }}:</strong>
+                                                <div>
+                                                    {% if value is iterable %}
+                                                        {% for item in value %}
+                                                            {% if item is iterable %}
+                                                                <span class="badge bg-secondary me-1">{{ item|json_encode }}</span>
+                                                            {% else %}
+                                                                <span class="badge bg-secondary me-1">{{ item }}</span>
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                    {% else %}
+                                                        {{ value }}
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                        {% if asset.status.value == 'draft' %}
+                            <form method="post" action="{{ path('marketing_asset_approve', {id: project.id, assetId: asset.id}) }}" class="d-inline">
+                                <input type="hidden" name="_token" value="{{ csrf_token('approve' ~ asset.id) }}">
+                                <button type="submit" class="btn btn-success">
+                                    <i class="bi bi-check-lg"></i> Approuver
+                                </button>
+                            </form>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+{% endif %}
+{% endblock %}

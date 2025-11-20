@@ -39,10 +39,11 @@
 .chat-input-field {
     width: 100%;
     outline: none;
-    border: 2px solid #FFFFFF;
+    border: 2px solid #ffffff;
     border-radius: 15px;
-    background: transparent linear-gradient(93deg, #FFFFFFA7 0%, #FEFEFE66 46%, #FFFFFFE6 100%) 0% 0% no-repeat padding-box;
-    box-shadow: 5px 6px 7px #0000005A;
+    background: transparent linear-gradient(93deg, #ffffffa7 0%, #fefefe66 46%, #ffffffe6 100%) 0% 0% no-repeat
+        padding-box;
+    box-shadow: 5px 6px 7px #0000005a;
     opacity: 0.95;
     backdrop-filter: blur(30px);
     -webkit-backdrop-filter: blur(30px);
@@ -63,8 +64,8 @@
 }
 
 .chat-input-field {
-    -ms-overflow-style: none;  /* IE et Edge */
-    scrollbar-width: none;  /* Firefox */
+    -ms-overflow-style: none; /* IE et Edge */
+    scrollbar-width: none; /* Firefox */
 }
 
 .chat-input-field::placeholder {
@@ -84,8 +85,8 @@
     flex-shrink: 0;
     width: 52px;
     height: 52px;
-    background: #143F80 0% 0% no-repeat padding-box;
-    border: 2px solid #FFFFFFFD;
+    background: #143f80 0% 0% no-repeat padding-box;
+    border: 2px solid #fffffffd;
     border-radius: 15px;
     opacity: 1;
     display: flex;
@@ -97,14 +98,14 @@
 }
 
 .chat-send-button i {
-    color: #FFFFFF;
+    color: #ffffff;
     font-size: 1.25rem;
     transform: matrix(0.71, 0.71, -0.71, 0.71, 0, 0);
-    background: #FFFFFF 0% 0% no-repeat padding-box;
+    background: #ffffff 0% 0% no-repeat padding-box;
     opacity: 1;
     -webkit-background-clip: text;
     background-clip: text;
-    -webkit-text-fill-color: #FFFFFF;
+    -webkit-text-fill-color: #ffffff;
 }
 
 .chat-send-button:hover {
@@ -137,7 +138,7 @@
 }
 
 .theme-light .chat-send-button {
-    background: #143F80 0% 0% no-repeat padding-box;
+    background: #143f80 0% 0% no-repeat padding-box;
 }
 
 .theme-light .chat-send-button:hover {

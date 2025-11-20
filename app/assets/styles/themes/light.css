@@ -114,8 +114,9 @@ body.theme-light input.btn-check:checked + label.quick-access-card,
 body.theme-light .btn-check:checked + .quick-access-card {
     border: 3px solid var(--theme-accent) !important;
     background: rgba(0, 62, 130, 0.15) !important;
-    box-shadow: 0 0 0 5px rgba(0, 62, 130, 0.2),
-                0 6px 16px rgba(0, 62, 130, 0.3) !important;
+    box-shadow:
+        0 0 0 5px rgba(0, 62, 130, 0.2),
+        0 6px 16px rgba(0, 62, 130, 0.3) !important;
     transform: translateY(-3px) !important;
 }
 

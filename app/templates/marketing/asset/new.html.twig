@@ -1,0 +1,262 @@
+{% extends 'layouts/home.html.twig' %}
+
+{% block title %}Générer assets marketing - {{ project.name }}{% endblock %}
+
+{% block content_classes %} marketing-page{% endblock %}
+
+{% block content %}
+<div class="container" style="max-width: 900px;">
+    {# Breadcrumb #}
+    <div class="mb-4">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="{{ path('marketing_project_index') }}">Projets Marketing</a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a href="{{ path('marketing_project_show', {id: project.id}) }}">{{ project.name }}</a>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">Générer assets</li>
+            </ol>
+        </nav>
+    </div>
+
+    {# En-tête #}
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <h2 class="mb-2">
+                <i class="bi bi-file-earmark-text text-primary"></i>
+                Générer vos contenus marketing IA
+            </h2>
+            <p class="text-muted mb-0">
+                Sélectionnez les types d'assets à générer parmi ceux choisis lors de la création du projet
+            </p>
+        </div>
+    </div>
+
+    {# Formulaire de génération #}
+    <div class="card shadow-sm">
+        <div class="card-body p-4">
+            {{ form_start(form, {
+                attr: {
+                    class: 'needs-validation',
+                    novalidate: 'novalidate',
+                    'data-turbo': 'false'
+                }
+            }) }}
+
+            {# Erreurs globales du formulaire #}
+            {{ form_errors(form) }}
+
+            {# Sélection des types d'assets #}
+            <div class="mb-4">
+                <h5 class="fw-bold text-primary mb-3 pb-2 border-bottom">
+                    <i class="bi bi-collection"></i>
+                    Types d'assets à générer
+                </h5>
+                <p class="text-muted small mb-3">
+                    <i class="bi bi-info-circle"></i>
+                    Sélectionnez un ou plusieurs types d'assets parmi ceux pré-sélectionnés pour votre projet.
+                </p>
+
+                {# Grille de cartes pour les checkboxes assets #}
+                <div class="row g-3">
+                    {% for child in form.assetTypes %}
+                        {% set assetIcon = 'bi-file-earmark' %}
+                        {% set assetChannel = '' %}
+
+                        {# Déterminer l'icône et le canal selon le type #}
+                        {% if child.vars.value == 'google_ads' %}
+                            {% set assetIcon = 'bi-google' %}
+                            {% set assetChannel = 'Search' %}
+                        {% elseif child.vars.value == 'linkedin_post' %}
+                            {% set assetIcon = 'bi-linkedin' %}
+                            {% set assetChannel = 'Social' %}
+                        {% elseif child.vars.value == 'facebook_post' %}
+                            {% set assetIcon = 'bi-facebook' %}
+                            {% set assetChannel = 'Social' %}
+                        {% elseif child.vars.value == 'instagram_post' %}
+                            {% set assetIcon = 'bi-instagram' %}
+                            {% set assetChannel = 'Social' %}
+                        {% elseif child.vars.value == 'mail' %}
+                            {% set assetIcon = 'bi-envelope' %}
+                            {% set assetChannel = 'Email' %}
+                        {% elseif child.vars.value == 'bing_ads' %}
+                            {% set assetIcon = 'bi-microsoft' %}
+                            {% set assetChannel = 'Search' %}
+                        {% elseif child.vars.value == 'iab_banner' %}
+                            {% set assetIcon = 'bi-display' %}
+                            {% set assetChannel = 'Display' %}
+                        {% elseif child.vars.value == 'article_seo' %}
+                            {% set assetIcon = 'bi-newspaper' %}
+                            {% set assetChannel = 'Content' %}
+                        {% endif %}
+
+                        <div class="col-md-6 col-lg-4">
+                            <div class="card h-100 border asset-type-card">
+                                <label class="card-body p-3 cursor-pointer" for="{{ child.vars.id }}">
+                                    <div class="d-flex align-items-start justify-content-between mb-2">
+                                        <div class="d-flex align-items-center gap-2">
+                                            <i class="{{ assetIcon }} text-primary fs-4"></i>
+                                            <strong class="fw-semibold">{{ child.vars.label|split(' (')[0] }}</strong>
+                                        </div>
+                                        {{ form_widget(child, {
+                                            attr: {class: 'form-check-input asset-checkbox'}
+                                        }) }}
+                                    </div>
+                                    <div class="small text-muted">
+                                        <span class="badge bg-secondary">{{ assetChannel }}</span>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <hr class="my-4">
+
+            {# Options de génération #}
+            <div class="mb-4">
+                <h5 class="fw-bold text-primary mb-3 pb-2 border-bottom">
+                    <i class="bi bi-sliders"></i>
+                    Options de génération
+                </h5>
+
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        {{ form_row(form.numberOfVariations, {
+                            label_attr: {class: 'form-label fw-semibold'},
+                            attr: {class: 'form-control'}
+                        }) }}
+                    </div>
+                    <div class="col-md-6">
+                        {{ form_row(form.toneOfVoice, {
+                            label_attr: {class: 'form-label fw-semibold'},
+                            attr: {class: 'form-select'}
+                        }) }}
+                    </div>
+                </div>
+
+                <div class="mt-3">
+                    {{ form_row(form.additionalContext, {
+                        label_attr: {class: 'form-label fw-semibold'},
+                        attr: {
+                            class: 'form-control',
+                            rows: '4'
+                        }
+                    }) }}
+                </div>
+            </div>
+
+            {# Actions #}
+            <div class="d-grid gap-2 mt-4">
+                <button type="submit" class="btn btn-primary btn-lg">
+                    <i class="bi bi-magic"></i>
+                    Générer les assets marketing
+                </button>
+                <a href="{{ path('marketing_project_show', {id: project.id}) }}" class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-left"></i>
+                    Retour au projet
+                </a>
+            </div>
+
+            {{ form_end(form) }}
+        </div>
+    </div>
+
+    {# Informations sur le processus #}
+    <div class="card mt-4 bg-light border-0">
+        <div class="card-body">
+            <h6 class="fw-bold mb-3">
+                <i class="bi bi-info-circle text-primary"></i>
+                Ce que l'IA va générer
+            </h6>
+            <div class="row g-3 small text-muted">
+                <div class="col-md-6">
+                    <h6 class="fw-bold text-dark">Contenus optimisés</h6>
+                    <ul class="mb-0">
+                        <li>Textes adaptés à chaque plateforme</li>
+                        <li>Call-to-action pertinents</li>
+                        <li>Hashtags et mots-clés optimisés</li>
+                    </ul>
+                </div>
+                <div class="col-md-6">
+                    <h6 class="fw-bold text-dark">A/B Testing</h6>
+                    <ul class="mb-0">
+                        <li>Variations pour tester différentes approches</li>
+                        <li>Tonalités variées selon vos choix</li>
+                        <li>Score de qualité pour chaque asset</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {# Contexte projet #}
+    <div class="card mt-4 bg-primary text-white">
+        <div class="card-body">
+            <h6 class="fw-bold mb-3">
+                <i class="bi bi-briefcase-fill"></i>
+                Contexte du projet
+            </h6>
+            <div class="row g-3 small">
+                <div class="col-md-3">
+                    <strong>Entreprise</strong>
+                    <br>{{ project.companyName }}
+                </div>
+                <div class="col-md-3">
+                    <strong>Secteur</strong>
+                    <br>{{ project.sector }}
+                </div>
+                <div class="col-md-3">
+                    <strong>Objectif</strong>
+                    <br>{{ project.goalType.label }}
+                </div>
+                <div class="col-md-3">
+                    <strong>Budget</strong>
+                    <br>{{ project.budget|number_format(2, ',', ' ') }} €
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        /* Style des cartes assets */
+        .asset-type-card {
+            transition: all 0.2s ease-in-out;
+            cursor: pointer;
+        }
+
+        .asset-type-card:hover {
+            border-color: var(--bs-primary) !important;
+            box-shadow: 0 0.125rem 0.5rem rgba(0, 123, 255, 0.25);
+            transform: translateY(-2px);
+        }
+
+        .asset-type-card label {
+            margin-bottom: 0;
+            user-select: none;
+        }
+
+        .asset-checkbox {
+            cursor: pointer;
+            width: 1.25rem;
+            height: 1.25rem;
+        }
+
+        .asset-type-card:has(.asset-checkbox:checked) {
+            border-color: var(--bs-primary) !important;
+            background-color: rgba(13, 110, 253, 0.05);
+            box-shadow: 0 0.25rem 0.75rem rgba(13, 110, 253, 0.3);
+        }
+
+        .cursor-pointer {
+            cursor: pointer;
+        }
+    </style>
+{% endblock %}
