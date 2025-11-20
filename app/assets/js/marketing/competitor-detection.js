@@ -318,14 +318,20 @@ function initCompetitorDetection() {
     // ✅ Marquer comme en cours
     isDetectionRunning = true;
 
+    // ✅ Ajouter un AbortController pour gérer le timeout (120s)
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 120000); // 120 secondes
+
     fetch(detectUrl, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
             'X-Requested-With': 'XMLHttpRequest'
-        }
+        },
+        signal: controller.signal // ✅ Ajouter le signal d'annulation
     })
     .then(response => {
+        clearTimeout(timeoutId); // ✅ Annuler le timeout si réponse reçue
         console.log('🔍 TRACE: Réponse reçue, status:', response.status);
         return response.json();
     })
@@ -361,12 +367,25 @@ function initCompetitorDetection() {
         }
     })
     .catch(error => {
+        clearTimeout(timeoutId); // ✅ Nettoyer le timeout
         console.error('🔍 TRACE: Erreur détection concurrents:', error);
         loaderSection.classList.add('d-none');
-        errorMessage.textContent = 'Erreur de connexion au serveur. Veuillez réessayer.';
+
+        // ✅ Message spécifique pour timeout
+        if (error.name === 'AbortError') {
+            errorMessage.innerHTML = `
+                <strong>La détection de concurrents prend trop de temps (>2 min).</strong><br>
+                Cette opération nécessite l'intervention de l'administrateur réseau pour augmenter le timeout du serveur.<br>
+                <small class="text-muted">Veuillez contacter le support technique.</small>
+            `;
+        } else {
+            errorMessage.textContent = 'Erreur de connexion au serveur. Veuillez réessayer.';
+        }
+
         errorSection.classList.remove('d-none');
     })
     .finally(() => {
+        clearTimeout(timeoutId); // ✅ Toujours nettoyer le timeout
         // ✅ Libérer le flag une fois terminé (succès ou erreur)
         isDetectionRunning = false;
         console.log('🔍 TRACE: Détection terminée, flag libéré');
