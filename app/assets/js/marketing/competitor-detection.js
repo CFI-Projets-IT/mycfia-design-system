@@ -7,6 +7,9 @@
 
 console.log('🚀 TRACE: Fichier competitor-detection.js chargé');
 
+// Flag global pour empêcher les exécutions multiples
+let isDetectionRunning = false;
+
 function initCompetitorDetection() {
     console.log('🚀 TRACE: initCompetitorDetection() appelée');
 
@@ -16,6 +19,12 @@ function initCompetitorDetection() {
 
     if (!detectUrlElement) {
         console.log('🚀 TRACE: Pas de data-detect-url, return');
+        return;
+    }
+
+    // ✅ GUARD: Empêcher les exécutions multiples (Turbo events)
+    if (isDetectionRunning) {
+        console.log('⚠️ TRACE: Détection déjà en cours, ignorer cet appel');
         return;
     }
 
@@ -306,6 +315,9 @@ function initCompetitorDetection() {
     // Lancer la détection automatique au chargement
     console.log('🔍 TRACE: Début détection concurrents, URL:', detectUrl);
 
+    // ✅ Marquer comme en cours
+    isDetectionRunning = true;
+
     fetch(detectUrl, {
         method: 'POST',
         headers: {
@@ -353,6 +365,11 @@ function initCompetitorDetection() {
         loaderSection.classList.add('d-none');
         errorMessage.textContent = 'Erreur de connexion au serveur. Veuillez réessayer.';
         errorSection.classList.remove('d-none');
+    })
+    .finally(() => {
+        // ✅ Libérer le flag une fois terminé (succès ou erreur)
+        isDetectionRunning = false;
+        console.log('🔍 TRACE: Détection terminée, flag libéré');
     });
 
     // Fonction pour ouvrir la modal avec les détails du concurrent
