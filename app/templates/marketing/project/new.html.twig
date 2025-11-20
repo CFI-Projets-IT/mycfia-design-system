@@ -320,18 +320,11 @@
                         <a href="{{ path('marketing_project_index') }}" class="btn btn-outline-secondary px-4">
                             <i class="bi bi-x-circle"></i> Annuler
                         </a>
-                        <div class="d-flex gap-2">
-                            {{ form_widget(form.analyze, {
-                                attr: {
-                                    class: 'btn btn-outline-primary px-4'
-                                }
-                            }) }}
-                            {{ form_widget(form.save, {
-                                attr: {
-                                    class: 'btn btn-primary px-4'
-                                }
-                            }) }}
-                        </div>
+                        {{ form_widget(form.analyze, {
+                            attr: {
+                                class: 'btn btn-primary px-4'
+                            }
+                        }) }}
                     </div>
 
                     {{ form_end(form) }}
