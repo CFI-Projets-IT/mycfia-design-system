@@ -327,6 +327,11 @@
                         }) }}
                     </div>
 
+                    {# Rendre le bouton save comme hidden pour qu'il ne soit pas affiché par form_end #}
+                    <div class="d-none">
+                        {{ form_widget(form.save) }}
+                    </div>
+
                     {{ form_end(form) }}
                 </div>
             </div>
