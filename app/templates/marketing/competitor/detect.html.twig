@@ -222,129 +222,132 @@
     </div>
 </div>
 
-{# Modal de détails du concurrent - DOIT être en dehors du container #}
+{% endblock %}
+
+{% block modals %}
+{# Modal de détails du concurrent #}
 <div class="modal fade" id="competitorDetailModal" tabindex="-1" aria-labelledby="competitorDetailModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg modal-dialog-scrollable">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="competitorDetailModalLabel">
-                        <i class="bi bi-info-circle text-primary"></i> Détails du concurrent
-                    </h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    {# Section Informations principales #}
-                    <div class="mb-4">
-                        <h6 class="text-uppercase text-muted fw-bold mb-3">
-                            <i class="bi bi-building"></i> Informations principales
-                        </h6>
-                        <div class="row g-3">
-                            <div class="col-12">
-                                <label class="form-label fw-semibold">Titre</label>
-                                <p class="form-control-plaintext" id="modal-title"></p>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label fw-semibold">Domaine</label>
-                                <p class="form-control-plaintext" id="modal-domain"></p>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label fw-semibold">URL</label>
-                                <p class="form-control-plaintext">
-                                    <a href="#" id="modal-url" target="_blank" rel="noopener noreferrer">
-                                        <i class="bi bi-box-arrow-up-right"></i> Ouvrir
-                                    </a>
-                                </p>
-                            </div>
-                            <div class="col-12">
-                                <label class="form-label fw-semibold">Description (snippet)</label>
-                                <p class="form-control-plaintext text-muted" id="modal-snippet"></p>
-                            </div>
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="competitorDetailModalLabel">
+                    <i class="bi bi-info-circle text-primary"></i> Détails du concurrent
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                {# Section Informations principales #}
+                <div class="mb-4">
+                    <h6 class="text-uppercase text-muted fw-bold mb-3">
+                        <i class="bi bi-building"></i> Informations principales
+                    </h6>
+                    <div class="row g-3">
+                        <div class="col-12">
+                            <label class="form-label fw-semibold">Titre</label>
+                            <p class="form-control-plaintext" id="modal-title"></p>
                         </div>
-                    </div>
-
-                    {# Section Validation IA #}
-                    <div class="mb-4">
-                        <h6 class="text-uppercase text-muted fw-bold mb-3">
-                            <i class="bi bi-robot"></i> Validation IA
-                        </h6>
-                        <div class="row g-3">
-                            <div class="col-md-3">
-                                <label class="form-label fw-semibold">Score d'alignement</label>
-                                <p class="form-control-plaintext">
-                                    <span class="badge fs-6" id="modal-score">N/A</span>
-                                </p>
-                            </div>
-                            <div class="col-md-3">
-                                <label class="form-label fw-semibold">Concurrent validé</label>
-                                <p class="form-control-plaintext">
-                                    <span class="badge fs-6" id="modal-is-competitor">N/A</span>
-                                </p>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label fw-semibold">Overlaps</label>
-                                <div id="modal-overlaps"></div>
-                            </div>
-                            <div class="col-12">
-                                <label class="form-label fw-semibold">Analyse IA (reasoning)</label>
-                                <div class="alert alert-info mb-0" id="modal-reasoning"></div>
-                            </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Domaine</label>
+                            <p class="form-control-plaintext" id="modal-domain"></p>
                         </div>
-                    </div>
-
-                    {# Section Données SEO #}
-                    <div class="mb-4">
-                        <h6 class="text-uppercase text-muted fw-bold mb-3">
-                            <i class="bi bi-search"></i> Données SEO/SEM (v3.27.0)
-                        </h6>
-                        <div class="row g-3">
-                            <div class="col-md-4">
-                                <label class="form-label fw-semibold">Position Google</label>
-                                <p class="form-control-plaintext" id="modal-position"></p>
-                            </div>
-                            <div class="col-md-4">
-                                <label class="form-label fw-semibold">Publicité Google Ads</label>
-                                <p class="form-control-plaintext" id="modal-ads"></p>
-                            </div>
-                            <div class="col-md-4">
-                                <label class="form-label fw-semibold">Featured Snippet</label>
-                                <p class="form-control-plaintext" id="modal-featured"></p>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label fw-semibold">Keyword source</label>
-                                <p class="form-control-plaintext" id="modal-keyword-source"></p>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label fw-semibold">Volume de recherche</label>
-                                <p class="form-control-plaintext" id="modal-keyword-volume"></p>
-                            </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">URL</label>
+                            <p class="form-control-plaintext">
+                                <a href="#" id="modal-url" target="_blank" rel="noopener noreferrer">
+                                    <i class="bi bi-box-arrow-up-right"></i> Ouvrir
+                                </a>
+                            </p>
                         </div>
-                    </div>
-
-                    {# Section Données techniques #}
-                    <div class="mb-0">
-                        <h6 class="text-uppercase text-muted fw-bold mb-3">
-                            <i class="bi bi-gear"></i> Données techniques
-                        </h6>
-                        <div class="row g-3">
-                            <div class="col-md-4">
-                                <label class="form-label fw-semibold">Source</label>
-                                <p class="form-control-plaintext"><small id="modal-source"></small></p>
-                            </div>
-                            <div class="col-md-4">
-                                <label class="form-label fw-semibold">Scraper</label>
-                                <p class="form-control-plaintext"><small id="modal-scraper"></small></p>
-                            </div>
-                            <div class="col-md-4">
-                                <label class="form-label fw-semibold">Page SerpAPI</label>
-                                <p class="form-control-plaintext"><small id="modal-page"></small></p>
-                            </div>
+                        <div class="col-12">
+                            <label class="form-label fw-semibold">Description (snippet)</label>
+                            <p class="form-control-plaintext text-muted" id="modal-snippet"></p>
                         </div>
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+
+                {# Section Validation IA #}
+                <div class="mb-4">
+                    <h6 class="text-uppercase text-muted fw-bold mb-3">
+                        <i class="bi bi-robot"></i> Validation IA
+                    </h6>
+                    <div class="row g-3">
+                        <div class="col-md-3">
+                            <label class="form-label fw-semibold">Score d'alignement</label>
+                            <p class="form-control-plaintext">
+                                <span class="badge fs-6" id="modal-score">N/A</span>
+                            </p>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label fw-semibold">Concurrent validé</label>
+                            <p class="form-control-plaintext">
+                                <span class="badge fs-6" id="modal-is-competitor">N/A</span>
+                            </p>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Overlaps</label>
+                            <div id="modal-overlaps"></div>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label fw-semibold">Analyse IA (reasoning)</label>
+                            <div class="alert alert-info mb-0" id="modal-reasoning"></div>
+                        </div>
+                    </div>
                 </div>
+
+                {# Section Données SEO #}
+                <div class="mb-4">
+                    <h6 class="text-uppercase text-muted fw-bold mb-3">
+                        <i class="bi bi-search"></i> Données SEO/SEM (v3.27.0)
+                    </h6>
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <label class="form-label fw-semibold">Position Google</label>
+                            <p class="form-control-plaintext" id="modal-position"></p>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label fw-semibold">Publicité Google Ads</label>
+                            <p class="form-control-plaintext" id="modal-ads"></p>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label fw-semibold">Featured Snippet</label>
+                            <p class="form-control-plaintext" id="modal-featured"></p>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Keyword source</label>
+                            <p class="form-control-plaintext" id="modal-keyword-source"></p>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Volume de recherche</label>
+                            <p class="form-control-plaintext" id="modal-keyword-volume"></p>
+                        </div>
+                    </div>
+                </div>
+
+                {# Section Données techniques #}
+                <div class="mb-0">
+                    <h6 class="text-uppercase text-muted fw-bold mb-3">
+                        <i class="bi bi-gear"></i> Données techniques
+                    </h6>
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <label class="form-label fw-semibold">Source</label>
+                            <p class="form-control-plaintext"><small id="modal-source"></small></p>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label fw-semibold">Scraper</label>
+                            <p class="form-control-plaintext"><small id="modal-scraper"></small></p>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label fw-semibold">Page SerpAPI</label>
+                            <p class="form-control-plaintext"><small id="modal-page"></small></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
             </div>
         </div>
     </div>
+</div>
 {% endblock %}
