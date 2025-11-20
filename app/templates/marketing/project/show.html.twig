@@ -144,7 +144,7 @@
                             <i class="bi bi-check-lg"></i>
                         </div>
                         <div class="small fw-semibold">Stratégie</div>
-                        <a href="{{ path('marketing_strategy_show', {id: project.id}) }}" class="btn btn-sm btn-outline-success py-0 px-2 mt-1">Voir</a>
+                        <a href="#strategy" class="btn btn-sm btn-outline-success py-0 px-2 mt-1">Voir</a>
                     </div>
                 </div>
             {% elseif project.competitorAnalysis %}
@@ -790,6 +790,99 @@
                             {% endfor %}
                         </tbody>
                     </table>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    {# Section Stratégie Marketing #}
+    {% if project.strategies|length > 0 %}
+        {% set strategy = project.strategies|last %}
+        <div class="card mb-4" id="strategy">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">
+                    <i class="bi bi-graph-up-arrow text-primary"></i> Stratégie Marketing
+                </h5>
+                <a href="{{ path('marketing_strategy_show', {id: project.id}) }}" class="btn btn-sm btn-outline-primary">
+                    <i class="bi bi-eye"></i> Voir détails complets
+                </a>
+            </div>
+            <div class="card-body">
+                {# Positionnement stratégique #}
+                <div class="mb-4">
+                    <h6 class="text-uppercase text-muted fw-bold mb-3">
+                        <i class="bi bi-bullseye"></i> Positionnement Stratégique
+                    </h6>
+                    <p class="text-muted">{{ strategy.positioning }}</p>
+                </div>
+
+                {# Messages clés et Canaux recommandés - 2 colonnes #}
+                <div class="row g-3 mb-4">
+                    {# Messages clés #}
+                    <div class="col-md-6">
+                        <h6 class="text-uppercase text-muted fw-bold mb-3">
+                            <i class="bi bi-chat-dots"></i> Messages Clés
+                        </h6>
+                        {% set keyMessages = strategy.keyMessages|json_decode %}
+                        {% if keyMessages is iterable %}
+                            <ul class="list-unstyled">
+                                {% for message in keyMessages|slice(0, 3) %}
+                                    <li class="mb-2">
+                                        <i class="bi bi-check-circle text-success"></i>
+                                        <span class="text-muted">{{ message }}</span>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        {% else %}
+                            <p class="text-muted small">{{ strategy.keyMessages }}</p>
+                        {% endif %}
+                    </div>
+
+                    {# Canaux recommandés #}
+                    <div class="col-md-6">
+                        <h6 class="text-uppercase text-muted fw-bold mb-3">
+                            <i class="bi bi-megaphone"></i> Canaux Recommandés
+                        </h6>
+                        {% set channels = strategy.recommendedChannels|json_decode %}
+                        {% if channels is iterable %}
+                            <div class="d-flex flex-wrap gap-2">
+                                {% for channel in channels|slice(0, 5) %}
+                                    <span class="badge bg-primary">{{ channel }}</span>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <p class="text-muted small">{{ strategy.recommendedChannels }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+
+                {# KPIs - Grid compact #}
+                <div class="mb-0">
+                    <h6 class="text-uppercase text-muted fw-bold mb-3">
+                        <i class="bi bi-graph-up"></i> Indicateurs de Performance (KPIs)
+                    </h6>
+                    {% set kpis = strategy.kpis|json_decode %}
+                    {% if kpis is iterable and kpis is not empty %}
+                        <div class="row g-2">
+                            {% for label, value in kpis|slice(0, 4) %}
+                                <div class="col-6 col-md-3">
+                                    <div class="p-2 bg-light rounded text-center">
+                                        <div class="small text-muted text-truncate">{{ label }}</div>
+                                        <div class="fw-bold text-primary">{{ value }}</div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                        {% if kpis|length > 4 %}
+                            <div class="text-center mt-2">
+                                <a href="{{ path('marketing_strategy_show', {id: project.id}) }}" class="btn btn-sm btn-link">
+                                    Voir {{ kpis|length - 4 }} autres KPIs <i class="bi bi-arrow-right"></i>
+                                </a>
+                            </div>
+                        {% endif %}
+                    {% else %}
+                        <p class="text-muted small mb-0">{{ strategy.kpis }}</p>
+                    {% endif %}
                 </div>
             </div>
         </div>
