@@ -106,12 +106,20 @@ export default class extends Controller {
         console.log('[MERCURE DEBUG] Generation type:', this.generationTypeValue);
         console.log('[MERCURE DEBUG] Full data:', JSON.stringify(data, null, 2));
 
-        // Redirection directe après réception du TaskCompletedEvent
-        // La stratégie est sauvegardée en BDD par le bundle avant l'envoi de l'événement
-        console.log('[MERCURE DEBUG] Task completed, redirecting in 1s...');
-        setTimeout(() => {
-            this.showSuccess(data);
-        }, 1000);
+        // ✅ FIX: Pour la stratégie, vérifier qu'elle est sauvegardée en BDD avant de rediriger
+        // L'EventSubscriber peut prendre quelques ms pour persister
+        if (this.generationTypeValue === 'strategy') {
+            console.log('[MERCURE DEBUG] Strategy generation, checking DB status before redirect...');
+            setTimeout(() => {
+                this.checkStrategyStatus();
+            }, 2000); // Attendre 2s pour laisser l'EventSubscriber persister
+        } else {
+            // Pour les autres types (assets), redirection immédiate
+            console.log('[MERCURE DEBUG] Non-strategy generation, redirecting in 1s...');
+            setTimeout(() => {
+                this.showSuccess(data);
+            }, 1000);
+        }
     }
 
     /**
