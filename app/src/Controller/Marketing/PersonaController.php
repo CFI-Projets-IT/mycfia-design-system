@@ -9,6 +9,7 @@ use App\Entity\Project;
 use App\Entity\User;
 use App\Enum\ProjectStatus;
 use App\Form\Marketing\PersonaGenerationConfigType;
+use App\Service\MercureJwtGenerator;
 use Doctrine\ORM\EntityManagerInterface;
 use Gorillias\MarketingBundle\Service\AgentTaskManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -40,6 +41,7 @@ final class PersonaController extends AbstractController
         private readonly AgentTaskManager $agentTaskManager,
         private readonly EntityManagerInterface $entityManager,
         private readonly TranslatorInterface $translator,
+        private readonly MercureJwtGenerator $mercureJwtGenerator,
         #[Autowire('%env(MERCURE_PUBLIC_URL)%')]
         private readonly string $mercurePublicUrl,
     ) {
@@ -188,10 +190,16 @@ final class PersonaController extends AbstractController
     {
         $this->denyAccessUnlessGranted('view', $project);
 
+        // Générer un JWT Mercure pour autoriser l'abonnement au topic /tasks/{taskId}
+        $mercureJwt = $this->mercureJwtGenerator->generateSubscriberToken([
+            sprintf('tasks/%s', $taskId),
+        ]);
+
         return $this->render('marketing/persona/generating.html.twig', [
             'project' => $project,
             'taskId' => $taskId,
             'mercureUrl' => $this->mercurePublicUrl,
+            'mercureJwt' => $mercureJwt,
         ]);
     }
 

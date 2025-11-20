@@ -10,6 +10,7 @@ use App\Entity\User;
 use App\Enum\AssetStatus;
 use App\Enum\ProjectStatus;
 use App\Form\AssetGenerationType;
+use App\Service\MercureJwtGenerator;
 use Doctrine\ORM\EntityManagerInterface;
 use Gorillias\MarketingBundle\Service\AgentTaskManager;
 use Psr\Log\LoggerInterface;
@@ -61,6 +62,7 @@ final class AssetController extends AbstractController
         private readonly EntityManagerInterface $entityManager,
         private readonly TranslatorInterface $translator,
         private readonly LoggerInterface $logger,
+        private readonly MercureJwtGenerator $mercureJwtGenerator,
         #[Autowire('%env(MERCURE_PUBLIC_URL)%')]
         private readonly string $mercurePublicUrl,
     ) {
@@ -172,10 +174,16 @@ final class AssetController extends AbstractController
     {
         $this->denyAccessUnlessGranted('view', $project);
 
+        // Générer un JWT Mercure pour autoriser l'abonnement au topic /tasks/{taskId}
+        $mercureJwt = $this->mercureJwtGenerator->generateSubscriberToken([
+            sprintf('tasks/%s', $taskId),
+        ]);
+
         return $this->render('marketing/asset/generating.html.twig', [
             'project' => $project,
             'taskId' => $taskId,
             'mercureUrl' => $this->mercurePublicUrl,
+            'mercureJwt' => $mercureJwt,
         ]);
     }
 

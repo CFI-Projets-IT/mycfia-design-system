@@ -8,6 +8,7 @@ use App\Entity\Project;
 use App\Entity\User;
 use App\Enum\ProjectStatus;
 use App\Form\StrategyGenerationType;
+use App\Service\MercureJwtGenerator;
 use Doctrine\ORM\EntityManagerInterface;
 use Gorillias\MarketingBundle\Service\AgentTaskManager;
 use Gorillias\MarketingBundle\Tool\BudgetOptimizerTool;
@@ -48,6 +49,7 @@ final class StrategyController extends AbstractController
         private readonly BudgetOptimizerTool $budgetOptimizerTool,
         private readonly HttpClientInterface $httpClient,
         private readonly LoggerInterface $logger,
+        private readonly MercureJwtGenerator $mercureJwtGenerator,
         #[Autowire('%env(MERCURE_PUBLIC_URL)%')]
         private readonly string $mercurePublicUrl,
     ) {
@@ -470,10 +472,16 @@ final class StrategyController extends AbstractController
     {
         $this->denyAccessUnlessGranted('view', $project);
 
+        // Générer un JWT Mercure pour autoriser l'abonnement au topic /tasks/{taskId}
+        $mercureJwt = $this->mercureJwtGenerator->generateSubscriberToken([
+            sprintf('tasks/%s', $taskId),
+        ]);
+
         return $this->render('marketing/strategy/generating.html.twig', [
             'project' => $project,
             'taskId' => $taskId,
             'mercureUrl' => $this->mercurePublicUrl,
+            'mercureJwt' => $mercureJwt,
         ]);
     }
 

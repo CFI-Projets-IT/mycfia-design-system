@@ -8,6 +8,7 @@ export default class extends Controller {
     static values = {
         taskId: String,
         mercureUrl: String,
+        mercureJwt: String,
         nextUrl: String,
         generationType: String, // 'strategy', 'asset', etc.
     };
@@ -35,14 +36,21 @@ export default class extends Controller {
      */
     connectToMercure() {
         const topic = `/tasks/${this.taskIdValue}`;
-        const url = `${this.mercureUrlValue}?topic=${encodeURIComponent(topic)}`;
+        const mercureUrl = new URL(this.mercureUrlValue);
+        mercureUrl.searchParams.append('topic', topic);
 
-        console.log('[MERCURE DEBUG] Connecting to Mercure:', url);
+        // Ajouter le JWT Mercure pour l'authentification
+        if (this.mercureJwtValue) {
+            mercureUrl.searchParams.append('authorization', this.mercureJwtValue);
+        }
+
+        const finalUrl = mercureUrl.toString();
+        console.log('[MERCURE DEBUG] Connecting to Mercure:', finalUrl);
         console.log('[MERCURE DEBUG] Task ID:', this.taskIdValue);
         console.log('[MERCURE DEBUG] Topic:', topic);
         console.log('[MERCURE DEBUG] Mercure URL base:', this.mercureUrlValue);
 
-        this.eventSource = new EventSource(url);
+        this.eventSource = new EventSource(finalUrl);
 
         // Log de connexion
         this.eventSource.onopen = () => {

@@ -28,6 +28,7 @@ export default class extends Controller {
         taskId: String,
         stage: String,
         mercureUrl: String,
+        mercureJwt: String,
         nextUrl: String,
         multiple: { type: Boolean, default: false },
     };
@@ -69,12 +70,19 @@ export default class extends Controller {
     connectToMercure() {
         // Utiliser le topic /tasks/{taskId} du Marketing AI Bundle
         const topic = `/tasks/${this.taskIdValue}`;
-        const url = `${this.mercureUrlValue}?topic=${encodeURIComponent(topic)}`;
+        const mercureUrl = new URL(this.mercureUrlValue);
+        mercureUrl.searchParams.append('topic', topic);
 
-        console.log('Connecting to Mercure:', url);
+        // Ajouter le JWT Mercure pour l'authentification
+        if (this.mercureJwtValue) {
+            mercureUrl.searchParams.append('authorization', this.mercureJwtValue);
+        }
+
+        const finalUrl = mercureUrl.toString();
+        console.log('Connecting to Mercure:', finalUrl);
         console.log('Topic:', topic);
 
-        this.eventSource = new EventSource(url);
+        this.eventSource = new EventSource(finalUrl);
 
         // Écouter les événements spécifiques du bundle
         this.eventSource.addEventListener('TaskStartedEvent', (event) => {

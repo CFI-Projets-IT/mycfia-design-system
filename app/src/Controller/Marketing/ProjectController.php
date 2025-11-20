@@ -12,6 +12,7 @@ use App\Enum\ProjectStatus;
 use App\Form\ProjectType;
 use App\Repository\ProjectEnrichmentDraftRepository;
 use App\Repository\ProjectRepository;
+use App\Service\MercureJwtGenerator;
 use Doctrine\ORM\EntityManagerInterface;
 use Gorillias\MarketingBundle\Service\AgentTaskManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -52,6 +53,7 @@ final class ProjectController extends AbstractController
         private readonly AgentTaskManager $agentTaskManager,
         private readonly TranslatorInterface $translator,
         private readonly CacheInterface $cache,
+        private readonly MercureJwtGenerator $mercureJwtGenerator,
     ) {
     }
 
@@ -280,10 +282,16 @@ final class ProjectController extends AbstractController
     {
         $this->denyAccessUnlessGranted('edit', $project);
 
+        // Générer un JWT Mercure pour autoriser l'abonnement au topic /tasks/{taskId}
+        $mercureJwt = $this->mercureJwtGenerator->generateSubscriberToken([
+            sprintf('tasks/%s', $taskId),
+        ]);
+
         return $this->render('marketing/enrichment/generating.html.twig', [
             'project' => $project,
             'taskId' => $taskId,
             'mercureUrl' => $_ENV['MERCURE_PUBLIC_URL'] ?? 'http://localhost/.well-known/mercure',
+            'mercureJwt' => $mercureJwt,
         ]);
     }
 
