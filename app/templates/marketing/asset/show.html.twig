@@ -1,0 +1,300 @@
+{% extends 'layouts/home.html.twig' %}
+
+{% block title %}Assets Marketing - {{ project.name }}{% endblock %}
+
+{% block content_classes %} marketing-page{% endblock %}
+
+{% block content %}
+<div class="container-fluid" style="max-width: 1400px;">
+    {# Breadcrumb #}
+    <div class="mb-4">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="{{ path('marketing_project_index') }}">Projets Marketing</a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a href="{{ path('marketing_project_show', {id: project.id}) }}">{{ project.name }}</a>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">Assets</li>
+            </ol>
+        </nav>
+    </div>
+
+    {# Header #}
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h2 class="mb-2">
+                        <i class="bi bi-file-earmark-text text-primary"></i>
+                        Assets Marketing Générés
+                    </h2>
+                    <p class="text-muted mb-0">
+                        Validez ou rejetez chaque asset pour finaliser votre campagne
+                    </p>
+                </div>
+                <div class="col-md-4 text-end">
+                    <span class="badge bg-success fs-6 mb-2">
+                        <i class="bi bi-check-circle-fill"></i> {{ assets|length }} asset(s) généré(s)
+                    </span>
+                    <div class="d-grid gap-2">
+                        <a href="{{ path('marketing_project_show', {id: project.id}) }}"
+                           class="btn btn-outline-secondary">
+                            <i class="bi bi-arrow-left"></i>
+                            Retour au projet
+                        </a>
+                        <a href="{{ path('marketing_asset_new', {id: project.id}) }}"
+                           class="btn btn-outline-primary btn-sm">
+                            <i class="bi bi-plus-circle"></i>
+                            Générer plus d'assets
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {# Statistiques des assets #}
+    <div class="row g-3 mb-4">
+        {% set drafts = assets|filter(a => a.status.value == 'DRAFT')|length %}
+        {% set approved = assets|filter(a => a.status.value == 'APPROVED')|length %}
+        {% set rejected = assets|filter(a => a.status.value == 'REJECTED')|length %}
+
+        <div class="col-md-4">
+            <div class="card border-warning h-100">
+                <div class="card-body text-center">
+                    <h3 class="text-warning mb-1">{{ drafts }}</h3>
+                    <small class="text-muted">En attente</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card border-success h-100">
+                <div class="card-body text-center">
+                    <h3 class="text-success mb-1">{{ approved }}</h3>
+                    <small class="text-muted">Approuvés</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card border-danger h-100">
+                <div class="card-body text-center">
+                    <h3 class="text-danger mb-1">{{ rejected }}</h3>
+                    <small class="text-muted">Rejetés</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {# Liste des assets par type #}
+    <div class="row g-4">
+        {% for asset in assets %}
+            {% set assetIcon = 'bi-file-earmark' %}
+            {% set channelColor = 'secondary' %}
+
+            {# Déterminer l'icône selon le type #}
+            {% if asset.assetType == 'google_ads' %}
+                {% set assetIcon = 'bi-google' %}
+                {% set channelColor = 'danger' %}
+            {% elseif asset.assetType == 'linkedin_post' %}
+                {% set assetIcon = 'bi-linkedin' %}
+                {% set channelColor = 'primary' %}
+            {% elseif asset.assetType == 'facebook_post' %}
+                {% set assetIcon = 'bi-facebook' %}
+                {% set channelColor = 'info' %}
+            {% elseif asset.assetType == 'instagram_post' %}
+                {% set assetIcon = 'bi-instagram' %}
+                {% set channelColor = 'warning' %}
+            {% elseif asset.assetType == 'mail' %}
+                {% set assetIcon = 'bi-envelope' %}
+                {% set channelColor = 'success' %}
+            {% elseif asset.assetType == 'bing_ads' %}
+                {% set assetIcon = 'bi-microsoft' %}
+                {% set channelColor = 'secondary' %}
+            {% elseif asset.assetType == 'iab_banner' %}
+                {% set assetIcon = 'bi-display' %}
+                {% set channelColor = 'dark' %}
+            {% elseif asset.assetType == 'article_seo' %}
+                {% set assetIcon = 'bi-newspaper' %}
+                {% set channelColor = 'primary' %}
+            {% endif %}
+
+            <div class="col-lg-6">
+                <div class="card shadow-sm h-100
+                    {% if asset.status.value == 'APPROVED' %}border-success{% endif %}
+                    {% if asset.status.value == 'REJECTED' %}border-danger{% endif %}">
+
+                    {# Header avec type et statut #}
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="{{ assetIcon }} text-{{ channelColor }} fs-4"></i>
+                            <div>
+                                <strong>{{ asset.assetType|replace({'_': ' '})|title }}</strong>
+                                <br>
+                                <span class="badge bg-{{ channelColor }}">{{ asset.channel|capitalize }}</span>
+                            </div>
+                        </div>
+                        <div>
+                            {% if asset.status.value == 'DRAFT' %}
+                                <span class="badge bg-warning text-dark">
+                                    <i class="bi bi-hourglass"></i> En attente
+                                </span>
+                            {% elseif asset.status.value == 'APPROVED' %}
+                                <span class="badge bg-success">
+                                    <i class="bi bi-check-circle-fill"></i> Approuvé
+                                </span>
+                            {% else %}
+                                <span class="badge bg-danger">
+                                    <i class="bi bi-x-circle-fill"></i> Rejeté
+                                </span>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    {# Contenu de l'asset #}
+                    <div class="card-body">
+                        {% set contentData = asset.content|json_decode %}
+
+                        {% if contentData is iterable %}
+                            {# Afficher les champs principaux du contenu #}
+                            {% for key, value in contentData %}
+                                {% if key not in ['keywords', 'hashtags'] %}
+                                    <div class="mb-3">
+                                        <label class="form-label fw-bold text-muted small">
+                                            {{ key|replace({'_': ' '})|title }}
+                                        </label>
+                                        <div class="border rounded p-2 bg-light" style="white-space: pre-wrap;">
+                                            {% if value is iterable %}
+                                                {{ value|json_encode(constant('JSON_PRETTY_PRINT') b-or constant('JSON_UNESCAPED_UNICODE')) }}
+                                            {% else %}
+                                                {{ value }}
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+
+                            {# Afficher les hashtags/mots-clés en badges #}
+                            {% if contentData.hashtags is defined and contentData.hashtags %}
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold text-muted small">Hashtags</label>
+                                    <div>
+                                        {% for tag in contentData.hashtags %}
+                                            <span class="badge bg-primary me-1 mb-1">{{ tag }}</span>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            {% endif %}
+
+                            {% if contentData.keywords is defined and contentData.keywords %}
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold text-muted small">Mots-clés</label>
+                                    <div>
+                                        {% for keyword in contentData.keywords %}
+                                            <span class="badge bg-secondary me-1 mb-1">{{ keyword }}</span>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            {% endif %}
+                        {% else %}
+                            {# Fallback si le contenu n'est pas du JSON valide #}
+                            <div class="border rounded p-3 bg-light" style="white-space: pre-wrap;">
+                                {{ asset.content }}
+                            </div>
+                        {% endif %}
+
+                        {# Score de qualité #}
+                        {% if asset.qualityScore %}
+                            <div class="mt-3">
+                                <label class="form-label fw-bold text-muted small">Score de qualité</label>
+                                <div class="progress" style="height: 25px;">
+                                    {% set score = (asset.qualityScore * 100)|round %}
+                                    <div class="progress-bar
+                                        {% if score >= 80 %}bg-success{% elseif score >= 60 %}bg-warning{% else %}bg-danger{% endif %}"
+                                         role="progressbar"
+                                         style="width: {{ score }}%">
+                                        {{ score }}%
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    {# Actions #}
+                    {% if asset.status.value == 'DRAFT' %}
+                        <div class="card-footer bg-white">
+                            <div class="d-flex gap-2 justify-content-end">
+                                <form method="post" action="{{ path('marketing_asset_reject', {id: project.id, assetId: asset.id}) }}" class="d-inline">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('reject' ~ asset.id) }}">
+                                    <button type="submit" class="btn btn-outline-danger btn-sm">
+                                        <i class="bi bi-x-circle"></i> Rejeter
+                                    </button>
+                                </form>
+                                <form method="post" action="{{ path('marketing_asset_approve', {id: project.id, assetId: asset.id}) }}" class="d-inline">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('approve' ~ asset.id) }}">
+                                    <button type="submit" class="btn btn-success btn-sm">
+                                        <i class="bi bi-check-circle"></i> Approuver
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    {# Message si tous approuvés #}
+    {% if drafts == 0 and approved > 0 %}
+        <div class="alert alert-success mt-4 text-center">
+            <i class="bi bi-check-circle-fill fs-1 d-block mb-3"></i>
+            <h4>Tous les assets ont été validés !</h4>
+            <p class="mb-3">Votre campagne marketing est prête à être publiée.</p>
+            <a href="{{ path('marketing_project_show', {id: project.id}) }}" class="btn btn-success">
+                <i class="bi bi-eye"></i> Voir le projet complet
+            </a>
+        </div>
+    {% endif %}
+
+    {# Contexte projet #}
+    <div class="card mt-4 bg-primary text-white">
+        <div class="card-body">
+            <h6 class="fw-bold mb-3">
+                <i class="bi bi-briefcase-fill"></i>
+                Contexte du projet
+            </h6>
+            <div class="row g-3 small">
+                <div class="col-md-3">
+                    <strong>Entreprise</strong>
+                    <br>{{ project.companyName }}
+                </div>
+                <div class="col-md-3">
+                    <strong>Secteur</strong>
+                    <br>{{ project.sector }}
+                </div>
+                <div class="col-md-3">
+                    <strong>Objectif</strong>
+                    <br>{{ project.goalType.label }}
+                </div>
+                <div class="col-md-3">
+                    <strong>Budget</strong>
+                    <br>{{ project.budget|number_format(2, ',', ' ') }} €
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .card.border-success {
+            border-width: 2px;
+        }
+        .card.border-danger {
+            border-width: 2px;
+        }
+    </style>
+{% endblock %}

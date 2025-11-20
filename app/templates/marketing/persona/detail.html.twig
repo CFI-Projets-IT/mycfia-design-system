@@ -1,0 +1,273 @@
+{% extends 'layouts/home.html.twig' %}
+
+{% block title %}{{ persona.name }} - Persona Marketing{% endblock %}
+
+{% block content_classes %} marketing-page{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .avatar-large {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 48px;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+<div class="container" style="max-width: 1200px;">
+    {# Breadcrumb #}
+    <div class="mb-4">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="{{ path('marketing_project_index') }}">Projets Marketing</a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a href="{{ path('marketing_project_show', {id: project.id}) }}">{{ project.name }}</a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a href="{{ path('marketing_persona_show', {id: project.id}) }}">Personas</a>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">{{ persona.name }}</li>
+            </ol>
+        </nav>
+    </div>
+
+    {# Header Card - Persona Identity #}
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <div class="row align-items-center">
+                <div class="col-auto">
+                    <div class="avatar-large bg-primary text-white">
+                        {{ persona.name|slice(0, 2)|upper }}
+                    </div>
+                </div>
+                <div class="col">
+                    <h1 class="h3 mb-2">{{ persona.name|replace({'_': ' '}) }}</h1>
+                    <div class="d-flex gap-3 text-muted">
+                        <span><i class="bi bi-person"></i> {{ persona.gender }}</span>
+                        <span><i class="bi bi-calendar"></i> {{ persona.age }} ans</span>
+                        <span><i class="bi bi-briefcase"></i> {{ persona.job }}</span>
+                    </div>
+                    {% if persona.qualityScore %}
+                        <div class="mt-3" style="max-width: 300px;">
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <small class="text-muted">Score de qualité</small>
+                                <small class="fw-semibold">{{ (persona.qualityScore * 100)|round }}%</small>
+                            </div>
+                            <div class="progress" style="height: 12px;">
+                                <div class="progress-bar bg-success" role="progressbar"
+                                     style="width: {{ (persona.qualityScore * 100)|round }}%"
+                                     aria-valuenow="{{ (persona.qualityScore * 100)|round }}"
+                                     aria-valuemin="0"
+                                     aria-valuemax="100">
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="col-auto">
+                    <a href="{{ path('marketing_persona_show', {id: project.id}) }}" class="btn btn-outline-secondary">
+                        <i class="bi bi-arrow-left"></i> Retour aux personas
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        {# Profil Description #}
+        {% if persona.description %}
+            <div class="col-12">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0">
+                            <i class="bi bi-person-badge"></i> Profil
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <p class="mb-0">{{ persona.description }}</p>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+
+        {# Demographics #}
+        {% if persona.rawData and persona.rawData.demographics is defined %}
+            <div class="col-md-6">
+                <div class="card shadow-sm h-100">
+                    <div class="card-header bg-info text-white">
+                        <h5 class="mb-0">
+                            <i class="bi bi-bar-chart-fill"></i> Données démographiques
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        {% if persona.rawData.demographics is iterable %}
+                            <ul class="list-unstyled mb-0">
+                                {% for key, value in persona.rawData.demographics %}
+                                    <li class="mb-2">
+                                        <strong class="text-muted">{{ key|replace({'_': ' '})|title }} :</strong>
+                                        <span>{{ value }}</span>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        {% else %}
+                            <p class="text-muted mb-0">{{ persona.rawData.demographics }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+
+        {# Comportements #}
+        {% if persona.rawData and persona.rawData.behaviors is defined %}
+            <div class="col-md-6">
+                <div class="card shadow-sm h-100">
+                    <div class="card-header bg-success text-white">
+                        <h5 class="mb-0">
+                            <i class="bi bi-graph-up"></i> Comportements
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        {% if persona.rawData.behaviors is iterable and persona.rawData.behaviors is not mapping %}
+                            <ul class="list-unstyled mb-0">
+                                {% for behavior in persona.rawData.behaviors %}
+                                    <li class="mb-2">
+                                        <i class="bi bi-check-circle-fill text-success me-2"></i>
+                                        {{ behavior }}
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        {% elseif persona.rawData.behaviors is mapping %}
+                            {% if persona.rawData.behaviors.digital_habits is defined %}
+                                <div class="mb-3">
+                                    <h6 class="fw-bold"><i class="bi bi-phone"></i> Habitudes digitales</h6>
+                                    <ul class="list-unstyled ms-3">
+                                        {% for habit in persona.rawData.behaviors.digital_habits %}
+                                            <li class="mb-1">
+                                                <i class="bi bi-check-circle-fill text-success me-1"></i> {{ habit }}
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            {% endif %}
+                            {% if persona.rawData.behaviors.preferred_channels is defined %}
+                                <div class="mb-3">
+                                    <h6 class="fw-bold"><i class="bi bi-broadcast"></i> Canaux préférés</h6>
+                                    <ul class="list-unstyled ms-3">
+                                        {% for channel in persona.rawData.behaviors.preferred_channels %}
+                                            <li class="mb-1">
+                                                <i class="bi bi-check-circle-fill text-success me-1"></i> {{ channel }}
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            {% endif %}
+                            {% if persona.rawData.behaviors.influencers is defined %}
+                                <div>
+                                    <h6 class="fw-bold"><i class="bi bi-people"></i> Influenceurs</h6>
+                                    <ul class="list-unstyled ms-3">
+                                        {% for influencer in persona.rawData.behaviors.influencers %}
+                                            <li class="mb-1">
+                                                <i class="bi bi-check-circle-fill text-success me-1"></i> {{ influencer }}
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            {% endif %}
+                        {% else %}
+                            <p class="mb-0">{{ persona.rawData.behaviors }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+
+        {# Points de douleur #}
+        {% if persona.rawData and persona.rawData.pain_points is defined %}
+            <div class="col-md-6">
+                <div class="card shadow-sm h-100">
+                    <div class="card-header bg-danger text-white">
+                        <h5 class="mb-0">
+                            <i class="bi bi-exclamation-triangle-fill"></i> Points de douleur
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        {% if persona.rawData.pain_points is iterable %}
+                            <ul class="list-unstyled mb-0">
+                                {% for pain in persona.rawData.pain_points %}
+                                    <li class="mb-2">
+                                        <i class="bi bi-x-circle-fill text-danger me-2"></i>
+                                        {{ pain }}
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        {% else %}
+                            <p class="mb-0">{{ persona.rawData.pain_points }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+
+        {# Objectifs #}
+        {% if persona.rawData and persona.rawData.goals is defined %}
+            <div class="col-md-6">
+                <div class="card shadow-sm h-100">
+                    <div class="card-header bg-warning text-dark">
+                        <h5 class="mb-0">
+                            <i class="bi bi-lightning-fill"></i> Objectifs
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        {% if persona.rawData.goals is iterable %}
+                            <ul class="list-unstyled mb-0">
+                                {% for goal in persona.rawData.goals %}
+                                    <li class="mb-2">
+                                        <i class="bi bi-star-fill text-warning me-2"></i>
+                                        {{ goal }}
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        {% else %}
+                            <p class="mb-0">{{ persona.rawData.goals }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+
+        {# Metadata #}
+        <div class="col-12">
+            <div class="card shadow-sm bg-light">
+                <div class="card-body">
+                    <div class="row text-center">
+                        <div class="col-md-4">
+                            <i class="bi bi-calendar-plus fs-3 text-muted mb-2"></i>
+                            <div class="small text-muted">Généré le</div>
+                            <div class="fw-semibold">{{ persona.createdAt|date('d/m/Y à H:i') }}</div>
+                        </div>
+                        <div class="col-md-4">
+                            <i class="bi bi-building fs-3 text-muted mb-2"></i>
+                            <div class="small text-muted">Projet</div>
+                            <div class="fw-semibold">{{ project.name }}</div>
+                        </div>
+                        <div class="col-md-4">
+                            <i class="bi bi-tag fs-3 text-muted mb-2"></i>
+                            <div class="small text-muted">Secteur</div>
+                            <div class="fw-semibold">{{ project.sector }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

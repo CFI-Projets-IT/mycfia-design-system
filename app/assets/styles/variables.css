@@ -27,28 +27,28 @@
     /* ====================================
        Couleurs Primaires
        ==================================== */
-    --color-primary: #6366F1;              /* Violet-bleu (bouton) */
-    --color-secondary: #3ABFF0;            /* Bleu clair */
-    --color-tertiary: #E6204C;             /* Rouge accent */
-    --color-default: #2A1B3D;              /* Violet foncé */
+    --color-primary: #6366f1; /* Violet-bleu (bouton) */
+    --color-secondary: #3abff0; /* Bleu clair */
+    --color-tertiary: #e6204c; /* Rouge accent */
+    --color-default: #2a1b3d; /* Violet foncé */
 
     /* ====================================
        Couleurs Chat
        ==================================== */
-    --chat-input-text: #183E82;
-    --chat-input-bg: #FFFFFF;
-    --message-user-bg: #FFFFFF;
-    --message-assistant-bg: #405D8C;
+    --chat-input-text: #183e82;
+    --chat-input-bg: #ffffff;
+    --message-user-bg: #ffffff;
+    --message-assistant-bg: #405d8c;
     --message-user-text: #000000;
-    --message-assistant-text: #FFFFFF;
+    --message-assistant-text: #ffffff;
 
     /* ====================================
        Couleurs Utilitaires
        ==================================== */
-    --color-white: #FFFFFF;
+    --color-white: #ffffff;
     --color-black: #000000;
-    --color-gray-light: #F5F5F5;
-    --color-gray-medium: #CCCCCC;
+    --color-gray-light: #f5f5f5;
+    --color-gray-medium: #cccccc;
     --color-gray-dark: #666666;
 
     /* ====================================
@@ -64,23 +64,11 @@
     /* ====================================
        Glass Effects (3 niveaux)
        ==================================== */
-    --glass-subtle: linear-gradient(
-        119deg,
-        rgba(255, 255, 255, 0.075) 0%,
-        rgba(255, 255, 255, 0.01) 100%
-    );
+    --glass-subtle: linear-gradient(119deg, rgba(255, 255, 255, 0.075) 0%, rgba(255, 255, 255, 0.01) 100%);
 
-    --glass-light: linear-gradient(
-        110deg,
-        rgba(255, 255, 255, 0.3) 0%,
-        rgba(255, 255, 255, 0.025) 100%
-    );
+    --glass-light: linear-gradient(110deg, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0.025) 100%);
 
-    --glass-intense: linear-gradient(
-        92deg,
-        #FFFFFFE6 0%,
-        #FFFFFF00 100%
-    );
+    --glass-intense: linear-gradient(92deg, #ffffffe6 0%, #ffffff00 100%);
 
     /* Glass borders */
     --glass-border: 1px solid rgba(255, 255, 255, 0.3);
@@ -108,11 +96,9 @@
     /* ====================================
        Ombres
        ==================================== */
-    --shadow-glass: inset 2px 3px 7px rgba(0, 0, 0, 0.23),
-                    5px 6px 7px rgba(0, 0, 0, 0.1);
+    --shadow-glass: inset 2px 3px 7px rgba(0, 0, 0, 0.23), 5px 6px 7px rgba(0, 0, 0, 0.1);
 
-    --shadow-message-user: inset 0px 3px 6px #00000029,
-                           3px 5px 8px #00000029;
+    --shadow-message-user: inset 0px 3px 6px #00000029, 3px 5px 8px #00000029;
 
     --shadow-hover: 0 4px 15px rgba(255, 255, 255, 0.1);
 

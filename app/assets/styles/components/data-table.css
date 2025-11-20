@@ -18,7 +18,7 @@
 .chat-datatable .table {
     margin-bottom: 0;
     font-size: 0.9375rem;
-    background-color: #FFFFFF;
+    background-color: #ffffff;
 }
 
 /* ====================================
@@ -26,8 +26,8 @@
    ==================================== */
 
 .chat-datatable thead {
-    background: linear-gradient(90deg, #183E82 0%, #1E4A92 100%);
-    color: #FFFFFF;
+    background: linear-gradient(90deg, #183e82 0%, #1e4a92 100%);
+    color: #ffffff;
 }
 
 .chat-datatable thead th {
@@ -51,7 +51,7 @@
 .chat-datatable tbody td {
     padding: 0.875rem 0.75rem;
     vertical-align: middle;
-    border-color: #E0E0E0;
+    border-color: #e0e0e0;
 }
 
 /* Effet hover sur les lignes */
@@ -65,7 +65,7 @@
    ==================================== */
 
 .chat-datatable .detail-link {
-    color: #0D6EFD;
+    color: #0d6efd;
     font-weight: 600;
     transition: all 0.2s ease;
     display: inline-flex;
@@ -74,7 +74,7 @@
 }
 
 .chat-datatable .detail-link:hover {
-    color: #0A58CA;
+    color: #0a58ca;
     text-decoration: underline !important;
 }
 
@@ -90,15 +90,15 @@
    ==================================== */
 
 .chat-datatable tfoot {
-    background: linear-gradient(90deg, #F8F9FA 0%, #E9ECEF 100%);
-    border-top: 2px solid #183E82;
+    background: linear-gradient(90deg, #f8f9fa 0%, #e9ecef 100%);
+    border-top: 2px solid #183e82;
 }
 
 .chat-datatable .table-total td {
     padding: 1rem 0.75rem;
     font-weight: 700;
     font-size: 1rem;
-    color: #183E82;
+    color: #183e82;
     border: none;
 }
 
@@ -168,13 +168,13 @@
    ==================================== */
 
 .theme-light .chat-datatable .table {
-    background-color: #FFFFFF;
+    background-color: #ffffff;
     color: #212529;
 }
 
 .theme-light .chat-datatable thead {
-    background: linear-gradient(90deg, #183E82 0%, #1E4A92 100%);
-    color: #FFFFFF;
+    background: linear-gradient(90deg, #183e82 0%, #1e4a92 100%);
+    color: #ffffff;
 }
 
 .theme-light .chat-datatable tbody tr:hover {
@@ -182,7 +182,7 @@
 }
 
 .theme-light .chat-datatable tfoot {
-    background: linear-gradient(90deg, #F8F9FA 0%, #E9ECEF 100%);
+    background: linear-gradient(90deg, #f8f9fa 0%, #e9ecef 100%);
 }
 
 /* ====================================
@@ -191,12 +191,12 @@
 
 body.theme-dark-blue .chat-datatable .table {
     background-color: rgba(255, 255, 255, 0.05);
-    color: #FFFFFF;
+    color: #ffffff;
 }
 
 body.theme-dark-blue .chat-datatable thead {
-    background: linear-gradient(90deg, #5FA8D3 0%, #4A8FC7 100%);
-    color: #FFFFFF;
+    background: linear-gradient(90deg, #5fa8d3 0%, #4a8fc7 100%);
+    color: #ffffff;
 }
 
 body.theme-dark-blue .chat-datatable tbody td {
@@ -209,19 +209,19 @@ body.theme-dark-blue .chat-datatable tbody tr:hover {
 
 body.theme-dark-blue .chat-datatable tfoot {
     background: rgba(95, 168, 211, 0.15);
-    border-top: 2px solid #5FA8D3;
+    border-top: 2px solid #5fa8d3;
 }
 
 body.theme-dark-blue .chat-datatable .table-total td {
-    color: #FFFFFF;
+    color: #ffffff;
 }
 
 body.theme-dark-blue .chat-datatable .detail-link {
-    color: #5FA8D3;
+    color: #5fa8d3;
 }
 
 body.theme-dark-blue .chat-datatable .detail-link:hover {
-    color: #7CBDE0;
+    color: #7cbde0;
 }
 
 /* ====================================
@@ -230,12 +230,12 @@ body.theme-dark-blue .chat-datatable .detail-link:hover {
 
 body.theme-dark-red .chat-datatable .table {
     background-color: rgba(255, 255, 255, 0.05);
-    color: #FFFFFF;
+    color: #ffffff;
 }
 
 body.theme-dark-red .chat-datatable thead {
-    background: linear-gradient(90deg, #D35F8D 0%, #C74D7D 100%);
-    color: #FFFFFF;
+    background: linear-gradient(90deg, #d35f8d 0%, #c74d7d 100%);
+    color: #ffffff;
 }
 
 body.theme-dark-red .chat-datatable tbody td {
@@ -248,19 +248,19 @@ body.theme-dark-red .chat-datatable tbody tr:hover {
 
 body.theme-dark-red .chat-datatable tfoot {
     background: rgba(211, 95, 141, 0.15);
-    border-top: 2px solid #D35F8D;
+    border-top: 2px solid #d35f8d;
 }
 
 body.theme-dark-red .chat-datatable .table-total td {
-    color: #FFFFFF;
+    color: #ffffff;
 }
 
 body.theme-dark-red .chat-datatable .detail-link {
-    color: #D35F8D;
+    color: #d35f8d;
 }
 
 body.theme-dark-red .chat-datatable .detail-link:hover {
-    color: #E077A3;
+    color: #e077a3;
 }
 
 /* ====================================
@@ -328,7 +328,7 @@ body.theme-dark-red .chat-datatable .detail-link:hover {
 
 /* Focus visible pour navigation clavier */
 .chat-datatable .detail-link:focus-visible {
-    outline: 2px solid #0D6EFD;
+    outline: 2px solid #0d6efd;
     outline-offset: 2px;
     border-radius: 2px;
 }

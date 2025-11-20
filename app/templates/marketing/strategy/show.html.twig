@@ -1,0 +1,273 @@
+{% extends 'layouts/home.html.twig' %}
+
+{% block title %}Stratégie Marketing - {{ project.name }}{% endblock %}
+
+{% block content_classes %} marketing-page{% endblock %}
+
+{% block content %}
+<div class="container-fluid" style="max-width: 1400px;">
+    {# Breadcrumb #}
+    <div class="mb-4">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="{{ path('marketing_project_index') }}">Projets Marketing</a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a href="{{ path('marketing_project_show', {id: project.id}) }}">{{ project.name }}</a>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">Stratégie</li>
+            </ol>
+        </nav>
+    </div>
+
+    {# Header #}
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h2 class="mb-2">
+                        <i class="bi bi-graph-up-arrow text-primary"></i>
+                        Stratégie Marketing Générée
+                    </h2>
+                    <p class="text-muted mb-0">
+                        Stratégie complète personnalisée pour optimiser votre campagne marketing
+                    </p>
+                </div>
+                <div class="col-md-4 text-end">
+                    <span class="badge bg-success fs-6 mb-2">
+                        <i class="bi bi-check-circle-fill"></i> {{ project.status.label }}
+                    </span>
+                    {% if strategy.qualityScore %}
+                        <div class="mb-2">
+                            <span class="badge bg-info fs-6">
+                                <i class="bi bi-star-fill"></i>
+                                Score qualité : {{ (strategy.qualityScore * 100)|number_format(0) }}%
+                            </span>
+                        </div>
+                    {% endif %}
+                    <div class="d-grid gap-2">
+                        <a href="{{ path('marketing_asset_new', {id: project.id}) }}"
+                           class="btn btn-primary">
+                            <i class="bi bi-images"></i>
+                            Générer les assets marketing
+                        </a>
+                        <a href="{{ path('marketing_strategy_new', {id: project.id}) }}"
+                           class="btn btn-outline-secondary btn-sm">
+                            <i class="bi bi-arrow-clockwise"></i>
+                            Régénérer la stratégie
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {# Positionnement stratégique #}
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-gradient text-white py-3"
+             style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+            <h4 class="mb-0">
+                <i class="bi bi-bullseye"></i>
+                Positionnement Stratégique
+            </h4>
+        </div>
+        <div class="card-body p-4">
+            <div class="lead text-muted" style="white-space: pre-line;">
+                {{ strategy.positioning }}
+            </div>
+        </div>
+    </div>
+
+    {# Messages clés #}
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-primary text-white py-3">
+            <h4 class="mb-0">
+                <i class="bi bi-chat-left-quote-fill"></i>
+                Messages Clés de Campagne
+            </h4>
+        </div>
+        <div class="card-body p-4">
+            <div style="white-space: pre-line;">
+                {{ strategy.keyMessages }}
+            </div>
+        </div>
+    </div>
+
+    {# Canaux recommandés et Budget #}
+    <div class="row g-4 mb-4">
+        {# Canaux recommandés #}
+        <div class="col-lg-6">
+            <div class="card shadow-sm h-100">
+                <div class="card-header bg-success text-white py-3">
+                    <h5 class="mb-0">
+                        <i class="bi bi-broadcast"></i>
+                        Canaux Marketing Recommandés
+                    </h5>
+                </div>
+                <div class="card-body p-4">
+                    <div style="white-space: pre-line;">
+                        {{ strategy.recommendedChannels }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {# Répartition budgétaire v3.29.0 #}
+        <div class="col-lg-6">
+            <div class="card shadow-sm h-100">
+                <div class="card-header bg-warning text-white py-3">
+                    <h5 class="mb-0">
+                        <i class="bi bi-pie-chart-fill"></i>
+                        Répartition Budgétaire
+                    </h5>
+                </div>
+                <div class="card-body p-4">
+                    {% set budgetData = strategy.budgetAllocationData %}
+                    {% if budgetData and budgetData.allocation is defined %}
+                        {# Métriques globales #}
+                        <div class="row mb-3">
+                            <div class="col-4 text-center">
+                                <div class="fw-bold text-primary fs-5">{{ budgetData.total_budget|number_format(0, ',', ' ') }} €</div>
+                                <small class="text-muted">Budget total</small>
+                            </div>
+                            <div class="col-4 text-center">
+                                <div class="fw-bold text-success fs-5">{{ budgetData.total_expected_leads }}</div>
+                                <small class="text-muted">Leads attendus</small>
+                            </div>
+                            <div class="col-4 text-center">
+                                <div class="fw-bold text-info fs-5">{{ budgetData.confidence_score }}%</div>
+                                <small class="text-muted">Confiance</small>
+                            </div>
+                        </div>
+
+                        {# Tableau allocation par canal #}
+                        <div class="table-responsive">
+                            <table class="table table-sm table-striped mb-3">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th>Canal</th>
+                                        <th class="text-end">Budget</th>
+                                        <th class="text-end">CPL</th>
+                                        <th class="text-end">Leads</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for channel, data in budgetData.allocation %}
+                                        <tr>
+                                            <td>
+                                                {% if data.category == 'main' %}
+                                                    <span class="badge bg-primary me-1">P</span>
+                                                {% elseif data.category == 'secondary' %}
+                                                    <span class="badge bg-secondary me-1">S</span>
+                                                {% else %}
+                                                    <span class="badge bg-warning me-1">E</span>
+                                                {% endif %}
+                                                {{ channel|replace({'_': ' '})|title }}
+                                            </td>
+                                            <td class="text-end">{{ data.budget|number_format(0, ',', ' ') }} €</td>
+                                            <td class="text-end">{{ data.cpl }} €</td>
+                                            <td class="text-end">{{ data.expected_leads }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+
+                        {# Recommandations budgétaires #}
+                        {% if budgetData.recommendations is defined and budgetData.recommendations|length > 0 %}
+                            <div class="alert alert-info py-2 mb-0">
+                                <small>
+                                    {% for rec in budgetData.recommendations %}
+                                        <div>{{ rec }}</div>
+                                    {% endfor %}
+                                </small>
+                            </div>
+                        {% endif %}
+                    {% else %}
+                        <p class="text-muted mb-0">Allocation budgétaire non disponible</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {# Planning de diffusion #}
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-info text-white py-3">
+            <h4 class="mb-0">
+                <i class="bi bi-calendar-event"></i>
+                Planning de Diffusion Recommandé
+            </h4>
+        </div>
+        <div class="card-body p-4">
+            <div style="white-space: pre-line;">
+                {{ strategy.timeline }}
+            </div>
+        </div>
+    </div>
+
+    {# KPIs suggérés #}
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-dark text-white py-3">
+            <h4 class="mb-0">
+                <i class="bi bi-graph-up"></i>
+                KPIs et Indicateurs de Performance
+            </h4>
+        </div>
+        <div class="card-body p-4">
+            <div style="white-space: pre-line;">
+                {{ strategy.kpis }}
+            </div>
+        </div>
+    </div>
+
+    {# Informations contextuelles #}
+    <div class="card bg-light border-0">
+        <div class="card-body">
+            <h6 class="fw-bold mb-3">
+                <i class="bi bi-info-circle text-primary"></i>
+                Comment utiliser cette stratégie ?
+            </h6>
+            <div class="row g-3 small text-muted">
+                <div class="col-md-6">
+                    <h6 class="fw-bold text-dark">Étape suivante : Génération d'assets</h6>
+                    <ul class="mb-0">
+                        <li>Cliquez sur "Générer les assets marketing"</li>
+                        <li>L'IA créera des contenus adaptés à chaque canal</li>
+                        <li>Textes publicitaires, visuels et accroches optimisés</li>
+                    </ul>
+                </div>
+                <div class="col-md-6">
+                    <h6 class="fw-bold text-dark">Exploitation de la stratégie</h6>
+                    <ul class="mb-0">
+                        <li>Utilisez les messages clés dans vos communications</li>
+                        <li>Respectez la répartition budgétaire recommandée</li>
+                        <li>Suivez les KPIs pour mesurer votre ROI</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {# Métadonnées #}
+    <div class="card mt-4 border-0 bg-light">
+        <div class="card-body">
+            <div class="row g-3 small text-muted">
+                <div class="col-md-4">
+                    <strong>Générée le</strong>
+                    <br>{{ strategy.createdAt|date('d/m/Y à H:i') }}
+                </div>
+                <div class="col-md-4">
+                    <strong>Entreprise</strong>
+                    <br>{{ project.companyName }}
+                </div>
+                <div class="col-md-4">
+                    <strong>Budget total</strong>
+                    <br>{{ project.budget|number_format(2, ',', ' ') }} €
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

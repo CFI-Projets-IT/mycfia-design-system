@@ -195,9 +195,9 @@ final readonly class GetFacturesTool
 
             // Collecter le résultat pour transmission au frontend
             $this->logger->info('[DEBUG] GetFacturesTool: AVANT addToolResult()', [
-                'has_table_data_in_result' => isset($result['table_data']),
-                'table_data_headers_count' => isset($result['table_data']['headers']) ? count($result['table_data']['headers']) : 0,
-                'table_data_rows_count' => isset($result['table_data']['rows']) ? count($result['table_data']['rows']) : 0,
+                'has_table_data_in_result' => true,
+                'table_data_headers_count' => count($result['table_data']['headers']),
+                'table_data_rows_count' => count($result['table_data']['rows']),
                 'collector_count_before' => $this->toolResultCollector->count(),
             ]);
 
@@ -358,11 +358,11 @@ final readonly class GetFacturesTool
 
         // DEBUG : Logger le résultat complet pour diagnostic
         $this->logger->info('[DEBUG MODE DÉTAIL] Résultat retourné à l\'IA', [
-            'has_success_key' => isset($result['success']),
-            'success_value' => $result['success'] ?? null,
-            'has_facture_key' => isset($result['facture']),
-            'facture_id' => $result['facture']['id'] ?? null,
-            'facture_nb_lignes' => $result['facture']['nb_lignes'] ?? null,
+            'has_success_key' => true,
+            'success_value' => $result['success'],
+            'has_facture_key' => true,
+            'facture_id' => $result['facture']['id'],
+            'facture_nb_lignes' => $result['facture']['nb_lignes'],
             'result_keys' => array_keys($result),
         ]);
 

@@ -1,0 +1,74 @@
+project:
+  status:
+    draft: Brouillon
+    enriched: Enrichi par IA
+    enriched_pending: En attente de validation
+    persona_in_progress: Génération personas...
+    persona_generated: Personas générés
+    competitor_validated: Concurrents validés
+    strategy_in_progress: Génération stratégie...
+    strategy_generated: Stratégie générée
+    assets_in_progress: Génération assets...
+    assets_generated: Assets générés
+    ready_to_publish: Prêt à publier
+    published: Publié
+
+  flash:
+    created: 'Projet créé avec succès ! Vous pouvez maintenant générer les personas.'
+    created_with_ai: 'Projet créé avec succès avec les améliorations IA ! Vous pouvez maintenant générer les personas.'
+    updated: 'Projet modifié avec succès !'
+    deleted: 'Projet supprimé avec succès !'
+    no_data_to_analyze: 'Aucune donnée de projet à analyser. Veuillez remplir le formulaire.'
+    enrichment_started: 'Enrichissement IA en cours... Veuillez patienter.'
+    enrichment_not_found: 'Résultats d''enrichissement introuvables. Veuillez réessayer.'
+    enrichment_failed: 'L''enrichissement IA a échoué. Veuillez réessayer.'
+    enrichment_validated: 'Enrichissement validé avec succès ! Génération des personas en cours...'
+    enrichment_regenerating: 'Nouvelle analyse IA en cours... Les résultats actuels seront remplacés.'
+    name_selection_required: 'Vous devez sélectionner un nom alternatif avant de valider.'
+
+goal:
+  type:
+    awareness: Notoriété
+    conversion: Conversion
+    retention: Fidélisation
+
+persona:
+  flash:
+    generation_started: 'Génération de personas en cours... Veuillez patienter.'
+    already_generated: 'Les personas ont déjà été générés pour ce projet.'
+    already_exists: 'Des personas existent déjà pour ce projet.'
+    no_personas: 'Aucun persona généré pour ce projet.'
+    generation_failed: 'La génération de personas a échoué. Veuillez réessayer.'
+    selection_updated: '%count% persona(s) sélectionné(s) sur %total% pour la stratégie marketing.'
+
+strategy:
+  flash:
+    generation_started: 'Génération de stratégie en cours... Veuillez patienter.'
+    already_generated: 'La stratégie a déjà été générée pour ce projet.'
+    no_personas: 'Veuillez d''abord générer les personas avant la stratégie.'
+    no_personas_selected: 'Veuillez sélectionner au moins un persona avant de générer la stratégie.'
+    no_strategy: 'Aucune stratégie générée pour ce projet.'
+    generation_failed: 'La génération de stratégie a échoué. Veuillez réessayer.'
+
+asset:
+  flash:
+    generation_started: 'Génération des assets en cours... Veuillez patienter.'
+    already_generated: 'Les assets ont déjà été générés pour ce projet.'
+    no_strategy: 'Veuillez d''abord générer la stratégie avant les assets.'
+    no_assets: 'Aucun asset généré pour ce projet.'
+    generation_failed: 'La génération de l''asset %type% a échoué après plusieurs tentatives. Veuillez réessayer.'
+
+  type:
+    google_ads: Google Ads
+    linkedin_post: LinkedIn Post
+    facebook_post: Facebook Post
+    instagram_post: Instagram Post
+    mail: Email Marketing
+    bing_ads: Bing Ads
+    iab_banner: Bannière IAB
+    article_seo: Article SEO
+
+  status:
+    draft: Brouillon
+    approved: Approuvé
+    rejected: Rejeté

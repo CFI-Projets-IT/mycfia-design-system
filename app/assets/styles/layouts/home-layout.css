@@ -47,7 +47,7 @@
     transition: transform 0.2s ease;
 }
 
-.nav-section-title-pill[aria-expanded="true"] i.bi-chevron-down {
+.nav-section-title-pill[aria-expanded='true'] i.bi-chevron-down {
     transform: rotate(180deg);
 }
 
@@ -147,6 +147,8 @@
    CONTAINER 1 : Header + Nav Tabs sticky en haut
    ==================================== */
 .sticky-top-container {
+    position: sticky;
+    top: 0;
     flex-shrink: 0; /* Ne pas rétrécir */
     z-index: 100;
     background-color: var(--theme-bg);
@@ -170,7 +172,8 @@
 /* Adaptation des couleurs du logo selon le thème */
 /* Logo texte : blanc en SVG, donc doit être converti en bleu pour thème light */
 .theme-light .header-logo {
-    filter: brightness(0) saturate(100%) invert(23%) sepia(73%) saturate(1647%) hue-rotate(203deg) brightness(93%) contrast(94%);
+    filter: brightness(0) saturate(100%) invert(23%) sepia(73%) saturate(1647%) hue-rotate(203deg) brightness(93%)
+        contrast(94%);
 }
 
 /* Logo picto : on utilise les bons SVG directement (logo_picto.svg en light, assistant-picto.svg en dark) */
@@ -202,6 +205,12 @@
 /* Page settings : contenu aligné en haut (pas centré verticalement) */
 .home-content.settings-page {
     justify-content: flex-start;
+}
+
+/* Page marketing : contenu aligné en haut (pas centré verticalement) */
+.home-content.marketing-page {
+    justify-content: flex-start;
+    padding-top: 1rem; /* Éviter que le contenu soit caché sous le header */
 }
 
 /* ====================================

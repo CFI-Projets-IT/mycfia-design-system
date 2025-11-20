@@ -1,0 +1,17 @@
+# Dépendances
+node_modules/
+vendor/
+
+# Fichiers de build
+public/build/
+var/
+
+# Fichiers AssetMapper compilés
+public/assets/
+
+# Fichiers de configuration
+*.min.js
+*.min.css
+*.bundle.js
+package-lock.json
+composer.lock

@@ -40,6 +40,50 @@
                     <h3 class="fs-6 fw-semibold text-primary mb-0">{{ 'home.quick_access.other'|trans({}, 'home') }}</h3>
                 </div>
             </a>
+
+            <a href="#" class="card text-decoration-none shadow-sm quick-access-card" data-bs-toggle="modal" data-bs-target="#marketingWarningModal">
+                <div class="card-body d-flex align-items-center gap-3 p-3">
+                    <i class="bi bi-magic fs-2 text-danger flex-shrink-0"></i>
+                    <h3 class="fs-6 fw-semibold text-primary mb-0">{{ 'home.quick_access.marketing'|trans({}, 'home') }}</h3>
+                </div>
+            </a>
         </div>    </div>
+</div>
+{% endblock %}
+
+{% block modals %}
+{# Modal d'avertissement MarketingAI #}
+<div class="modal fade" id="marketingWarningModal" tabindex="-1" aria-labelledby="marketingWarningModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-warning bg-opacity-10 border-bottom-0">
+                <h5 class="modal-title" id="marketingWarningModalLabel">
+                    <i class="bi bi-exclamation-triangle text-warning me-2"></i>
+                    Attention
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+            </div>
+            <div class="modal-body text-center py-4">
+                <div class="mb-4">
+                    <i class="bi bi-robot fs-1 text-muted"></i>
+                </div>
+                <p class="mb-3 fs-5">
+                    Vous entrez dans l'ancienne interface <strong>"MyAgent"</strong> de création de campagne.
+                </p>
+                <p class="text-muted small mb-0">
+                    Cette interface sera bientôt remplacée par une nouvelle version améliorée.
+                </p>
+            </div>
+            <div class="modal-footer border-top-0 justify-content-center pb-4">
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                    Annuler
+                </button>
+                <a href="{{ path('marketing_project_index') }}" class="btn btn-primary">
+                    <i class="bi bi-megaphone me-1"></i>
+                    Je souhaite créer une campagne
+                </a>
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}

@@ -1,0 +1,24 @@
+{
+  "name": "mycfia",
+  "version": "1.0.0",
+  "description": "myCfia - Plateforme d'automatisation marketing multi-canal avec IA conversationnelle",
+  "private": true,
+  "scripts": {
+    "lint": "eslint \"assets/{js,controllers,styles}/**/*.js\"",
+    "lint:fix": "eslint \"assets/{js,controllers,styles}/**/*.js\" --fix",
+    "format": "prettier --write \"assets/{js,controllers,styles}/**/*.{js,css}\"",
+    "format:check": "prettier --check \"assets/{js,controllers,styles}/**/*.{js,css}\"",
+    "quality": "npm run lint && npm run format:check",
+    "quality:fix": "npm run lint:fix && npm run format"
+  },
+  "devDependencies": {
+    "eslint": "^8.57.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.1.3",
+    "prettier": "^3.2.5"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  }
+}
