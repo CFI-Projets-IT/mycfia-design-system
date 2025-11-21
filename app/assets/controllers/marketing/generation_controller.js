@@ -105,8 +105,7 @@ export default class extends Controller {
 
     /**
      * Gère la complétion
-     * Pour la stratégie : CompetitorAnalyst termine d'abord, puis StrategyAnalyst
-     * On attend que le statut projet change avant de rediriger
+     * Pour la stratégie : attendre StrategyAnalystAgent, pas CompetitorAnalystAgent
      */
     handleComplete(data) {
         console.log('[MERCURE DEBUG] handleComplete called');
@@ -114,73 +113,26 @@ export default class extends Controller {
         console.log('[MERCURE DEBUG] Generation type:', this.generationTypeValue);
         console.log('[MERCURE DEBUG] Full data:', JSON.stringify(data, null, 2));
 
-        // ✅ FIX: Pour la stratégie, vérifier qu'elle est sauvegardée en BDD avant de rediriger
-        // L'EventSubscriber peut prendre quelques ms pour persister
+        // ✅ FIX: Pour la stratégie, vérifier qu'on reçoit bien StrategyAnalystAgent
         if (this.generationTypeValue === 'strategy') {
-            console.log('[MERCURE DEBUG] Strategy generation, checking DB status before redirect...');
-            setTimeout(() => {
-                this.checkStrategyStatus();
-            }, 2000); // Attendre 2s pour laisser l'EventSubscriber persister
+            // Vérifier si c'est StrategyAnalystAgent qui a terminé
+            if (data.agentName && data.agentName.includes('StrategyAnalystAgent')) {
+                console.log('[MERCURE DEBUG] StrategyAnalystAgent completed, waiting 2s then redirecting...');
+                setTimeout(() => {
+                    this.showSuccess(data);
+                }, 2000);
+            } else {
+                // C'est CompetitorAnalystAgent, on attend StrategyAnalystAgent
+                console.log('[MERCURE DEBUG] CompetitorAnalystAgent completed, waiting for StrategyAnalystAgent...');
+                this.updateStatus('Analyse concurrents terminée, génération de la stratégie en cours...');
+            }
         } else {
-            // Pour les autres types (assets), redirection immédiate
-            console.log('[MERCURE DEBUG] Non-strategy generation, redirecting in 1s...');
+            // Pour les autres types : redirection immédiate après 2s
+            console.log('[MERCURE DEBUG] Non-strategy generation, redirecting in 2s...');
             setTimeout(() => {
                 this.showSuccess(data);
-            }, 1000);
+            }, 2000);
         }
-    }
-
-    /**
-     * Vérifie si la stratégie a été sauvegardée en BDD
-     */
-    async checkStrategyStatus() {
-        try {
-            const projectId = this.extractProjectId();
-            console.log('[MERCURE DEBUG] checkStrategyStatus - projectId:', projectId);
-            console.log('[MERCURE DEBUG] checkStrategyStatus - fetching /marketing/projects/' + projectId);
-
-            const response = await fetch(`/marketing/projects/${projectId}`, {
-                method: 'GET',
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest'
-                }
-            });
-
-            console.log('[MERCURE DEBUG] checkStrategyStatus - response status:', response.status);
-
-            if (response.ok) {
-                const html = await response.text();
-                console.log('[MERCURE DEBUG] checkStrategyStatus - HTML length:', html.length);
-                console.log('[MERCURE DEBUG] checkStrategyStatus - contains marketing_strategy_show:', html.includes('marketing_strategy_show'));
-                console.log('[MERCURE DEBUG] checkStrategyStatus - contains strategy_generated:', html.includes('strategy_generated'));
-
-                // Si la page contient le lien vers la stratégie, c'est prêt
-                if (html.includes('marketing_strategy_show') || html.includes('strategy_generated')) {
-                    console.log('[MERCURE DEBUG] Strategy saved, redirecting...');
-                    this.showSuccess({});
-                } else {
-                    // Réessayer après 1 seconde
-                    console.log('[MERCURE DEBUG] Strategy not ready, retrying in 1s...');
-                    setTimeout(() => this.checkStrategyStatus(), 1000);
-                }
-            } else {
-                console.error('[MERCURE DEBUG] checkStrategyStatus - response not OK:', response.status);
-                // Rediriger quand même après un délai
-                setTimeout(() => this.showSuccess({}), 3000);
-            }
-        } catch (error) {
-            console.error('[MERCURE DEBUG] Error checking strategy status:', error);
-            // Rediriger quand même après timeout
-            setTimeout(() => this.showSuccess({}), 3000);
-        }
-    }
-
-    /**
-     * Extrait le project ID depuis nextUrl
-     */
-    extractProjectId() {
-        const match = this.nextUrlValue.match(/\/(\d+)$/);
-        return match ? match[1] : null;
     }
 
     /**
