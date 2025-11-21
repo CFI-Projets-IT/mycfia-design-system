@@ -101,19 +101,22 @@ ENVIRONNEMENTS:
 OPTIONS:
     -p, --project-name NAME    Nom du projet (défaut: depuis .env)
     --build                   Force la reconstruction des images
-    --auto-ports              Configuration automatique des ports libres (OBLIGATOIRE en dev)
+    --auto-ports              Configuration automatique des ports libres (dev local)
+    --full-deploy             Déploiement complet (Composer, migrations, cache, assets)
+                              Automatique pour preprod/prod, optionnel pour dev
     --down                    Arrêter les services
     --logs                    Afficher les logs
     --status                  Afficher le statut des services
     -h, --help               Afficher cette aide
 
 EXEMPLES:
-    ./deploy.sh dev --auto-ports       # Déploiement développement (auto-ports obligatoire)
-    ./deploy.sh prod --build           # Production avec rebuild
-    ./deploy.sh dev --auto-ports --project-name myapp
-    ./deploy.sh --down                 # Arrêter tous les services
-    ./deploy.sh --status               # Statut des services
-    ./deploy.sh --logs                 # Voir les logs
+    ./deploy.sh dev --auto-ports              # Déploiement dev avec auto-configuration
+    ./deploy.sh dev --auto-ports --full-deploy # Déploiement dev complet (avec migrations)
+    ./deploy.sh preprod                       # Déploiement preprod (full-deploy automatique)
+    ./deploy.sh prod --build                  # Production avec rebuild (full-deploy automatique)
+    ./deploy.sh --down                        # Arrêter tous les services
+    ./deploy.sh --status                      # Statut des services
+    ./deploy.sh --logs                        # Voir les logs
 EOF
 }
 
@@ -327,6 +330,42 @@ show_connection_info() {
     echo ""
 }
 
+deploy_application() {
+    local container="${PROJECT_NAME}_frankenphp"
+
+    log_info "🚀 Déploiement complet de l'application..."
+
+    # Attendre que le conteneur soit vraiment prêt
+    sleep 2
+
+    log_info "📦 Installation des dépendances Composer..."
+    if [ "$APP_ENV" = "prod" ]; then
+        # Production : sans dépendances de dev, optimisé
+        docker exec --user www-data $container composer install --no-dev --optimize-autoloader --no-interaction
+    else
+        # Dev/Preprod : avec dépendances de dev
+        docker exec --user www-data $container composer install --no-interaction
+    fi
+
+    log_info "🗄️ Exécution des migrations Doctrine..."
+    docker exec --user www-data $container php bin/console doctrine:migrations:migrate --no-interaction --allow-no-migration
+
+    log_info "🧹 Nettoyage du cache Symfony..."
+    docker exec --user www-data $container php bin/console cache:clear
+
+    # Cache warmup seulement en prod (pas en dev/preprod)
+    if [ "$APP_ENV" = "prod" ]; then
+        log_info "🔥 Préchauffage du cache..."
+        docker exec --user www-data $container php bin/console cache:warmup
+    fi
+
+    log_info "🎨 Recompilation des assets..."
+    docker exec --user www-data $container rm -rf public/assets
+    docker exec --user www-data $container php bin/console asset-map:compile
+
+    log_success "✅ Application déployée avec succès"
+}
+
 stop_services() {
     log_info "Arrêt des services..."
     docker compose $COMPOSE_FILES down
@@ -352,6 +391,7 @@ ENVIRONMENT=""
 PROJECT_NAME=""
 BUILD_FLAG=false
 AUTO_PORTS=false
+FULL_DEPLOY=false
 ACTION=""
 
 while [[ $# -gt 0 ]]; do
@@ -370,6 +410,10 @@ while [[ $# -gt 0 ]]; do
             ;;
         --auto-ports)
             AUTO_PORTS=true
+            shift
+            ;;
+        --full-deploy)
+            FULL_DEPLOY=true
             shift
             ;;
         --down)
@@ -455,5 +499,11 @@ fi
 
 # Déploiement
 deploy_services "$BUILD_FLAG"
+
+# Déploiement complet de l'application (Composer, migrations, cache, assets)
+# Automatique pour preprod/prod, optionnel pour dev via --full-deploy
+if [ "$ENVIRONMENT" = "preprod" ] || [ "$ENVIRONMENT" = "prod" ] || [ "$FULL_DEPLOY" = "true" ]; then
+    deploy_application
+fi
 
 log_success "🎉 Déploiement terminé avec succès!"
