@@ -70,6 +70,63 @@ if ! command -v php >/dev/null 2>&1; then
     exit 1
 fi
 
+# Fonction d'attente pour la disponibilité de MariaDB
+wait_for_mariadb() {
+    local max_attempts=30
+    local attempt=1
+    local wait_time=2
+
+    echo "⏳ Attente de MariaDB (max ${max_attempts} tentatives)..."
+
+    while [ $attempt -le $max_attempts ]; do
+        # Vérification de la résolution DNS
+        if ! getent hosts mariadb > /dev/null 2>&1; then
+            echo "   [$attempt/$max_attempts] Résolution DNS 'mariadb' en cours..."
+            sleep $wait_time
+            attempt=$((attempt + 1))
+            continue
+        fi
+
+        # Vérification de la connexion TCP
+        if timeout 2 bash -c "cat < /dev/null > /dev/tcp/mariadb/3306" 2>/dev/null; then
+            # Vérification de l'authentification avec les credentials Symfony
+            if php -r "
+                \$dsn = getenv('DATABASE_URL') ?: 'mysql://root:root@mariadb:3306/app_db';
+                preg_match('/mysql:\\/\\/([^:]+):([^@]+)@([^:]+):(\d+)\\/(.+)/', \$dsn, \$matches);
+                if (count(\$matches) === 6) {
+                    try {
+                        new PDO('mysql:host='.\$matches[3].';port='.\$matches[4], \$matches[1], \$matches[2]);
+                        exit(0);
+                    } catch (PDOException \$e) {
+                        exit(1);
+                    }
+                }
+                exit(1);
+            " 2>/dev/null; then
+                echo "✅ MariaDB accessible et authentification réussie"
+                return 0
+            else
+                echo "   [$attempt/$max_attempts] MariaDB répond mais authentification échouée..."
+            fi
+        else
+            echo "   [$attempt/$max_attempts] MariaDB pas encore accessible..."
+        fi
+
+        sleep $wait_time
+        attempt=$((attempt + 1))
+    done
+
+    echo "❌ Erreur: Impossible de se connecter à MariaDB après ${max_attempts} tentatives"
+    echo "   Vérifiez que le service MariaDB est démarré et que les credentials sont corrects"
+    return 1
+}
+
+# Attendre que MariaDB soit prêt avant de démarrer le worker
+# Évite les erreurs de race condition au démarrage des conteneurs
+if ! wait_for_mariadb; then
+    exit 1
+fi
+
 # Démarrage du worker Messenger
 echo "🎯 Lancement du Messenger Worker"
 

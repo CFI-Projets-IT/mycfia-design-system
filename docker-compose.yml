@@ -93,6 +93,10 @@ services:
     restart: unless-stopped
     networks:
       - app_network
+    # Désactiver le healthcheck hérité de l'image FrankenPHP
+    # Un worker CLI n'expose aucun port HTTP, le healthcheck port 2019 n'a pas de sens
+    healthcheck:
+      disable: true
 
 networks:
   app_network:
