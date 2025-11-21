@@ -70,3 +70,17 @@ services:
         cors_origins http://localhost:${HTTP_PORT:-82} http://127.0.0.1:${HTTP_PORT:-82} http://0.0.0.0:${HTTP_PORT:-82}
         anonymous
         demo
+
+  # Configuration ChromaDB pour développement
+  chroma:
+    ports:
+      - "${CHROMA_PORT:-8000}:8000"
+    volumes:
+      - chroma_data:/chroma/chroma
+    environment:
+      - IS_PERSISTENT=TRUE
+      - ANONYMIZED_TELEMETRY=FALSE
+
+volumes:
+  chroma_data:
+    name: ${PROJECT_NAME}_chroma_data

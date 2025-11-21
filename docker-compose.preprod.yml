@@ -123,6 +123,13 @@ services:
       - app_network
     restart: unless-stopped
 
+  chroma:
+    volumes:
+      - chroma_data:/chroma/chroma
+    environment:
+      - IS_PERSISTENT=TRUE
+      - ANONYMIZED_TELEMETRY=FALSE
+
 networks:
   app_network:
     driver: bridge
@@ -137,3 +144,5 @@ volumes:
     name: ${PROJECT_NAME}_mercure_data
   mercure_config:
     name: ${PROJECT_NAME}_mercure_config
+  chroma_data:
+    name: ${PROJECT_NAME}_chroma_data

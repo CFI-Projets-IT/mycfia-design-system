@@ -423,16 +423,23 @@ fi
 # Configuration de l'environnement
 setup_environment "$ENVIRONMENT"
 
-# Configuration automatique des ports (obligatoire en développement)
-if [ "$APP_ENV" = "dev" ]; then
+# Configuration automatique des ports (recommandée en développement local)
+if [ "$APP_ENV" = "dev" ] && [ "$ENVIRONMENT" != "preprod" ]; then
     if [ "$AUTO_PORTS" != "true" ]; then
-        log_error "L'argument --auto-ports est obligatoire pour l'environnement de développement"
-        log_error "Usage: ./deploy.sh dev --auto-ports"
-        exit 1
+        log_warn "Ports non configurés automatiquement"
+        log_warn "Risque de conflit si ports déjà utilisés"
+        echo -n "Continuer sans --auto-ports ? (y/N): "
+        read -r response
+        if [[ ! "$response" =~ ^[Yy]$ ]]; then
+            log_info "Déploiement annulé. Relancez avec : ./deploy.sh dev --auto-ports"
+            exit 1
+        fi
     fi
     auto_configure_ports "$SCRIPT_DIR/.env.local"
-elif [ "$AUTO_PORTS" = "true" ]; then
-    log_warn "Configuration automatique des ports disponible seulement en développement"
+elif [ "$AUTO_PORTS" = "true" ] && [ "$APP_ENV" != "dev" ]; then
+    log_warn "--auto-ports disponible uniquement en développement local"
+    log_warn "Cette option sera ignorée pour $ENVIRONMENT"
+    AUTO_PORTS=false
 fi
 
 # Nom du projet personnalisé

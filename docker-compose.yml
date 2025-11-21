@@ -58,6 +58,19 @@ services:
     networks:
       - app_network
 
+  chroma:
+    image: chromadb/chroma:latest
+    container_name: ${PROJECT_NAME}_chroma
+    restart: unless-stopped
+    networks:
+      - app_network
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8000/api/v2/heartbeat || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
   messenger_worker:
     build:
       context: .
@@ -96,3 +109,5 @@ volumes:
     name: ${PROJECT_NAME}_mercure_data
   mercure_config:
     name: ${PROJECT_NAME}_mercure_config
+  chroma_data:
+    name: ${PROJECT_NAME}_chroma_data
