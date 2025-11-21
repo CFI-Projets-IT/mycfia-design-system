@@ -441,7 +441,7 @@ if [ "$APP_ENV" = "dev" ] && [ "$ENVIRONMENT" != "preprod" ]; then
             exit 1
         fi
     fi
-    auto_configure_ports "$SCRIPT_DIR/.env.local"
+    auto_configure_ports "$SCRIPT_DIR/.env"
 elif [ "$AUTO_PORTS" = "true" ] && [ "$APP_ENV" != "dev" ]; then
     log_warn "--auto-ports disponible uniquement en développement local"
     log_warn "Cette option sera ignorée pour $ENVIRONMENT"
