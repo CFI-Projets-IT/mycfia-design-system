@@ -8,8 +8,9 @@ services:
       target: production
     container_name: ${PROJECT_NAME}_frankenphp
     ports:
-      # ⚠️ CRITIQUE : Localhost uniquement pour reverse proxy
-      - "127.0.0.1:8081:82"
+      # Exposition publique directe (comme prospect_office)
+      - "80:82"
+      - "443:443"
     volumes:
       # Code monté depuis le serveur
       # En tests locaux : read-write pour simplifier
