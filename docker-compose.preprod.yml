@@ -17,9 +17,10 @@ services:
       # Sur serveur : ajouter :ro pour read-only
       - ${PREPROD_CODE_PATH:-.}:/var/www/html
     environment:
-      - SERVER_NAME=:82  # Écouter sur port 82 (HTTP uniquement)
+      - SERVER_NAME=mycfia.krystdev.com  # Domaine pour HTTPS automatique
       - SERVER_ROOT=app/public  # Chemin vers public Symfony
-      - CADDY_GLOBAL_OPTIONS=auto_https off
+      - HTTPS_PORT=443
+      - HTTP_PORT=80
       - APP_ENV=dev
       - APP_DEBUG=1
       - APP_SECRET=${APP_SECRET}
