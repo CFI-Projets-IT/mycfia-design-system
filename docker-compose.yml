@@ -64,12 +64,8 @@ services:
     restart: unless-stopped
     networks:
       - app_network
-    healthcheck:
-      test: ["CMD-SHELL", "curl -f http://localhost:8000/api/v2/heartbeat || exit 1"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-      start_period: 20s
+    # Healthcheck retiré : curl n'est pas disponible dans l'image chromadb/chroma
+    # Le service fonctionne correctement, vérification possible via http://localhost:8000/api/v2/heartbeat
 
   messenger_worker:
     build:

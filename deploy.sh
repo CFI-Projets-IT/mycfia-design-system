@@ -60,6 +60,10 @@ auto_configure_ports() {
         sed -i "s/^PHPMYADMIN_PORT=.*/PHPMYADMIN_PORT=$phpmyadmin_port/" "$env_file"
         sed -i "s/^MAILHOG_PORT=.*/MAILHOG_PORT=$mailhog_port/" "$env_file"
         sed -i "s/^MERCURE_PORT=.*/MERCURE_PORT=$mercure_port/" "$env_file"
+
+        # Mise à jour des variables dépendantes des ports
+        sed -i "s|^MERCURE_PUBLIC_URL=.*|MERCURE_PUBLIC_URL=http://localhost:$http_port/.well-known/mercure|" "$env_file"
+
         log_success "Configuration des ports mise à jour dans $env_file"
     else
         log_warn "Fichier $env_file non trouvé, création automatique"
@@ -69,6 +73,7 @@ HTTP_PORT=$http_port
 PHPMYADMIN_PORT=$phpmyadmin_port
 MAILHOG_PORT=$mailhog_port
 MERCURE_PORT=$mercure_port
+MERCURE_PUBLIC_URL=http://localhost:$http_port/.well-known/mercure
 EOF
     fi
 
@@ -77,6 +82,7 @@ EOF
     export PHPMYADMIN_PORT=$phpmyadmin_port
     export MAILHOG_PORT=$mailhog_port
     export MERCURE_PORT=$mercure_port
+    export MERCURE_PUBLIC_URL="http://localhost:$http_port/.well-known/mercure"
 }
 
 show_help() {
