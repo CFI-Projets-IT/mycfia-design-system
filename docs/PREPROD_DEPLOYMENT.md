@@ -34,6 +34,10 @@ L'environnement preprod utilise une approche optimisée avec **Git serveur + Vol
 │  │  │ Mercure Hub (127.0.0.1:3081)              │    │  │
 │  │  └─────────────────────────────────────────────┘    │  │
 │  │  ┌─────────────────────────────────────────────┐    │  │
+│  │  │ ChromaDB (interne)                         │    │  │
+│  │  │ - Base vectorielle IA (embeddings)         │    │  │
+│  │  └─────────────────────────────────────────────┘    │  │
+│  │  ┌─────────────────────────────────────────────┐    │  │
 │  │  │ Messenger Worker (async)                   │    │  │
 │  │  └─────────────────────────────────────────────┘    │  │
 │  └──────────────────────────────────────────────────────┘  │
@@ -139,15 +143,34 @@ MISTRAL_API_KEY=votre-clé-mistral
 
 ### Étape 4 : Déployer l'application
 
+#### Workflow automatique de déploiement
+
+Le script `deploy.sh preprod` exécute **automatiquement** toutes les étapes nécessaires pour un déploiement production-ready :
+
+1. **Vérification des prérequis** : Docker, Docker Compose, ports disponibles
+2. **Construction des images** : Build multi-stage (si --build)
+3. **Démarrage des conteneurs** : Orchestration Docker Compose
+4. **⚡ Déploiement automatique de l'application** :
+   - 📦 **Composer install** (avec dépendances dev, car APP_ENV=dev en preprod)
+   - 🗄️ **Migrations Doctrine** : `doctrine:migrations:migrate --no-interaction`
+   - 🧹 **Cache clear** : `cache:clear` pour Symfony
+   - 🎨 **Recompilation assets** : Suppression `public/assets` + `asset-map:compile`
+5. **Validation finale** : Vérification de l'état des services
+
+#### Commande
+
 ```bash
-# Première construction et démarrage
+# Première construction et démarrage avec déploiement complet
 ./deploy.sh preprod --build
+
+# Redéploiement (sans rebuild des images)
+./deploy.sh preprod
 
 # Vérifier les services
 docker compose -f docker-compose.yml -f docker-compose.preprod.yml ps
 ```
 
-**Sortie attendue** :
+#### Sortie attendue
 
 ```
 ℹ️  Configuration environnement PREPROD
@@ -155,15 +178,44 @@ docker compose -f docker-compose.yml -f docker-compose.preprod.yml ps
 ℹ️  Déploiement des services...
 ✅ Services déployés avec succès
 
+🚀 Déploiement complet de l'application...
+📦 Installation des dépendances Composer...
+   Loading composer repositories with package information
+   Installing dependencies from lock file (including require-dev)
+   ✅ Composer install terminé
+
+🗄️ Exécution des migrations Doctrine...
+   [OK] Application up to date!
+   ✅ Migrations appliquées
+
+🧹 Nettoyage du cache Symfony...
+   [OK] Cache for the "dev" environment cleared
+   ✅ Cache nettoyé
+
+🎨 Recompilation des assets...
+   Removing old assets...
+   Compiling asset map...
+   ✅ Assets recompilés
+
+✅ Application déployée avec succès
+
 🌐 Services accessibles:
    📱 Application:    http://127.0.0.1:8081 (localhost uniquement)
    ⚡ Mercure:       http://127.0.0.1:3081 (localhost uniquement)
+   🤖 ChromaDB:      Service interne (pas d'exposition)
 
    ⚠️  Services accessibles uniquement depuis le serveur
    🌐 Reverse proxy requis pour accès public HTTPS
 
    💡 Switch de branch rapide : ./scripts/preprod-switch.sh <branch>
 ```
+
+#### Notes importantes
+
+- **APP_ENV=dev en preprod** : Les dépendances de développement sont conservées pour faciliter le débogage
+- **Pas de cache warmup** : Cache warmup seulement en production (APP_ENV=prod)
+- **Déploiement systématique** : Le workflow complet s'exécute automatiquement à chaque déploiement preprod
+- **ChromaDB** : Base vectorielle IA pour le Gorillias Marketing AI Bundle (communication interne uniquement)
 
 ### Étape 5 : Vérifier le déploiement
 

@@ -48,7 +48,9 @@ Le script `deploy.sh` est un orchestrateur intelligent qui simplifie le déploie
 #### Options de configuration
 ```bash
 -p, --project-name NAME    # Nom personnalisé du projet
---auto-ports              # Auto-détection des ports libres
+--auto-ports              # Auto-détection des ports libres (dev local)
+--full-deploy             # Déploiement complet (Composer, migrations, cache, assets)
+                          # Automatique pour preprod/prod, optionnel pour dev
 --build                   # Force la reconstruction des images
 ```
 
@@ -96,10 +98,12 @@ MERCURE_PORT=$(find_free_port 3000 3099)    # Services temps réel
 
 #### Configuration automatique
 ```bash
-# Le script met à jour automatiquement .env.local
+# Le script met à jour automatiquement .env (fichier lu par Docker Compose)
 sed -i "s/^HTTP_PORT=.*/HTTP_PORT=$http_port/" "$env_file"
 sed -i "s/^PHPMYADMIN_PORT=.*/PHPMYADMIN_PORT=$phpmyadmin_port/" "$env_file"
-# etc.
+sed -i "s|^MERCURE_PUBLIC_URL=.*|MERCURE_PUBLIC_URL=http://localhost:$http_port/.well-known/mercure|" "$env_file"
+export MERCURE_PUBLIC_URL="http://localhost:$http_port/.well-known/mercure"
+# MERCURE_PUBLIC_URL est automatiquement synchronisé avec HTTP_PORT
 ```
 
 ### Gestion intelligente des environnements
@@ -135,6 +139,75 @@ setup_environment "prod" {
     done
 }
 ```
+
+### Déploiement complet de l'application
+
+#### Fonction deploy_application()
+
+La fonction `deploy_application()` automatise le workflow complet de déploiement pour un environnement production-ready :
+
+```bash
+deploy_application() {
+    local container="${PROJECT_NAME}_frankenphp"
+
+    log_info "🚀 Déploiement complet de l'application..."
+
+    # 1. Installation des dépendances Composer
+    if [ "$APP_ENV" = "prod" ]; then
+        # Production : optimisé sans dépendances de dev
+        docker exec --user www-data $container \
+            composer install --no-dev --optimize-autoloader --no-interaction
+    else
+        # Dev/Preprod : avec dépendances de dev
+        docker exec --user www-data $container \
+            composer install --no-interaction
+    fi
+
+    # 2. Migrations Doctrine automatiques
+    docker exec --user www-data $container \
+        php bin/console doctrine:migrations:migrate --no-interaction --allow-no-migration
+
+    # 3. Nettoyage du cache Symfony
+    docker exec --user www-data $container \
+        php bin/console cache:clear
+
+    # 4. Préchauffage du cache (prod uniquement)
+    if [ "$APP_ENV" = "prod" ]; then
+        docker exec --user www-data $container \
+            php bin/console cache:warmup
+    fi
+
+    # 5. Recompilation des assets
+    docker exec --user www-data $container rm -rf public/assets
+    docker exec --user www-data $container \
+        php bin/console asset-map:compile
+
+    log_success "✅ Application déployée avec succès"
+}
+```
+
+#### Activation automatique
+
+Le déploiement complet est :
+- **Automatique** pour `preprod` et `prod` (même si `APP_ENV=dev` en preprod)
+- **Optionnel** pour `dev` local via le flag `--full-deploy`
+
+```bash
+# Logique d'activation
+if [ "$ENVIRONMENT" = "preprod" ] || [ "$ENVIRONMENT" = "prod" ] || [ "$FULL_DEPLOY" = "true" ]; then
+    deploy_application
+fi
+```
+
+#### Différences par environnement
+
+| Étape | Dev/Preprod | Production |
+|-------|-------------|------------|
+| Composer | `composer install` | `composer install --no-dev --optimize-autoloader` |
+| Migrations | ✅ Automatique | ✅ Automatique |
+| Cache clear | ✅ Oui | ✅ Oui |
+| Cache warmup | ❌ Non | ✅ Oui |
+| Assets | ✅ Recompilation | ✅ Recompilation |
 
 ### Système de validation
 
@@ -180,8 +253,21 @@ check_requirements() {
 #   🗄️ phpMyAdmin: 8200
 #   📧 MailHog: 8300
 #   ⚡ Mercure: 3002
-# ✅ Configuration des ports mise à jour dans .env.local
+# ✅ Configuration des ports mise à jour dans .env
 # 🚀 Services déployés avec succès
+```
+
+#### Déploiement complet (développement)
+```bash
+# Déploiement avec migrations et recompilation assets
+./deploy.sh dev --auto-ports --full-deploy
+
+# Workflow exécuté :
+# 1. Démarrage des conteneurs avec auto-détection ports
+# 2. Installation Composer (avec dev)
+# 3. Migrations Doctrine
+# 4. Nettoyage cache Symfony
+# 5. Recompilation des assets
 ```
 
 #### Développement avec reconstruction
@@ -204,6 +290,20 @@ check_requirements() {
 # etc.
 ```
 
+#### Déploiement preprod
+```bash
+# Déploiement automatique complet (sur le serveur preprod)
+./deploy.sh preprod
+
+# Workflow exécuté automatiquement :
+# 1. Démarrage des conteneurs (APP_ENV=dev)
+# 2. Installation Composer avec dépendances dev
+# 3. Migrations Doctrine automatiques
+# 4. Nettoyage cache Symfony
+# 5. Recompilation des assets
+# Note : --full-deploy est activé automatiquement pour preprod
+```
+
 #### Déploiement production
 ```bash
 # Validation et déploiement sécurisé
@@ -213,6 +313,14 @@ check_requirements() {
 # - Présence de .env.prod.local
 # - Variables de sécurité (APP_SECRET, DB_PASSWORD)
 # - Configuration production
+
+# Workflow exécuté automatiquement :
+# 1. Rebuild des images
+# 2. Démarrage des conteneurs
+# 3. Composer install --no-dev --optimize-autoloader
+# 4. Migrations Doctrine
+# 5. Cache clear + warmup
+# 6. Recompilation assets
 ```
 
 ### Gestion quotidienne

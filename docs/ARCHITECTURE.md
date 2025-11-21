@@ -7,39 +7,45 @@ Documentation technique de l'architecture Docker Symfony + FrankenPHP.
 ### Diagramme de l'architecture
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                     HOST SYSTEM                             │
-│  ┌─────────────────────────────────────────────────────────┐ │
-│  │                  Docker Network                         │ │
-│  │                   app_network                           │ │
-│  │                                                         │ │
-│  │  ┌─────────────┐    ┌─────────────┐    ┌─────────────┐  │ │
-│  │  │ FrankenPHP  │    │   MariaDB   │    │   Mercure   │  │ │
-│  │  │   :82       │    │   :3306     │    │   :3000     │  │ │
-│  │  │ ┌─────────┐ │    │             │    │             │  │ │
-│  │  │ │ Caddy   │ │    │             │    │             │  │ │
-│  │  │ │ PHP 8.3 │ │    │             │    │             │  │ │
-│  │  │ │ Symfony │ │    │             │    │             │  │ │
-│  │  │ └─────────┘ │    │             │    │             │  │ │
-│  │  └─────────────┘    └─────────────┘    └─────────────┘  │ │
-│  │         │                   │                   │       │ │
-│  │  ┌─────────────┐    ┌─────────────┐    ┌─────────────┐  │ │
-│  │  │ phpMyAdmin  │    │   MailHog   │    │   Volumes   │  │ │
-│  │  │   :80       │    │   :8025     │    │             │  │ │
-│  │  │             │    │             │    │ - mariadb   │  │ │
-│  │  │             │    │             │    │ - mercure   │  │ │
-│  │  │             │    │             │    │             │  │ │
-│  │  └─────────────┘    └─────────────┘    └─────────────┘  │ │
-│  └─────────────────────────────────────────────────────────┘ │
-│                           │                                  │
-│  ┌─────────────────────────────────────────────────────────┐ │
-│  │                   PORT MAPPING                         │ │
-│  │  8080 → frankenphp:82     (Application)                │ │
-│  │  8200 → frankenphp:8082   (phpMyAdmin)                 │ │
-│  │  8300 → frankenphp:8027   (MailHog)                    │ │
-│  │  3002 → mercure:3000      (Mercure Hub)                │ │
-│  └─────────────────────────────────────────────────────────┘ │
-└─────────────────────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────────────────────────┐
+│                          HOST SYSTEM                                │
+│  ┌─────────────────────────────────────────────────────────────────┐ │
+│  │                       Docker Network                            │ │
+│  │                        app_network                              │ │
+│  │                                                                 │ │
+│  │  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐  ┌────────┐  │ │
+│  │  │ FrankenPHP  │  │   MariaDB   │  │   Mercure   │  │ Chroma │  │ │
+│  │  │   :82       │  │   :3306     │  │   :3000     │  │ :8000  │  │ │
+│  │  │ ┌─────────┐ │  │             │  │             │  │  AI    │  │ │
+│  │  │ │ Caddy   │ │  │             │  │             │  │ Vector │  │ │
+│  │  │ │ PHP 8.3 │ │  │             │  │             │  │  DB    │  │ │
+│  │  │ │ Symfony │ │  │             │  │             │  │        │  │ │
+│  │  │ └─────────┘ │  │             │  │             │  │        │  │ │
+│  │  └─────────────┘  └─────────────┘  └─────────────┘  └────────┘  │ │
+│  │         │                 │                 │            │      │ │
+│  │  ┌─────────────┐  ┌─────────────┐  ┌─────────────────────────┐  │ │
+│  │  │ phpMyAdmin  │  │   MailHog   │  │      Messenger Worker   │  │ │
+│  │  │   :80       │  │   :8025     │  │      (Async Queue)      │  │ │
+│  │  │             │  │             │  │                         │  │ │
+│  │  └─────────────┘  └─────────────┘  └─────────────────────────┘  │ │
+│  │         │                 │                       │             │ │
+│  │  ┌─────────────────────────────────────────────────────────────┐  │ │
+│  │  │                        Volumes                              │  │ │
+│  │  │  - mariadb_data  (Base de données)                          │  │ │
+│  │  │  - mercure_data  (Événements temps réel)                    │  │ │
+│  │  │  - chroma_data   (Embeddings IA)                            │  │ │
+│  │  └─────────────────────────────────────────────────────────────┘  │ │
+│  └─────────────────────────────────────────────────────────────────┘ │
+│                                 │                                    │
+│  ┌─────────────────────────────────────────────────────────────────┐ │
+│  │                         PORT MAPPING                            │ │
+│  │  8080 → frankenphp:82     (Application Symfony)                │ │
+│  │  8200 → frankenphp:8082   (phpMyAdmin)                         │ │
+│  │  8300 → frankenphp:8027   (MailHog)                            │ │
+│  │  3002 → mercure:3000      (Mercure Hub)                        │ │
+│  │  8000 → chroma:8000       (ChromaDB - Dev uniquement)          │ │
+│  └─────────────────────────────────────────────────────────────────┘ │
+└─────────────────────────────────────────────────────────────────────┘
 ```
 
 ## 🐳 Services Docker
@@ -131,6 +137,68 @@ environment:
   MERCURE_EXTRA_DIRECTIVES: "anonymous\ndemo"
 ```
 
+### ChromaDB (Base de données vectorielle)
+
+#### Caractéristiques
+- **Image** : `chromadb/chroma:latest`
+- **Port** : 8000 (interne et externe en dev)
+- **Usage** : Stockage des embeddings pour le Gorillias Marketing AI Bundle
+- **Volumes** : `chroma_data` (persistant)
+
+#### Configuration
+```yaml
+environment:
+  IS_PERSISTENT: TRUE
+  ANONYMIZED_TELEMETRY: FALSE
+
+volumes:
+  - chroma_data:/chroma/chroma
+
+# Dev : port exposé pour accès direct
+# Preprod/Prod : communication interne uniquement (pas d'exposition)
+```
+
+#### Healthcheck
+```yaml
+# ⚠️ Healthcheck retiré : curl n'est pas disponible dans l'image chromadb/chroma
+# Vérification manuelle possible via : http://localhost:8000/api/v2/heartbeat
+```
+
+### Messenger Worker (Queue asynchrone)
+
+#### Caractéristiques
+- **Image** : FrankenPHP (même que l'application principale)
+- **Rôle** : Traitement asynchrone des messages (Marketing AI, emails, etc.)
+- **Transport** : Doctrine (base de données)
+- **Configuration** : `messenger:consume async --time-limit=3600`
+
+#### Startup sequence
+```bash
+# entrypoint-worker.sh sequence:
+1. Configuration UID/GID (identique à FrankenPHP)
+2. Application des permissions
+3. ⏳ Attente MariaDB (wait_for_mariadb avec 3 niveaux)
+   - Niveau 1 : Résolution DNS (getent hosts mariadb)
+   - Niveau 2 : Connexion TCP (bash /dev/tcp/mariadb/3306)
+   - Niveau 3 : Authentification PDO (credentials Symfony)
+4. Démarrage du worker Messenger
+```
+
+#### Healthcheck
+```yaml
+# ⚠️ Healthcheck désactivé : service CLI sans port HTTP
+# Le worker FrankenPHP hérite du healthcheck port 2019 (Caddy metrics)
+# Inapproprié pour un worker CLI → healthcheck: disable: true
+healthcheck:
+  disable: true
+```
+
+#### Gestion des erreurs au démarrage
+- **Race condition résolu** : Le worker attend que MariaDB soit complètement accessible avant de démarrer
+- **Validation multi-niveau** : DNS → TCP → Authentification (évite les "getaddrinfo failed")
+- **Retry stratégie** : 30 tentatives × 2s = 60s timeout maximum
+- **Logging détaillé** : Progression visible dans les logs pour diagnostic
+
 ### Services de développement
 
 #### phpMyAdmin
@@ -159,10 +227,13 @@ networks:
 ```
 Services Communication Map:
 ├── frankenphp → mariadb:3306     (Base de données)
-├── frankenphp → mercure:3000     (Reverse proxy)
+├── frankenphp → mercure:3000     (Reverse proxy Mercure)
+├── frankenphp → chroma:8000      (Embeddings IA Marketing)
+├── messenger_worker → mariadb:3306 (Queue Doctrine)
+├── messenger_worker → chroma:8000  (Traitement IA async)
 ├── phpmyadmin → mariadb:3306     (Administration DB)
 ├── mailhog → isolated            (Service indépendant)
-└── External → frankenphp:82,8082,8027 (Points d'entrée)
+└── External → frankenphp:82,8082,8027 (Points d'entrée HTTP)
 ```
 
 ### Gestion des ports
@@ -218,6 +289,15 @@ mercure_data:
 mercure_config:
   name: ${PROJECT_NAME}_mercure_config
   # Stockage : /config (configuration)
+```
+
+#### ChromaDB
+```yaml
+chroma_data:
+  name: ${PROJECT_NAME}_chroma_data
+  # Stockage : /chroma/chroma (embeddings vectoriels)
+  # Persistance : Survit aux redémarrages
+  # Usage : Gorillias Marketing AI Bundle
 ```
 
 ### Bind mounts (développement)
@@ -289,27 +369,52 @@ APP_DEBUG=0
 
 ### Ordre de démarrage
 
-#### Phase 1 : Infrastructure
+#### Phase 1 : Infrastructure (Base de données)
 ```yaml
-depends_on:
-  mariadb:
-    condition: service_healthy  # Attendre MariaDB
+mariadb:
+  # Démarre en premier
+  healthcheck:
+    test: ["CMD", "mariadb-admin", "ping"]
+    timeout: 5s
+    retries: 10
+    start_period: 30s
 ```
 
-#### Phase 2 : Application
-```bash
-# entrypoint.sh sequence:
-1. Détection environnement (APP_ENV)
-2. Configuration UID/GID
-3. Application permissions
-4. Vérification santé (PHP, Composer)
-5. Démarrage FrankenPHP
+#### Phase 2 : Services indépendants
+```yaml
+# Démarrage parallèle :
+chroma:        # Base vectorielle (pas de dépendances)
+mercure:       # Hub temps réel (pas de dépendances)
+phpmyadmin:    # Interface DB (dépend de mariadb)
+mailhog:       # Capture emails (service isolé)
 ```
 
-#### Phase 3 : Services auxiliaires
+#### Phase 3 : Application principale
 ```yaml
-# phpMyAdmin et MailHog démarrent en parallèle
-# Mercure démarre indépendamment
+frankenphp:
+  depends_on:
+    mariadb:
+      condition: service_healthy  # Attendre MariaDB ready
+  # entrypoint.sh sequence:
+  1. Détection environnement (APP_ENV)
+  2. Configuration UID/GID
+  3. Application permissions
+  4. Vérification santé (PHP, Composer)
+  5. Démarrage FrankenPHP
+```
+
+#### Phase 4 : Worker asynchrone
+```yaml
+messenger_worker:
+  depends_on:
+    mariadb:
+      condition: service_healthy  # Attendre MariaDB
+    frankenphp:
+      condition: service_started  # Attendre application
+  # entrypoint-worker.sh sequence:
+  1. Configuration UID/GID
+  2. wait_for_mariadb() avec validation 3 niveaux
+  3. Démarrage messenger:consume
 ```
 
 ### Healthchecks

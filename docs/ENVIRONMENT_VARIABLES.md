@@ -182,12 +182,18 @@ MERCURE_PORT=3002       # Hub temps réel
 # Le script détecte automatiquement les ports libres
 ./deploy.sh dev --auto-ports
 
-# Met à jour .env.local avec les ports trouvés
+# Met à jour .env avec les ports trouvés + synchronisation automatique
 HTTP_PORT=8080
 PHPMYADMIN_PORT=8201    # 8200 occupé, port suivant utilisé
 MAILHOG_PORT=8300
 MERCURE_PORT=3002
+MERCURE_PUBLIC_URL=http://localhost:8080/.well-known/mercure  # ✅ Synchronisé automatiquement
 ```
+
+**Notes importantes** :
+- Les modifications sont appliquées au fichier `.env` (lu par Docker Compose)
+- `MERCURE_PUBLIC_URL` est **automatiquement synchronisé** avec `HTTP_PORT` pour éviter les erreurs CORS
+- Cette synchronisation garantit que le chat temps réel fonctionne toujours correctement
 
 ## 🗄️ Variables de base de données
 
@@ -302,11 +308,42 @@ MERCURE_URL=http://mercure:3000/.well-known/mercure
 ```
 
 #### MERCURE_PUBLIC_URL
-- **Description** : URL publique Mercure pour le navigateur
+- **Description** : URL publique Mercure pour le navigateur (côté client JavaScript)
 - **Format** : `http://localhost:PORT/.well-known/mercure`
+- **Synchronisation automatique** : ✅ Mise à jour automatiquement par `--auto-ports` pour correspondre à `HTTP_PORT`
+- **Importance** : ⚠️ DOIT correspondre au port HTTP pour éviter les erreurs CORS
 - **Exemple** :
 ```env
-MERCURE_PUBLIC_URL=http://localhost:3002/.well-known/mercure
+# Développement (synchronisé avec HTTP_PORT=8080)
+MERCURE_PUBLIC_URL=http://localhost:8080/.well-known/mercure
+
+# Production (domaine dédié)
+MERCURE_PUBLIC_URL=https://mercure.example.com/.well-known/mercure
+```
+
+## 🤖 Variables ChromaDB
+
+### Configuration ChromaDB
+
+#### CHROMA_URL
+- **Description** : URL interne ChromaDB pour Symfony (côté serveur)
+- **Format** : `http://chroma:PORT`
+- **Usage** : Connexion du Gorillias Marketing AI Bundle au service de base de données vectorielle
+- **Exemple** :
+```env
+CHROMA_URL=http://chroma:8000
+```
+
+#### CHROMA_PORT
+- **Description** : Port externe pour ChromaDB (développement uniquement)
+- **Défaut** : `8000`
+- **Production** : ⚠️ Non exposé en production (communication interne uniquement)
+- **Exemple** :
+```env
+# Développement : port exposé pour accès direct
+CHROMA_PORT=8000
+
+# Production : variable non nécessaire (pas d'exposition)
 ```
 
 ## 🔧 Variables des services de développement
@@ -402,7 +439,11 @@ MERCURE_PORT=3002
 MERCURE_JWT_SECRET=dev-mercure-secret-key
 MERCURE_VERSION=v0.16
 MERCURE_URL=http://mercure:3000/.well-known/mercure
-MERCURE_PUBLIC_URL=http://localhost:3002/.well-known/mercure
+MERCURE_PUBLIC_URL=http://localhost:8080/.well-known/mercure
+
+# === CHROMADB ===
+CHROMA_URL=http://chroma:8000
+CHROMA_PORT=8000
 
 # === DÉVELOPPEMENT ===
 PHPMYADMIN_VERSION=latest
@@ -439,7 +480,10 @@ MERCURE_DOMAIN=mercure.example.com
 MERCURE_JWT_SECRET=ultra-secure-mercure-jwt-secret-64-chars
 MERCURE_VERSION=v0.16
 MERCURE_URL=http://mercure:3000/.well-known/mercure
-MERCURE_PUBLIC_URL=https://mercure.example.com/.well-known/mercure
+MERCURE_PUBLIC_URL=https://example.com/.well-known/mercure
+
+# === CHROMADB ===
+CHROMA_URL=http://chroma:8000
 
 # === SÉCURITÉ ===
 CORS_ALLOWED_ORIGINS=https://example.com,https://www.example.com
@@ -473,7 +517,11 @@ MERCURE_PORT=4002
 # === MERCURE TEST ===
 MERCURE_JWT_SECRET=test-mercure-secret
 MERCURE_URL=http://mercure:3000/.well-known/mercure
-MERCURE_PUBLIC_URL=http://localhost:4002/.well-known/mercure
+MERCURE_PUBLIC_URL=http://localhost:9080/.well-known/mercure
+
+# === CHROMADB TEST ===
+CHROMA_URL=http://chroma:8000
+CHROMA_PORT=8001
 ```
 
 ## ✅ Validation des variables
