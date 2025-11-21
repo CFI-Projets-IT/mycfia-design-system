@@ -27,7 +27,12 @@ services:
       - MERCURE_PUBLIC_URL=${MERCURE_PUBLIC_URL}
       - MERCURE_JWT_SECRET=${MERCURE_JWT_SECRET}
       - TRUSTED_PROXIES=127.0.0.1,172.30.0.0/16
-      - TRUSTED_HOSTS=^localhost|mycfia\.gorillias\.app$
+      - TRUSTED_HOSTS=^localhost|mycfia\.krystdev\.com$
+      - CFI_API_BASE_URL=${CFI_API_BASE_URL}
+      - CFI_API_CLEF=${CFI_API_CLEF}
+      - CFI_API_TIMEOUT=${CFI_API_TIMEOUT}
+      - CFI_TOKEN_TTL=${CFI_TOKEN_TTL}
+      - CFI_TOKEN_REFRESH_THRESHOLD=${CFI_TOKEN_REFRESH_THRESHOLD}
     depends_on:
       mariadb:
         condition: service_healthy
@@ -96,6 +101,11 @@ services:
       - MERCURE_URL=http://mercure/.well-known/mercure
       - MERCURE_PUBLIC_URL=${MERCURE_PUBLIC_URL}
       - MERCURE_JWT_SECRET=${MERCURE_JWT_SECRET}
+      - CFI_API_BASE_URL=${CFI_API_BASE_URL}
+      - CFI_API_CLEF=${CFI_API_CLEF}
+      - CFI_API_TIMEOUT=${CFI_API_TIMEOUT}
+      - CFI_TOKEN_TTL=${CFI_TOKEN_TTL}
+      - CFI_TOKEN_REFRESH_THRESHOLD=${CFI_TOKEN_REFRESH_THRESHOLD}
     depends_on:
       mariadb:
         condition: service_healthy
