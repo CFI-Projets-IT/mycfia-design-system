@@ -318,9 +318,9 @@ function initCompetitorDetection() {
     // ✅ Marquer comme en cours
     isDetectionRunning = true;
 
-    // ✅ Ajouter un AbortController pour gérer le timeout (120s)
+    // ✅ Ajouter un AbortController pour gérer le timeout (10 minutes)
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 120000); // 120 secondes
+    const timeoutId = setTimeout(() => controller.abort(), 600000); // 600 secondes (10 minutes)
 
     fetch(detectUrl, {
         method: 'POST',
@@ -374,9 +374,9 @@ function initCompetitorDetection() {
         // ✅ Message spécifique pour timeout
         if (error.name === 'AbortError') {
             errorMessage.innerHTML = `
-                <strong>La détection de concurrents prend trop de temps (>2 min).</strong><br>
-                Cette opération nécessite l'intervention de l'administrateur réseau pour augmenter le timeout du serveur.<br>
-                <small class="text-muted">Veuillez contacter le support technique.</small>
+                <strong>La détection de concurrents prend trop de temps (>10 min).</strong><br>
+                Cette opération nécessite de nombreux appels API (SERP, Firecrawl, Mistral AI).<br>
+                <small class="text-muted">La tâche continue en arrière-plan. Vérifiez les logs ou revenez plus tard.</small>
             `;
         } else {
             errorMessage.textContent = 'Erreur de connexion au serveur. Veuillez réessayer.';
