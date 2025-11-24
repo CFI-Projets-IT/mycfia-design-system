@@ -18,6 +18,9 @@ services:
       - ${PREPROD_CODE_PATH:-.}:/var/www/html
       # Caddyfile spécifique preprod avec routing Mercure
       - ${PREPROD_CODE_PATH:-.}/docker/Caddyfile.preprod:/etc/caddy/Caddyfile:ro
+      # Volume persistant pour les certificats SSL
+      - caddy_data:/data
+      - caddy_config:/config
     environment:
       - SERVER_NAME=mycfia.krystdev.com  # Domaine pour HTTPS automatique
       - SERVER_ROOT=app/public  # Chemin vers public Symfony
@@ -178,3 +181,7 @@ volumes:
     name: ${PROJECT_NAME}_mercure_config
   chroma_data:
     name: ${PROJECT_NAME}_chroma_data
+  caddy_data:
+    name: ${PROJECT_NAME}_caddy_data
+  caddy_config:
+    name: ${PROJECT_NAME}_caddy_config
