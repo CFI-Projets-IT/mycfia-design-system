@@ -5,10 +5,7 @@
 	email contact@krystdev.com
 
 	log {
-		output file /var/log/caddy/caddy.log {
-			roll_size 100MB
-			roll_keep 10
-		}
+		output stdout
 		level INFO
 	}
 }
@@ -44,10 +41,7 @@ mycfia.krystdev.com {
 
 	# Logs des accès
 	log {
-		output file /var/log/caddy/access.log {
-			roll_size 50MB
-			roll_keep 5
-		}
+		output stdout
 		format json
 	}
 }
