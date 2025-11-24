@@ -9,7 +9,7 @@ services:
     container_name: ${PROJECT_NAME}_frankenphp
     ports:
       # Exposition publique directe (comme prospect_office)
-      - "80:82"
+      - "80:80"
       - "443:443"
     volumes:
       # Code monté depuis le serveur
