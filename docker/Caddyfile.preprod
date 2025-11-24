@@ -1,0 +1,59 @@
+{
+	frankenphp
+	admin off
+	# HTTPS automatique avec Let's Encrypt
+	auto_https on
+	email contact@krystdev.com
+
+	log {
+		output file /var/log/caddy/caddy.log {
+			roll_size 100MB
+			roll_keep 10
+		}
+		level INFO
+	}
+}
+
+# Application principale - HTTPS
+mycfia.krystdev.com {
+	# Dossier public Symfony
+	root * /var/www/html/app/public
+
+	# Encodage
+	encode gzip
+
+	# ✅ Reverse proxy pour Mercure via /.well-known/mercure
+	handle /.well-known/mercure* {
+		reverse_proxy mercure:80 {
+			header_up Host {host}
+			header_up X-Forwarded-For {remote}
+			header_up X-Forwarded-Proto {scheme}
+		}
+	}
+
+	# Application Symfony
+	php_server
+	file_server
+
+	# Headers CORS pour l'application
+	header {
+		Access-Control-Allow-Origin "https://mycfia.krystdev.com"
+		Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS"
+		Access-Control-Allow-Headers "Authorization, Content-Type, Cache-Control"
+		Access-Control-Allow-Credentials "true"
+	}
+
+	# Logs des accès
+	log {
+		output file /var/log/caddy/access.log {
+			roll_size 50MB
+			roll_keep 5
+		}
+		format json
+	}
+}
+
+# Redirection HTTP → HTTPS
+http://mycfia.krystdev.com {
+	redir https://{host}{uri} permanent
+}

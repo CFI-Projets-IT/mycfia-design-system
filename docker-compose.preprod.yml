@@ -16,6 +16,8 @@ services:
       # En tests locaux : read-write pour simplifier
       # Sur serveur : ajouter :ro pour read-only
       - ${PREPROD_CODE_PATH:-.}:/var/www/html
+      # Caddyfile spécifique preprod avec routing Mercure
+      - ${PREPROD_CODE_PATH:-.}/docker/Caddyfile.preprod:/etc/caddy/Caddyfile:ro
     environment:
       - SERVER_NAME=mycfia.krystdev.com  # Domaine pour HTTPS automatique
       - SERVER_ROOT=app/public  # Chemin vers public Symfony
@@ -73,8 +75,8 @@ services:
         cors_origins ${CORS_ALLOWED_ORIGINS:-*}
     command: /usr/bin/caddy run --config /etc/caddy/Caddyfile
     ports:
-      # ⚠️ CRITIQUE : Localhost uniquement pour reverse proxy
-      - "127.0.0.1:3081:80"
+      # Exposition publique via FrankenPHP reverse proxy
+      - "3001:80"
     volumes:
       - mercure_data:/data
       - mercure_config:/config
