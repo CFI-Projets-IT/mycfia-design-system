@@ -105,7 +105,10 @@ export default class extends Controller {
 
     /**
      * Gère la complétion
-     * Pour la stratégie : attendre StrategyAnalystAgent, pas CompetitorAnalystAgent
+     *
+     * FIX v3.30.0 : Pour la stratégie, CompetitorAnalystAgent est le point de complétion final
+     * car le subscriber lance StrategyAnalystAgent avec un nouveau taskId (non écouté par le frontend).
+     * La stratégie est bien générée en BDD par StrategyOptimizedEventSubscriber, donc on peut rediriger.
      */
     handleComplete(data) {
         console.log('[MERCURE DEBUG] handleComplete called');
@@ -113,18 +116,26 @@ export default class extends Controller {
         console.log('[MERCURE DEBUG] Generation type:', this.generationTypeValue);
         console.log('[MERCURE DEBUG] Full data:', JSON.stringify(data, null, 2));
 
-        // ✅ FIX: Pour la stratégie, vérifier qu'on reçoit bien StrategyAnalystAgent
+        // ✅ FIX v3.30.0: Pour la stratégie, CompetitorAnalystAgent = succès final
+        // Le subscriber CompetitorToStrategySubscriber lance StrategyAnalystAgent en arrière-plan
+        // avec un nouveau taskId, donc le frontend ne recevra jamais l'événement StrategyAnalystAgent
+        // sur ce taskId. La stratégie est bien générée (persistée par StrategyOptimizedEventSubscriber).
         if (this.generationTypeValue === 'strategy') {
-            // Vérifier si c'est StrategyAnalystAgent qui a terminé
-            if (data.agentName && data.agentName.includes('StrategyAnalystAgent')) {
-                console.log('[MERCURE DEBUG] StrategyAnalystAgent completed, waiting 2s then redirecting...');
+            // Accepter CompetitorAnalystAgent comme succès final pour type "strategy"
+            if (data.agentName && data.agentName.includes('CompetitorAnalystAgent')) {
+                console.log('[MERCURE DEBUG] CompetitorAnalystAgent completed, strategy generation continues in background');
+                this.updateStatus('Analyse terminée, génération de la stratégie en cours...');
+                // ✅ Polling pour vérifier que la stratégie existe en BDD avant de rediriger
+                this.pollStrategyCompletion();
+            } else if (data.agentName && data.agentName.includes('StrategyAnalystAgent')) {
+                // Au cas où on recevrait quand même StrategyAnalystAgent (ne devrait pas arriver)
+                console.log('[MERCURE DEBUG] StrategyAnalystAgent completed (unexpected), redirecting...');
                 setTimeout(() => {
                     this.showSuccess(data);
                 }, 2000);
             } else {
-                // C'est CompetitorAnalystAgent, on attend StrategyAnalystAgent
-                console.log('[MERCURE DEBUG] CompetitorAnalystAgent completed, waiting for StrategyAnalystAgent...');
-                this.updateStatus('Analyse concurrents terminée, génération de la stratégie en cours...');
+                // Agent inconnu pour le type strategy
+                console.warn('[MERCURE DEBUG] Unknown agent for strategy generation:', data.agentName);
             }
         } else {
             // Pour les autres types : redirection immédiate après 2s
@@ -133,6 +144,85 @@ export default class extends Controller {
                 this.showSuccess(data);
             }, 2000);
         }
+    }
+
+    /**
+     * Polling pour vérifier que la stratégie existe en BDD avant de rediriger
+     *
+     * FIX v3.30.1 : StrategyAnalystAgent peut prendre 20-30 secondes pour terminer.
+     * Au lieu de deviner un délai fixe, on poll le statut du projet jusqu'à ce que
+     * la stratégie soit persistée en BDD.
+     */
+    pollStrategyCompletion() {
+        console.log('[MERCURE DEBUG] Starting strategy completion polling...');
+
+        const maxAttempts = 40; // 40 tentatives max (40 secondes)
+        let attempts = 0;
+
+        const pollInterval = setInterval(async () => {
+            attempts++;
+            console.log(`[MERCURE DEBUG] Polling attempt ${attempts}/${maxAttempts}`);
+
+            try {
+                // Extraire l'ID du projet depuis nextUrl
+                // Format: /marketing/strategy/show/{id} ou /marketing/projects/{id}
+                const projectId = this.nextUrlValue.match(/\/(\d+)$/)?.[1];
+
+                if (!projectId) {
+                    console.error('[MERCURE DEBUG] Could not extract project ID from nextUrl:', this.nextUrlValue);
+                    clearInterval(pollInterval);
+                    this.showSuccess({}); // Rediriger quand même
+                    return;
+                }
+
+                // Vérifier le statut du projet
+                const response = await fetch(`/marketing/projects/${projectId}/status`, {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                });
+
+                if (!response.ok) {
+                    console.warn(`[MERCURE DEBUG] Status check failed: ${response.status}`);
+
+                    // Si max attempts atteint, rediriger quand même
+                    if (attempts >= maxAttempts) {
+                        console.warn('[MERCURE DEBUG] Max polling attempts reached, redirecting anyway...');
+                        clearInterval(pollInterval);
+                        this.showSuccess({});
+                    }
+                    return;
+                }
+
+                const data = await response.json();
+                console.log('[MERCURE DEBUG] Project status:', data);
+
+                // Vérifier si la stratégie existe
+                if (data.has_strategy === true) {
+                    console.log('[MERCURE DEBUG] Strategy detected in database, redirecting!');
+                    clearInterval(pollInterval);
+                    this.updateStatus('✅ Stratégie générée avec succès !');
+                    setTimeout(() => {
+                        this.showSuccess({});
+                    }, 1000);
+                } else {
+                    // Mettre à jour le message de progression
+                    const progressMessage = `Génération en cours... (${attempts}s)`;
+                    this.updateStatus(progressMessage);
+                }
+
+            } catch (error) {
+                console.error('[MERCURE DEBUG] Polling error:', error);
+
+                // Si max attempts atteint, rediriger quand même
+                if (attempts >= maxAttempts) {
+                    console.warn('[MERCURE DEBUG] Max polling attempts reached after error, redirecting anyway...');
+                    clearInterval(pollInterval);
+                    this.showSuccess({});
+                }
+            }
+        }, 1000); // Poll toutes les secondes
     }
 
     /**

@@ -510,6 +510,26 @@ final class ProjectController extends AbstractController
     }
 
     /**
+     * Endpoint API pour vérifier le statut du projet (stratégie générée, personas, etc.).
+     *
+     * Utilisé par le frontend pour le polling de complétion de tâches asynchrones.
+     *
+     * @return Response JSON avec { has_strategy: bool, has_personas: bool, status: string }
+     */
+    #[Route('/{id}/status', name: 'status', methods: ['GET'])]
+    public function status(Project $project): Response
+    {
+        $this->denyAccessUnlessGranted('view', $project);
+
+        return $this->json([
+            'has_strategy' => ! $project->getStrategies()->isEmpty(),
+            'has_personas' => ! $project->getPersonas()->isEmpty(),
+            'has_competitor_analysis' => null !== $project->getCompetitorAnalysis(),
+            'status' => $project->getStatus()->value,
+        ]);
+    }
+
+    /**
      * Construit une description cible pour la génération de personas.
      *
      * @param Project $project Projet source
