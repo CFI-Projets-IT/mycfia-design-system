@@ -37,6 +37,9 @@ services:
       - CFI_API_TIMEOUT=${CFI_API_TIMEOUT}
       - CFI_TOKEN_TTL=${CFI_TOKEN_TTL}
       - CFI_TOKEN_REFRESH_THRESHOLD=${CFI_TOKEN_REFRESH_THRESHOLD}
+      - MISTRAL_API_KEY=${MISTRAL_API_KEY}
+      - SERP_API_KEY=${SERP_API_KEY}
+      - FIRECRAWL_API_KEY=${FIRECRAWL_API_KEY}
     depends_on:
       mariadb:
         condition: service_healthy
@@ -110,6 +113,9 @@ services:
       - CFI_API_TIMEOUT=${CFI_API_TIMEOUT}
       - CFI_TOKEN_TTL=${CFI_TOKEN_TTL}
       - CFI_TOKEN_REFRESH_THRESHOLD=${CFI_TOKEN_REFRESH_THRESHOLD}
+      - MISTRAL_API_KEY=${MISTRAL_API_KEY}
+      - SERP_API_KEY=${SERP_API_KEY}
+      - FIRECRAWL_API_KEY=${FIRECRAWL_API_KEY}
     depends_on:
       mariadb:
         condition: service_healthy
