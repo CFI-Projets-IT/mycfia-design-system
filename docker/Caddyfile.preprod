@@ -2,7 +2,6 @@
 	frankenphp
 	admin off
 	# HTTPS automatique avec Let's Encrypt
-	auto_https on
 	email contact@krystdev.com
 
 	log {
