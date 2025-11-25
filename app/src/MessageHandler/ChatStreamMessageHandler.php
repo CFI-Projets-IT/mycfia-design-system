@@ -151,7 +151,8 @@ final readonly class ChatStreamMessageHandler
             $llmDurationMs = (microtime(true) - $llmStartTime) * 1000;
 
             // 8. Récupérer réponse complète et métadonnées
-            $fullResponse = $result->getContent();
+            $content = $result->getContent();
+            $fullResponse = \is_string($content) ? $content : '';
             $resultMetadata = $result->getMetadata();
 
             // Extraire token_usage

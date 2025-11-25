@@ -74,7 +74,7 @@ class UserAccessibleDivisionRepository extends ServiceEntityRepository
             ->getQuery()
             ->getSingleScalarResult();
 
-        return $result ? new \DateTimeImmutable($result) : null;
+        return \is_string($result) ? new \DateTimeImmutable($result) : null;
     }
 
     /**

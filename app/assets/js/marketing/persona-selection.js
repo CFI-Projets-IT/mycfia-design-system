@@ -28,16 +28,16 @@ function initPersonaSelection() {
     }
 
     // Gestionnaire pour la checkbox "Tout sélectionner"
-    selectAllCheckbox.addEventListener('change', function() {
+    selectAllCheckbox.addEventListener('change', function () {
         const isChecked = this.checked;
-        personaCheckboxes.forEach(checkbox => {
+        personaCheckboxes.forEach((checkbox) => {
             checkbox.checked = isChecked;
         });
         updateSelectedCount();
     });
 
     // Gestionnaire pour chaque checkbox individuelle
-    personaCheckboxes.forEach(checkbox => {
+    personaCheckboxes.forEach((checkbox) => {
         checkbox.addEventListener('change', updateSelectedCount);
     });
 

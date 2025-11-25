@@ -123,7 +123,9 @@ export default class extends Controller {
         if (this.generationTypeValue === 'strategy') {
             // Accepter CompetitorAnalystAgent comme succès final pour type "strategy"
             if (data.agentName && data.agentName.includes('CompetitorAnalystAgent')) {
-                console.log('[MERCURE DEBUG] CompetitorAnalystAgent completed, strategy generation continues in background');
+                console.log(
+                    '[MERCURE DEBUG] CompetitorAnalystAgent completed, strategy generation continues in background'
+                );
                 this.updateStatus('Analyse terminée, génération de la stratégie en cours...');
                 // ✅ Polling pour vérifier que la stratégie existe en BDD avant de rediriger
                 this.pollStrategyCompletion();
@@ -179,8 +181,8 @@ export default class extends Controller {
                 const response = await fetch(`/marketing/projects/${projectId}/status`, {
                     method: 'GET',
                     headers: {
-                        'Accept': 'application/json'
-                    }
+                        Accept: 'application/json',
+                    },
                 });
 
                 if (!response.ok) {
@@ -211,7 +213,6 @@ export default class extends Controller {
                     const progressMessage = `Génération en cours... (${attempts}s)`;
                     this.updateStatus(progressMessage);
                 }
-
             } catch (error) {
                 console.error('[MERCURE DEBUG] Polling error:', error);
 

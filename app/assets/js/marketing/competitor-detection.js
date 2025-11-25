@@ -35,8 +35,9 @@ function initCompetitorDetection() {
     const errorSection = document.getElementById('detection-error');
     const competitorsInput = document.getElementById('competitors-input');
     const selectedCountSpan = document.getElementById('selected-count');
-    const newCompetitorInput = document.getElementById('new-competitor-input');
-    const addCompetitorBtn = document.getElementById('add-competitor-btn');
+    // Variables pour ajout manuel de concurrents (fonctionnalité future)
+    // const newCompetitorInput = document.getElementById('new-competitor-input');
+    // const addCompetitorBtn = document.getElementById('add-competitor-btn');
     const validateBtn = document.getElementById('validate-btn');
     const emptyState = document.getElementById('empty-state');
     const errorMessage = document.getElementById('error-message');
@@ -62,17 +63,16 @@ function initCompetitorDetection() {
             // Extraire toutes les données disponibles
             const title = competitor.title || 'N/A';
             const domain = competitor.domain || 'N/A';
-            const url = competitor.url || '#';
+            // const url = competitor.url || '#'; // Non utilisé actuellement
             const validation = competitor.validation || {};
 
             // Structure réelle de validation
             const isCompetitor = validation.isCompetitor !== undefined ? validation.isCompetitor : null;
             const alignmentScore = validation.alignmentScore !== undefined ? validation.alignmentScore : 'N/A';
-            const overlaps = [
-                validation.offeringOverlap,
-                validation.marketOverlap,
-                validation.geoOverlap
-            ].filter(o => o).join(' / ') || 'N/A';
+            const overlaps =
+                [validation.offeringOverlap, validation.marketOverlap, validation.geoOverlap]
+                    .filter((o) => o)
+                    .join(' / ') || 'N/A';
 
             // Nouveaux champs v3.27.0
             const hasAds = competitor.has_ads || false;
@@ -84,7 +84,7 @@ function initCompetitorDetection() {
             const position = competitor.position || 'N/A';
 
             // Vérifier si coché par défaut (tous cochés au départ si isCompetitor = true)
-            const isChecked = competitor.selected !== undefined ? competitor.selected : (isCompetitor === true);
+            const isChecked = competitor.selected !== undefined ? competitor.selected : isCompetitor === true;
 
             // Construire badges signaux marketing (v3.27.0)
             let marketingSignals = '';
@@ -102,7 +102,7 @@ function initCompetitorDetection() {
                 <td class="text-center">
                     <input type="checkbox" class="form-check-input competitor-checkbox" data-index="${index}" ${isChecked ? 'checked' : ''}>
                 </td>
-                <td title="${escapeHtml(title)}" class="cursor-pointer" data-index="${index}">${escapeHtml(title.length > 35 ? title.substring(0, 35) + '...' : title)}</td>
+                <td title="${escapeHtml(title)}" class="cursor-pointer" data-index="${index}">${escapeHtml(title.length > 35 ? `${title.substring(0, 35)}...` : title)}</td>
                 <td class="cursor-pointer" data-index="${index}">${escapeHtml(domain)}</td>
                 <td class="text-center cursor-pointer" data-index="${index}">
                     <span class="badge ${alignmentScore >= 70 ? 'bg-success' : alignmentScore >= 50 ? 'bg-warning' : 'bg-secondary'}">${alignmentScore}</span>
@@ -118,14 +118,14 @@ function initCompetitorDetection() {
 
             // Ajouter l'événement sur la checkbox
             const checkbox = row.querySelector('.competitor-checkbox');
-            checkbox.addEventListener('change', function() {
+            checkbox.addEventListener('change', function () {
                 competitor.selected = this.checked;
                 updateSelectedCount();
             });
 
             // Ajouter l'événement clic sur toutes les cellules sauf la checkbox
-            row.querySelectorAll('.cursor-pointer').forEach(cell => {
-                cell.addEventListener('click', function() {
+            row.querySelectorAll('.cursor-pointer').forEach((cell) => {
+                cell.addEventListener('click', () => {
                     openCompetitorModal(competitor);
                 });
             });
@@ -191,8 +191,8 @@ function initCompetitorDetection() {
 
     // Gestionnaire pour "Tout sélectionner"
     if (selectAllBtn) {
-        selectAllBtn.addEventListener('click', function() {
-            document.querySelectorAll('.competitor-checkbox').forEach(checkbox => {
+        selectAllBtn.addEventListener('click', () => {
+            document.querySelectorAll('.competitor-checkbox').forEach((checkbox) => {
                 checkbox.checked = true;
                 const index = parseInt(checkbox.dataset.index);
                 competitorsData[index].selected = true;
@@ -203,8 +203,8 @@ function initCompetitorDetection() {
 
     // Gestionnaire pour "Tout déselectionner"
     if (deselectAllBtn) {
-        deselectAllBtn.addEventListener('click', function() {
-            document.querySelectorAll('.competitor-checkbox').forEach(checkbox => {
+        deselectAllBtn.addEventListener('click', () => {
+            document.querySelectorAll('.competitor-checkbox').forEach((checkbox) => {
                 checkbox.checked = false;
                 const index = parseInt(checkbox.dataset.index);
                 competitorsData[index].selected = false;
@@ -215,9 +215,9 @@ function initCompetitorDetection() {
 
     // Gestionnaire pour la checkbox principale du header
     if (selectAllCheckbox) {
-        selectAllCheckbox.addEventListener('change', function() {
+        selectAllCheckbox.addEventListener('change', function () {
             const isChecked = this.checked;
-            document.querySelectorAll('.competitor-checkbox').forEach(checkbox => {
+            document.querySelectorAll('.competitor-checkbox').forEach((checkbox) => {
                 checkbox.checked = isChecked;
                 const index = parseInt(checkbox.dataset.index);
                 competitorsData[index].selected = isChecked;
@@ -326,70 +326,70 @@ function initCompetitorDetection() {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'X-Requested-With': 'XMLHttpRequest'
+            'X-Requested-With': 'XMLHttpRequest',
         },
-        signal: controller.signal // ✅ Ajouter le signal d'annulation
+        signal: controller.signal, // ✅ Ajouter le signal d'annulation
     })
-    .then(response => {
-        clearTimeout(timeoutId); // ✅ Annuler le timeout si réponse reçue
-        console.log('🔍 TRACE: Réponse reçue, status:', response.status);
-        return response.json();
-    })
-    .then(data => {
-        console.log('🔍 TRACE: Données reçues:', data);
-        loaderSection.classList.add('d-none');
+        .then((response) => {
+            clearTimeout(timeoutId); // ✅ Annuler le timeout si réponse reçue
+            console.log('🔍 TRACE: Réponse reçue, status:', response.status);
+            return response.json();
+        })
+        .then((data) => {
+            console.log('🔍 TRACE: Données reçues:', data);
+            loaderSection.classList.add('d-none');
 
-        if (data.success) {
-            console.log('🔍 TRACE: Succès, nombre de concurrents:', data.competitors?.length || 0);
-            // Stocker toutes les données des concurrents
-            if (data.competitors && data.competitors.length > 0) {
-                // Marquer tous les concurrents validés comme sélectionnés par défaut
-                competitorsData = data.competitors.map(competitor => ({
-                    ...competitor,
-                    selected: competitor.validation?.isCompetitor === true
-                }));
+            if (data.success) {
+                console.log('🔍 TRACE: Succès, nombre de concurrents:', data.competitors?.length || 0);
+                // Stocker toutes les données des concurrents
+                if (data.competitors && data.competitors.length > 0) {
+                    // Marquer tous les concurrents validés comme sélectionnés par défaut
+                    competitorsData = data.competitors.map((competitor) => ({
+                        ...competitor,
+                        selected: competitor.validation?.isCompetitor === true,
+                    }));
 
-                // Mettre à jour le compteur de détection (total détecté)
-                const competitorsCountElem = document.getElementById('competitors-count');
-                if (competitorsCountElem) {
-                    competitorsCountElem.textContent = data.competitors.length;
+                    // Mettre à jour le compteur de détection (total détecté)
+                    const competitorsCountElem = document.getElementById('competitors-count');
+                    if (competitorsCountElem) {
+                        competitorsCountElem.textContent = data.competitors.length;
+                    }
+
+                    // Remplir le tableau avec toutes les données
+                    updateCompetitorsTable();
                 }
 
-                // Remplir le tableau avec toutes les données
-                updateCompetitorsTable();
+                resultsSection.classList.remove('d-none');
+            } else {
+                console.error('🔍 TRACE: Erreur dans la réponse:', data.error);
+                errorMessage.textContent = data.error || "Une erreur inconnue s'est produite";
+                errorSection.classList.remove('d-none');
+            }
+        })
+        .catch((error) => {
+            clearTimeout(timeoutId); // ✅ Nettoyer le timeout
+            console.error('🔍 TRACE: Erreur détection concurrents:', error);
+            loaderSection.classList.add('d-none');
+
+            // ✅ Message spécifique pour timeout
+            if (error.name === 'AbortError') {
+                errorMessage.innerHTML = `
+                <strong>La détection de concurrents prend trop de temps (>10 min).</strong><br>
+                Cette opération nécessite de nombreux appels API (SERP, Firecrawl, Mistral AI).<br>
+                <small class="text-muted">La tâche continue en arrière-plan. Vérifiez les logs ou revenez plus tard.</small>
+            `;
+            } else {
+                errorMessage.textContent = 'Erreur de connexion au serveur. Veuillez réessayer.';
             }
 
-            resultsSection.classList.remove('d-none');
-        } else {
-            console.error('🔍 TRACE: Erreur dans la réponse:', data.error);
-            errorMessage.textContent = data.error || 'Une erreur inconnue s\'est produite';
             errorSection.classList.remove('d-none');
-        }
-    })
-    .catch(error => {
-        clearTimeout(timeoutId); // ✅ Nettoyer le timeout
-        console.error('🔍 TRACE: Erreur détection concurrents:', error);
-        loaderSection.classList.add('d-none');
-
-        // ✅ Message spécifique pour timeout
-        if (error.name === 'AbortError') {
-            errorMessage.innerHTML = `
-                <strong>La détection de concurrents prend trop de temps (>2 min).</strong><br>
-                Cette opération nécessite l'intervention de l'administrateur réseau pour augmenter le timeout du serveur.<br>
-                <small class="text-muted">Veuillez contacter le support technique.</small>
-            `;
-        } else {
-            errorMessage.textContent = 'Erreur de connexion au serveur. Veuillez réessayer.';
-        }
-
-        errorSection.classList.remove('d-none');
-    })
-    .finally(() => {
-        clearTimeout(timeoutId); // ✅ Toujours nettoyer le timeout
-        // ✅ Libérer le flag une fois terminé (succès ou erreur)
-        isDetectionRunning = false;
-        console.log('🔍 TRACE: Détection terminée, flag libéré');
-    });
+        })
+        .finally(() => {
+            clearTimeout(timeoutId); // ✅ Toujours nettoyer le timeout
+            // ✅ Libérer le flag une fois terminé (succès ou erreur)
+            isDetectionRunning = false;
+            console.log('🔍 TRACE: Détection terminée, flag libéré');
+        });
 
     // Fonction pour ouvrir la modal avec les détails du concurrent
     function openCompetitorModal(competitor) {
@@ -445,8 +445,9 @@ function initCompetitorDetection() {
         }
 
         document.getElementById('modal-keyword-source').textContent = competitor.keyword_source || 'N/A';
-        document.getElementById('modal-keyword-volume').textContent = competitor.keyword_volume ?
-            `${competitor.keyword_volume.toLocaleString('fr-FR')} recherches/mois` : 'N/A';
+        document.getElementById('modal-keyword-volume').textContent = competitor.keyword_volume
+            ? `${competitor.keyword_volume.toLocaleString('fr-FR')} recherches/mois`
+            : 'N/A';
 
         // Données techniques
         document.getElementById('modal-source').textContent = competitor.source || 'N/A';
@@ -461,13 +462,15 @@ function initCompetitorDetection() {
 
     // Échapper le HTML pour éviter les injections XSS
     function escapeHtml(unsafe) {
-        if (typeof unsafe !== 'string') return '';
+        if (typeof unsafe !== 'string') {
+            return '';
+        }
         return unsafe
-            .replace(/&/g, "&amp;")
-            .replace(/</g, "&lt;")
-            .replace(/>/g, "&gt;")
-            .replace(/"/g, "&quot;")
-            .replace(/'/g, "&#039;");
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#039;');
     }
 }
 

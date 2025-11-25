@@ -65,7 +65,7 @@ final readonly class MercurePublisherSubscriber implements EventSubscriberInterf
                 'agentName' => $event->agentName,
                 'methodName' => $event->methodName,
                 'timestamp' => (new \DateTimeImmutable())->format(\DateTimeInterface::ATOM),
-            ]),
+            ], JSON_THROW_ON_ERROR),
             private: false, // Public pour simplicité en développement (utiliser JWT en production)
             type: 'TaskStartedEvent', // Définit le champ SSE "event:" pour que JavaScript puisse l'écouter
         );
@@ -113,7 +113,7 @@ final readonly class MercurePublisherSubscriber implements EventSubscriberInterf
                 'result' => $event->result,
                 'executionTime' => $executionTime,
                 'timestamp' => (new \DateTimeImmutable())->format(\DateTimeInterface::ATOM),
-            ]),
+            ], JSON_THROW_ON_ERROR),
             private: false,
             type: 'TaskCompletedEvent', // Définit le champ SSE "event:" pour que JavaScript puisse l'écouter
         );
@@ -152,7 +152,7 @@ final readonly class MercurePublisherSubscriber implements EventSubscriberInterf
                 'agentName' => $event->agentName,
                 'error' => $event->error,
                 'timestamp' => (new \DateTimeImmutable())->format(\DateTimeInterface::ATOM),
-            ]),
+            ], JSON_THROW_ON_ERROR),
             private: false,
             type: 'TaskFailedEvent', // Définit le champ SSE "event:" pour que JavaScript puisse l'écouter
         );

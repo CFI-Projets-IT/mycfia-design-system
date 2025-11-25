@@ -17,8 +17,8 @@ function initEnrichmentReview() {
     }
 
     // Gérer la sélection d'un nom alternatif
-    nameRadios.forEach(radio => {
-        radio.addEventListener('change', function() {
+    nameRadios.forEach((radio) => {
+        radio.addEventListener('change', function () {
             // Mettre à jour le champ caché
             selectedNameInput.value = this.value;
 
@@ -28,13 +28,13 @@ function initEnrichmentReview() {
             validateButton.classList.add('btn-primary');
 
             // Gérer l'indicateur visuel de sélection
-            document.querySelectorAll('.selected-indicator').forEach(indicator => {
+            document.querySelectorAll('.selected-indicator').forEach((indicator) => {
                 indicator.classList.add('d-none');
             });
             this.closest('label').querySelector('.selected-indicator').classList.remove('d-none');
 
             // Retirer la classe "active" de tous les labels
-            document.querySelectorAll('#alternative-names-list label').forEach(label => {
+            document.querySelectorAll('#alternative-names-list label').forEach((label) => {
                 label.classList.remove('active');
             });
 
@@ -44,7 +44,7 @@ function initEnrichmentReview() {
     });
 
     // Validation du formulaire
-    validationForm.addEventListener('submit', function(e) {
+    validationForm.addEventListener('submit', (e) => {
         if (!selectedNameInput.value) {
             e.preventDefault();
             alert('Veuillez sélectionner un nom alternatif avant de valider.');

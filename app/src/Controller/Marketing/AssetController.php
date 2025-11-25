@@ -368,7 +368,7 @@ final class AssetController extends AbstractController
         // Toutes les tentatives ont échoué
         // $lastException est garanti non-null ici car on entre dans cette partie
         // seulement si toutes les tentatives ont échoué (au moins une exception catchée)
-        /** @var \Throwable $lastException */
+        /* @var \Throwable $lastException */
         $this->logger->error('Asset generation failed after all retries', [
             'asset_type' => $assetType,
             'max_retries' => self::MAX_RETRIES,

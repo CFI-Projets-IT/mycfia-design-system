@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Service\Tool;
 
+use App\DTO\Cfi\FactureDetailDto;
 use App\DTO\Cfi\FactureDto;
 use App\Security\UserAuthenticationService;
 use App\Service\AiLoggerService;
@@ -463,11 +464,9 @@ final readonly class GetFacturesTool
     /**
      * Générer les données du tableau pour une facture en détail (lignes de facturation).
      *
-     * @param object $facture Facture complète avec ses lignes
-     *
      * @return array{headers: array<string>, rows: array<array<string, string>>, totalRow: array<string, string>, linkColumns: array<string, string>}
      */
-    private function generateDetailTableData(object $facture): array
+    private function generateDetailTableData(FactureDetailDto $facture): array
     {
         // Headers du tableau (colonnes des lignes de facturation)
         $headers = ['ID LIGNE', 'LIBELLÉ', 'QUANTITÉ', 'MONTANT HT', 'TAUX TVA', 'MONTANT TTC'];

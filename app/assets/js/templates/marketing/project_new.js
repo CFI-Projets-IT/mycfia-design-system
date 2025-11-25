@@ -63,7 +63,9 @@ export function initMarketingProjectEnrichment(config) {
         formData.delete('project[selectedAssetTypes][]');
 
         // Récupérer toutes les checkboxes cochées des selectedAssetTypes
-        const assetCheckboxes = form.querySelectorAll('input[type="checkbox"][name="project[selectedAssetTypes][]"]:checked');
+        const assetCheckboxes = form.querySelectorAll(
+            'input[type="checkbox"][name="project[selectedAssetTypes][]"]:checked'
+        );
         assetCheckboxes.forEach((checkbox) => {
             // Utiliser la valeur réelle de la checkbox (ex: "linkedin_post", pas "0")
             formData.append('project[selectedAssetTypes][]', checkbox.value);

@@ -141,10 +141,17 @@ class User implements UserInterface
     // UserInterface Implementation
     // ========================================
 
+    /**
+     * @return non-empty-string
+     */
     public function getUserIdentifier(): string
     {
-        // Utiliser email si disponible, sinon idCfi comme fallback
-        return $this->email ?? (string) $this->idCfi;
+        // Utiliser email si disponible et non vide, sinon idCfi comme fallback
+        if (null !== $this->email && '' !== $this->email) {
+            return $this->email;
+        }
+
+        return (string) $this->idCfi;
     }
 
     /**

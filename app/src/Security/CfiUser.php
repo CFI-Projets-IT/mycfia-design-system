@@ -46,10 +46,16 @@ class CfiUser implements UserInterface
     /**
      * Identifiant unique pour Symfony Security.
      * Utilise l'email comme identifiant.
+     *
+     * @return non-empty-string
      */
     public function getUserIdentifier(): string
     {
-        return $this->email ?? (string) $this->id;
+        if (null !== $this->email && '' !== $this->email) {
+            return $this->email;
+        }
+
+        return (string) $this->id;
     }
 
     /**

@@ -32,7 +32,7 @@ trait AuthenticatedToolTrait
      * @param UserAuthenticationService $authService Service d'authentification centralisé
      * @param TranslatorInterface       $translator  Service de traduction pour messages i18n
      *
-     * @return array{user: User, tenant: TenantDto}|array{error: array} Utilisateur et tenant, ou erreur formatée
+     * @return array{user: User, tenant: TenantDto, error?: never}|array{error: array<string, mixed>, user?: never, tenant?: never}
      */
     protected function getUserAndTenant(UserAuthenticationService $authService, TranslatorInterface $translator): array
     {

@@ -926,11 +926,6 @@ class Project
 
     public function setCompetitorAnalysis(?CompetitorAnalysis $competitorAnalysis): self
     {
-        // unset the owning side of the relation if necessary
-        if (null === $competitorAnalysis && null !== $this->competitorAnalysis) {
-            $this->competitorAnalysis->setProject(null);
-        }
-
         // set the owning side of the relation if necessary
         if (null !== $competitorAnalysis && $competitorAnalysis->getProject() !== $this) {
             $competitorAnalysis->setProject($this);
@@ -961,11 +956,7 @@ class Project
 
     public function removeAsset(Asset $asset): self
     {
-        if ($this->assets->removeElement($asset)) {
-            if ($asset->getProject() === $this) {
-                $asset->setProject(null);
-            }
-        }
+        $this->assets->removeElement($asset);
 
         return $this;
     }
