@@ -15,9 +15,9 @@ alerting:
         - targets: []
           # - alertmanager:9093  # À activer en Phase 4
 
-# Chargement des règles d'alerting (Phase 4)
+# Chargement des règles d'alerting (Phase 3)
 rule_files:
-  # - "/etc/prometheus/alerts/*.yml"  # À créer en Phase 4
+  - "/etc/prometheus/alerts/*.yml"
 
 # Configuration des scrapes
 scrape_configs:
