@@ -1,0 +1,35 @@
+# Provisioning des datasources Grafana pour myCfia
+# Documentation: https://grafana.com/docs/grafana/latest/administration/provisioning/
+
+apiVersion: 1
+
+datasources:
+  # Data source Prometheus (métriques)
+  - name: Prometheus
+    type: prometheus
+    access: proxy
+    url: http://prometheus:9090
+    isDefault: true
+    editable: true
+    jsonData:
+      timeInterval: "15s"
+      httpMethod: POST
+      manageAlerts: true
+      prometheusType: Prometheus
+      prometheusVersion: 2.50.0
+
+  # Data source Loki (logs)
+  - name: Loki
+    type: loki
+    access: proxy
+    url: http://loki:3100
+    editable: true
+    jsonData:
+      maxLines: 1000
+      timeout: 60
+      # Lien entre logs et métriques via correlation_id
+      derivedFields:
+        - datasourceUid: prometheus
+          matcherRegex: "correlation_id=([a-f0-9-]+)"
+          name: correlation_id
+          url: "$${__value.raw}"

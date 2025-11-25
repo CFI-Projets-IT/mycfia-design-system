@@ -1,0 +1,88 @@
+# Configuration Promtail pour myCfia
+# Documentation: https://grafana.com/docs/loki/latest/send-data/promtail/configuration/
+
+server:
+  http_listen_port: 9080
+  grpc_listen_port: 0
+
+positions:
+  filename: /tmp/positions.yaml
+
+clients:
+  - url: http://loki:3100/loki/api/v1/push
+
+scrape_configs:
+  # Collecte des logs Symfony (JSON)
+  - job_name: symfony-logs
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: symfony
+          app: myCfia
+          __path__: /var/log/symfony/*.log
+
+    # Pipeline de traitement des logs JSON Symfony/Monolog
+    pipeline_stages:
+      # 1. Parser le JSON Monolog
+      - json:
+          expressions:
+            timestamp: datetime
+            level: level_name
+            channel: channel
+            message: message
+            context: context
+            extra: extra
+
+      # 2. Extraire les labels importants
+      - labels:
+          level:
+          channel:
+
+      # 3. Extraire correlation_id si présent dans extra
+      - json:
+          expressions:
+            correlation_id: extra.correlation_id
+          source: extra
+
+      - labels:
+          correlation_id:
+
+      # 4. Timestamp depuis le log
+      - timestamp:
+          source: timestamp
+          format: RFC3339Nano
+          fallback_formats:
+            - '2006-01-02T15:04:05.000000Z07:00'
+            - '2006-01-02 15:04:05'
+
+      # 5. Output final : le message
+      - output:
+          source: message
+
+  # Collecte des logs des conteneurs Docker
+  - job_name: docker-containers
+    docker_sd_configs:
+      - host: unix:///var/run/docker.sock
+        refresh_interval: 5s
+
+    relabel_configs:
+      # Extraire le nom du conteneur
+      - source_labels: ['__meta_docker_container_name']
+        regex: '/(.*)'
+        target_label: 'container'
+
+      # Extraire le stream (stdout/stderr)
+      - source_labels: ['__meta_docker_container_log_stream']
+        target_label: 'stream'
+
+      # Ajouter le label du projet
+      - source_labels: ['__meta_docker_compose_project']
+        target_label: 'project'
+
+      # Ajouter le label du service
+      - source_labels: ['__meta_docker_compose_service']
+        target_label: 'service'
+
+    pipeline_stages:
+      - docker: {}

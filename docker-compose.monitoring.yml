@@ -1,0 +1,110 @@
+# Configuration Docker Compose pour la stack Monitoring
+# À utiliser avec : docker compose -f docker-compose.yml -f docker-compose.monitoring.yml up -d
+# Documentation: PLAN_PHASE_1_Infrastructure_Docker.md
+
+services:
+  # Service Prometheus - Collecte des métriques
+  prometheus:
+    image: prom/prometheus:v2.50.1
+    container_name: ${PROJECT_NAME}_prometheus
+    restart: unless-stopped
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--storage.tsdb.retention.time=30d'
+      - '--web.console.libraries=/usr/share/prometheus/console_libraries'
+      - '--web.console.templates=/usr/share/prometheus/consoles'
+      - '--web.enable-lifecycle'
+    volumes:
+      - ./docker/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_data:/prometheus
+    ports:
+      - "${PROMETHEUS_PORT:-9090}:9090"
+    networks:
+      - app_network
+    depends_on:
+      frankenphp:
+        condition: service_started
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:9090/-/healthy"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Service Loki - Agrégation des logs
+  loki:
+    image: grafana/loki:2.9.4
+    container_name: ${PROJECT_NAME}_loki
+    restart: unless-stopped
+    command: -config.file=/etc/loki/loki.yml
+    volumes:
+      - ./docker/loki/loki.yml:/etc/loki/loki.yml:ro
+      - loki_data:/loki
+    ports:
+      - "${LOKI_PORT:-3100}:3100"
+    networks:
+      - app_network
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3100/ready"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Service Promtail - Agent de collecte des logs
+  promtail:
+    image: grafana/promtail:2.9.4
+    container_name: ${PROJECT_NAME}_promtail
+    restart: unless-stopped
+    command: -config.file=/etc/promtail/promtail.yml
+    volumes:
+      - ./docker/promtail/promtail.yml:/etc/promtail/promtail.yml:ro
+      - ./app/var/log:/var/log/symfony:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks:
+      - app_network
+    depends_on:
+      loki:
+        condition: service_healthy
+
+  # Service Grafana - Visualisation
+  grafana:
+    image: grafana/grafana-oss:10.3.3
+    container_name: ${PROJECT_NAME}_grafana
+    restart: unless-stopped
+    environment:
+      - GF_SECURITY_ADMIN_USER=${GRAFANA_ADMIN_USER:-admin}
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_ADMIN_PASSWORD:-admin}
+      - GF_INSTALL_PLUGINS=grafana-clock-panel
+      - GF_SERVER_ROOT_URL=http://localhost:${GRAFANA_PORT:-3000}
+      - GF_AUTH_ANONYMOUS_ENABLED=false
+      - GF_USERS_ALLOW_SIGN_UP=false
+      - GF_LOG_LEVEL=info
+    volumes:
+      - ./docker/grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./docker/grafana/dashboards:/var/lib/grafana/dashboards:ro
+      - grafana_data:/var/lib/grafana
+    ports:
+      - "${GRAFANA_PORT:-3000}:3000"
+    networks:
+      - app_network
+    depends_on:
+      prometheus:
+        condition: service_healthy
+      loki:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+volumes:
+  prometheus_data:
+    name: ${PROJECT_NAME}_prometheus_data
+  loki_data:
+    name: ${PROJECT_NAME}_loki_data
+  grafana_data:
+    name: ${PROJECT_NAME}_grafana_data

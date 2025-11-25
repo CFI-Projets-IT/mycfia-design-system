@@ -1,0 +1,50 @@
+# Configuration Prometheus pour myCfia
+# Documentation: https://prometheus.io/docs/prometheus/latest/configuration/configuration/
+
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+  external_labels:
+    cluster: 'myCfia'
+    environment: '${APP_ENV:-dev}'
+
+# Configuration des règles d'alerting (Phase 4)
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets: []
+          # - alertmanager:9093  # À activer en Phase 4
+
+# Chargement des règles d'alerting (Phase 4)
+rule_files:
+  # - "/etc/prometheus/alerts/*.yml"  # À créer en Phase 4
+
+# Configuration des scrapes
+scrape_configs:
+  # Scrape Prometheus lui-même
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+        labels:
+          service: 'prometheus'
+
+  # Scrape de l'application Symfony (Phase 2)
+  # L'endpoint /metrics sera créé en Phase 2
+  - job_name: 'symfony-app'
+    scrape_interval: 10s
+    metrics_path: '/metrics'
+    static_configs:
+      - targets: ['frankenphp:80']
+        labels:
+          service: 'symfony'
+          app: 'myCfia'
+
+  # Scrape MariaDB via mysqld_exporter (optionnel, Phase 4)
+  # - job_name: 'mariadb'
+  #   static_configs:
+  #     - targets: ['mysqld-exporter:9104']
+
+  # Scrape Redis via redis_exporter (optionnel, Phase 4)
+  # - job_name: 'redis'
+  #   static_configs:
+  #     - targets: ['redis-exporter:9121']
