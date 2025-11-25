@@ -67,6 +67,21 @@ services:
     # Healthcheck retiré : curl n'est pas disponible dans l'image chromadb/chroma
     # Le service fonctionne correctement, vérification possible via http://localhost:8000/api/v2/heartbeat
 
+  redis:
+    image: redis:7-alpine
+    container_name: ${PROJECT_NAME}_redis
+    restart: unless-stopped
+    command: redis-server --appendonly yes
+    volumes:
+      - redis_data:/data
+    networks:
+      - app_network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
   messenger_worker:
     build:
       context: .
@@ -111,3 +126,5 @@ volumes:
     name: ${PROJECT_NAME}_mercure_config
   chroma_data:
     name: ${PROJECT_NAME}_chroma_data
+  redis_data:
+    name: ${PROJECT_NAME}_redis_data
