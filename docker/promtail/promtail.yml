@@ -27,9 +27,10 @@ scrape_configs:
           __path__: /var/log/symfony/*.log
 
     pipeline_stages:
-      # Parser le format Monolog: [2025-11-24T11:47:16.100718+01:00] llm.INFO: Message {context} []
+      # Parser le format Monolog: [2025-11-24T11:47:16.100718+01:00] channel.INFO: Message {context} []
+      # Supporte les channels avec points (ex: marketing.agent.competitor)
       - regex:
-          expression: '^\[(?P<timestamp>[^\]]+)\] (?P<channel>[^\.]+)\.(?P<level>[A-Z]+): (?P<message>.+?) (?P<context>\{.*?\}) \[\]$'
+          expression: '^\[(?P<timestamp>[^\]]+)\] (?P<channel>.+)\.(?P<level>DEBUG|INFO|NOTICE|WARNING|ERROR|CRITICAL|ALERT|EMERGENCY): (?P<message>.+?) (?P<context>\{.*?\}) \[\]$'
 
       # Extraire les labels
       - labels:
@@ -86,7 +87,7 @@ scrape_configs:
 
     pipeline_stages:
       - regex:
-          expression: '^\[(?P<timestamp>[^\]]+)\] (?P<channel>[^\.]+)\.(?P<level>[A-Z]+): (?P<message>.+?) (?P<context>\{.*?\}) \[\]$'
+          expression: '^\[(?P<timestamp>[^\]]+)\] (?P<channel>.+)\.(?P<level>DEBUG|INFO|NOTICE|WARNING|ERROR|CRITICAL|ALERT|EMERGENCY): (?P<message>.+?) (?P<context>\{.*?\}) \[\]$'
       - labels:
           channel:
           level:
@@ -124,7 +125,7 @@ scrape_configs:
 
     pipeline_stages:
       - regex:
-          expression: '^\[(?P<timestamp>[^\]]+)\] (?P<channel>[^\.]+)\.(?P<level>[A-Z]+): (?P<message>.+?) (?P<context>\{.*?\}) \[\]$'
+          expression: '^\[(?P<timestamp>[^\]]+)\] (?P<channel>.+)\.(?P<level>DEBUG|INFO|NOTICE|WARNING|ERROR|CRITICAL|ALERT|EMERGENCY): (?P<message>.+?) (?P<context>\{.*?\}) \[\]$'
       - labels:
           channel:
           level:
@@ -162,7 +163,7 @@ scrape_configs:
 
     pipeline_stages:
       - regex:
-          expression: '^\[(?P<timestamp>[^\]]+)\] (?P<channel>[^\.]+)\.(?P<level>[A-Z]+): (?P<message>.+?) (?P<context>\{.*?\}) \[\]$'
+          expression: '^\[(?P<timestamp>[^\]]+)\] (?P<channel>.+)\.(?P<level>DEBUG|INFO|NOTICE|WARNING|ERROR|CRITICAL|ALERT|EMERGENCY): (?P<message>.+?) (?P<context>\{.*?\}) \[\]$'
       - labels:
           channel:
           level:
@@ -188,7 +189,7 @@ scrape_configs:
 
     pipeline_stages:
       - regex:
-          expression: '^\[(?P<timestamp>[^\]]+)\] (?P<channel>[^\.]+)\.(?P<level>[A-Z]+): (?P<message>.+?) (?P<context>\{.*?\}) \[\]$'
+          expression: '^\[(?P<timestamp>[^\]]+)\] (?P<channel>.+)\.(?P<level>DEBUG|INFO|NOTICE|WARNING|ERROR|CRITICAL|ALERT|EMERGENCY): (?P<message>.+?) (?P<context>\{.*?\}) \[\]$'
       - labels:
           channel:
           level:
@@ -214,7 +215,7 @@ scrape_configs:
 
     pipeline_stages:
       - regex:
-          expression: '^\[(?P<timestamp>[^\]]+)\] (?P<channel>[^\.]+)\.(?P<level>[A-Z]+): (?P<message>.+?) (?P<context>\{.*?\}) \[\]$'
+          expression: '^\[(?P<timestamp>[^\]]+)\] (?P<channel>.+)\.(?P<level>DEBUG|INFO|NOTICE|WARNING|ERROR|CRITICAL|ALERT|EMERGENCY): (?P<message>.+?) (?P<context>\{.*?\}) \[\]$'
       - labels:
           channel:
           level:
@@ -246,7 +247,7 @@ scrape_configs:
 
     pipeline_stages:
       - regex:
-          expression: '^\[(?P<timestamp>[^\]]+)\] (?P<channel>[^\.]+)\.(?P<level>[A-Z]+): (?P<message>.+?) (?P<context>\{.*?\}) \[\]$'
+          expression: '^\[(?P<timestamp>[^\]]+)\] (?P<channel>.+)\.(?P<level>DEBUG|INFO|NOTICE|WARNING|ERROR|CRITICAL|ALERT|EMERGENCY): (?P<message>.+?) (?P<context>\{.*?\}) \[\]$'
       - labels:
           channel:
           level:
@@ -269,7 +270,7 @@ scrape_configs:
 
     pipeline_stages:
       - regex:
-          expression: '^\[(?P<timestamp>[^\]]+)\] (?P<channel>[^\.]+)\.(?P<level>[A-Z]+): (?P<message>.+?) (?P<context>\{.*?\}) \[\]$'
+          expression: '^\[(?P<timestamp>[^\]]+)\] (?P<channel>.+)\.(?P<level>DEBUG|INFO|NOTICE|WARNING|ERROR|CRITICAL|ALERT|EMERGENCY): (?P<message>.+?) (?P<context>\{.*?\}) \[\]$'
       - labels:
           channel:
           level:
