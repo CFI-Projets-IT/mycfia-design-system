@@ -74,7 +74,7 @@
             "type": "loki",
             "uid": "loki"
           },
-          "expr": "sum(count_over_time({job=\"symfony\"} | json | level = `ERROR` [$__range]))",
+          "expr": "sum(count_over_time({job=\"symfony\", level=\"ERROR\"} [$__range])) or vector(0)",
           "legendFormat": "Errors",
           "refId": "A"
         }
@@ -133,7 +133,7 @@
             "type": "loki",
             "uid": "loki"
           },
-          "expr": "sum(count_over_time({job=\"symfony\"} | json | level = `WARNING` [$__range]))",
+          "expr": "sum(count_over_time({job=\"symfony\", level=\"WARNING\"} [$__range])) or vector(0)",
           "legendFormat": "Warnings",
           "refId": "A"
         }
@@ -192,7 +192,7 @@
             "type": "loki",
             "uid": "loki"
           },
-          "expr": "sum(count_over_time({job=\"symfony\"} | json | level = `INFO` [$__range]))",
+          "expr": "sum(count_over_time({job=\"symfony\", level=\"INFO\"} [$__range])) or vector(0)",
           "legendFormat": "Info",
           "refId": "A"
         }
@@ -251,7 +251,7 @@
             "type": "loki",
             "uid": "loki"
           },
-          "expr": "sum(count_over_time({job=\"symfony\"} | json | level = `DEBUG` [$__range]))",
+          "expr": "sum(count_over_time({job=\"symfony\", level=\"DEBUG\"} [$__range])) or vector(0)",
           "legendFormat": "Debug",
           "refId": "A"
         }
@@ -530,7 +530,7 @@
             "type": "loki",
             "uid": "loki"
           },
-          "expr": "sum by (level) (count_over_time({job=\"symfony\"} | json [1m]))",
+          "expr": "sum by (level) (count_over_time({job=\"symfony\"} [1m]))",
           "legendFormat": "{{level}}",
           "refId": "A"
         }
@@ -617,7 +617,7 @@
             "type": "loki",
             "uid": "loki"
           },
-          "expr": "sum by (channel) (count_over_time({job=\"symfony\"} | json [1m]))",
+          "expr": "sum by (channel) (count_over_time({job=\"symfony\"} [1m]))",
           "legendFormat": "{{channel}}",
           "refId": "A"
         }
@@ -666,7 +666,7 @@
             "type": "loki",
             "uid": "loki"
           },
-          "expr": "{job=\"symfony\"} | json | level = `ERROR`",
+          "expr": "{job=\"symfony\", level=\"ERROR\"}",
           "refId": "A"
         }
       ],
@@ -714,7 +714,7 @@
             "type": "loki",
             "uid": "loki"
           },
-          "expr": "{job=\"symfony\"} | json",
+          "expr": "{job=\"symfony\"}",
           "refId": "A"
         }
       ],

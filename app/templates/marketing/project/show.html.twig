@@ -545,6 +545,58 @@
                                     </div>
                                 </div>
                             </div>
+
+                            {# Section Brand Style v3.31.0 #}
+                            {% if project.scrapedContent.project_context is defined %}
+                                {% set ctx = project.scrapedContent.project_context %}
+                                {% if ctx.brandTone is defined or ctx.brandEnergy is defined or ctx.communicationStyle is defined or ctx.valueProposition is defined %}
+                                    <h5 class="fw-bold text-info mb-3 mt-4">
+                                        <i class="bi bi-palette"></i> Style de Marque
+                                    </h5>
+                                    <div class="row g-3">
+                                        {% if ctx.brandTone is defined %}
+                                            <div class="col-md-6">
+                                                <div class="card border-start border-info border-3">
+                                                    <div class="card-body">
+                                                        <h6 class="text-muted mb-2"><i class="bi bi-chat-heart"></i> Ton de Marque</h6>
+                                                        <p class="mb-0">{{ ctx.brandTone }}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        {% endif %}
+                                        {% if ctx.brandEnergy is defined %}
+                                            <div class="col-md-6">
+                                                <div class="card border-start border-info border-3">
+                                                    <div class="card-body">
+                                                        <h6 class="text-muted mb-2"><i class="bi bi-lightning-charge"></i> Énergie</h6>
+                                                        <p class="mb-0">{{ ctx.brandEnergy }}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        {% endif %}
+                                        {% if ctx.communicationStyle is defined %}
+                                            <div class="col-md-6">
+                                                <div class="card border-start border-info border-3">
+                                                    <div class="card-body">
+                                                        <h6 class="text-muted mb-2"><i class="bi bi-megaphone"></i> Style de Communication</h6>
+                                                        <p class="mb-0">{{ ctx.communicationStyle }}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        {% endif %}
+                                        {% if ctx.valueProposition is defined %}
+                                            <div class="col-md-6">
+                                                <div class="card border-start border-success border-3">
+                                                    <div class="card-body">
+                                                        <h6 class="text-muted mb-2"><i class="bi bi-star"></i> Proposition de Valeur</h6>
+                                                        <p class="mb-0 text-success">{{ ctx.valueProposition }}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                {% endif %}
+                            {% endif %}
                         </div>
                     {% endif %}
 

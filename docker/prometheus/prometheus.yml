@@ -38,6 +38,13 @@ scrape_configs:
           service: 'symfony'
           app: 'myCfia'
 
+  # Scrape Loki
+  - job_name: 'loki'
+    static_configs:
+      - targets: ['loki:3100']
+        labels:
+          service: 'loki'
+
   # Scrape MariaDB via mysqld_exporter (optionnel, Phase 4)
   # - job_name: 'mariadb'
   #   static_configs:

@@ -74,12 +74,12 @@
             "type": "loki",
             "uid": "loki"
           },
-          "expr": "count_over_time({job=\"symfony\", channel=\"llm\"} |= \"LLM Call\" [$__range])",
+          "expr": "sum(count_over_time({job=\"symfony\", channel=\"llm\"} |= \"LLM Call\" [$__range])) or vector(0)",
           "legendFormat": "Appels LLM",
           "refId": "A"
         }
       ],
-      "title": "Appels LLM",
+      "title": "Appels LLM (24h)",
       "type": "stat"
     },
     {
@@ -133,12 +133,12 @@
             "type": "loki",
             "uid": "loki"
           },
-          "expr": "sum_over_time({job=\"symfony\", channel=\"llm\"} |= \"LLM Call\" | regexp `total_tokens.*?(?P<tokens>\\d+)` | unwrap tokens [$__range])",
+          "expr": "sum(sum_over_time({channel=\"llm\"} |= \"LLM Call\" | json | unwrap total_tokens [$__range])) or vector(0)",
           "legendFormat": "Tokens Total",
           "refId": "A"
         }
       ],
-      "title": "Tokens Total",
+      "title": "Tokens Total (24h)",
       "type": "stat"
     },
     {
@@ -192,12 +192,12 @@
             "type": "loki",
             "uid": "loki"
           },
-          "expr": "sum_over_time({job=\"symfony\", channel=\"llm\"} |= \"LLM Call\" | regexp `prompt_tokens.*?(?P<tokens>\\d+)` | unwrap tokens [$__range])",
+          "expr": "sum(sum_over_time({channel=\"llm\"} |= \"LLM Call\" | json | unwrap prompt_tokens [$__range])) or vector(0)",
           "legendFormat": "Prompt Tokens",
           "refId": "A"
         }
       ],
-      "title": "Prompt Tokens",
+      "title": "Prompt Tokens (24h)",
       "type": "stat"
     },
     {
@@ -251,12 +251,12 @@
             "type": "loki",
             "uid": "loki"
           },
-          "expr": "sum_over_time({job=\"symfony\", channel=\"llm\"} |= \"LLM Call\" | regexp `completion_tokens.*?(?P<tokens>\\d+)` | unwrap tokens [$__range])",
+          "expr": "sum(sum_over_time({channel=\"llm\"} |= \"LLM Call\" | json | unwrap completion_tokens [$__range])) or vector(0)",
           "legendFormat": "Completion Tokens",
           "refId": "A"
         }
       ],
-      "title": "Completion Tokens",
+      "title": "Completion Tokens (24h)",
       "type": "stat"
     },
     {
@@ -310,12 +310,12 @@
             "type": "loki",
             "uid": "loki"
           },
-          "expr": "{job=\"symfony\", channel=\"llm\"} |= \"LLM Call\" | regexp `user_id.*?(?P<user>\\d+)`",
+          "expr": "count(sum by (user) (count_over_time({job=\"symfony\", channel=\"llm\"} |= \"LLM Call\" | regexp `user_id.*?(?P<user>\\d+)` [$__range]))) or vector(0)",
           "legendFormat": "Users",
           "refId": "A"
         }
       ],
-      "title": "Utilisateurs uniques",
+      "title": "Utilisateurs uniques (24h)",
       "type": "stat"
     },
     {
@@ -377,12 +377,12 @@
             "type": "loki",
             "uid": "loki"
           },
-          "expr": "avg_over_time({job=\"symfony\", channel=\"llm\"} |= \"LLM Call\" | regexp `duration_ms.*?(?P<duration>[\\d.]+)` | unwrap duration [$__range])",
+          "expr": "avg(avg_over_time({channel=\"llm\"} |= \"LLM Call\" | json | unwrap duration_ms [$__range])) or vector(0)",
           "legendFormat": "Duree moyenne",
           "refId": "A"
         }
       ],
-      "title": "Duree moyenne",
+      "title": "Duree moyenne (24h)",
       "type": "stat"
     },
     {

@@ -82,7 +82,14 @@ services:
       - GF_AUTH_ANONYMOUS_ENABLED=false
       - GF_USERS_ALLOW_SIGN_UP=false
       - GF_LOG_LEVEL=info
+      # Masquer panneaux Welcome et Blog
+      - GF_NEWS_NEWS_FEED_ENABLED=false
+      - GF_HELP_ENABLED=false
+      - GF_PROFILE_ENABLED=false
+      - GF_ANALYTICS_REPORTING_ENABLED=false
+      - GF_ANALYTICS_CHECK_FOR_UPDATES=false
     volumes:
+      - ./docker/grafana/grafana.ini:/etc/grafana/grafana.ini:ro
       - ./docker/grafana/provisioning:/etc/grafana/provisioning:ro
       - ./docker/grafana/dashboards:/var/lib/grafana/dashboards:ro
       - grafana_data:/var/lib/grafana

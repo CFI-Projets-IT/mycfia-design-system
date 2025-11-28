@@ -45,8 +45,15 @@ scrape_configs:
             prompt_tokens: prompt_tokens
             completion_tokens: completion_tokens
             total_tokens: total_tokens
+            tokens_input: tokens_input
+            tokens_output: tokens_output
             user_id: user_id
             tenant_id: tenant_id
+            project_id: project_id
+            conversation_id: conversation_id
+            step: step
+            asset_type: asset_type
+            context: context
             correlation_id: correlation_id
             status_code: status_code
             endpoint: endpoint
@@ -57,6 +64,11 @@ scrape_configs:
           model:
           user_id:
           tenant_id:
+          project_id:
+          conversation_id:
+          step:
+          asset_type:
+          context:
           correlation_id:
 
       # Timestamp depuis le log
@@ -67,9 +79,12 @@ scrape_configs:
             - '2006-01-02T15:04:05.000000Z07:00'
             - RFC3339Nano
 
-      # Output final
+      # Output final - garder message + context JSON pour extraction Loki
+      - template:
+          source: output_line
+          template: '{{ .message }} {{ .context }}'
       - output:
-          source: message
+          source: output_line
 
   # ============================================
   # Logs Marketing - Assets
@@ -134,13 +149,19 @@ scrape_configs:
             model: model
             duration_ms: duration_ms
             total_tokens: total_tokens
+            tokens_input: tokens_input
+            tokens_output: tokens_output
             user_id: user_id
             tenant_id: tenant_id
+            project_id: project_id
+            step: step
           source: context
       - labels:
           model:
           user_id:
           tenant_id:
+          project_id:
+          step:
       - timestamp:
           source: timestamp
           format: '2006-01-02T15:04:05.000000-07:00'
@@ -223,8 +244,15 @@ scrape_configs:
           expressions:
             duration_ms: duration_ms
             status_code: status_code
+            http_status: http_status
             url: url
+            cache_hit: cache_hit
+            rate_limited: rate_limited
+            response_size_bytes: response_size_bytes
           source: context
+      - labels:
+          cache_hit:
+          rate_limited:
       - timestamp:
           source: timestamp
           format: '2006-01-02T15:04:05.000000-07:00'

@@ -30,14 +30,12 @@ schema_config:
         prefix: index_
         period: 24h
 
-# Configuration de l'ingester pour accepter les logs historiques
+# Configuration de l'ingester
 ingester:
   chunk_idle_period: 30m
-  max_chunk_age: 24h     # Augmenté pour accepter logs plus anciens
+  max_chunk_age: 2h
   chunk_target_size: 1572864
   chunk_retain_period: 30s
-  # Accepter les écritures out-of-order (logs historiques dans le désordre)
-  max_ignored_stream_errors: 1000
   wal:
     enabled: true
     dir: /loki/wal

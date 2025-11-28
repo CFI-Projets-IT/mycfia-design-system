@@ -499,6 +499,58 @@
                                 {% endif %}
                             </div>
                         </div>
+
+                        {# Section Brand Style v3.31.0 #}
+                        {% set ctx = enrichmentData.scraped_content.project_context %}
+                        {% if ctx.brandTone is defined or ctx.brandEnergy is defined or ctx.communicationStyle is defined or ctx.valueProposition is defined %}
+                            <div class="mb-4">
+                                <h6 class="fw-semibold text-dark">
+                                    <i class="bi bi-palette-fill text-info"></i> Style de Marque
+                                </h6>
+                                <div class="row g-3">
+                                    {% if ctx.brandTone is defined %}
+                                        <div class="col-md-6">
+                                            <div class="card border-info">
+                                                <div class="card-body">
+                                                    <small class="text-muted d-block mb-1">Ton de Marque</small>
+                                                    <strong class="text-info">{{ ctx.brandTone }}</strong>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                    {% if ctx.brandEnergy is defined %}
+                                        <div class="col-md-6">
+                                            <div class="card border-info">
+                                                <div class="card-body">
+                                                    <small class="text-muted d-block mb-1">Énergie</small>
+                                                    <strong class="text-info">{{ ctx.brandEnergy }}</strong>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                    {% if ctx.communicationStyle is defined %}
+                                        <div class="col-md-6">
+                                            <div class="card border-info">
+                                                <div class="card-body">
+                                                    <small class="text-muted d-block mb-1">Style de Communication</small>
+                                                    <strong class="text-info">{{ ctx.communicationStyle }}</strong>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                    {% if ctx.valueProposition is defined %}
+                                        <div class="col-12">
+                                            <div class="card border-success">
+                                                <div class="card-body">
+                                                    <small class="text-muted d-block mb-1">Proposition de Valeur</small>
+                                                    <p class="text-success mb-0">{{ ctx.valueProposition }}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        {% endif %}
                     {% endif %}
 
                     {% if (enrichmentData.scraped_content.markdown is not defined or not enrichmentData.scraped_content.markdown) and (enrichmentData.scraped_content.project_context is not defined) %}

@@ -15,6 +15,7 @@ use Gorillias\MarketingBundle\Agent\CompetitorAnalystAgent;
 use Gorillias\MarketingBundle\Agent\StrategyAnalystAgent;
 use Gorillias\MarketingBundle\Service\MarketingLoggerFactory;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
 /**
@@ -42,6 +43,7 @@ use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 final readonly class GenerateStrategyMessageHandler
 {
     private readonly LoggerInterface $logger;
+    private readonly LoggerInterface $llmLogger;
 
     public function __construct(
         private StrategyAnalystAgent $strategyAnalyst,
@@ -49,8 +51,11 @@ final readonly class GenerateStrategyMessageHandler
         private MarketingGenerationPublisher $publisher,
         private EntityManagerInterface $entityManager,
         MarketingLoggerFactory $loggerFactory,
+        #[Autowire(service: 'monolog.logger.llm')]
+        LoggerInterface $llmLogger,
     ) {
         $this->logger = $loggerFactory->getGeneralLogger();
+        $this->llmLogger = $llmLogger;
     }
 
     /**
@@ -83,7 +88,18 @@ final readonly class GenerateStrategyMessageHandler
                 'Génération de la stratégie marketing en cours...'
             );
 
-            // 3. Générer l'analyse concurrentielle si demandée (vraie API)
+            // 3. Préparer les options avec contexte d'exécution pour events v3.32.0
+            // Le bundle crée AgentExecutionContext::fromArray($options) automatiquement
+            $baseOptions = [
+                'user_id' => $message->userId,
+                'client_id' => null !== $message->tenantId ? (int) $message->tenantId : null,
+                'project_id' => $message->projectId,
+                'metadata' => [
+                    'step' => 'strategy_generation',
+                ],
+            ];
+
+            // 4. Générer l'analyse concurrentielle si demandée (vraie API)
             $competitorAnalysisData = null;
             if ($message->includeCompetitorAnalysis && ! empty($message->additionalContext)) {
                 $this->publisher->publishProgress(
@@ -92,13 +108,30 @@ final readonly class GenerateStrategyMessageHandler
                     'Analyse concurrentielle en cours...'
                 );
 
-                // Vraie API : analyzeCompetitor(market, competitors, dimensions, options)
+                // Vraie API avec contexte v3.32.0 : analyzeCompetitor(market, competitors, dimensions, options)
+                $competitorOptions = array_merge($baseOptions, [
+                    'metadata' => ['step' => 'competitor_analysis'],
+                ]);
                 $competitorAnalysisData = $this->competitorAnalyst->analyzeCompetitor(
                     market: $project->getDescription() ?: $project->getGoalType()->value,
                     competitors: array_filter(explode(',', $message->additionalContext)),
                     dimensions: ['positioning', 'strengths', 'weaknesses', 'messaging'],
-                    options: []
+                    options: $competitorOptions
                 );
+
+                // Log centralisé LLM pour Grafana (analyse concurrentielle)
+                $this->llmLogger->info('Campaign LLM Call', [
+                    'step' => 'competitor_analysis',
+                    'user_id' => $message->userId,
+                    'project_id' => $message->projectId,
+                    'tenant_id' => $message->tenantId,
+                    'competitors_count' => count($competitorAnalysisData['competitors'] ?? []),
+                    'tokens_input' => $competitorAnalysisData['tokens_used']['input'] ?? 0,
+                    'tokens_output' => $competitorAnalysisData['tokens_used']['output'] ?? 0,
+                    'total_tokens' => $competitorAnalysisData['tokens_used']['total'] ?? 0,
+                    'duration_ms' => $competitorAnalysisData['duration_ms'] ?? 0,
+                    'model' => $competitorAnalysisData['model_used'] ?? 'unknown',
+                ]);
             }
 
             // 4. Préparer les données pour la stratégie
@@ -127,13 +160,26 @@ final readonly class GenerateStrategyMessageHandler
                 $context['competitor_insights'] = $competitorAnalysisData['market_overview'];
             }
 
-            // Vraie API : analyzeStrategy(sector, objectives, context, options)
+            // Vraie API avec contexte v3.32.0 : analyzeStrategy(sector, objectives, context, options)
             $strategyData = $this->strategyAnalyst->analyzeStrategy(
                 sector: $project->getDescription() ?: $project->getGoalType()->value,
                 objectives: $objectives,
                 context: $context,
-                options: []
+                options: $baseOptions
             );
+
+            // Log centralisé LLM pour Grafana (génération stratégie)
+            $this->llmLogger->info('Campaign LLM Call', [
+                'step' => 'strategy_generation',
+                'user_id' => $message->userId,
+                'project_id' => $message->projectId,
+                'tenant_id' => $message->tenantId,
+                'tokens_input' => $strategyData['tokens_used']['input'] ?? 0,
+                'tokens_output' => $strategyData['tokens_used']['output'] ?? 0,
+                'total_tokens' => $strategyData['tokens_used']['total'] ?? 0,
+                'duration_ms' => $strategyData['duration_ms'] ?? 0,
+                'model' => $strategyData['model_used'] ?? 'unknown',
+            ]);
 
             // 5. Persister la stratégie (mapper vers vrais champs TEXT de l'entité)
             $this->publisher->publishProgress(

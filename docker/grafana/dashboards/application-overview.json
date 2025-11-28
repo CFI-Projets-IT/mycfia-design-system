@@ -297,7 +297,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "sum(increase(app_http_requests_total{status=~\"5..\"}[1h]))",
+          "expr": "sum(increase(app_http_requests_total{status=~\"5..\"}[1h])) or vector(0)",
           "legendFormat": "Erreurs 5xx",
           "refId": "A"
         }
@@ -364,12 +364,12 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "histogram_quantile(0.95, sum(rate(app_http_request_duration_seconds_bucket[5m])) by (le))",
+          "expr": "histogram_quantile(0.95, sum(rate(app_http_request_duration_seconds_bucket[1h])) by (le)) or vector(0)",
           "legendFormat": "P95 Latence",
           "refId": "A"
         }
       ],
-      "title": "Latence P95",
+      "title": "Latence P95 (1h)",
       "type": "stat"
     },
     {
@@ -431,12 +431,12 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "sum(rate(app_http_requests_total{status=~\"5..\"}[5m])) / sum(rate(app_http_requests_total[5m]))",
+          "expr": "sum(increase(app_http_requests_total{status=~\"5..\"}[1h])) / sum(increase(app_http_requests_total[1h])) or vector(0)",
           "legendFormat": "Taux erreur",
           "refId": "A"
         }
       ],
-      "title": "Taux d'erreur",
+      "title": "Taux d'erreur (1h)",
       "type": "stat"
     },
     {
