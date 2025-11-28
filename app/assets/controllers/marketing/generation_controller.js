@@ -71,6 +71,12 @@ export default class extends Controller {
             this.handleStart(data);
         });
 
+        this.eventSource.addEventListener('TaskProgressEvent', (event) => {
+            console.log('[MERCURE DEBUG] TaskProgressEvent received:', event.data);
+            const data = JSON.parse(event.data);
+            this.handleProgress(data);
+        });
+
         this.eventSource.addEventListener('TaskCompletedEvent', (event) => {
             console.log('[MERCURE DEBUG] TaskCompletedEvent received:', event.data);
             const data = JSON.parse(event.data);
@@ -101,6 +107,43 @@ export default class extends Controller {
     handleStart(_data) {
         console.log('Génération démarrée');
         this.updateStatus('En cours...');
+    }
+
+    /**
+     * Gère la progression temps réel (v3.34.0)
+     */
+    handleProgress(data) {
+        const { percentage, message, metadata } = data;
+
+        console.log(`[PROGRESS] ${percentage}% - ${message}`, metadata);
+
+        // Mettre à jour barre de progression si disponible
+        const progressBar = document.querySelector('[data-progress-bar]');
+        if (progressBar) {
+            progressBar.style.width = `${percentage}%`;
+            progressBar.setAttribute('aria-valuenow', percentage);
+        }
+
+        // Mettre à jour pourcentage texte
+        const progressText = document.querySelector('[data-progress-percentage]');
+        if (progressText) {
+            progressText.textContent = `${percentage}%`;
+        }
+
+        // Mettre à jour message
+        const progressMessage = document.querySelector('[data-progress-message]');
+        if (progressMessage) {
+            progressMessage.textContent = message;
+        }
+
+        // Mettre à jour indicateur de phase
+        const phaseIndicator = document.querySelector('[data-phase-indicator]');
+        if (phaseIndicator && metadata.current_phase && metadata.total_phases) {
+            phaseIndicator.textContent = `Phase ${metadata.current_phase}/${metadata.total_phases}`;
+        }
+
+        // Mettre à jour le statut général
+        this.updateStatus(message);
     }
 
     /**
