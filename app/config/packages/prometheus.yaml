@@ -1,0 +1,8 @@
+# config/packages/prometheus.yaml
+# Configuration Prometheus pour collecte de métriques applicatives
+
+parameters:
+    # Configuration Redis pour stockage des métriques Prometheus
+    prometheus.storage.redis.host: 'redis'
+    prometheus.storage.redis.port: 6379
+    prometheus.storage.redis.database: 1

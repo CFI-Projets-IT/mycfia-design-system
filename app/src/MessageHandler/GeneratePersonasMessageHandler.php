@@ -13,6 +13,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Gorillias\MarketingBundle\Agent\PersonaGeneratorAgent;
 use Gorillias\MarketingBundle\Service\MarketingLoggerFactory;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
 /**
@@ -39,14 +40,18 @@ use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 final readonly class GeneratePersonasMessageHandler
 {
     private readonly LoggerInterface $logger;
+    private readonly LoggerInterface $llmLogger;
 
     public function __construct(
         private PersonaGeneratorAgent $personaGenerator,
         private MarketingGenerationPublisher $publisher,
         private EntityManagerInterface $entityManager,
         MarketingLoggerFactory $loggerFactory,
+        #[Autowire(service: 'monolog.logger.llm')]
+        LoggerInterface $llmLogger,
     ) {
         $this->logger = $loggerFactory->getGeneralLogger();
+        $this->llmLogger = $llmLogger;
     }
 
     /**
@@ -87,7 +92,22 @@ final readonly class GeneratePersonasMessageHandler
                 $project->getGoalType()->value
             );
 
-            // 4. Générer les personas via PersonaGeneratorAgent (vraie API)
+            // 4. Préparer les options avec contexte d'exécution pour events v3.32.0
+            // Le bundle crée AgentExecutionContext::fromArray($options) automatiquement
+            $baseOptions = [
+                'detailed' => true,
+                'additionalContext' => $message->additionalContext,
+                // Contexte multi-tenant pour AgentExecutionContext (v3.32.0)
+                'user_id' => $message->userId,
+                'client_id' => null !== $message->tenantId ? (int) $message->tenantId : null,
+                'project_id' => $message->projectId,
+                'metadata' => [
+                    'number_of_personas' => $message->numberOfPersonas,
+                    'step' => 'persona_generation',
+                ],
+            ];
+
+            // 5. Générer les personas via PersonaGeneratorAgent (vraie API)
             $generatedCount = 0;
             for ($i = 0; $i < $message->numberOfPersonas; ++$i) {
                 $this->publisher->publishProgress(
@@ -97,15 +117,13 @@ final readonly class GeneratePersonasMessageHandler
                     ['progress' => round((($i + 1) / $message->numberOfPersonas) * 100, 2)]
                 );
 
-                // Appel de la vraie API du bundle : generatePersona(sector, target, options)
+                // Appel de la vraie API du bundle avec contexte v3.32.0
+                // Le bundle dispatch automatiquement AgentExecutionStartedEvent/CompletedEvent/FailedEvent
                 /** @var array<string, mixed> $personaData */
                 $personaData = $this->personaGenerator->generatePersona(
                     sector: $sector,
                     target: $target,
-                    options: [
-                        'detailed' => true,
-                        'additionalContext' => $message->additionalContext,
-                    ]
+                    options: $baseOptions
                 );
 
                 // 5. Mapper les données vers l'entité Persona
@@ -131,6 +149,22 @@ final readonly class GeneratePersonasMessageHandler
 
                 $this->entityManager->persist($persona);
                 ++$generatedCount;
+
+                // Log centralisé LLM pour Grafana (métriques tokens/duration par user/project/step)
+                $this->llmLogger->info('Campaign LLM Call', [
+                    'step' => 'persona_generation',
+                    'user_id' => $message->userId,
+                    'project_id' => $message->projectId,
+                    'tenant_id' => $message->tenantId,
+                    'persona_index' => $i + 1,
+                    'persona_name' => $personaData['name'] ?? 'unknown',
+                    'tokens_input' => $personaData['tokens_used']['input'] ?? 0,
+                    'tokens_output' => $personaData['tokens_used']['output'] ?? 0,
+                    'total_tokens' => $personaData['tokens_used']['total'] ?? 0,
+                    'duration_ms' => $personaData['duration_ms'] ?? 0,
+                    'model' => $personaData['model_used'] ?? 'unknown',
+                    'quality_score' => $qualityScore,
+                ]);
 
                 $this->publisher->publishProgress(
                     $message->projectId,

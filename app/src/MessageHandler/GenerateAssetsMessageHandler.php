@@ -14,6 +14,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Gorillias\MarketingBundle\Agent\ContentCreatorAgent;
 use Gorillias\MarketingBundle\Service\MarketingLoggerFactory;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
 /**
@@ -43,14 +44,18 @@ use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 final readonly class GenerateAssetsMessageHandler
 {
     private readonly LoggerInterface $logger;
+    private readonly LoggerInterface $llmLogger;
 
     public function __construct(
         private ContentCreatorAgent $contentCreator,
         private MarketingGenerationPublisher $publisher,
         private EntityManagerInterface $entityManager,
         MarketingLoggerFactory $loggerFactory,
+        #[Autowire(service: 'monolog.logger.llm')]
+        LoggerInterface $llmLogger,
     ) {
         $this->logger = $loggerFactory->getGeneralLogger();
+        $this->llmLogger = $llmLogger;
     }
 
     /**
@@ -94,7 +99,19 @@ final readonly class GenerateAssetsMessageHandler
                 sprintf('Génération de %d assets marketing en cours...', $totalAssets)
             );
 
-            // 3. Générer les assets pour chaque type demandé
+            // 3. Préparer les options avec contexte d'exécution pour events v3.32.0
+            // Le bundle crée AgentExecutionContext::fromArray($options) automatiquement
+            $baseOptions = [
+                'user_id' => $message->userId,
+                'client_id' => null !== $message->tenantId ? (int) $message->tenantId : null,
+                'project_id' => $message->projectId,
+                'metadata' => [
+                    'step' => 'asset_generation',
+                    'total_assets' => $totalAssets,
+                ],
+            ];
+
+            // 4. Générer les assets pour chaque type demandé
             $generatedCount = 0;
 
             foreach ($message->assetTypes as $assetType) {
@@ -125,12 +142,34 @@ final readonly class GenerateAssetsMessageHandler
                         ),
                     ];
 
-                    // Vraie API : createContent(assetType, brief, options)
+                    // Vraie API avec contexte v3.32.0 : createContent(assetType, brief, options)
+                    $assetOptions = array_merge($baseOptions, [
+                        'metadata' => [
+                            'step' => 'asset_generation',
+                            'asset_type' => $assetType,
+                            'variation' => $variation,
+                        ],
+                    ]);
                     $assetData = $this->contentCreator->createContent(
                         assetType: $assetType,
                         brief: $brief,
-                        options: []
+                        options: $assetOptions
                     );
+
+                    // Log centralisé LLM pour Grafana (génération asset)
+                    $this->llmLogger->info('Campaign LLM Call', [
+                        'step' => 'asset_generation',
+                        'user_id' => $message->userId,
+                        'project_id' => $message->projectId,
+                        'tenant_id' => $message->tenantId,
+                        'asset_type' => $assetType,
+                        'variation' => $variation,
+                        'tokens_input' => $assetData['tokens_used']['input'] ?? 0,
+                        'tokens_output' => $assetData['tokens_used']['output'] ?? 0,
+                        'total_tokens' => $assetData['tokens_used']['total'] ?? 0,
+                        'duration_ms' => $assetData['duration_ms'] ?? 0,
+                        'model' => $assetData['model_used'] ?? 'unknown',
+                    ]);
 
                     // Persister l'asset généré (mapper vers vrais champs TEXT)
                     $asset = new Asset();

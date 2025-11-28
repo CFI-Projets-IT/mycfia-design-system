@@ -53,6 +53,25 @@ services:
     Gorillias\MarketingBundle\Storage\TaskStorageInterface:
         class: App\Service\AppTaskStorage
 
+    # ========================================================================
+    # Marketing AI Bundle v3.32.0 - Event-driven Architecture
+    # ========================================================================
+    # Configuration des nouvelles interfaces abstraites pour l'execution async
+    # et les notifications temps reel des agents IA.
+    # ========================================================================
+
+    # TaskDispatcherInterface - Dispatch async via Symfony Messenger
+    # Permet de dispatcher des taches agents de maniere asynchrone avec UUID tracking
+    Gorillias\MarketingBundle\Contract\TaskDispatcherInterface:
+        class: Gorillias\MarketingBundle\Implementation\MessengerTaskDispatcher
+        arguments:
+            $messageBus: '@messenger.default_bus'
+
+    # NotificationPublisherInterface - Notifications temps reel via Mercure
+    # Permet au bundle de publier des notifications sans etre couple a l'infrastructure
+    Gorillias\MarketingBundle\Contract\NotificationPublisherInterface:
+        class: App\Service\MercureNotificationPublisher
+
 
     # CFI API Service Configuration
     App\Service\Cfi\CfiApiService:

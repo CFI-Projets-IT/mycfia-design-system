@@ -9,6 +9,7 @@ services:
       context: .
       target: ${BUILD_TARGET:-development}
     container_name: ${PROJECT_NAME}_frankenphp
+    restart: unless-stopped
     environment:
       - APP_ENV=${APP_ENV:-dev}
       - APP_DEBUG=${APP_DEBUG:-1}
@@ -25,6 +26,7 @@ services:
   mariadb:
     image: mariadb:${MARIADB_VERSION:-11}
     container_name: ${PROJECT_NAME}_mariadb
+    restart: unless-stopped
     environment:
       MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-root}
       MYSQL_DATABASE: ${DB_NAME:-app_db}
@@ -57,6 +59,13 @@ services:
       - mercure_config:/config
     networks:
       - app_network
+    healthcheck:
+      # Mercure retourne 400 sans JWT, mais cela confirme que le serveur répond
+      test: ["CMD-SHELL", "wget -q --spider http://localhost:80/.well-known/mercure 2>&1 | grep -q '400' && exit 0 || wget -q --spider http://localhost:80/.well-known/mercure"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
 
   chroma:
     image: chromadb/chroma:latest
@@ -66,6 +75,21 @@ services:
       - app_network
     # Healthcheck retiré : curl n'est pas disponible dans l'image chromadb/chroma
     # Le service fonctionne correctement, vérification possible via http://localhost:8000/api/v2/heartbeat
+
+  redis:
+    image: redis:7-alpine
+    container_name: ${PROJECT_NAME}_redis
+    restart: unless-stopped
+    command: redis-server --appendonly yes
+    volumes:
+      - redis_data:/data
+    networks:
+      - app_network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   messenger_worker:
     build:
@@ -111,3 +135,5 @@ volumes:
     name: ${PROJECT_NAME}_mercure_config
   chroma_data:
     name: ${PROJECT_NAME}_chroma_data
+  redis_data:
+    name: ${PROJECT_NAME}_redis_data

@@ -2,6 +2,7 @@
 
 # Script de déploiement intelligent pour stack Symfony + FrankenPHP
 # Compatible avec les conventions Symfony (APP_ENV=dev/prod)
+# Supporte la stack monitoring Grafana (Prometheus, Loki, Promtail, Grafana)
 
 set -e
 
@@ -10,6 +11,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ENV_FILE=""
 COMPOSE_FILES=""
 BUILD_ARGS=""
+MONITORING_ENABLED=false
 
 # === FONCTIONS ===
 
@@ -54,6 +56,19 @@ auto_configure_ports() {
     log_info "  📧 MailHog: $mailhog_port"
     log_info "  ⚡ Mercure: $mercure_port"
 
+    # Ports monitoring si activé
+    local prometheus_port=""
+    local grafana_port=""
+    local loki_port=""
+    if [ "$MONITORING_ENABLED" = "true" ]; then
+        prometheus_port=$(find_free_port 9090 9199)
+        grafana_port=$(find_free_port 3200 3299)
+        loki_port=$(find_free_port 3100 3199)
+        log_info "  📊 Prometheus: $prometheus_port"
+        log_info "  📈 Grafana: $grafana_port"
+        log_info "  📝 Loki: $loki_port"
+    fi
+
     # Mise à jour du fichier d'environnement
     if [ -f "$env_file" ]; then
         sed -i "s/^HTTP_PORT=.*/HTTP_PORT=$http_port/" "$env_file"
@@ -63,6 +78,13 @@ auto_configure_ports() {
 
         # Mise à jour des variables dépendantes des ports
         sed -i "s|^MERCURE_PUBLIC_URL=.*|MERCURE_PUBLIC_URL=http://localhost:$http_port/.well-known/mercure|" "$env_file"
+
+        # Ports monitoring
+        if [ "$MONITORING_ENABLED" = "true" ]; then
+            sed -i "s/^PROMETHEUS_PORT=.*/PROMETHEUS_PORT=$prometheus_port/" "$env_file"
+            sed -i "s/^GRAFANA_PORT=.*/GRAFANA_PORT=$grafana_port/" "$env_file"
+            sed -i "s/^LOKI_PORT=.*/LOKI_PORT=$loki_port/" "$env_file"
+        fi
 
         log_success "Configuration des ports mise à jour dans $env_file"
     else
@@ -75,6 +97,14 @@ MAILHOG_PORT=$mailhog_port
 MERCURE_PORT=$mercure_port
 MERCURE_PUBLIC_URL=http://localhost:$http_port/.well-known/mercure
 EOF
+        if [ "$MONITORING_ENABLED" = "true" ]; then
+            cat >> "$env_file" << EOF
+# Ports monitoring
+PROMETHEUS_PORT=$prometheus_port
+GRAFANA_PORT=$grafana_port
+LOKI_PORT=$loki_port
+EOF
+        fi
     fi
 
     # Exporter les variables pour Docker Compose
@@ -83,6 +113,12 @@ EOF
     export MAILHOG_PORT=$mailhog_port
     export MERCURE_PORT=$mercure_port
     export MERCURE_PUBLIC_URL="http://localhost:$http_port/.well-known/mercure"
+
+    if [ "$MONITORING_ENABLED" = "true" ]; then
+        export PROMETHEUS_PORT=$prometheus_port
+        export GRAFANA_PORT=$grafana_port
+        export LOKI_PORT=$loki_port
+    fi
 }
 
 show_help() {
@@ -104,6 +140,7 @@ OPTIONS:
     --auto-ports              Configuration automatique des ports libres (dev local)
     --full-deploy             Déploiement complet (Composer, migrations, cache, assets)
                               Automatique pour preprod/prod, optionnel pour dev
+    --monitoring              Activer la stack monitoring (Prometheus, Loki, Grafana)
     --down                    Arrêter les services
     --logs                    Afficher les logs
     --status                  Afficher le statut des services
@@ -111,6 +148,7 @@ OPTIONS:
 
 EXEMPLES:
     ./deploy.sh dev --auto-ports              # Déploiement dev avec auto-configuration
+    ./deploy.sh dev --auto-ports --monitoring # Déploiement dev avec monitoring Grafana
     ./deploy.sh dev --auto-ports --full-deploy # Déploiement dev complet (avec migrations)
     ./deploy.sh preprod                       # Déploiement preprod (full-deploy automatique)
     ./deploy.sh prod --build                  # Production avec rebuild (full-deploy automatique)
@@ -172,6 +210,12 @@ setup_environment() {
 
             ENV_FILE=".env"
             COMPOSE_FILES="-f docker-compose.yml -f docker-compose.override.yml"
+
+            # Ajouter monitoring si activé
+            if [ "$MONITORING_ENABLED" = "true" ]; then
+                COMPOSE_FILES="$COMPOSE_FILES -f docker-compose.monitoring.yml"
+                log_info "Stack monitoring activée (Prometheus, Loki, Grafana)"
+            fi
 
             # Détecter UID/GID automatiquement sur Linux/Mac
             if [[ "$OSTYPE" != "msys" && "$OSTYPE" != "cygwin" ]]; then
@@ -312,6 +356,20 @@ show_connection_info() {
         echo "   🗄️  phpMyAdmin:    http://localhost:$phpmyadmin_port"
         echo "   📧 MailHog:       http://localhost:$mailhog_port"
         echo "   ⚡ Mercure:       http://localhost:$mercure_port"
+
+        # Afficher URLs monitoring si activé
+        if [ "$MONITORING_ENABLED" = "true" ]; then
+            local prometheus_port=$(grep "^PROMETHEUS_PORT=" "$SCRIPT_DIR/.env" 2>/dev/null | cut -d= -f2 || echo "9090")
+            local grafana_port=$(grep "^GRAFANA_PORT=" "$SCRIPT_DIR/.env" 2>/dev/null | cut -d= -f2 || echo "3000")
+            local loki_port=$(grep "^LOKI_PORT=" "$SCRIPT_DIR/.env" 2>/dev/null | cut -d= -f2 || echo "3100")
+            echo ""
+            echo "   📊 Prometheus:    http://localhost:$prometheus_port"
+            echo "   📈 Grafana:       http://localhost:$grafana_port"
+            echo "   📝 Loki:          http://localhost:$loki_port"
+            echo ""
+            echo "   👤 Grafana Auth:  admin / admin (changer en production!)"
+        fi
+
         echo ""
         echo "   👤 Authentification: krystdev / dev123"
     elif [ "$APP_ENV" = "prod" ] && [[ "$COMPOSE_FILES" == *"preprod"* ]]; then
@@ -414,6 +472,10 @@ while [[ $# -gt 0 ]]; do
             ;;
         --full-deploy)
             FULL_DEPLOY=true
+            shift
+            ;;
+        --monitoring)
+            MONITORING_ENABLED=true
             shift
             ;;
         --down)
