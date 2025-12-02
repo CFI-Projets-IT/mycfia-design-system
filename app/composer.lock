@@ -1964,12 +1964,12 @@
             "source": {
                 "type": "git",
                 "url": "git@gitlab.com:gorillias/marketing-ai-bundle.git",
-                "reference": "7dfba7c66ebbdd3b2da66d1e45ab8b5657fdea1b"
+                "reference": "ca31985c816b4dcd7429a489459b79c5b5494886"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://gitlab.com/api/v4/projects/gorillias%2Fmarketing-ai-bundle/repository/archive.zip?sha=7dfba7c66ebbdd3b2da66d1e45ab8b5657fdea1b",
-                "reference": "7dfba7c66ebbdd3b2da66d1e45ab8b5657fdea1b",
+                "url": "https://gitlab.com/api/v4/projects/gorillias%2Fmarketing-ai-bundle/repository/archive.zip?sha=ca31985c816b4dcd7429a489459b79c5b5494886",
+                "reference": "ca31985c816b4dcd7429a489459b79c5b5494886",
                 "shasum": ""
             },
             "require": {
@@ -2048,7 +2048,7 @@
                 "symfony",
                 "vector store"
             ],
-            "time": "2025-12-02T14:23:17+00:00"
+            "time": "2025-12-02T15:10:33+00:00"
         },
         {
             "name": "grpc/grpc",
