@@ -35,6 +35,11 @@ if [ "$APP_ENV" = "dev" ]; then
     chown -R www-data:www-data /var/log/caddy /data/caddy /config/caddy
     chmod 775 /var/log/caddy /data/caddy /config/caddy
 
+    # Créer les répertoires Symfony nécessaires
+    mkdir -p /var/www/html/var/log/supervisor 2>/dev/null || true
+    mkdir -p /var/www/html/var/cache 2>/dev/null || true
+    mkdir -p /var/www/html/var/log 2>/dev/null || true
+
     # Permissions spéciales Symfony en développement
     if [ -d "/var/www/html/var" ]; then
         chmod -R 775 /var/www/html/var 2>/dev/null || true

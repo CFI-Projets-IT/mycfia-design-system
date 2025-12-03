@@ -30,6 +30,11 @@ if [ "$APP_ENV" = "dev" ]; then
     find /var/www/html -type d -exec chmod 775 {} \; 2>/dev/null || true
     find /var/www/html -type f -exec chmod 664 {} \; 2>/dev/null || true
 
+    # Créer les répertoires Symfony nécessaires
+    mkdir -p /var/www/html/var/log/supervisor 2>/dev/null || true
+    mkdir -p /var/www/html/var/cache 2>/dev/null || true
+    mkdir -p /var/www/html/var/log 2>/dev/null || true
+
     # Permissions spéciales Symfony en développement
     if [ -d "/var/www/html/var" ]; then
         chmod -R 775 /var/www/html/var 2>/dev/null || true
