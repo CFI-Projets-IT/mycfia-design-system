@@ -84,6 +84,19 @@ final readonly class PersonasGeneratedEventSubscriber implements EventSubscriber
             return;
         }
 
+        // Bundle v3.35.6+ : Le résultat est maintenant ['data' => ..., 'tokens_used' => ..., 'cost' => ...]
+        // Extraire les données personas depuis la clé 'data'
+        if (isset($result['data'])) {
+            $this->logger->debug('Extracting personas from result[data] (bundle v3.35.6+)', [
+                'task_id' => $taskId,
+                'result_keys' => array_keys($result),
+            ]);
+            $personasResult = $result['data'];
+        } else {
+            // Rétrocompatibilité : anciennes versions du bundle
+            $personasResult = $result;
+        }
+
         // Extraire project_id depuis context (passé dans options lors du dispatch)
         $projectId = $context['project_id'] ?? null;
 
@@ -113,7 +126,7 @@ final readonly class PersonasGeneratedEventSubscriber implements EventSubscriber
             $this->deleteExistingPersonas($project);
 
             // Créer et persister les nouvelles entités Persona
-            $personasCreated = $this->createPersonasFromResult($project, $result, $taskId);
+            $personasCreated = $this->createPersonasFromResult($project, $personasResult, $taskId);
 
             // Mettre à jour le statut du projet
             $project->setStatus(ProjectStatus::PERSONA_GENERATED);
