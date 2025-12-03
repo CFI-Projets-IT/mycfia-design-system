@@ -75,8 +75,9 @@ FROM base AS production
 # Configuration PHP production (pas de Node.js/npm)
 COPY ./docker/php.ini.prod /usr/local/etc/php/php.ini
 
-# Utilisateur sécurisé fixe pour la production (UID 82 = www-data Alpine)
-RUN usermod -u 82 www-data && groupmod -g 82 www-data 2>/dev/null || true
+# Créer le script d'entrée pour la gestion des droits (même en production pour preprod)
+COPY ./docker/entrypoint.sh /usr/local/bin/entrypoint.sh
+RUN chmod +x /usr/local/bin/entrypoint.sh
 
 # Permissions production restrictives
 RUN mkdir -p /var/www/html \
@@ -86,11 +87,8 @@ RUN mkdir -p /var/www/html \
 # Définir le répertoire de travail
 WORKDIR /var/www/html
 
-# Passer à l'utilisateur non privilégié
-USER www-data
-
 # Exposer les ports
 EXPOSE 80 443
 
-# Point d'entrée direct pour la production
-ENTRYPOINT ["frankenphp", "run", "--config", "/etc/caddy/Caddyfile", "--adapter", "caddyfile"]
+# Point d'entrée intelligent (même pour production/preprod)
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
