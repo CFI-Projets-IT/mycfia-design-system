@@ -313,6 +313,7 @@ setup_environment() {
     case $APP_ENV in
         "development") export APP_ENV="dev";;
         "production") export APP_ENV="prod";;
+        "preprod") export APP_ENV="dev";;  # Preprod utilise l'environnement dev Symfony
     esac
 }
 
