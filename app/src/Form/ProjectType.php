@@ -248,7 +248,7 @@ class ProjectType extends AbstractType
                     'Publicité Google Ads' => 'google_ads',
                     'Publication Facebook' => 'facebook_post',
                     'Publication Instagram' => 'instagram_post',
-                    'Email marketing' => 'mail',
+                    'Email marketing' => 'email',
                     'Publicité Bing Ads' => 'bing_ads',
                     'Bannière IAB' => 'iab',
                     'Article de blog' => 'article',

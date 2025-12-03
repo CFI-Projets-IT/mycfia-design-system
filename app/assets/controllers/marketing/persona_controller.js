@@ -61,9 +61,6 @@ export default class extends Controller {
         if (this.elapsedTimer) {
             clearInterval(this.elapsedTimer);
         }
-        if (this.timeoutTimer) {
-            clearTimeout(this.timeoutTimer);
-        }
     }
 
     /**
@@ -146,11 +143,6 @@ export default class extends Controller {
             console.error('EventSource error:', error);
             // EventSource tente de se reconnecter automatiquement
         };
-
-        // Timeout après 5 minutes (génération personas devrait prendre 10-60 secondes)
-        this.timeoutTimer = setTimeout(() => {
-            this.handleTimeout();
-        }, 300000);
     }
 
     /**
@@ -295,13 +287,6 @@ export default class extends Controller {
      */
     handleError(data) {
         this.showError(data.message || 'Une erreur est survenue', data.error);
-    }
-
-    /**
-     * Gère le timeout
-     */
-    handleTimeout() {
-        this.showError('La génération prend plus de temps que prévu. Veuillez vérifier le statut du projet.');
     }
 
     /**

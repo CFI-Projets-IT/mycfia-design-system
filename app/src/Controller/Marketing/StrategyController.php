@@ -146,9 +146,9 @@ final class StrategyController extends AbstractController
         }
 
         // Vérifier que les concurrents ont été validés
-        $competitorAnalysis = $project->getCompetitorAnalysis();
+        $selectedCompetitors = $project->getCompetitors()->filter(fn ($c) => $c->isSelected())->toArray();
 
-        if (null === $competitorAnalysis) {
+        if (empty($selectedCompetitors)) {
             $this->addFlash('warning', 'Vous devez d\'abord détecter et valider les concurrents avant de générer la stratégie.');
 
             return $this->redirectToRoute('marketing_competitor_detect', ['id' => $project->getId()]);
@@ -200,7 +200,6 @@ final class StrategyController extends AbstractController
 
             $selectedAssetTypes = $project->getSelectedAssetTypes() ?? [];
             $scrapedContent = $project->getScrapedContent();
-            $competitors = $competitorAnalysis->getCompetitorsArray();
 
             // v3.29.0 : Mapper les asset types vers les canaux du BudgetOptimizerTool
             $channelMapping = [
@@ -223,8 +222,8 @@ final class StrategyController extends AbstractController
             $budgetChannels = array_unique($budgetChannels);
 
             // v3.29.0 : Calculer métriques concurrentielles pour le BudgetOptimizerTool
-            $competitorsWithSEA = count(array_filter($competitors, fn ($c) => $c['has_ads'] ?? false));
-            $highThreatCompetitors = count(array_filter($competitors, fn ($c) => ($c['validation']['alignmentScore'] ?? 0) >= 80));
+            $competitorsWithSEA = count(array_filter($selectedCompetitors, fn ($c) => $c->hasAds()));
+            $highThreatCompetitors = count(array_filter($selectedCompetitors, fn ($c) => $c->getAlignmentScore() >= 80));
 
             // v3.29.0 : Calculer l'allocation budgétaire optimisée
             $budgetResult = $this->budgetOptimizerTool->optimizeBudgetWithBenchmarks(
@@ -254,8 +253,8 @@ final class StrategyController extends AbstractController
 
             // Extraire les domaines pour dispatchCompetitorAnalysis (attend array<string>)
             $competitorDomains = array_map(
-                fn ($c) => $c['domain'] ?? $c['title'] ?? 'unknown',
-                $competitors
+                fn ($c) => $c->getDomain(),
+                $selectedCompetitors
             );
 
             $this->logger->info('🔍 TRACE: StrategyController::recap - Avant dispatchCompetitorAnalysis', [
@@ -305,7 +304,7 @@ final class StrategyController extends AbstractController
         $response = $this->render('marketing/strategy/recap.html.twig', [
             'project' => $project,
             'selectedPersonas' => $selectedPersonas,
-            'competitorAnalysis' => $competitorAnalysis,
+            'selectedCompetitors' => $selectedCompetitors,
         ]);
 
         $afterRender = microtime(true);
@@ -356,9 +355,9 @@ final class StrategyController extends AbstractController
         }
 
         // NOUVEAU WORKFLOW : Vérifier que les concurrents ont été validés
-        $competitorAnalysis = $project->getCompetitorAnalysis();
+        $selectedCompetitorsNew = $project->getCompetitors()->filter(fn ($c) => $c->isSelected())->toArray();
 
-        if (null === $competitorAnalysis) {
+        if (empty($selectedCompetitorsNew)) {
             $this->addFlash('warning', 'Vous devez d\'abord détecter et valider les concurrents avant de générer la stratégie.');
 
             return $this->redirectToRoute('marketing_competitor_detect', ['id' => $project->getId()]);
@@ -403,14 +402,11 @@ final class StrategyController extends AbstractController
             // Récupérer les canaux depuis le projet (sélectionnés à la création)
             $channels = $project->getSelectedAssetTypes() ?? [];
 
-            // Récupérer les concurrents depuis CompetitorAnalysis (déjà validés)
-            $competitorAnalysisData = $project->getCompetitorAnalysis();
-            $competitors = [];
-
-            if (null !== $competitorAnalysisData) {
-                $competitorsJson = $competitorAnalysisData->getCompetitors();
-                $competitors = json_decode($competitorsJson, true, 512, JSON_THROW_ON_ERROR);
-            }
+            // Récupérer les domaines des concurrents sélectionnés
+            $competitorDomains = array_map(
+                fn ($c) => $c->getDomain(),
+                $selectedCompetitorsNew
+            );
 
             // ÉTAPE 1 : Dispatcher l'analyse concurrentielle (OBLIGATOIRE)
             // Le CompetitorToStrategySubscriber se chargera de :
@@ -421,12 +417,12 @@ final class StrategyController extends AbstractController
             $this->logger->info('🔍 TRACE: StrategyController - Avant dispatchCompetitorAnalysis', [
                 'project_id' => $project->getId(),
                 'market' => $project->getSector(),
-                'competitors_count' => count($competitors),
+                'competitors_count' => count($competitorDomains),
             ]);
 
             $taskId = $this->agentTaskManager->dispatchCompetitorAnalysis(
                 market: $project->getSector(),
-                competitors: $competitors, // Vide ou fournis - fonctionne dans les 2 cas
+                competitors: $competitorDomains, // Domaines des concurrents sélectionnés
                 dimensions: ['positioning', 'pricing', 'messaging', 'channels'],
                 options: [
                     'user_id' => $user->getId(),

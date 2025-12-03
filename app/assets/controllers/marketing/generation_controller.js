@@ -26,9 +26,6 @@ export default class extends Controller {
         if (this.eventSource) {
             this.eventSource.close();
         }
-        if (this.timeoutTimer) {
-            clearTimeout(this.timeoutTimer);
-        }
     }
 
     /**
@@ -94,11 +91,6 @@ export default class extends Controller {
             console.error('[MERCURE DEBUG] EventSource readyState:', this.eventSource.readyState);
             // 0 = CONNECTING, 1 = OPEN, 2 = CLOSED
         };
-
-        // Timeout après 3 minutes (génération peut prendre du temps)
-        this.timeoutTimer = setTimeout(() => {
-            this.handleTimeout();
-        }, 180000);
     }
 
     /**
@@ -275,14 +267,6 @@ export default class extends Controller {
     handleError(data) {
         console.error('Generation failed:', data.error);
         this.showError(data.error || 'Une erreur est survenue lors de la génération');
-    }
-
-    /**
-     * Gère le timeout
-     */
-    handleTimeout() {
-        console.warn('Generation timeout');
-        this.showError('La génération prend plus de temps que prévu. Veuillez vérifier le statut du projet.');
     }
 
     /**

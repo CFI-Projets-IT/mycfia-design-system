@@ -59,6 +59,12 @@ final readonly class PersonasGeneratedEventSubscriber implements EventSubscriber
      */
     public function onTaskCompleted(TaskCompletedEvent $event): void
     {
+        // Log DEBUG pour vérifier que subscriber est appelé
+        $this->logger->debug('PersonasGeneratedEventSubscriber::onTaskCompleted called', [
+            'agent_name' => $event->agentName,
+            'contains_PersonaGenerator' => str_contains($event->agentName, 'PersonaGeneratorAgent'),
+        ]);
+
         // Filtrer : seulement si c'est PersonaGeneratorAgent
         if (! str_contains($event->agentName, 'PersonaGeneratorAgent')) {
             return;

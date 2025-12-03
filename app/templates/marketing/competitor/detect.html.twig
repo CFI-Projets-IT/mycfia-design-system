@@ -15,11 +15,8 @@
     </style>
 {% endblock %}
 
-{% block content_classes %} marketing-page{% endblock %}
-
 {% block content %}
 <div class="container-fluid" style="max-width: 1200px;"
-     data-detect-url="{{ path('marketing_competitor_detect_ajax', {id: project.id}) }}"
      data-validate-manual-url="{{ path('marketing_competitor_validate_manual', {id: project.id}) }}">
     {# Breadcrumb #}
     <div class="mb-4">
@@ -61,47 +58,60 @@
         </div>
     </div>
 
-    {# Section de détection automatique #}
-    <div id="detection-loader" class="card shadow-sm mb-4">
-        <div class="card-body text-center py-5">
-            <div class="spinner-border text-primary mb-3" role="status" style="width: 3rem; height: 3rem;">
-                <span class="visually-hidden">Recherche en cours...</span>
-            </div>
-            <h5 class="text-primary mb-2">
-                <i class="bi bi-search"></i> Recherche de concurrents en cours...
-            </h5>
-            <p class="text-muted mb-0">
-                Analyse du secteur <strong>{{ project.sector }}</strong> et du contexte de votre projet
-            </p>
-            <div class="mt-3">
-                <small class="text-muted">
-                    <i class="bi bi-info-circle"></i> Cette analyse prend généralement 5 à 10 secondes
-                </small>
+    {% if competitors is empty %}
+        {# Première détection : Bouton de lancement #}
+        <div class="card shadow-sm">
+            <div class="card-body p-5 text-center">
+                <i class="bi bi-robot text-primary mb-3" style="font-size: 4rem;"></i>
+                <h3 class="mb-3">Prêt à détecter vos concurrents</h3>
+                <p class="text-muted mb-4">
+                    Notre agent IA <strong>CompetitorAnalystAgent</strong> va :<br>
+                    <span class="badge bg-light text-dark me-2">1️⃣ Analyser vos mots-clés Google Ads</span>
+                    <span class="badge bg-light text-dark me-2">2️⃣ Rechercher via SERP API</span>
+                    <span class="badge bg-light text-dark me-2">3️⃣ Scraper les sites concurrents (Firecrawl)</span>
+                    <span class="badge bg-light text-dark">4️⃣ Valider avec Mistral Large</span>
+                </p>
+
+                <div class="alert alert-info mb-4">
+                    <i class="bi bi-info-circle"></i>
+                    <strong>Temps estimé :</strong> 3 à 5 minutes<br>
+                    <small class="text-muted">La tâche s'exécute en arrière-plan avec barre de progression temps réel.</small>
+                </div>
+
+                <form action="{{ path('marketing_competitor_start', {id: project.id}) }}" method="post">
+                    <input type="hidden" name="_token" value="{{ csrf_token('competitor_start_' ~ project.id) }}">
+                    <button type="submit" class="btn btn-primary btn-lg px-5">
+                        <i class="bi bi-play-fill"></i> Lancer la détection
+                    </button>
+                </form>
+
+                <div class="mt-4">
+                    <a href="{{ path('marketing_persona_show', {id: project.id}) }}" class="btn btn-link">
+                        <i class="bi bi-arrow-left"></i> Retour aux personas
+                    </a>
+                </div>
             </div>
         </div>
-    </div>
-
-    {# Section des résultats (cachée par défaut) #}
-    <div id="detection-results" class="d-none">
-        {# Informations de détection #}
-        <div class="alert alert-info mb-4">
+    {% else %}
+        {# Concurrents détectés : Afficher le tableau de sélection #}
+        <div class="alert alert-success mb-4">
             <div class="d-flex align-items-start">
-                <i class="bi bi-info-circle fs-4 me-3"></i>
+                <i class="bi bi-check-circle-fill fs-4 me-3"></i>
                 <div class="flex-grow-1">
                     <h6 class="alert-heading mb-2">Détection automatique réussie</h6>
-                    <p class="mb-2" id="detection-info">
-                        <strong id="competitors-count">0</strong> concurrent(s) détecté(s) pour le secteur <strong>{{ project.sector }}</strong>
+                    <p class="mb-2">
+                        <strong>{{ competitorsCount }}</strong> concurrent(s) détecté(s) pour le secteur <strong>{{ project.sector }}</strong>
                     </p>
                     <small class="text-muted">
                         <i class="bi bi-lightbulb"></i>
-                        Vous pouvez ajouter ou retirer des concurrents avant de valider
+                        Sélectionnez les concurrents pertinents puis validez pour continuer
                     </small>
                 </div>
             </div>
         </div>
 
         {# Formulaire de validation #}
-        <div class="card shadow-sm">
+        <div class="card shadow-sm mb-4">
             <div class="card-header bg-light">
                 <div class="d-flex justify-content-between align-items-center">
                     <h5 class="mb-0">
@@ -110,13 +120,10 @@
                     </h5>
                     <div>
                         <span class="badge bg-info me-2">
-                            <span id="selected-count">0</span> sélectionné(s)
+                            <span id="selected-count">{{ competitors|length }}</span> sélectionné(s)
                         </span>
-                        <button type="button" class="btn btn-sm btn-outline-primary" id="select-all-btn">
-                            <i class="bi bi-check-all"></i> Tout sélectionner
-                        </button>
-                        <button type="button" class="btn btn-sm btn-outline-secondary d-none" id="deselect-all-btn">
-                            <i class="bi bi-x-square"></i> Tout déselectionner
+                        <button type="button" class="btn btn-sm btn-outline-warning" onclick="if(confirm('Voulez-vous relancer une nouvelle détection ?')) { document.getElementById('relaunch-form').submit(); }">
+                            <i class="bi bi-arrow-clockwise"></i> Relancer la détection
                         </button>
                     </div>
                 </div>
@@ -124,230 +131,139 @@
             <div class="card-body p-0">
                 <form method="post" action="{{ path('marketing_competitor_validate', {id: project.id}) }}" id="competitor-form">
                     <input type="hidden" name="_token" value="{{ csrf_token('validate_competitors_' ~ project.id) }}">
-                    <input type="hidden" name="competitors" id="competitors-input" value="">
-                    <input type="hidden" name="competitors_data" id="competitors-data-input" value="">
+                    <div id="competitor-ids-container"></div>
 
-                    {# Tableau avec design du chat #}
+                    {# Tableau avec design data-table #}
                     <div class="chat-datatable">
                         <table class="table table-hover mb-0">
                             <thead>
                                 <tr>
                                     <th style="width: 50px;" class="text-center">
-                                        <input type="checkbox" class="form-check-input" id="select-all-checkbox" title="Tout sélectionner">
+                                        <input type="checkbox" class="form-check-input" id="select-all-checkbox" title="Tout sélectionner" checked>
                                     </th>
                                     <th style="width: 200px;">Titre</th>
                                     <th style="width: 180px;">Domaine</th>
                                     <th style="width: 80px;" class="text-center">Score</th>
-                                    <th style="width: 120px;" class="text-center">Signaux Marketing</th>
-                                    <th style="width: 180px;">Overlaps</th>
-                                    <th style="width: 140px;">Keyword Source</th>
-                                    <th style="width: 70px;" class="text-center">Position</th>
+                                    <th>Résumé</th>
                                 </tr>
                             </thead>
                             <tbody id="competitors-table-body">
-                                {# Les lignes seront ajoutées dynamiquement par JavaScript #}
+                                {% for competitor in competitors %}
+                                <tr class="competitor-row cursor-pointer" data-competitor-index="{{ loop.index0 }}">
+                                    <td class="text-center">
+                                        <input type="checkbox" class="form-check-input competitor-checkbox"
+                                               data-id="{{ competitor.id }}"
+                                               data-domain="{{ competitor.domain }}"
+                                               data-title="{{ competitor.title }}"
+                                               data-alignment-score="{{ competitor.alignmentScore }}"
+                                               data-reasoning="{{ competitor.reasoning }}"
+                                               {% if competitor.selected %}checked{% endif %}>
+                                    </td>
+                                    <td>
+                                        <div class="fw-semibold">{{ competitor.title|default('N/A')|slice(0, 50) }}{% if competitor.title|length > 50 %}...{% endif %}</div>
+                                    </td>
+                                    <td>
+                                        <a href="{{ competitor.url }}" target="_blank" class="text-decoration-none">
+                                            {{ competitor.domain }}
+                                            <i class="bi bi-box-arrow-up-right ms-1 text-muted small"></i>
+                                        </a>
+                                    </td>
+                                    <td class="text-center">
+                                        <span class="badge {% if competitor.alignmentScore >= 80 %}bg-success{% elseif competitor.alignmentScore >= 60 %}bg-primary{% else %}bg-warning{% endif %}">
+                                            {{ competitor.alignmentScore }}%
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <small class="text-muted">{{ competitor.reasoning|slice(0, 100) }}{% if competitor.reasoning|length > 100 %}...{% endif %}</small>
+                                    </td>
+                                </tr>
+                                {% endfor %}
                             </tbody>
                         </table>
                     </div>
 
-                    {# Message si aucun concurrent sélectionné #}
-                    <div id="empty-state" class="alert alert-warning m-4 d-none">
-                        <i class="bi bi-exclamation-triangle"></i>
-                        Vous devez sélectionner au moins un concurrent avant de valider
-                    </div>
-
-                    {# Bouton pour ajouter un concurrent manuellement - EN DÉVELOPPEMENT #}
-                    <div class="m-4 mb-3">
-                        <label class="form-label fw-semibold">
-                            <i class="bi bi-plus-circle text-muted"></i> Ajouter un concurrent manuellement
-                            <span class="badge bg-warning text-dark ms-2">
-                                <i class="bi bi-tools"></i> En développement
-                            </span>
-                        </label>
-                        <div class="input-group">
-                            <input type="text"
-                                   class="form-control"
-                                   id="new-competitor-input"
-                                   placeholder="Nom du concurrent (ex: ESSEC Business School)"
-                                   disabled>
-                            <button type="button"
-                                    class="btn btn-outline-secondary"
-                                    id="add-competitor-btn"
-                                    disabled>
-                                <i class="bi bi-plus-lg"></i> Ajouter
+                    {# Boutons d'action #}
+                    <div class="card-footer bg-light">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <a href="{{ path('marketing_persona_show', {id: project.id}) }}" class="btn btn-outline-secondary">
+                                <i class="bi bi-arrow-left"></i> Retour
+                            </a>
+                            <button type="submit" class="btn btn-primary btn-lg px-5" id="validate-btn">
+                                <i class="bi bi-check-circle"></i> Valider et continuer
                             </button>
                         </div>
-                        <small class="form-text text-muted">
-                            <i class="bi bi-exclamation-triangle text-warning"></i>
-                            Cette fonctionnalité est en cours de développement. Les concurrents peuvent être ajoutés après validation de la recherche automatique.
-                        </small>
-                    </div>
-
-                    {# Actions #}
-                    <div class="d-flex justify-content-between align-items-center p-4 pt-3 border-top">
-                        <a href="{{ path('marketing_persona_show', {id: project.id}) }}"
-                           class="btn btn-outline-secondary">
-                            <i class="bi bi-arrow-left"></i> Retour aux personas
-                        </a>
-                        <button type="submit"
-                                class="btn btn-primary btn-lg"
-                                id="validate-btn"
-                                disabled>
-                            <i class="bi bi-check-lg"></i> Valider les concurrents
-                        </button>
                     </div>
                 </form>
             </div>
         </div>
-    </div>
+    {% endif %}
 
-    {# Section d'erreur (cachée par défaut) #}
-    <div id="detection-error" class="card shadow-sm border-danger d-none">
-        <div class="card-body text-center py-5">
-            <i class="bi bi-exclamation-triangle text-danger fs-1 mb-3"></i>
-            <h5 class="text-danger mb-3">Erreur lors de la détection</h5>
-            <p class="text-muted mb-4" id="error-message">
-                Une erreur s'est produite lors de la détection des concurrents
-            </p>
-            <div class="d-flex gap-2 justify-content-center">
-                <button type="button" class="btn btn-primary" onclick="location.reload()">
-                    <i class="bi bi-arrow-clockwise"></i> Réessayer
-                </button>
-                <a href="{{ path('marketing_persona_show', {id: project.id}) }}"
-                   class="btn btn-outline-secondary">
-                    <i class="bi bi-arrow-left"></i> Retour aux personas
-                </a>
-            </div>
-        </div>
-    </div>
+    {# Formulaire de relance (caché) #}
+    <form id="relaunch-form" action="{{ path('marketing_competitor_start', {id: project.id}) }}" method="post" class="d-none">
+        <input type="hidden" name="_token" value="{{ csrf_token('competitor_start_' ~ project.id) }}">
+    </form>
 </div>
 
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        // Gestion de la sélection des concurrents
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('competitor-form');
+            if (!form) return;
+
+            const checkboxes = document.querySelectorAll('.competitor-checkbox');
+            const selectAllCheckbox = document.getElementById('select-all-checkbox');
+            const selectedCountSpan = document.getElementById('selected-count');
+            const competitorsInput = document.getElementById('competitors-input');
+            const competitorsDataInput = document.getElementById('competitors-data-input');
+
+            // Fonction de mise à jour du compteur et des inputs
+            function updateSelection() {
+                const selectedIds = [];
+                const container = document.getElementById('competitor-ids-container');
+
+                // Vider le container
+                container.innerHTML = '';
+
+                checkboxes.forEach(function(checkbox) {
+                    if (checkbox.checked) {
+                        selectedIds.push(checkbox.dataset.id);
+
+                        // Créer un input hidden pour chaque ID sélectionné
+                        const input = document.createElement('input');
+                        input.type = 'hidden';
+                        input.name = 'competitor_ids[]';
+                        input.value = checkbox.dataset.id;
+                        container.appendChild(input);
+                    }
+                });
+
+                selectedCountSpan.textContent = selectedIds.length;
+
+                // Mettre à jour l'état du select-all
+                selectAllCheckbox.checked = selectedIds.length === checkboxes.length;
+                selectAllCheckbox.indeterminate = selectedIds.length > 0 && selectedIds.length < checkboxes.length;
+            }
+
+            // Select all / Deselect all
+            if (selectAllCheckbox) {
+                selectAllCheckbox.addEventListener('change', function() {
+                    checkboxes.forEach(function(checkbox) {
+                        checkbox.checked = selectAllCheckbox.checked;
+                    });
+                    updateSelection();
+                });
+            }
+
+            // Individual checkbox
+            checkboxes.forEach(function(checkbox) {
+                checkbox.addEventListener('change', updateSelection);
+            });
+
+            // Initialiser la sélection au chargement
+            updateSelection();
+        });
+    </script>
 {% endblock %}
-
-{% block modals %}
-{# Modal de détails du concurrent #}
-<div class="modal fade" id="competitorDetailModal" tabindex="-1" aria-labelledby="competitorDetailModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-scrollable">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="competitorDetailModalLabel">
-                    <i class="bi bi-info-circle text-primary"></i> Détails du concurrent
-                </h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                {# Section Informations principales #}
-                <div class="mb-4">
-                    <h6 class="text-uppercase text-muted fw-bold mb-3">
-                        <i class="bi bi-building"></i> Informations principales
-                    </h6>
-                    <div class="row g-3">
-                        <div class="col-12">
-                            <label class="form-label fw-semibold">Titre</label>
-                            <p class="form-control-plaintext" id="modal-title"></p>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label fw-semibold">Domaine</label>
-                            <p class="form-control-plaintext" id="modal-domain"></p>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label fw-semibold">URL</label>
-                            <p class="form-control-plaintext">
-                                <a href="#" id="modal-url" target="_blank" rel="noopener noreferrer">
-                                    <i class="bi bi-box-arrow-up-right"></i> Ouvrir
-                                </a>
-                            </p>
-                        </div>
-                        <div class="col-12">
-                            <label class="form-label fw-semibold">Description (snippet)</label>
-                            <p class="form-control-plaintext text-muted" id="modal-snippet"></p>
-                        </div>
-                    </div>
-                </div>
-
-                {# Section Validation IA #}
-                <div class="mb-4">
-                    <h6 class="text-uppercase text-muted fw-bold mb-3">
-                        <i class="bi bi-robot"></i> Validation IA
-                    </h6>
-                    <div class="row g-3">
-                        <div class="col-md-3">
-                            <label class="form-label fw-semibold">Score d'alignement</label>
-                            <p class="form-control-plaintext">
-                                <span class="badge fs-6" id="modal-score">N/A</span>
-                            </p>
-                        </div>
-                        <div class="col-md-3">
-                            <label class="form-label fw-semibold">Concurrent validé</label>
-                            <p class="form-control-plaintext">
-                                <span class="badge fs-6" id="modal-is-competitor">N/A</span>
-                            </p>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label fw-semibold">Overlaps</label>
-                            <div id="modal-overlaps"></div>
-                        </div>
-                        <div class="col-12">
-                            <label class="form-label fw-semibold">Analyse IA (reasoning)</label>
-                            <div class="alert alert-info mb-0" id="modal-reasoning"></div>
-                        </div>
-                    </div>
-                </div>
-
-                {# Section Données SEO #}
-                <div class="mb-4">
-                    <h6 class="text-uppercase text-muted fw-bold mb-3">
-                        <i class="bi bi-search"></i> Données SEO/SEM (v3.27.0)
-                    </h6>
-                    <div class="row g-3">
-                        <div class="col-md-4">
-                            <label class="form-label fw-semibold">Position Google</label>
-                            <p class="form-control-plaintext" id="modal-position"></p>
-                        </div>
-                        <div class="col-md-4">
-                            <label class="form-label fw-semibold">Publicité Google Ads</label>
-                            <p class="form-control-plaintext" id="modal-ads"></p>
-                        </div>
-                        <div class="col-md-4">
-                            <label class="form-label fw-semibold">Featured Snippet</label>
-                            <p class="form-control-plaintext" id="modal-featured"></p>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label fw-semibold">Keyword source</label>
-                            <p class="form-control-plaintext" id="modal-keyword-source"></p>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label fw-semibold">Volume de recherche</label>
-                            <p class="form-control-plaintext" id="modal-keyword-volume"></p>
-                        </div>
-                    </div>
-                </div>
-
-                {# Section Données techniques #}
-                <div class="mb-0">
-                    <h6 class="text-uppercase text-muted fw-bold mb-3">
-                        <i class="bi bi-gear"></i> Données techniques
-                    </h6>
-                    <div class="row g-3">
-                        <div class="col-md-4">
-                            <label class="form-label fw-semibold">Source</label>
-                            <p class="form-control-plaintext"><small id="modal-source"></small></p>
-                        </div>
-                        <div class="col-md-4">
-                            <label class="form-label fw-semibold">Scraper</label>
-                            <p class="form-control-plaintext"><small id="modal-scraper"></small></p>
-                        </div>
-                        <div class="col-md-4">
-                            <label class="form-label fw-semibold">Page SerpAPI</label>
-                            <p class="form-control-plaintext"><small id="modal-page"></small></p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
-            </div>
-        </div>
-    </div>
-</div>
 {% endblock %}

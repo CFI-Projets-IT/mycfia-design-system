@@ -299,7 +299,7 @@
                     {% set assetIcon = 'bi-instagram' %}
                     {% set assetColor = 'text-danger' %}
                     {% set assetLabel = 'Instagram' %}
-                {% elseif type == 'mail' %}
+                {% elseif type == 'email' %}
                     {% set assetIcon = 'bi-envelope' %}
                     {% set assetColor = 'text-warning' %}
                     {% set assetLabel = 'Email' %}
@@ -307,11 +307,11 @@
                     {% set assetIcon = 'bi-microsoft' %}
                     {% set assetColor = 'text-info' %}
                     {% set assetLabel = 'Bing Ads' %}
-                {% elseif type == 'iab_banner' %}
+                {% elseif type == 'iab' %}
                     {% set assetIcon = 'bi-display' %}
                     {% set assetColor = 'text-success' %}
                     {% set assetLabel = 'Bannière IAB' %}
-                {% elseif type == 'article_seo' %}
+                {% elseif type == 'article' %}
                     {% set assetIcon = 'bi-newspaper' %}
                     {% set assetColor = 'text-dark' %}
                     {% set assetLabel = 'Article SEO' %}
@@ -949,13 +949,13 @@
                                             {% set assetIcon = 'bi-facebook' %}
                                         {% elseif asset.assetType == 'instagram_post' %}
                                             {% set assetIcon = 'bi-instagram' %}
-                                        {% elseif asset.assetType == 'mail' %}
+                                        {% elseif asset.assetType == 'email' %}
                                             {% set assetIcon = 'bi-envelope' %}
                                         {% elseif asset.assetType == 'bing_ads' %}
                                             {% set assetIcon = 'bi-microsoft' %}
-                                        {% elseif asset.assetType == 'iab_banner' %}
+                                        {% elseif asset.assetType == 'iab' %}
                                             {% set assetIcon = 'bi-display' %}
-                                        {% elseif asset.assetType == 'article_seo' %}
+                                        {% elseif asset.assetType == 'article' %}
                                             {% set assetIcon = 'bi-newspaper' %}
                                         {% endif %}
                                         <div class="fw-semibold">
@@ -1617,9 +1617,10 @@
                                         <strong>Variation {{ i + 1 }}</strong>
                                     </div>
                                     <div class="card-body">
-                                        {# Gérer les 2 formats : STRING (LinkedIn, Facebook, Instagram, Mail, IAB) OU OBJET (Google Ads, Bing Ads) #}
-                                        {% if variation is iterable and variation.headlines is defined %}
-                                            {# Format OBJET : Google Ads/Bing Ads {"headlines": [...], "descriptions": [...]} #}
+                                        {# Gérer les formats : STRING (LinkedIn, Facebook) OU OBJET (Google Ads, Bing Ads, Instagram, Email, IAB, Article) #}
+                                        {% set isObject = variation is iterable and (variation.headline_1 is defined or variation.caption is defined or variation.subject is defined or variation.headlines is defined or variation.banner_300x250 is defined or variation.banner_728x90 is defined or variation.banner_160x600 is defined or (variation.title is defined and variation.introduction is defined)) %}
+                                        {% if isObject %}
+                                            {# Format OBJET : Google Ads/Bing Ads/Instagram - Structures complexes imbriquées #}
                                             {% for key, value in variation %}
                                                 <div class="mb-2">
                                                     <strong class="text-muted small">{{ key|replace({'_': ' '})|title }}:</strong>
@@ -1633,7 +1634,38 @@
                                                                 {% endif %}
                                                             {% endfor %}
                                                         {% else %}
-                                                            {{ value }}
+                                                            {# Valeur non-iterable OU objet complexe #}
+                                                            {%- if value is null -%}
+                                                                <div class="bg-light p-2 rounded">
+                                                                    <span class="text-muted">N/A</span>
+                                                                </div>
+                                                            {%- elseif value is iterable -%}
+                                                                {# Objet/array complexe - Décomposer pour affichage lisible #}
+                                                                <div class="bg-light p-3 rounded">
+                                                                    {% for subKey, subValue in value %}
+                                                                        <div class="mb-2">
+                                                                            {% if subKey matches '/^[a-zA-Z_]/' or subKey matches '/^banner_/' %}
+                                                                                {# Clé associative (objet) - commence par une lettre ou banner_ #}
+                                                                                <strong class="text-primary small d-block">{{ subKey|replace({'_': ' '})|title }}</strong>
+                                                                            {% endif %}
+                                                                            <div class="ms-2">
+                                                                                {% if subValue is iterable and subValue is not same as(subValue|join('')) %}
+                                                                                    {# Sous-objet/array imbriqué #}
+                                                                                    <pre class="mb-0 small">{{ subValue|json_encode(constant('JSON_PRETTY_PRINT') b-or constant('JSON_UNESCAPED_UNICODE') b-or constant('JSON_UNESCAPED_SLASHES'))|raw }}</pre>
+                                                                                {% else %}
+                                                                                    {# Valeur simple #}
+                                                                                    {{ subValue|nl2br }}
+                                                                                {% endif %}
+                                                                            </div>
+                                                                        </div>
+                                                                    {% endfor %}
+                                                                </div>
+                                                            {%- else -%}
+                                                                {# Valeur scalaire simple #}
+                                                                <div class="bg-light p-2 rounded">
+                                                                    {{ value|nl2br }}
+                                                                </div>
+                                                            {%- endif -%}
                                                         {% endif %}
                                                     </div>
                                                 </div>

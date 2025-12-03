@@ -524,7 +524,7 @@ final class ProjectController extends AbstractController
         return $this->json([
             'has_strategy' => ! $project->getStrategies()->isEmpty(),
             'has_personas' => ! $project->getPersonas()->isEmpty(),
-            'has_competitor_analysis' => null !== $project->getCompetitorAnalysis(),
+            'has_competitor_analysis' => null !== $project->getCompetitiveAnalysisGeneratedAt(),
             'status' => $project->getStatus()->value,
         ]);
     }
