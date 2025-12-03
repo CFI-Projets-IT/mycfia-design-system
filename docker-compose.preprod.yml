@@ -56,6 +56,13 @@ services:
     networks:
       - app_network
     restart: unless-stopped
+    # Healthcheck via HTTP plutôt que port admin 2019 (désactivé)
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q --spider http://localhost:80/ || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
 
   mariadb:
     image: mariadb:${MARIADB_VERSION:-11}
@@ -95,6 +102,13 @@ services:
       - mercure_config:/config
     networks:
       - app_network
+    # Healthcheck : 401 est normal sans JWT, cela confirme que Mercure répond
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q --spider http://localhost:80/.well-known/mercure 2>&1 | grep -qE '(400|401)' && exit 0 || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
 
   messenger_worker:
     build:
