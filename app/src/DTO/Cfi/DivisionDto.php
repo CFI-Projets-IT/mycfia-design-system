@@ -25,7 +25,7 @@ final readonly class DivisionDto
     /**
      * Créer un DivisionDto depuis les données brutes de l'API CFI.
      *
-     * @param array{id: int, nom?: string|null} $data
+     * @param array<string, mixed> $data
      */
     public static function fromApiData(array $data): self
     {

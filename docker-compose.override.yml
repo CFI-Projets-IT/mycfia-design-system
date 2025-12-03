@@ -37,6 +37,7 @@ services:
   phpmyadmin:
     image: phpmyadmin/phpmyadmin:${PHPMYADMIN_VERSION:-latest}
     container_name: ${PROJECT_NAME}_phpmyadmin
+    restart: unless-stopped
     environment:
       PMA_HOST: mariadb
       PMA_USER: ${DB_USER:-app_user}
@@ -51,6 +52,7 @@ services:
   mailhog:
     image: mailhog/mailhog:${MAILHOG_VERSION:-latest}
     container_name: ${PROJECT_NAME}_mailhog
+    restart: unless-stopped
     environment:
       # Configuration MailHog
       MH_STORAGE: memory

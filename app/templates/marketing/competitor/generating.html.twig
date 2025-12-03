@@ -1,0 +1,108 @@
+{% extends 'layouts/home.html.twig' %}
+
+{% block title %}Détection concurrents en cours{% endblock %}
+
+{% block content %}
+<div class="container" style="max-width: 900px;">
+    <div class="mb-4">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="{{ path('marketing_project_index') }}">Projets Marketing</a>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">Détection concurrents en cours</li>
+            </ol>
+        </nav>
+    </div>
+
+    <div class="card shadow-sm"
+         data-controller="marketing-competitor"
+         data-marketing-competitor-task-id-value="{{ taskId }}"
+         data-marketing-competitor-mercure-url-value="{{ mercureUrl }}"
+         data-marketing-competitor-mercure-jwt-value="{{ mercureJwt }}"
+         data-marketing-competitor-next-url-value="{{ path('marketing_competitor_detect', {id: project.id}) }}">
+
+        <div class="card-header bg-warning text-dark">
+            <div class="d-flex align-items-center">
+                <div class="spinner-border spinner-border-sm me-3" role="status" data-marketing-competitor-target="spinner">
+                    <span class="visually-hidden">Chargement...</span>
+                </div>
+                <div>
+                    <h5 class="mb-0">Détection de concurrents en cours...</h5>
+                    <small>Notre agent IA recherche et valide vos concurrents</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-body p-4">
+            <div data-marketing-competitor-target="statusMessage">
+                <div class="text-center py-5">
+                    <i class="bi bi-search text-warning mb-3" style="font-size: 4rem;"></i>
+                    <h4 class="mb-3">L'IA recherche vos concurrents</h4>
+                    <p class="text-muted mb-4">
+                        CompetitorAnalystAgent analyse votre secteur et valide les concurrents pertinents<br>
+                        Temps estimé : 3 à 5 minutes (SERP API, Scraping, Validation LLM)
+                    </p>
+
+                    {# Barre de progression temps réel (Mercure SSE) #}
+                    <div class="mb-4">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <div class="fw-semibold text-warning" data-marketing-competitor-target="progressMessage">
+                                Initialisation...
+                            </div>
+                            <div class="badge bg-warning text-dark" data-marketing-competitor-target="phaseIndicator">
+                                Phase 0/5
+                            </div>
+                        </div>
+
+                        <div class="progress mb-2" style="height: 25px;" role="progressbar" aria-label="Progression détection" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                            <div class="progress-bar progress-bar-striped progress-bar-animated bg-warning"
+                                 style="width: 0%"
+                                 data-marketing-competitor-target="progressBar">
+                                <span class="fw-semibold text-dark" data-marketing-competitor-target="progressPercentage">0%</span>
+                            </div>
+                        </div>
+
+                        <div class="text-muted small text-center">
+                            <i class="bi bi-robot me-1"></i> Mistral Large + SERP API + Firecrawl en temps réel
+                        </div>
+                    </div>
+
+                    <div class="text-muted small text-center">
+                        <i class="bi bi-clock"></i>
+                        Temps écoulé : <span data-marketing-competitor-target="elapsedTime">0s</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="d-none" data-marketing-competitor-target="successMessage">
+                <div class="alert alert-success text-center">
+                    <i class="bi bi-check-circle-fill fs-1 text-success d-block mb-3"></i>
+                    <h4 class="mb-3">Détection terminée avec succès !</h4>
+                    <p class="mb-3" data-marketing-competitor-target="resultSummary"></p>
+                    <div class="spinner-border text-success mb-3" role="status">
+                        <span class="visually-hidden">Redirection...</span>
+                    </div>
+                    <p class="text-muted small">Redirection vers la sélection des concurrents...</p>
+                </div>
+            </div>
+
+            <div class="d-none" data-marketing-competitor-target="errorMessage">
+                <div class="alert alert-danger text-center">
+                    <i class="bi bi-exclamation-triangle-fill fs-1 text-danger d-block mb-3"></i>
+                    <h4 class="mb-3">Erreur lors de la détection</h4>
+                    <p class="mb-3" data-marketing-competitor-target="errorDetails"></p>
+                    <div class="d-flex gap-2 justify-content-center">
+                        <a href="{{ path('home_index') }}" class="btn btn-danger">
+                            <i class="bi bi-house"></i> Retour à l'accueil
+                        </a>
+                        <button type="button" class="btn btn-outline-secondary" onclick="window.location.reload()">
+                            <i class="bi bi-arrow-clockwise"></i> Réessayer
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

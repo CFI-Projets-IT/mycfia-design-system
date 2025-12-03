@@ -129,9 +129,10 @@ final readonly class ChatService
             $result = $agent->call($messages);
 
             // LOG : Après appel agent
+            $content = $result->getContent();
             $this->logger->info('ChatService: APRÈS appel agent', [
                 'context' => $context,
-                'result_content_length' => strlen($result->getContent()),
+                'result_content_length' => \is_string($content) ? \strlen($content) : 0,
                 'result_metadata' => $result->getMetadata()->all(),
             ]);
 
@@ -275,11 +276,14 @@ final readonly class ChatService
             $result = $agent->call($messages, ['stream' => true]);
 
             $fullResponse = '';
-            foreach ($result->getContent() as $chunk) {
-                $fullResponse .= $chunk;
+            $streamContent = $result->getContent();
+            if (is_iterable($streamContent)) {
+                foreach ($streamContent as $chunk) {
+                    $fullResponse .= $chunk;
 
-                // Publier chaque chunk via Mercure
-                $this->streamPublisher->publishChunk($conversationId, $messageId, $chunk);
+                    // Publier chaque chunk via Mercure
+                    $this->streamPublisher->publishChunk($conversationId, $messageId, $chunk);
+                }
             }
 
             // IMPORTANT : Les métadonnées ne sont disponibles qu'APRÈS avoir consommé tous les chunks

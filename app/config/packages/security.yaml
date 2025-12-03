@@ -29,6 +29,8 @@ security:
     access_control:
         # Route login accessible sans authentification
         - { path: ^/login, roles: PUBLIC_ACCESS }
+        # Endpoint Prometheus metrics (accès public pour scraping)
+        - { path: ^/metrics, roles: PUBLIC_ACCESS }
         # Toutes les autres routes nécessitent ROLE_USER
         - { path: ^/, roles: ROLE_USER }
 

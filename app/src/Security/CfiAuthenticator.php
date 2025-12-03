@@ -105,8 +105,8 @@ class CfiAuthenticator extends AbstractAuthenticator
      */
     public function authenticate(Request $request): Passport
     {
-        $mode = $request->request->get('mode', 'token');
-        $csrfToken = $request->request->get('_csrf_token', '');
+        $mode = (string) $request->request->get('mode', 'token');
+        $csrfToken = (string) $request->request->get('_csrf_token', '');
 
         $this->logger->info('CFI Authenticator: Tentative d\'authentification', [
             'mode' => $mode,
@@ -270,10 +270,10 @@ class CfiAuthenticator extends AbstractAuthenticator
      */
     private function authenticateWithToken(Request $request): UtilisateurGorilliasDto
     {
-        $jetonUtilisateur = $request->request->get('jetonUtilisateur', '');
+        $jetonUtilisateur = (string) $request->request->get('jetonUtilisateur', '');
 
         // Validation format token Gorillias
-        if (empty($jetonUtilisateur) || ! $this->cfiAuthService->isValidTokenFormat($jetonUtilisateur)) {
+        if ('' === $jetonUtilisateur || ! $this->cfiAuthService->isValidTokenFormat($jetonUtilisateur)) {
             $this->logger->warning('CFI Authenticator: Token Gorillias invalide', [
                 'jeton' => substr($jetonUtilisateur, 0, 8).'...',
             ]);
@@ -290,15 +290,15 @@ class CfiAuthenticator extends AbstractAuthenticator
      */
     private function authenticateWithCredentials(Request $request): UtilisateurGorilliasDto
     {
-        $username = $request->request->get('username', '');
-        $password = $request->request->get('password', '');
+        $username = (string) $request->request->get('username', '');
+        $password = (string) $request->request->get('password', '');
 
         $this->logger->info('CFI Authenticator: Tentative authentification credentials', [
             'username' => $username,
         ]);
 
         // Validation basique
-        if (empty($username) || empty($password)) {
+        if ('' === $username || '' === $password) {
             throw new AuthenticationException($this->translator->trans('cfi.auth.error.empty_credentials', [], 'security'));
         }
 

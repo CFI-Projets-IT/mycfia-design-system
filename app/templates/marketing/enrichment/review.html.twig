@@ -232,11 +232,43 @@
                                 </h6>
                                 <div class="card">
                                     <div class="card-body">
-                                        {% if brandData.visual_identity.design_style is defined %}
-                                            <p class="mb-2"><strong>Style de design :</strong> {{ brandData.visual_identity.design_style }}</p>
+                                        {# Design Style : Priorité à l'analyse LLM (v3.34.2) #}
+                                        {% if enrichmentData.ai_suggestions.visual_identity is defined and enrichmentData.ai_suggestions.visual_identity.design_style is defined %}
+                                            <div class="mb-3">
+                                                <strong>Style de design :</strong>
+                                                <span class="badge bg-success ms-2">{{ enrichmentData.ai_suggestions.visual_identity.design_style }}</span>
+                                                <small class="text-muted d-block mt-1">
+                                                    <i class="bi bi-check-circle-fill text-success"></i> Analysé par IA (Mistral Large)
+                                                </small>
+                                            </div>
+                                        {% elseif brandData.visual_identity.design_style is defined %}
+                                            <p class="mb-3">
+                                                <strong>Style de design :</strong>
+                                                <span class="text-muted">{{ brandData.visual_identity.design_style }}</span>
+                                            </p>
                                         {% endif %}
+
+                                        {# Palette de couleurs #}
+                                        {% if brandData.visual_identity.primary_colors is defined and brandData.visual_identity.primary_colors is iterable and brandData.visual_identity.primary_colors|length > 0 %}
+                                            <div class="mb-3">
+                                                <strong>Palette de couleurs :</strong>
+                                                <div class="d-flex gap-2 mt-2 flex-wrap">
+                                                    {% for color in brandData.visual_identity.primary_colors %}
+                                                        <div class="text-center">
+                                                            <div class="rounded shadow-sm" style="width: 50px; height: 50px; background-color: {{ color }}; border: 2px solid #e0e0e0;" title="{{ color }}"></div>
+                                                            <small class="text-muted d-block mt-1" style="font-size: 0.7rem;">{{ color }}</small>
+                                                        </div>
+                                                    {% endfor %}
+                                                </div>
+                                            </div>
+                                        {% endif %}
+
+                                        {# Typographie #}
                                         {% if brandData.visual_identity.typography is defined %}
-                                            <p class="mb-0"><strong>Typographie :</strong> {{ brandData.visual_identity.typography }}</p>
+                                            <p class="mb-0">
+                                                <strong>Typographie :</strong>
+                                                <span class="badge bg-secondary">{{ brandData.visual_identity.typography }}</span>
+                                            </p>
                                         {% endif %}
                                     </div>
                                 </div>
@@ -499,6 +531,58 @@
                                 {% endif %}
                             </div>
                         </div>
+
+                        {# Section Brand Style v3.31.0 #}
+                        {% set ctx = enrichmentData.scraped_content.project_context %}
+                        {% if ctx.brandTone is defined or ctx.brandEnergy is defined or ctx.communicationStyle is defined or ctx.valueProposition is defined %}
+                            <div class="mb-4">
+                                <h6 class="fw-semibold text-dark">
+                                    <i class="bi bi-palette-fill text-info"></i> Style de Marque
+                                </h6>
+                                <div class="row g-3">
+                                    {% if ctx.brandTone is defined %}
+                                        <div class="col-md-6">
+                                            <div class="card border-info">
+                                                <div class="card-body">
+                                                    <small class="text-muted d-block mb-1">Ton de Marque</small>
+                                                    <strong class="text-info">{{ ctx.brandTone }}</strong>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                    {% if ctx.brandEnergy is defined %}
+                                        <div class="col-md-6">
+                                            <div class="card border-info">
+                                                <div class="card-body">
+                                                    <small class="text-muted d-block mb-1">Énergie</small>
+                                                    <strong class="text-info">{{ ctx.brandEnergy }}</strong>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                    {% if ctx.communicationStyle is defined %}
+                                        <div class="col-md-6">
+                                            <div class="card border-info">
+                                                <div class="card-body">
+                                                    <small class="text-muted d-block mb-1">Style de Communication</small>
+                                                    <strong class="text-info">{{ ctx.communicationStyle }}</strong>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                    {% if ctx.valueProposition is defined %}
+                                        <div class="col-12">
+                                            <div class="card border-success">
+                                                <div class="card-body">
+                                                    <small class="text-muted d-block mb-1">Proposition de Valeur</small>
+                                                    <p class="text-success mb-0">{{ ctx.valueProposition }}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        {% endif %}
                     {% endif %}
 
                     {% if (enrichmentData.scraped_content.markdown is not defined or not enrichmentData.scraped_content.markdown) and (enrichmentData.scraped_content.project_context is not defined) %}

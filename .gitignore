@@ -1,48 +1,38 @@
-# ============================================
-# EXCLUSIONS CONTEXT ENGINEERING
-# ============================================
-CONTEXT_ENGINEERING/
-CLAUDE.md
-CONTEXT_INDEX.md
-PLAN_*.md
-ANALYSE_*.md
+# Context Engineering (documentation locale uniquement)
+/CONTEXT_ENGINEERING/
+/CONTEXT_INDEX.md
+/CLAUDE.md
+/FIXME.md
+/PLAN_*.md
 
-# ============================================
-# ENVIRONNEMENT ET SÉCURITÉ
-# ============================================
-.env.local
-.env.*.local
-.env.prod.local
+# Environnement
+/.env.local
+/.env.*.local
+/app/.env.local
+/app/.env.*.local
 
-# ============================================
-# SYMFONY - Cache et fichiers générés
-# ============================================
-app/var/
-app/vendor/
-app/.php-cs-fixer.cache
+# Docker volumes
+/docker/grafana/
+/docker/loki/
+/docker/prometheus/
+/docker/promtail/
+/docker/mysql/
 
-# ============================================
-# DOCKER
-# ============================================
-docker/logs/
+# Symfony
+/app/var/
+/app/vendor/
+/app/public/bundles/
 
-# ============================================
-# FICHIERS TEMPORAIRES
-# ============================================
-*.tmp
-*.log
-.DS_Store
-Thumbs.db
+# Node
+/app/node_modules/
 
-# ============================================
 # IDE
-# ============================================
-.idea/
-.vscode/
+/.idea/
+/.vscode/
 *.swp
 *.swo
+*~
 
-# ============================================
-# CACHE SYSTÈME
-# ============================================
-.cache/
+# OS
+.DS_Store
+Thumbs.db

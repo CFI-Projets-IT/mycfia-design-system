@@ -1,0 +1,17 @@
+# Provisioning des dashboards Grafana pour myCfia
+# Documentation: https://grafana.com/docs/grafana/latest/administration/provisioning/
+
+apiVersion: 1
+
+providers:
+  - name: 'myCfia Dashboards'
+    orgId: 1
+    folder: 'myCfia'
+    folderUid: 'mycfia-dashboards'
+    type: file
+    disableDeletion: false
+    updateIntervalSeconds: 30
+    allowUiUpdates: true
+    options:
+      path: /var/lib/grafana/dashboards
+      foldersFromFilesStructure: false

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Controller\Marketing;
 
-use App\Entity\CompetitorAnalysis;
 use App\Entity\Project;
+use App\Entity\User;
 use App\Enum\ProjectStatus;
 use Doctrine\ORM\EntityManagerInterface;
 use Gorillias\MarketingBundle\Tool\CompetitorIntelligenceTool;
@@ -36,14 +36,14 @@ final class CompetitorController extends AbstractController
         private readonly EntityManagerInterface $entityManager,
         private readonly TranslatorInterface $translator,
         private readonly LoggerInterface $logger,
+        private readonly \Gorillias\MarketingBundle\Service\AgentTaskManager $agentTaskManager,
+        private readonly \App\Service\MercureJwtGenerator $mercureJwtGenerator,
     ) {
     }
 
     /**
-     * Affiche la page de détection de concurrents avec auto-loading AJAX.
-     *
-     * Cette page lance automatiquement la détection des concurrents au chargement
-     * via AJAX vers la route marketing_competitor_detect_ajax.
+     * Affiche la page de détection de concurrents.
+     * Vérifie les prérequis (personas sélectionnés) puis affiche le bouton de lancement.
      */
     #[Route('/detect/{id}', name: 'detect', methods: ['GET'])]
     public function detect(Project $project): Response
@@ -75,22 +75,129 @@ final class CompetitorController extends AbstractController
             return $this->redirectToRoute('marketing_persona_show', ['id' => $project->getId()]);
         }
 
-        // Vérifier si une analyse existe déjà
-        $existingAnalysis = $project->getCompetitorAnalysis();
+        // Récupérer les concurrents existants
+        $competitors = $project->getCompetitors()->toArray();
+        $competitorsCount = count($competitors);
 
         $this->logger->info('🔍 TRACE: CompetitorController::detect - Rendu du template', [
             'selected_personas_count' => count($selectedPersonas),
-            'has_existing_analysis' => null !== $existingAnalysis,
+            'competitors_count' => $competitorsCount,
         ]);
 
         return $this->render('marketing/competitor/detect.html.twig', [
             'project' => $project,
-            'existingAnalysis' => $existingAnalysis,
+            'competitors' => $competitors,
+            'competitorsCount' => $competitorsCount,
+        ]);
+    }
+
+    /**
+     * Lance la détection asynchrone des concurrents via AgentTaskManager.
+     * Dispatche CompetitorAnalystAgent et redirige vers la page de progression.
+     */
+    #[Route('/start/{id}', name: 'start', methods: ['POST'])]
+    public function start(Request $request, Project $project): Response
+    {
+        $this->denyAccessUnlessGranted('edit', $project);
+
+        // Vérifier CSRF
+        $token = $request->request->get('_token');
+        if (! is_string($token) || ! $this->isCsrfTokenValid('competitor_start_'.$project->getId(), $token)) {
+            $this->addFlash('error', $this->translator->trans('security.invalid_csrf_token', [], 'security'));
+
+            return $this->redirectToRoute('marketing_competitor_detect', ['id' => $project->getId()]);
+        }
+
+        $this->logger->info('🔍 TRACE: CompetitorController::start - Dispatch tâche asynchrone', [
+            'project_id' => $project->getId(),
+        ]);
+
+        // Préparer le contexte projet (même structure que detectAjax)
+        $keywordsData = $project->getKeywordsData();
+        $brandIdentity = $project->getBrandIdentity();
+        $businessIntelligence = $project->getBusinessIntelligence();
+        $scrapedContent = $project->getScrapedContent();
+
+        $projectContext = [
+            'website_url' => $project->getWebsiteUrl(),
+            'brand_analysis' => [
+                'brand_name' => $brandIdentity['brand_name'] ?? $project->getCompanyName(),
+                'extract' => [
+                    'geographicMarket' => $businessIntelligence['geography'] ?? 'France',
+                    'mainOffering' => $businessIntelligence['valueProposition'] ?? ($project->getProductInfo() ?: ''),
+                    'targetMarket' => $businessIntelligence['targetAudience'] ?? '',
+                ],
+            ],
+            'google_ads_keywords' => $keywordsData['keywords'] ?? [],
+            'scraped_content' => array_merge(
+                $scrapedContent ?? [],
+                [
+                    'project_context' => $businessIntelligence ?? [],
+                    'language' => $scrapedContent['language'] ?? 'fr',
+                ]
+            ),
+        ];
+
+        /** @var User $user */
+        $user = $this->getUser();
+
+        // Dispatcher la tâche asynchrone
+        $taskId = $this->agentTaskManager->dispatchCompetitorDetection(
+            sector: $project->getSector(),
+            maxCompetitors: 10,
+            projectContext: $projectContext,
+            options: [
+                'project_id' => $project->getId(),
+                'user_id' => $user->getId(),
+            ]
+        );
+
+        $this->logger->info('🔍 TRACE: CompetitorController::start - Tâche dispatchée', [
+            'project_id' => $project->getId(),
+            'task_id' => $taskId,
+        ]);
+
+        // Rediriger vers la page de progression
+        return $this->redirectToRoute('marketing_competitor_generating', [
+            'id' => $project->getId(),
+            'taskId' => $taskId,
+        ]);
+    }
+
+    /**
+     * Affiche la page de progression de la détection asynchrone.
+     * Écoute les TaskProgressEvent via Mercure SSE pour afficher la progression en temps réel.
+     */
+    #[Route('/generating/{id}/{taskId}', name: 'generating', methods: ['GET'])]
+    public function generating(Project $project, string $taskId): Response
+    {
+        $this->denyAccessUnlessGranted('view', $project);
+
+        $this->logger->info('🔍 TRACE: CompetitorController::generating - Page de progression', [
+            'project_id' => $project->getId(),
+            'task_id' => $taskId,
+        ]);
+
+        // Générer le JWT Mercure pour l'abonnement aux événements de cette tâche
+        $mercureJwt = $this->mercureJwtGenerator->generateSubscriberToken([
+            "tasks/{$taskId}",
+        ]);
+
+        // Récupérer l'URL Mercure depuis l'environnement
+        $mercureUrl = $_ENV['MERCURE_PUBLIC_URL'] ?? 'http://localhost/.well-known/mercure';
+
+        return $this->render('marketing/competitor/generating.html.twig', [
+            'project' => $project,
+            'taskId' => $taskId,
+            'mercureUrl' => $mercureUrl,
+            'mercureJwt' => $mercureJwt,
         ]);
     }
 
     /**
      * Détection AJAX des concurrents via CompetitorIntelligenceTool.
+     *
+     * @deprecated Utiliser la route 'start' avec système asynchrone
      *
      * Endpoint appelé automatiquement au chargement de la page detect.
      * Utilise les données enrichies du projet pour détecter les concurrents.
@@ -340,11 +447,11 @@ final class CompetitorController extends AbstractController
     }
 
     /**
-     * Valide et enregistre les concurrents sélectionnés par l'utilisateur.
+     * Marque les concurrents sélectionnés par l'utilisateur (flag selected = true).
      *
-     * Crée ou met à jour l'entité CompetitorAnalysis avec la liste des concurrents.
-     * Les données d'analyse détaillée (forces, faiblesses, etc.) seront générées
-     * par l'agent IA lors de la génération de stratégie.
+     * Les entités Competitor existent déjà en base (créées par CompetitorDetectedEventSubscriber).
+     * Cette méthode marque simplement les concurrents choisis comme sélectionnés pour l'analyse.
+     * L'analyse globale du marché sera générée par CompetitorAnalystAgent lors de la génération de stratégie.
      */
     #[Route('/validate/{id}', name: 'validate', methods: ['POST'])]
     public function validate(Request $request, Project $project): Response
@@ -362,76 +469,40 @@ final class CompetitorController extends AbstractController
             return $this->redirectToRoute('marketing_competitor_detect', ['id' => $project->getId()]);
         }
 
-        // ✅ Récupérer les données complètes des concurrents (objets JSON) OU noms (fallback)
-        $competitorsDataJson = $request->request->get('competitors_data', '');
-        $competitorsInput = $request->request->get('competitors', '');
+        // Récupérer les IDs des concurrents sélectionnés
+        $selectedIds = $request->request->all('competitor_ids');
 
-        $this->logger->info('🔍 TRACE: CompetitorController::validate - Données reçues', [
-            'project_id' => $project->getId(),
-            'has_competitors_data' => ! empty($competitorsDataJson),
-            'competitors_data_length' => is_string($competitorsDataJson) ? strlen($competitorsDataJson) : 0,
-            'has_competitors_names' => ! empty($competitorsInput),
-        ]);
-
-        // ✅ Parser les données complètes (prioritaire) ou fallback sur les noms
-        $competitorsList = [];
-
-        if (! empty($competitorsDataJson) && is_string($competitorsDataJson)) {
-            try {
-                // Décoder le JSON des objets complets
-                $competitorsList = json_decode($competitorsDataJson, true, 512, JSON_THROW_ON_ERROR);
-
-                $this->logger->info('🔍 TRACE: CompetitorController::validate - Objets complets décodés', [
-                    'competitors_count' => count($competitorsList),
-                    'first_competitor_keys' => ! empty($competitorsList) ? array_keys($competitorsList[0]) : [],
-                ]);
-            } catch (\JsonException $e) {
-                $this->logger->error('🔍 TRACE: CompetitorController::validate - Erreur décodage JSON', [
-                    'error' => $e->getMessage(),
-                ]);
-
-                // Fallback sur l'ancienne méthode (noms uniquement)
-                if (is_string($competitorsInput) && ! empty(trim($competitorsInput))) {
-                    $competitorsList = array_map('trim', explode(',', $competitorsInput));
-                    $competitorsList = array_filter($competitorsList);
-                }
-            }
-        } elseif (is_string($competitorsInput) && ! empty(trim($competitorsInput))) {
-            // Fallback : parser la liste des noms (format: "concurrent1, concurrent2, concurrent3")
-            $competitorsList = array_map('trim', explode(',', $competitorsInput));
-            $competitorsList = array_filter($competitorsList);
-
-            $this->logger->warning('🔍 TRACE: CompetitorController::validate - Fallback sur noms uniquement', [
-                'competitors_count' => count($competitorsList),
-            ]);
+        if (! is_array($selectedIds)) {
+            $selectedIds = [];
         }
 
-        // Validation finale
-        if (empty($competitorsList)) {
+        // Convertir en entiers
+        $selectedIds = array_map('intval', $selectedIds);
+        $selectedIds = array_filter($selectedIds);
+
+        $this->logger->info('🔍 TRACE: CompetitorController::validate - IDs reçus', [
+            'project_id' => $project->getId(),
+            'selected_ids' => $selectedIds,
+            'count' => count($selectedIds),
+        ]);
+
+        // Validation : au moins un concurrent sélectionné
+        if (empty($selectedIds)) {
             $this->addFlash('error', 'Vous devez sélectionner au moins un concurrent.');
 
             return $this->redirectToRoute('marketing_competitor_detect', ['id' => $project->getId()]);
         }
 
-        // Créer ou récupérer l'analyse existante
-        $analysis = $project->getCompetitorAnalysis();
-
-        if (null === $analysis) {
-            $analysis = new CompetitorAnalysis();
-            $analysis->setProject($project);
-            $this->entityManager->persist($analysis);
+        // Mettre à jour le flag selected des Competitors
+        $updatedCount = 0;
+        foreach ($project->getCompetitors() as $competitor) {
+            if (in_array($competitor->getId(), $selectedIds, true)) {
+                $competitor->setSelected(true);
+                ++$updatedCount;
+            } else {
+                $competitor->setSelected(false); // Déselectionner les autres
+            }
         }
-
-        // ✅ Stocker les objets complets en JSON (métadonnées enrichies incluses)
-        // Format: [{"title": "...", "domain": "...", "validation": {...}, "has_ads": true, ...}, ...]
-        $analysis->setCompetitors(json_encode($competitorsList, JSON_THROW_ON_ERROR));
-
-        // Initialiser les autres champs avec des tableaux vides en attendant l'analyse IA
-        $analysis->setStrengths(json_encode([], JSON_THROW_ON_ERROR));
-        $analysis->setWeaknesses(json_encode([], JSON_THROW_ON_ERROR));
-        $analysis->setMarketPositioning(json_encode([], JSON_THROW_ON_ERROR));
-        $analysis->setDifferentiationOpportunities(json_encode([], JSON_THROW_ON_ERROR));
-        $analysis->setMarketingStrategies(json_encode([], JSON_THROW_ON_ERROR));
 
         // Mettre à jour le statut du projet
         $project->setStatus(ProjectStatus::COMPETITOR_VALIDATED);
@@ -439,6 +510,7 @@ final class CompetitorController extends AbstractController
         $beforeFlush = microtime(true);
         $this->logger->info('⏱️ PERF: CompetitorController::validate - BEFORE FLUSH', [
             'elapsed_ms' => round(($beforeFlush - $startTime) * 1000, 2),
+            'updated_count' => $updatedCount,
         ]);
 
         $this->entityManager->flush();
@@ -451,7 +523,7 @@ final class CompetitorController extends AbstractController
 
         $this->addFlash('success', sprintf(
             '%d concurrent(s) validé(s) avec succès !',
-            count($competitorsList)
+            $updatedCount
         ));
 
         $beforeRedirect = microtime(true);

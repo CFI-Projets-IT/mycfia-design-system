@@ -366,15 +366,57 @@ class Project
     private Collection $strategies;
 
     /**
-     * Analyse concurrentielle générée pour ce projet.
+     * Collection des concurrents identifiés pour ce projet.
+     *
+     * @var Collection<int, Competitor>
      */
-    #[ORM\OneToOne(
-        targetEntity: CompetitorAnalysis::class,
+    #[ORM\OneToMany(
+        targetEntity: Competitor::class,
         mappedBy: 'project',
         cascade: ['persist', 'remove'],
         orphanRemoval: true
     )]
-    private ?CompetitorAnalysis $competitorAnalysis = null;
+    private Collection $competitors;
+
+    /**
+     * Vue d'ensemble du marché concurrentiel (analyse globale générée par CompetitorAnalystAgent).
+     * Stocke la narrative d'analyse du marché : tendances, dynamiques, opportunités globales.
+     */
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $competitiveMarketOverview = null;
+
+    /**
+     * Menaces concurrentielles globales identifiées par l'IA (JSON).
+     * Liste des menaces concurrentielles transverses affectant le positionnement.
+     *
+     * @var array<string, mixed>|null
+     */
+    #[ORM\Column(type: Types::JSON, nullable: true)]
+    private ?array $competitiveThreats = null;
+
+    /**
+     * Opportunités de marché identifiées par l'analyse concurrentielle (JSON).
+     * Liste des opportunités de différenciation et de positionnement.
+     *
+     * @var array<string, mixed>|null
+     */
+    #[ORM\Column(type: Types::JSON, nullable: true)]
+    private ?array $competitiveOpportunities = null;
+
+    /**
+     * Recommandations stratégiques basées sur l'analyse concurrentielle (JSON).
+     * Actions concrètes pour se différencier et exploiter les opportunités.
+     *
+     * @var array<string, mixed>|null
+     */
+    #[ORM\Column(type: Types::JSON, nullable: true)]
+    private ?array $competitiveRecommendations = null;
+
+    /**
+     * Date de génération de l'analyse concurrentielle.
+     */
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE, nullable: true)]
+    private ?\DateTimeImmutable $competitiveAnalysisGeneratedAt = null;
 
     /**
      * Collection des assets marketing générés.
@@ -393,6 +435,7 @@ class Project
     {
         $this->personas = new ArrayCollection();
         $this->strategies = new ArrayCollection();
+        $this->competitors = new ArrayCollection();
         $this->assets = new ArrayCollection();
     }
 
@@ -919,24 +962,105 @@ class Project
         return $this;
     }
 
-    public function getCompetitorAnalysis(): ?CompetitorAnalysis
+    /**
+     * @return Collection<int, Competitor>
+     */
+    public function getCompetitors(): Collection
     {
-        return $this->competitorAnalysis;
+        return $this->competitors;
     }
 
-    public function setCompetitorAnalysis(?CompetitorAnalysis $competitorAnalysis): self
+    public function addCompetitor(Competitor $competitor): self
     {
-        // unset the owning side of the relation if necessary
-        if (null === $competitorAnalysis && null !== $this->competitorAnalysis) {
-            $this->competitorAnalysis->setProject(null);
+        if (! $this->competitors->contains($competitor)) {
+            $this->competitors->add($competitor);
+            $competitor->setProject($this);
         }
 
-        // set the owning side of the relation if necessary
-        if (null !== $competitorAnalysis && $competitorAnalysis->getProject() !== $this) {
-            $competitorAnalysis->setProject($this);
-        }
+        return $this;
+    }
 
-        $this->competitorAnalysis = $competitorAnalysis;
+    public function removeCompetitor(Competitor $competitor): self
+    {
+        $this->competitors->removeElement($competitor);
+
+        return $this;
+    }
+
+    public function getCompetitiveMarketOverview(): ?string
+    {
+        return $this->competitiveMarketOverview;
+    }
+
+    public function setCompetitiveMarketOverview(?string $competitiveMarketOverview): self
+    {
+        $this->competitiveMarketOverview = $competitiveMarketOverview;
+
+        return $this;
+    }
+
+    /**
+     * @return array<string, mixed>|null
+     */
+    public function getCompetitiveThreats(): ?array
+    {
+        return $this->competitiveThreats;
+    }
+
+    /**
+     * @param array<string, mixed>|null $competitiveThreats
+     */
+    public function setCompetitiveThreats(?array $competitiveThreats): self
+    {
+        $this->competitiveThreats = $competitiveThreats;
+
+        return $this;
+    }
+
+    /**
+     * @return array<string, mixed>|null
+     */
+    public function getCompetitiveOpportunities(): ?array
+    {
+        return $this->competitiveOpportunities;
+    }
+
+    /**
+     * @param array<string, mixed>|null $competitiveOpportunities
+     */
+    public function setCompetitiveOpportunities(?array $competitiveOpportunities): self
+    {
+        $this->competitiveOpportunities = $competitiveOpportunities;
+
+        return $this;
+    }
+
+    /**
+     * @return array<string, mixed>|null
+     */
+    public function getCompetitiveRecommendations(): ?array
+    {
+        return $this->competitiveRecommendations;
+    }
+
+    /**
+     * @param array<string, mixed>|null $competitiveRecommendations
+     */
+    public function setCompetitiveRecommendations(?array $competitiveRecommendations): self
+    {
+        $this->competitiveRecommendations = $competitiveRecommendations;
+
+        return $this;
+    }
+
+    public function getCompetitiveAnalysisGeneratedAt(): ?\DateTimeImmutable
+    {
+        return $this->competitiveAnalysisGeneratedAt;
+    }
+
+    public function setCompetitiveAnalysisGeneratedAt(?\DateTimeImmutable $competitiveAnalysisGeneratedAt): self
+    {
+        $this->competitiveAnalysisGeneratedAt = $competitiveAnalysisGeneratedAt;
 
         return $this;
     }
@@ -961,11 +1085,7 @@ class Project
 
     public function removeAsset(Asset $asset): self
     {
-        if ($this->assets->removeElement($asset)) {
-            if ($asset->getProject() === $this) {
-                $asset->setProject(null);
-            }
-        }
+        $this->assets->removeElement($asset);
 
         return $this;
     }

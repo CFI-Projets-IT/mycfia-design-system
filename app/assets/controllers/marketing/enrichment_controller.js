@@ -14,6 +14,10 @@ export default class extends Controller {
         'errorDetails',
         'elapsedTime',
         'status',
+        'progressBar',
+        'progressPercentage',
+        'progressMessage',
+        'phaseIndicator',
     ];
 
     static values = {
@@ -40,9 +44,6 @@ export default class extends Controller {
         }
         if (this.elapsedTimer) {
             clearInterval(this.elapsedTimer);
-        }
-        if (this.timeoutTimer) {
-            clearTimeout(this.timeoutTimer);
         }
     }
 
@@ -72,6 +73,12 @@ export default class extends Controller {
             this.handleStart(data);
         });
 
+        this.eventSource.addEventListener('TaskProgressEvent', (event) => {
+            console.log('TaskProgressEvent received:', event.data);
+            const data = JSON.parse(event.data);
+            this.handleProgress(data);
+        });
+
         this.eventSource.addEventListener('TaskCompletedEvent', (event) => {
             console.log('TaskCompletedEvent received:', event.data);
             const data = JSON.parse(event.data);
@@ -88,11 +95,6 @@ export default class extends Controller {
             console.error('EventSource error:', error);
             // EventSource tente de se reconnecter automatiquement
         };
-
-        // Timeout après 2 minutes (enrichissement devrait prendre 10-30 secondes)
-        this.timeoutTimer = setTimeout(() => {
-            this.handleTimeout();
-        }, 120000);
     }
 
     /**
@@ -102,6 +104,36 @@ export default class extends Controller {
         console.log('Enrichissement démarré');
         if (this.hasStatusTarget) {
             this.statusTarget.textContent = 'En cours...';
+        }
+    }
+
+    /**
+     * Gère la progression temps réel (v3.34.0)
+     */
+    handleProgress(data) {
+        const { percentage, message, metadata } = data;
+
+        console.log(`Progression: ${percentage}% - ${message}`, metadata);
+
+        // Mettre à jour la barre de progression
+        if (this.hasProgressBarTarget) {
+            this.progressBarTarget.style.width = `${percentage}%`;
+            this.progressBarTarget.setAttribute('aria-valuenow', percentage);
+        }
+
+        // Mettre à jour le pourcentage affiché
+        if (this.hasProgressPercentageTarget) {
+            this.progressPercentageTarget.textContent = `${percentage}%`;
+        }
+
+        // Mettre à jour le message descriptif
+        if (this.hasProgressMessageTarget) {
+            this.progressMessageTarget.textContent = message;
+        }
+
+        // Mettre à jour l'indicateur de phase
+        if (this.hasPhaseIndicatorTarget && metadata.current_phase && metadata.total_phases) {
+            this.phaseIndicatorTarget.textContent = `Phase ${metadata.current_phase}/${metadata.total_phases}`;
         }
     }
 
@@ -118,13 +150,6 @@ export default class extends Controller {
      */
     handleError(data) {
         this.showError(data.error || "Une erreur est survenue lors de l'enrichissement");
-    }
-
-    /**
-     * Gère le timeout
-     */
-    handleTimeout() {
-        this.showError("L'enrichissement prend plus de temps que prévu. Veuillez vérifier le statut du projet.");
     }
 
     /**

@@ -26,9 +26,6 @@ export default class extends Controller {
         if (this.eventSource) {
             this.eventSource.close();
         }
-        if (this.timeoutTimer) {
-            clearTimeout(this.timeoutTimer);
-        }
     }
 
     /**
@@ -71,6 +68,12 @@ export default class extends Controller {
             this.handleStart(data);
         });
 
+        this.eventSource.addEventListener('TaskProgressEvent', (event) => {
+            console.log('[MERCURE DEBUG] TaskProgressEvent received:', event.data);
+            const data = JSON.parse(event.data);
+            this.handleProgress(data);
+        });
+
         this.eventSource.addEventListener('TaskCompletedEvent', (event) => {
             console.log('[MERCURE DEBUG] TaskCompletedEvent received:', event.data);
             const data = JSON.parse(event.data);
@@ -88,11 +91,6 @@ export default class extends Controller {
             console.error('[MERCURE DEBUG] EventSource readyState:', this.eventSource.readyState);
             // 0 = CONNECTING, 1 = OPEN, 2 = CLOSED
         };
-
-        // Timeout après 3 minutes (génération peut prendre du temps)
-        this.timeoutTimer = setTimeout(() => {
-            this.handleTimeout();
-        }, 180000);
     }
 
     /**
@@ -101,6 +99,43 @@ export default class extends Controller {
     handleStart(_data) {
         console.log('Génération démarrée');
         this.updateStatus('En cours...');
+    }
+
+    /**
+     * Gère la progression temps réel (v3.34.0)
+     */
+    handleProgress(data) {
+        const { percentage, message, metadata } = data;
+
+        console.log(`[PROGRESS] ${percentage}% - ${message}`, metadata);
+
+        // Mettre à jour barre de progression si disponible
+        const progressBar = document.querySelector('[data-progress-bar]');
+        if (progressBar) {
+            progressBar.style.width = `${percentage}%`;
+            progressBar.setAttribute('aria-valuenow', percentage);
+        }
+
+        // Mettre à jour pourcentage texte
+        const progressText = document.querySelector('[data-progress-percentage]');
+        if (progressText) {
+            progressText.textContent = `${percentage}%`;
+        }
+
+        // Mettre à jour message
+        const progressMessage = document.querySelector('[data-progress-message]');
+        if (progressMessage) {
+            progressMessage.textContent = message;
+        }
+
+        // Mettre à jour indicateur de phase
+        const phaseIndicator = document.querySelector('[data-phase-indicator]');
+        if (phaseIndicator && metadata.current_phase && metadata.total_phases) {
+            phaseIndicator.textContent = `Phase ${metadata.current_phase}/${metadata.total_phases}`;
+        }
+
+        // Mettre à jour le statut général
+        this.updateStatus(message);
     }
 
     /**
@@ -123,7 +158,9 @@ export default class extends Controller {
         if (this.generationTypeValue === 'strategy') {
             // Accepter CompetitorAnalystAgent comme succès final pour type "strategy"
             if (data.agentName && data.agentName.includes('CompetitorAnalystAgent')) {
-                console.log('[MERCURE DEBUG] CompetitorAnalystAgent completed, strategy generation continues in background');
+                console.log(
+                    '[MERCURE DEBUG] CompetitorAnalystAgent completed, strategy generation continues in background'
+                );
                 this.updateStatus('Analyse terminée, génération de la stratégie en cours...');
                 // ✅ Polling pour vérifier que la stratégie existe en BDD avant de rediriger
                 this.pollStrategyCompletion();
@@ -179,8 +216,8 @@ export default class extends Controller {
                 const response = await fetch(`/marketing/projects/${projectId}/status`, {
                     method: 'GET',
                     headers: {
-                        'Accept': 'application/json'
-                    }
+                        Accept: 'application/json',
+                    },
                 });
 
                 if (!response.ok) {
@@ -211,7 +248,6 @@ export default class extends Controller {
                     const progressMessage = `Génération en cours... (${attempts}s)`;
                     this.updateStatus(progressMessage);
                 }
-
             } catch (error) {
                 console.error('[MERCURE DEBUG] Polling error:', error);
 
@@ -231,14 +267,6 @@ export default class extends Controller {
     handleError(data) {
         console.error('Generation failed:', data.error);
         this.showError(data.error || 'Une erreur est survenue lors de la génération');
-    }
-
-    /**
-     * Gère le timeout
-     */
-    handleTimeout() {
-        console.warn('Generation timeout');
-        this.showError('La génération prend plus de temps que prévu. Veuillez vérifier le statut du projet.');
     }
 
     /**

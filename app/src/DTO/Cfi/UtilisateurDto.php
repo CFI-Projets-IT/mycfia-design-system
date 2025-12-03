@@ -36,7 +36,7 @@ final readonly class UtilisateurDto
     /**
      * Créer un UtilisateurDto depuis les données brutes de l'API CFI.
      *
-     * @param array{id: int, idDivision: int, nomDivision?: string|null, nom?: string|null, prenom?: string|null, email?: string|null} $data
+     * @param array<string, mixed> $data
      */
     public static function fromApiData(array $data): self
     {

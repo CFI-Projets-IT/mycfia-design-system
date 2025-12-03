@@ -66,8 +66,8 @@ class SettingsController extends AbstractController
         /** @var User $user */
         $user = $this->getUser();
 
-        $theme = $request->request->get('theme', 'light');
-        $locale = $request->request->get('locale', 'fr');
+        $theme = (string) $request->request->get('theme', 'light');
+        $locale = (string) $request->request->get('locale', 'fr');
 
         try {
             // Mise à jour thème

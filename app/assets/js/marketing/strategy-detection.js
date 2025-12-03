@@ -23,7 +23,7 @@ function initCompetitorDetection() {
         errorZone: !!errorZone,
         resultsZone: !!resultsZone,
         competitorsInput: !!competitorsInput,
-        projectId: projectId
+        projectId: projectId,
     });
 
     if (!detectBtn) {
@@ -39,7 +39,7 @@ function initCompetitorDetection() {
     let detectedCompetitors = [];
 
     // Gestion du clic sur le bouton de détection
-    detectBtn.addEventListener('click', async function() {
+    detectBtn.addEventListener('click', async () => {
         console.log('Button clicked! Starting competitor detection...');
 
         // Réinitialiser l'affichage
@@ -59,8 +59,8 @@ function initCompetitorDetection() {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-Requested-With': 'XMLHttpRequest'
-                }
+                    'X-Requested-With': 'XMLHttpRequest',
+                },
             });
 
             console.log('Response status:', response.status);
@@ -80,7 +80,7 @@ function initCompetitorDetection() {
             }
         } catch (error) {
             console.error('Fetch error:', error);
-            showError('Erreur réseau : ' + error.message);
+            showError(`Erreur réseau : ${error.message}`);
         } finally {
             loadingZone.classList.add('d-none');
             detectBtn.disabled = false;
@@ -96,9 +96,9 @@ function initCompetitorDetection() {
         document.getElementById('detectionSource').textContent = sourceText;
 
         // Mettre à jour la requête de recherche
-        const queryText = data.search_query ?
-            `Requête Google : "${data.search_query}"` :
-            'Détection basée sur les informations du projet';
+        const queryText = data.search_query
+            ? `Requête Google : "${data.search_query}"`
+            : 'Détection basée sur les informations du projet';
         document.getElementById('detectionQuery').textContent = queryText;
 
         // Construire la liste des concurrents
@@ -106,7 +106,8 @@ function initCompetitorDetection() {
         listContainer.innerHTML = '';
 
         if (detectedCompetitors.length === 0) {
-            listContainer.innerHTML = '<p class="text-muted mb-0">Aucun concurrent détecté. Ajoutez-les manuellement ci-dessous.</p>';
+            listContainer.innerHTML =
+                '<p class="text-muted mb-0">Aucun concurrent détecté. Ajoutez-les manuellement ci-dessous.</p>';
         } else {
             const list = document.createElement('div');
 
@@ -133,8 +134,8 @@ function initCompetitorDetection() {
             listContainer.appendChild(list);
 
             // Ajouter les gestionnaires d'événements pour les checkboxes
-            listContainer.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
-                checkbox.addEventListener('change', function() {
+            listContainer.querySelectorAll('input[type="checkbox"]').forEach((checkbox) => {
+                checkbox.addEventListener('change', function () {
                     const item = this.closest('.competitor-item');
                     if (this.checked) {
                         item.classList.add('selected');
@@ -162,7 +163,7 @@ function initCompetitorDetection() {
 
         const selectedCompetitors = [];
 
-        document.querySelectorAll('#competitorsList input[type="checkbox"]:checked').forEach(checkbox => {
+        document.querySelectorAll('#competitorsList input[type="checkbox"]:checked').forEach((checkbox) => {
             const index = checkbox.dataset.competitorIndex;
             const competitor = detectedCompetitors[index];
             if (competitor) {
@@ -183,11 +184,11 @@ function initCompetitorDetection() {
     // Échapper le HTML pour éviter les injections XSS
     function escapeHtml(unsafe) {
         return unsafe
-            .replace(/&/g, "&amp;")
-            .replace(/</g, "&lt;")
-            .replace(/>/g, "&gt;")
-            .replace(/"/g, "&quot;")
-            .replace(/'/g, "&#039;");
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#039;');
     }
 }
 

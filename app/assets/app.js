@@ -33,7 +33,6 @@ window.bootstrap = bootstrap;
 
 // Import des composants JavaScript
 import './js/ui/division-selector.js';
-import './js/marketing/competitor-detection.js';
 import './js/marketing/enrichment-review.js';
 import './js/marketing/persona-selection.js';
 import './js/marketing/persona-configure.js';
@@ -42,11 +41,11 @@ import './js/marketing/persona-configure.js';
 document.addEventListener('DOMContentLoaded', () => {
     // Initialisation des tooltips
     const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
-    const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
+    const tooltipList = [...tooltipTriggerList].map((tooltipTriggerEl) => new bootstrap.Tooltip(tooltipTriggerEl));
 
     // Initialisation des popovers
     const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]');
-    const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl));
+    const popoverList = [...popoverTriggerList].map((popoverTriggerEl) => new bootstrap.Popover(popoverTriggerEl));
 });
 
 console.log('Bootstrap loaded!');

@@ -1,0 +1,127 @@
+# Regles d'alerting Prometheus pour myCfia
+# Phase 3 - Alertes basiques
+
+groups:
+  - name: myCfia-application
+    rules:
+      # Alerte si l'application Symfony est DOWN
+      - alert: SymfonyAppDown
+        expr: up{job="symfony-app"} == 0
+        for: 1m
+        labels:
+          severity: critical
+          service: symfony
+        annotations:
+          summary: "Application Symfony DOWN"
+          description: "L'application Symfony n'est plus accessible depuis {{ $labels.instance }}"
+
+      # Alerte si taux d'erreur HTTP 5xx > 5%
+      - alert: HighHTTPErrorRate
+        expr: |
+          (sum(rate(app_http_requests_total{status=~"5.."}[5m]))
+          / sum(rate(app_http_requests_total[5m]))) > 0.05
+        for: 5m
+        labels:
+          severity: warning
+          service: symfony
+        annotations:
+          summary: "Taux d'erreur HTTP eleve"
+          description: "Le taux d'erreur HTTP 5xx est de {{ $value | humanizePercentage }} (seuil: 5%)"
+
+      # Alerte si latence P95 > 2 secondes
+      - alert: HighLatency
+        expr: |
+          histogram_quantile(0.95, sum(rate(app_http_request_duration_seconds_bucket[5m])) by (le)) > 2
+        for: 5m
+        labels:
+          severity: warning
+          service: symfony
+        annotations:
+          summary: "Latence HTTP elevee"
+          description: "La latence P95 est de {{ $value | humanizeDuration }} (seuil: 2s)"
+
+      # Alerte si pas de requetes depuis 5 minutes (application peut-etre en panne)
+      - alert: NoTraffic
+        expr: |
+          sum(rate(app_http_requests_total[5m])) == 0
+        for: 10m
+        labels:
+          severity: info
+          service: symfony
+        annotations:
+          summary: "Aucun trafic HTTP"
+          description: "Aucune requete HTTP recue depuis 10 minutes"
+
+  - name: myCfia-infrastructure
+    rules:
+      # Alerte si Prometheus lui-meme a des problemes
+      - alert: PrometheusTargetDown
+        expr: up == 0
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Target Prometheus DOWN"
+          description: "Le target {{ $labels.job }} sur {{ $labels.instance }} est inaccessible"
+
+      # Alerte si trop d'erreurs API externes
+      - alert: HighAPIErrorRate
+        expr: |
+          (sum(rate(app_api_errors_total[5m])) by (service)
+          / sum(rate(app_api_calls_total[5m])) by (service)) > 0.1
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Taux d'erreur API externe eleve"
+          description: "Le service {{ $labels.service }} a un taux d'erreur de {{ $value | humanizePercentage }}"
+
+      # Alerte si latence API externe > 5 secondes
+      - alert: HighAPILatency
+        expr: |
+          histogram_quantile(0.95, sum(rate(app_api_call_duration_seconds_bucket[5m])) by (le, service)) > 5
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Latence API externe elevee"
+          description: "Le service {{ $labels.service }} a une latence P95 de {{ $value | humanizeDuration }}"
+
+  - name: myCfia-ai
+    rules:
+      # Alerte si erreurs IA frequentes
+      - alert: AIErrorsHigh
+        expr: |
+          sum(rate(app_ai_errors_total[5m])) by (provider) > 0.1
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Erreurs IA frequentes"
+          description: "Le provider {{ $labels.provider }} genere {{ $value | humanize }} erreurs/sec"
+
+      # Alerte si consommation de tokens elevee (couts)
+      - alert: HighTokenUsage
+        expr: |
+          sum(increase(app_ai_tokens_used_sum[1h])) > 100000
+        for: 5m
+        labels:
+          severity: info
+        annotations:
+          summary: "Consommation de tokens IA elevee"
+          description: "{{ $value | humanize }} tokens consommes dans la derniere heure"
+
+  - name: myCfia-cache
+    rules:
+      # Alerte si taux de cache hit faible
+      - alert: LowCacheHitRate
+        expr: |
+          (sum(rate(app_cache_operations_total{result="hit"}[5m]))
+          / (sum(rate(app_cache_operations_total{result="hit"}[5m]))
+          + sum(rate(app_cache_operations_total{result="miss"}[5m])))) < 0.7
+        for: 10m
+        labels:
+          severity: info
+        annotations:
+          summary: "Taux de cache hit faible"
+          description: "Le taux de cache hit est de {{ $value | humanizePercentage }} (seuil: 70%)"

@@ -6,6 +6,7 @@ namespace App\EventSubscriber\Marketing;
 
 use Gorillias\MarketingBundle\Event\TaskCompletedEvent;
 use Gorillias\MarketingBundle\Event\TaskFailedEvent;
+use Gorillias\MarketingBundle\Event\TaskProgressEvent;
 use Gorillias\MarketingBundle\Event\TaskStartedEvent;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -15,18 +16,19 @@ use Symfony\Component\Mercure\Update;
 /**
  * Publie les événements de tâches asynchrones sur le hub Mercure pour notifications temps réel.
  *
- * Écoute tous les événements de cycle de vie des tâches IA (TaskStartedEvent, TaskCompletedEvent,
- * TaskFailedEvent) et les publie sur le hub Mercure pour permettre aux clients JavaScript de
- * recevoir des notifications en temps réel via EventSource.
+ * Écoute tous les événements de cycle de vie des tâches IA (TaskStartedEvent, TaskProgressEvent,
+ * TaskCompletedEvent, TaskFailedEvent) et les publie sur le hub Mercure pour permettre aux clients
+ * JavaScript de recevoir des notifications en temps réel via EventSource.
  *
  * Architecture Mercure :
- * 1. Backend dispatche événement Symfony (ex: TaskStartedEvent)
+ * 1. Backend dispatche événement Symfony (ex: TaskStartedEvent, TaskProgressEvent)
  * 2. Ce subscriber publie sur hub Mercure avec topic `/tasks/{taskId}`
  * 3. Client JavaScript EventSource reçoit notification instantanée
- * 4. Interface actualise (loader, résultats, erreurs)
+ * 4. Interface actualise (loader, barres progression, résultats, erreurs)
  *
  * Note: ProjectEnrichedEvent n'est plus écouté (remplacé par TaskCompletedEvent depuis bundle v2.6.0)
  *
+ * @since v3.34.0 Ajout TaskProgressEvent pour reporting progression temps réel
  * @see https://mercure.rocks Documentation Mercure
  */
 final readonly class MercurePublisherSubscriber implements EventSubscriberInterface
@@ -43,6 +45,7 @@ final readonly class MercurePublisherSubscriber implements EventSubscriberInterf
             // Priorité haute (10) pour publier à Mercure AVANT les autres subscribers
             // qui pourraient lancer des exceptions (ex: PersonasGeneratedEventSubscriber)
             TaskStartedEvent::class => ['onTaskStarted', 10],
+            TaskProgressEvent::class => ['onTaskProgress', 10], // v3.34.0: Progression temps réel
             TaskCompletedEvent::class => ['onTaskCompleted', 10],
             TaskFailedEvent::class => ['onTaskFailed', 10],
         ];
@@ -65,7 +68,7 @@ final readonly class MercurePublisherSubscriber implements EventSubscriberInterf
                 'agentName' => $event->agentName,
                 'methodName' => $event->methodName,
                 'timestamp' => (new \DateTimeImmutable())->format(\DateTimeInterface::ATOM),
-            ]),
+            ], JSON_THROW_ON_ERROR),
             private: false, // Public pour simplicité en développement (utiliser JWT en production)
             type: 'TaskStartedEvent', // Définit le champ SSE "event:" pour que JavaScript puisse l'écouter
         );
@@ -80,6 +83,52 @@ final readonly class MercurePublisherSubscriber implements EventSubscriberInterf
             ]);
         } catch (\Throwable $e) {
             $this->logger->error('Failed to publish TaskStartedEvent to Mercure', [
+                'task_id' => $taskId,
+                'error' => $e->getMessage(),
+            ]);
+        }
+    }
+
+    /**
+     * Publie TaskProgressEvent sur Mercure (v3.34.0).
+     *
+     * Notifie le client de la progression en temps réel de la tâche en cours.
+     * Permet d'afficher barres de progression, messages descriptifs et phases détaillées.
+     *
+     * Événement dispatché plusieurs fois pendant l'exécution (throttling 500ms appliqué par le bundle).
+     * Exemple: 0% → 10% → 20% → 35% → 50% → 70% → 85% → 100%
+     */
+    public function onTaskProgress(TaskProgressEvent $event): void
+    {
+        $taskId = $event->taskId;
+
+        $update = new Update(
+            topics: "/tasks/{$taskId}",
+            data: json_encode([
+                'type' => 'TaskProgressEvent',
+                'taskId' => $taskId,
+                'percentage' => $event->percentage,
+                'phase' => $event->phase,
+                'message' => $event->message,
+                'metadata' => $event->metadata,
+                'timestamp' => $event->progressedAt->format(\DateTimeInterface::ATOM),
+            ], JSON_THROW_ON_ERROR),
+            private: false,
+            type: 'TaskProgressEvent', // Définit le champ SSE "event:" pour que JavaScript puisse l'écouter
+        );
+
+        try {
+            $this->hub->publish($update);
+
+            $this->logger->debug('TaskProgressEvent published to Mercure', [
+                'task_id' => $taskId,
+                'percentage' => $event->percentage,
+                'phase' => $event->phase,
+                'message' => $event->message,
+                'topic' => "/tasks/{$taskId}",
+            ]);
+        } catch (\Throwable $e) {
+            $this->logger->error('Failed to publish TaskProgressEvent to Mercure', [
                 'task_id' => $taskId,
                 'error' => $e->getMessage(),
             ]);
@@ -113,7 +162,7 @@ final readonly class MercurePublisherSubscriber implements EventSubscriberInterf
                 'result' => $event->result,
                 'executionTime' => $executionTime,
                 'timestamp' => (new \DateTimeImmutable())->format(\DateTimeInterface::ATOM),
-            ]),
+            ], JSON_THROW_ON_ERROR),
             private: false,
             type: 'TaskCompletedEvent', // Définit le champ SSE "event:" pour que JavaScript puisse l'écouter
         );
@@ -152,7 +201,7 @@ final readonly class MercurePublisherSubscriber implements EventSubscriberInterf
                 'agentName' => $event->agentName,
                 'error' => $event->error,
                 'timestamp' => (new \DateTimeImmutable())->format(\DateTimeInterface::ATOM),
-            ]),
+            ], JSON_THROW_ON_ERROR),
             private: false,
             type: 'TaskFailedEvent', // Définit le champ SSE "event:" pour que JavaScript puisse l'écouter
         );

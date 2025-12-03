@@ -10,7 +10,7 @@
  * Bootstrap stoppe la propagation des événements, donc on utilise la phase de capture.
  */
 
-(function() {
+(function () {
     'use strict';
 
     function initLoginForm() {
@@ -58,28 +58,38 @@
 
         // Capturer les clics AVANT Bootstrap avec useCapture: true
         // car Bootstrap stoppe la propagation des événements
-        document.addEventListener('click', function(e) {
-            const target = e.target;
+        document.addEventListener(
+            'click',
+            function (e) {
+                const target = e.target;
 
-            // Récupérer les radios à chaque clic (ne pas stocker les références)
-            const modeTokenRadio = document.getElementById('mode-token');
-            const modeCredentialsRadio = document.getElementById('mode-credentials');
+                // Récupérer les radios à chaque clic (ne pas stocker les références)
+                const modeTokenRadio = document.getElementById('mode-token');
+                const modeCredentialsRadio = document.getElementById('mode-credentials');
 
-            // Détecter les clics sur les radios ou leurs labels
-            if (target.id === 'mode-token' || (target.tagName === 'LABEL' && target.getAttribute('for') === 'mode-token')) {
-                if (modeTokenRadio && modeCredentialsRadio) {
-                    modeTokenRadio.checked = true;
-                    modeCredentialsRadio.checked = false;
-                    switchAuthMode('token');
+                // Détecter les clics sur les radios ou leurs labels
+                if (
+                    target.id === 'mode-token' ||
+                    (target.tagName === 'LABEL' && target.getAttribute('for') === 'mode-token')
+                ) {
+                    if (modeTokenRadio && modeCredentialsRadio) {
+                        modeTokenRadio.checked = true;
+                        modeCredentialsRadio.checked = false;
+                        switchAuthMode('token');
+                    }
+                } else if (
+                    target.id === 'mode-credentials' ||
+                    (target.tagName === 'LABEL' && target.getAttribute('for') === 'mode-credentials')
+                ) {
+                    if (modeTokenRadio && modeCredentialsRadio) {
+                        modeCredentialsRadio.checked = true;
+                        modeTokenRadio.checked = false;
+                        switchAuthMode('credentials');
+                    }
                 }
-            } else if (target.id === 'mode-credentials' || (target.tagName === 'LABEL' && target.getAttribute('for') === 'mode-credentials')) {
-                if (modeTokenRadio && modeCredentialsRadio) {
-                    modeCredentialsRadio.checked = true;
-                    modeTokenRadio.checked = false;
-                    switchAuthMode('credentials');
-                }
-            }
-        }, true);
+            },
+            true
+        );
 
         // Initialiser l'état au chargement
         const modeTokenRadio = document.getElementById('mode-token');

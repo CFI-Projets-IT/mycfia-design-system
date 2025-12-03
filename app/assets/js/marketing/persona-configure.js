@@ -23,7 +23,7 @@ function initPersonaConfigure() {
         1: { duration: '~30 secondes', cost: '~0.015 $', diversity: 1 },
         3: { duration: '~85 secondes', cost: '~0.04 $', diversity: 2 },
         5: { duration: '~140 secondes', cost: '~0.065 $', diversity: 3 },
-        10: { duration: '~280 secondes', cost: '~0.13 $', diversity: 4 }
+        10: { duration: '~280 secondes', cost: '~0.13 $', diversity: 4 },
     };
 
     function updateEstimations() {
@@ -56,7 +56,7 @@ function initPersonaConfigure() {
     updateEstimations();
 
     // Animation du bouton de soumission
-    form.addEventListener('submit', function() {
+    form.addEventListener('submit', () => {
         submitBtn.disabled = true;
         submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Lancement en cours...';
     });

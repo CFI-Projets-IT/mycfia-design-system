@@ -21,6 +21,8 @@ export default class extends Controller {
         'completedCount',
         'assetsList',
         'assetsContainer',
+        'progressPercentage',
+        'phaseIndicator',
     ];
 
     static values = {
@@ -59,9 +61,6 @@ export default class extends Controller {
         if (this.elapsedTimer) {
             clearInterval(this.elapsedTimer);
         }
-        if (this.timeoutTimer) {
-            clearTimeout(this.timeoutTimer);
-        }
     }
 
     /**
@@ -89,6 +88,12 @@ export default class extends Controller {
             console.log('TaskStartedEvent received:', event.data);
             const data = JSON.parse(event.data);
             this.handleStart({ message: 'Agent IA démarré', ...data });
+        });
+
+        this.eventSource.addEventListener('TaskProgressEvent', (event) => {
+            console.log('TaskProgressEvent received:', event.data);
+            const data = JSON.parse(event.data);
+            this.handleProgress(data);
         });
 
         this.eventSource.addEventListener('TaskCompletedEvent', (event) => {
@@ -138,11 +143,6 @@ export default class extends Controller {
             console.error('EventSource error:', error);
             // EventSource tente de se reconnecter automatiquement
         };
-
-        // Timeout après 5 minutes (génération personas devrait prendre 10-60 secondes)
-        this.timeoutTimer = setTimeout(() => {
-            this.handleTimeout();
-        }, 300000);
     }
 
     /**
@@ -182,26 +182,42 @@ export default class extends Controller {
     }
 
     /**
-     * Gère la progression
+     * Gère la progression temps réel (v3.34.0)
      */
     handleProgress(data) {
-        const percentage = data.data?.percentage || 0;
+        const { percentage, message, metadata } = data;
 
+        console.log(`Progression: ${percentage}% - ${message}`, metadata);
+
+        // Mettre à jour la barre de progression
         if (this.hasProgressBarTarget) {
             this.progressBarTarget.style.width = `${percentage}%`;
+            this.progressBarTarget.setAttribute('aria-valuenow', percentage);
         }
 
+        // Mettre à jour le pourcentage affiché
         if (this.hasProgressTextTarget) {
             this.progressTextTarget.textContent = `${percentage}%`;
         }
 
-        if (this.hasProgressMessageTarget && data.message) {
-            this.progressMessageTarget.textContent = data.message;
+        // Mettre à jour le pourcentage (target alternatif)
+        if (this.hasProgressPercentageTarget) {
+            this.progressPercentageTarget.textContent = `${percentage}%`;
+        }
+
+        // Mettre à jour le message descriptif
+        if (this.hasProgressMessageTarget) {
+            this.progressMessageTarget.textContent = message;
+        }
+
+        // Mettre à jour l'indicateur de phase
+        if (this.hasPhaseIndicatorTarget && metadata.current_phase && metadata.total_phases) {
+            this.phaseIndicatorTarget.textContent = `Phase ${metadata.current_phase}/${metadata.total_phases}`;
         }
 
         // Mode multiple : mise à jour asset spécifique
-        if (this.multipleValue && data.metadata && data.metadata.assetType) {
-            this.updateAssetStatus(data.metadata.assetType, 'in_progress', data.message);
+        if (this.multipleValue && metadata && metadata.assetType) {
+            this.updateAssetStatus(metadata.assetType, 'in_progress', message);
         }
     }
 
@@ -271,13 +287,6 @@ export default class extends Controller {
      */
     handleError(data) {
         this.showError(data.message || 'Une erreur est survenue', data.error);
-    }
-
-    /**
-     * Gère le timeout
-     */
-    handleTimeout() {
-        this.showError('La génération prend plus de temps que prévu. Veuillez vérifier le statut du projet.');
     }
 
     /**

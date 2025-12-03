@@ -52,6 +52,29 @@ services:
 
   # Pas de phpMyAdmin ni MailHog en production pour la sécurité
 
+  # Redis pour Messenger et cache
+  redis:
+    restart: unless-stopped
+
+  # ChromaDB pour embeddings IA
+  chroma:
+    restart: unless-stopped
+    environment:
+      - IS_PERSISTENT=TRUE
+      - ANONYMIZED_TELEMETRY=FALSE
+
+  # Messenger worker pour traitement async
+  messenger_worker:
+    build:
+      target: production
+    environment:
+      - APP_ENV=prod
+      - APP_DEBUG=0
+    restart: unless-stopped
+    # Pas de healthcheck pour un worker CLI
+    healthcheck:
+      disable: true
+
 volumes:
   # Volumes de production
   app_data:

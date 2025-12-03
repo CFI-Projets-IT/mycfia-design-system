@@ -1,0 +1,338 @@
+# Configuration Promtail pour myCfia
+# Documentation: https://grafana.com/docs/loki/latest/send-data/promtail/configuration/
+# Collecte tous les canaux Monolog Symfony (auth, chat, llm, cfi_api, marketing, etc.)
+
+server:
+  http_listen_port: 9080
+  grpc_listen_port: 0
+
+positions:
+  filename: /tmp/positions.yaml
+
+clients:
+  - url: http://loki:3100/loki/api/v1/push
+
+scrape_configs:
+  # ============================================
+  # Logs Symfony - Fichiers racine (auth, chat, llm, cfi_api, etc.)
+  # ============================================
+  - job_name: symfony-app-logs
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: symfony
+          app: myCfia
+          log_type: application
+          __path__: /var/log/symfony/*.log
+
+    pipeline_stages:
+      # Parser le format Monolog: [2025-11-24T11:47:16.100718+01:00] channel.INFO: Message {context} []
+      # Supporte les channels avec points (ex: marketing.agent.competitor)
+      - regex:
+          expression: '^\[(?P<timestamp>[^\]]+)\] (?P<channel>.+)\.(?P<level>DEBUG|INFO|NOTICE|WARNING|ERROR|CRITICAL|ALERT|EMERGENCY): (?P<message>.+?) (?P<context>\{.*?\}) \[\]$'
+
+      # Extraire les labels
+      - labels:
+          channel:
+          level:
+
+      # Parser le contexte JSON si present
+      - json:
+          expressions:
+            model: model
+            duration_ms: duration_ms
+            prompt_tokens: prompt_tokens
+            completion_tokens: completion_tokens
+            total_tokens: total_tokens
+            tokens_input: tokens_input
+            tokens_output: tokens_output
+            user_id: user_id
+            tenant_id: tenant_id
+            project_id: project_id
+            conversation_id: conversation_id
+            step: step
+            asset_type: asset_type
+            context: context
+            correlation_id: correlation_id
+            status_code: status_code
+            endpoint: endpoint
+          source: context
+
+      # Ajouter les labels extraits du contexte
+      - labels:
+          model:
+          user_id:
+          tenant_id:
+          project_id:
+          conversation_id:
+          step:
+          asset_type:
+          context:
+          correlation_id:
+
+      # Timestamp depuis le log
+      - timestamp:
+          source: timestamp
+          format: '2006-01-02T15:04:05.000000-07:00'
+          fallback_formats:
+            - '2006-01-02T15:04:05.000000Z07:00'
+            - RFC3339Nano
+
+      # Output final - garder message + context JSON pour extraction Loki
+      - template:
+          source: output_line
+          template: '{{ .message }} {{ .context }}'
+      - output:
+          source: output_line
+
+  # ============================================
+  # Logs Marketing - Assets
+  # ============================================
+  - job_name: symfony-marketing-assets
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: symfony
+          app: myCfia
+          log_type: marketing
+          marketing_category: assets
+          __path__: /var/log/symfony/marketing/assets/*.log
+
+    pipeline_stages:
+      - regex:
+          expression: '^\[(?P<timestamp>[^\]]+)\] (?P<channel>.+)\.(?P<level>DEBUG|INFO|NOTICE|WARNING|ERROR|CRITICAL|ALERT|EMERGENCY): (?P<message>.+?) (?P<context>\{.*?\}) \[\]$'
+      - labels:
+          channel:
+          level:
+      - json:
+          expressions:
+            model: model
+            duration_ms: duration_ms
+            total_tokens: total_tokens
+            user_id: user_id
+            tenant_id: tenant_id
+          source: context
+      - labels:
+          model:
+          user_id:
+          tenant_id:
+      - timestamp:
+          source: timestamp
+          format: '2006-01-02T15:04:05.000000-07:00'
+      - output:
+          source: message
+
+  # ============================================
+  # Logs Marketing - Agents
+  # ============================================
+  - job_name: symfony-marketing-agents
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: symfony
+          app: myCfia
+          log_type: marketing
+          marketing_category: agents
+          __path__: /var/log/symfony/marketing/agents/*.log
+
+    pipeline_stages:
+      - regex:
+          expression: '^\[(?P<timestamp>[^\]]+)\] (?P<channel>.+)\.(?P<level>DEBUG|INFO|NOTICE|WARNING|ERROR|CRITICAL|ALERT|EMERGENCY): (?P<message>.+?) (?P<context>\{.*?\}) \[\]$'
+      - labels:
+          channel:
+          level:
+      - json:
+          expressions:
+            model: model
+            duration_ms: duration_ms
+            total_tokens: total_tokens
+            tokens_input: tokens_input
+            tokens_output: tokens_output
+            user_id: user_id
+            tenant_id: tenant_id
+            project_id: project_id
+            step: step
+          source: context
+      - labels:
+          model:
+          user_id:
+          tenant_id:
+          project_id:
+          step:
+      - timestamp:
+          source: timestamp
+          format: '2006-01-02T15:04:05.000000-07:00'
+      - output:
+          source: message
+
+  # ============================================
+  # Logs Marketing - Stores
+  # ============================================
+  - job_name: symfony-marketing-stores
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: symfony
+          app: myCfia
+          log_type: marketing
+          marketing_category: stores
+          __path__: /var/log/symfony/marketing/stores/*.log
+
+    pipeline_stages:
+      - regex:
+          expression: '^\[(?P<timestamp>[^\]]+)\] (?P<channel>.+)\.(?P<level>DEBUG|INFO|NOTICE|WARNING|ERROR|CRITICAL|ALERT|EMERGENCY): (?P<message>.+?) (?P<context>\{.*?\}) \[\]$'
+      - labels:
+          channel:
+          level:
+      - timestamp:
+          source: timestamp
+          format: '2006-01-02T15:04:05.000000-07:00'
+      - output:
+          source: message
+
+  # ============================================
+  # Logs Marketing - Tools
+  # ============================================
+  - job_name: symfony-marketing-tools
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: symfony
+          app: myCfia
+          log_type: marketing
+          marketing_category: tools
+          __path__: /var/log/symfony/marketing/tools/*.log
+
+    pipeline_stages:
+      - regex:
+          expression: '^\[(?P<timestamp>[^\]]+)\] (?P<channel>.+)\.(?P<level>DEBUG|INFO|NOTICE|WARNING|ERROR|CRITICAL|ALERT|EMERGENCY): (?P<message>.+?) (?P<context>\{.*?\}) \[\]$'
+      - labels:
+          channel:
+          level:
+      - timestamp:
+          source: timestamp
+          format: '2006-01-02T15:04:05.000000-07:00'
+      - output:
+          source: message
+
+  # ============================================
+  # Logs Marketing - Clients HTTP (serpapi, firecrawl, tavily)
+  # ============================================
+  - job_name: symfony-marketing-clients
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: symfony
+          app: myCfia
+          log_type: marketing
+          marketing_category: clients
+          __path__: /var/log/symfony/marketing/clients/*.log
+
+    pipeline_stages:
+      - regex:
+          expression: '^\[(?P<timestamp>[^\]]+)\] (?P<channel>.+)\.(?P<level>DEBUG|INFO|NOTICE|WARNING|ERROR|CRITICAL|ALERT|EMERGENCY): (?P<message>.+?) (?P<context>\{.*?\}) \[\]$'
+      - labels:
+          channel:
+          level:
+      - json:
+          expressions:
+            duration_ms: duration_ms
+            status_code: status_code
+            http_status: http_status
+            url: url
+            cache_hit: cache_hit
+            rate_limited: rate_limited
+            response_size_bytes: response_size_bytes
+          source: context
+      - labels:
+          cache_hit:
+          rate_limited:
+      - timestamp:
+          source: timestamp
+          format: '2006-01-02T15:04:05.000000-07:00'
+      - output:
+          source: message
+
+  # ============================================
+  # Logs Marketing - Tasks et General
+  # ============================================
+  - job_name: symfony-marketing-tasks
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: symfony
+          app: myCfia
+          log_type: marketing
+          marketing_category: tasks
+          __path__: /var/log/symfony/marketing/tasks/*.log
+
+    pipeline_stages:
+      - regex:
+          expression: '^\[(?P<timestamp>[^\]]+)\] (?P<channel>.+)\.(?P<level>DEBUG|INFO|NOTICE|WARNING|ERROR|CRITICAL|ALERT|EMERGENCY): (?P<message>.+?) (?P<context>\{.*?\}) \[\]$'
+      - labels:
+          channel:
+          level:
+      - timestamp:
+          source: timestamp
+          format: '2006-01-02T15:04:05.000000-07:00'
+      - output:
+          source: message
+
+  - job_name: symfony-marketing-general
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: symfony
+          app: myCfia
+          log_type: marketing
+          marketing_category: general
+          __path__: /var/log/symfony/marketing/*.log
+
+    pipeline_stages:
+      - regex:
+          expression: '^\[(?P<timestamp>[^\]]+)\] (?P<channel>.+)\.(?P<level>DEBUG|INFO|NOTICE|WARNING|ERROR|CRITICAL|ALERT|EMERGENCY): (?P<message>.+?) (?P<context>\{.*?\}) \[\]$'
+      - labels:
+          channel:
+          level:
+      - timestamp:
+          source: timestamp
+          format: '2006-01-02T15:04:05.000000-07:00'
+      - output:
+          source: message
+
+  # ============================================
+  # Logs des conteneurs Docker
+  # ============================================
+  - job_name: docker-containers
+    docker_sd_configs:
+      - host: unix:///var/run/docker.sock
+        refresh_interval: 5s
+
+    relabel_configs:
+      # Extraire le nom du conteneur
+      - source_labels: ['__meta_docker_container_name']
+        regex: '/(.*)'
+        target_label: 'container'
+
+      # Extraire le stream (stdout/stderr)
+      - source_labels: ['__meta_docker_container_log_stream']
+        target_label: 'stream'
+
+      # Ajouter le label du projet
+      - source_labels: ['__meta_docker_compose_project']
+        target_label: 'project'
+
+      # Ajouter le label du service
+      - source_labels: ['__meta_docker_compose_service']
+        target_label: 'service'
+
+    pipeline_stages:
+      - docker: {}

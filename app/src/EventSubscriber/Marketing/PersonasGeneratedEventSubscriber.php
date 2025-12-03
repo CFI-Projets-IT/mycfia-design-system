@@ -59,6 +59,12 @@ final readonly class PersonasGeneratedEventSubscriber implements EventSubscriber
      */
     public function onTaskCompleted(TaskCompletedEvent $event): void
     {
+        // Log DEBUG pour vérifier que subscriber est appelé
+        $this->logger->debug('PersonasGeneratedEventSubscriber::onTaskCompleted called', [
+            'agent_name' => $event->agentName,
+            'contains_PersonaGenerator' => str_contains($event->agentName, 'PersonaGeneratorAgent'),
+        ]);
+
         // Filtrer : seulement si c'est PersonaGeneratorAgent
         if (! str_contains($event->agentName, 'PersonaGeneratorAgent')) {
             return;
@@ -82,6 +88,19 @@ final readonly class PersonasGeneratedEventSubscriber implements EventSubscriber
             ]);
 
             return;
+        }
+
+        // Bundle v3.35.6+ : Le résultat est maintenant ['data' => ..., 'tokens_used' => ..., 'cost' => ...]
+        // Extraire les données personas depuis la clé 'data'
+        if (isset($result['data'])) {
+            $this->logger->debug('Extracting personas from result[data] (bundle v3.35.6+)', [
+                'task_id' => $taskId,
+                'result_keys' => array_keys($result),
+            ]);
+            $personasResult = $result['data'];
+        } else {
+            // Rétrocompatibilité : anciennes versions du bundle
+            $personasResult = $result;
         }
 
         // Extraire project_id depuis context (passé dans options lors du dispatch)
@@ -113,7 +132,7 @@ final readonly class PersonasGeneratedEventSubscriber implements EventSubscriber
             $this->deleteExistingPersonas($project);
 
             // Créer et persister les nouvelles entités Persona
-            $personasCreated = $this->createPersonasFromResult($project, $result, $taskId);
+            $personasCreated = $this->createPersonasFromResult($project, $personasResult, $taskId);
 
             // Mettre à jour le statut du projet
             $project->setStatus(ProjectStatus::PERSONA_GENERATED);
@@ -205,43 +224,63 @@ final readonly class PersonasGeneratedEventSubscriber implements EventSubscriber
      *
      * Convertit tous les DTOs StructuredOutput en arrays via toArray().
      *
-     * @param array<string, mixed>|PersonaStructuredOutput $result
+     * @param array<string, mixed>|object $result
      *
      * @return array<array<string, mixed>>
      */
-    private function normalizePersonasData(array|PersonaStructuredOutput $result): array
+    private function normalizePersonasData(array|object $result): array
     {
-        // Cas 1 : Objet PersonaStructuredOutput unique
-        if ($result instanceof PersonaStructuredOutput) {
-            return [$result->toArray()];
+        // Log pour déboguer le format reçu
+        $this->logger->debug('normalizePersonasData: Analyzing result format', [
+            'is_array' => is_array($result),
+            'is_object' => is_object($result),
+            'class' => is_object($result) ? get_class($result) : null,
+            'array_keys' => is_array($result) ? array_keys($result) : null,
+            'first_element_type' => is_array($result) && ! empty($result) ? gettype(reset($result)) : null,
+        ]);
+
+        // Si c'est un tableau
+        if (is_array($result)) {
+            // Cas 1 : Array mono-persona direct (has 'name' key)
+            if (isset($result['name']) && is_string($result['name'])) {
+                $this->logger->debug('normalizePersonasData: Single persona array detected');
+
+                return [$result];
+            }
+
+            // Cas 2 : Tableau direct de personas (array of arrays avec 'name')
+            // Bundle v3.36.1+ retourne ['data' => [persona1, persona2, ...]]
+            // Après extraction on a directement [persona1, persona2, ...]
+            if (! empty($result) && is_array(reset($result)) && isset(reset($result)['name'])) {
+                $this->logger->debug('normalizePersonasData: Direct array of personas detected', [
+                    'personas_count' => count($result),
+                ]);
+
+                return $result; // Déjà au bon format
+            }
+
+            // Cas 3 : Tableau avec clé 'personas' (ancien format)
+            if (isset($result['personas']) && is_array($result['personas'])) {
+                $this->logger->debug('normalizePersonasData: Array with personas key detected', [
+                    'personas_count' => count($result['personas']),
+                ]);
+
+                return $result['personas'];
+            }
+
+            // Aucun format array reconnu
+            $this->logger->warning('normalizePersonasData: Unknown array format', [
+                'array_keys' => array_keys($result),
+            ]);
+
+            return [];
         }
 
-        // Cas 2 : Tableau avec clé 'personas' contenant des StructuredOutput ou arrays
-        if (isset($result['personas']) && is_array($result['personas'])) {
-            return array_map(
-                fn ($persona) => $persona instanceof \Gorillias\MarketingBundle\StructuredOutput\PersonaItem
-                    ? $persona->toArray()
-                    : $persona,
-                $result['personas']
-            );
-        }
+        // Aucun format reconnu (objet non géré)
+        $this->logger->warning('normalizePersonasData: Unknown format (object not supported)', [
+            'class' => get_class($result),
+        ]);
 
-        // Cas 3 : Tableau direct de personas (StructuredOutput ou arrays)
-        if (! empty($result) && (reset($result) instanceof \Gorillias\MarketingBundle\StructuredOutput\PersonaItem || (is_array(reset($result)) && isset(reset($result)['name'])))) {
-            return array_map(
-                fn ($persona) => $persona instanceof \Gorillias\MarketingBundle\StructuredOutput\PersonaItem
-                    ? $persona->toArray()
-                    : $persona,
-                $result
-            );
-        }
-
-        // Cas 4 : Array mono-persona direct
-        if (isset($result['name']) && is_string($result['name'])) {
-            return [$result];
-        }
-
-        // Aucun format reconnu
         return [];
     }
 

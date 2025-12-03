@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "brick/math",
-            "version": "0.14.0",
+            "version": "0.14.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/brick/math.git",
-                "reference": "113a8ee2656b882d4c3164fa31aa6e12cbb7aaa2"
+                "reference": "f05858549e5f9d7bb45875a75583240a38a281d0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/brick/math/zipball/113a8ee2656b882d4c3164fa31aa6e12cbb7aaa2",
-                "reference": "113a8ee2656b882d4c3164fa31aa6e12cbb7aaa2",
+                "url": "https://api.github.com/repos/brick/math/zipball/f05858549e5f9d7bb45875a75583240a38a281d0",
+                "reference": "f05858549e5f9d7bb45875a75583240a38a281d0",
                 "shasum": ""
             },
             "require": {
@@ -56,7 +56,7 @@
             ],
             "support": {
                 "issues": "https://github.com/brick/math/issues",
-                "source": "https://github.com/brick/math/tree/0.14.0"
+                "source": "https://github.com/brick/math/tree/0.14.1"
             },
             "funding": [
                 {
@@ -64,7 +64,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-08-29T12:40:03+00:00"
+            "time": "2025-11-24T14:40:29+00:00"
         },
         {
             "name": "codewithkyrian/chromadb-php",
@@ -289,16 +289,16 @@
         },
         {
             "name": "doctrine/dbal",
-            "version": "3.10.3",
+            "version": "3.10.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/dbal.git",
-                "reference": "65edaca19a752730f290ec2fb89d593cb40afb43"
+                "reference": "63a46cb5aa6f60991186cc98c1d1b50c09311868"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/dbal/zipball/65edaca19a752730f290ec2fb89d593cb40afb43",
-                "reference": "65edaca19a752730f290ec2fb89d593cb40afb43",
+                "url": "https://api.github.com/repos/doctrine/dbal/zipball/63a46cb5aa6f60991186cc98c1d1b50c09311868",
+                "reference": "63a46cb5aa6f60991186cc98c1d1b50c09311868",
                 "shasum": ""
             },
             "require": {
@@ -322,8 +322,8 @@
                 "phpunit/phpunit": "9.6.29",
                 "slevomat/coding-standard": "8.24.0",
                 "squizlabs/php_codesniffer": "4.0.0",
-                "symfony/cache": "^5.4|^6.0|^7.0",
-                "symfony/console": "^4.4|^5.4|^6.0|^7.0"
+                "symfony/cache": "^5.4|^6.0|^7.0|^8.0",
+                "symfony/console": "^4.4|^5.4|^6.0|^7.0|^8.0"
             },
             "suggest": {
                 "symfony/console": "For helpful console commands such as SQL execution and import of files."
@@ -383,7 +383,7 @@
             ],
             "support": {
                 "issues": "https://github.com/doctrine/dbal/issues",
-                "source": "https://github.com/doctrine/dbal/tree/3.10.3"
+                "source": "https://github.com/doctrine/dbal/tree/3.10.4"
             },
             "funding": [
                 {
@@ -399,7 +399,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-10-09T09:05:12+00:00"
+            "time": "2025-11-29T10:46:08+00:00"
         },
         {
             "name": "doctrine/deprecations",
@@ -1088,16 +1088,16 @@
         },
         {
             "name": "doctrine/orm",
-            "version": "3.5.7",
+            "version": "3.5.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/orm.git",
-                "reference": "f18de9d569f00ed6eb9dac4b33c7844d705d17da"
+                "reference": "78dd074266e8b47a83bcf60ab5fe06c91a639168"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/orm/zipball/f18de9d569f00ed6eb9dac4b33c7844d705d17da",
-                "reference": "f18de9d569f00ed6eb9dac4b33c7844d705d17da",
+                "url": "https://api.github.com/repos/doctrine/orm/zipball/78dd074266e8b47a83bcf60ab5fe06c91a639168",
+                "reference": "78dd074266e8b47a83bcf60ab5fe06c91a639168",
                 "shasum": ""
             },
             "require": {
@@ -1113,19 +1113,18 @@
                 "ext-ctype": "*",
                 "php": "^8.1",
                 "psr/cache": "^1 || ^2 || ^3",
-                "symfony/console": "^5.4 || ^6.0 || ^7.0",
-                "symfony/var-exporter": "^6.3.9 || ^7.0"
+                "symfony/console": "^5.4 || ^6.0 || ^7.0 || ^8.0",
+                "symfony/var-exporter": "^6.3.9 || ^7.0 || ^8.0"
             },
             "require-dev": {
                 "doctrine/coding-standard": "^14.0",
                 "phpbench/phpbench": "^1.0",
-                "phpdocumentor/guides-cli": "^1.4",
                 "phpstan/extension-installer": "^1.4",
                 "phpstan/phpstan": "2.1.23",
                 "phpstan/phpstan-deprecation-rules": "^2",
                 "phpunit/phpunit": "^10.5.0 || ^11.5",
                 "psr/log": "^1 || ^2 || ^3",
-                "symfony/cache": "^5.4 || ^6.2 || ^7.0"
+                "symfony/cache": "^5.4 || ^6.2 || ^7.0 || ^8.0"
             },
             "suggest": {
                 "ext-dom": "Provides support for XSD validation for XML mapping files",
@@ -1171,9 +1170,9 @@
             ],
             "support": {
                 "issues": "https://github.com/doctrine/orm/issues",
-                "source": "https://github.com/doctrine/orm/tree/3.5.7"
+                "source": "https://github.com/doctrine/orm/tree/3.5.8"
             },
-            "time": "2025-11-11T18:27:40+00:00"
+            "time": "2025-11-29T23:11:02+00:00"
         },
         {
             "name": "doctrine/persistence",
@@ -1965,12 +1964,12 @@
             "source": {
                 "type": "git",
                 "url": "git@gitlab.com:gorillias/marketing-ai-bundle.git",
-                "reference": "2be0ecce489732b1f0084660940f1235e3617a7a"
+                "reference": "cdfca81452ba26c974317343eb062f6ddd9477d3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://gitlab.com/api/v4/projects/gorillias%2Fmarketing-ai-bundle/repository/archive.zip?sha=2be0ecce489732b1f0084660940f1235e3617a7a",
-                "reference": "2be0ecce489732b1f0084660940f1235e3617a7a",
+                "url": "https://gitlab.com/api/v4/projects/gorillias%2Fmarketing-ai-bundle/repository/archive.zip?sha=cdfca81452ba26c974317343eb062f6ddd9477d3",
+                "reference": "cdfca81452ba26c974317343eb062f6ddd9477d3",
                 "shasum": ""
             },
             "require": {
@@ -2049,7 +2048,7 @@
                 "symfony",
                 "vector store"
             ],
-            "time": "2025-11-19T19:28:16+00:00"
+            "time": "2025-12-03T09:25:00+00:00"
         },
         {
             "name": "grpc/grpc",
@@ -2598,16 +2597,16 @@
         },
         {
             "name": "oskarstark/enum-helper",
-            "version": "1.8.0",
+            "version": "1.8.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/OskarStark/enum-helper.git",
-                "reference": "8279e5289658b407ef247f0bd08a3d7b2611723c"
+                "reference": "44df91ae018016034a98ac9d7e30020f9d7af403"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/OskarStark/enum-helper/zipball/8279e5289658b407ef247f0bd08a3d7b2611723c",
-                "reference": "8279e5289658b407ef247f0bd08a3d7b2611723c",
+                "url": "https://api.github.com/repos/OskarStark/enum-helper/zipball/44df91ae018016034a98ac9d7e30020f9d7af403",
+                "reference": "44df91ae018016034a98ac9d7e30020f9d7af403",
                 "shasum": ""
             },
             "require": {
@@ -2643,9 +2642,9 @@
             ],
             "support": {
                 "issues": "https://github.com/OskarStark/enum-helper/issues",
-                "source": "https://github.com/OskarStark/enum-helper/tree/1.8.0"
+                "source": "https://github.com/OskarStark/enum-helper/tree/1.8.1"
             },
-            "time": "2025-10-14T08:12:56+00:00"
+            "time": "2025-11-25T08:51:05+00:00"
         },
         {
             "name": "phpdocumentor/reflection-common",
@@ -2702,16 +2701,16 @@
         },
         {
             "name": "phpdocumentor/reflection-docblock",
-            "version": "5.6.4",
+            "version": "5.6.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpDocumentor/ReflectionDocBlock.git",
-                "reference": "90a04bcbf03784066f16038e87e23a0a83cee3c2"
+                "reference": "90614c73d3800e187615e2dd236ad0e2a01bf761"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpDocumentor/ReflectionDocBlock/zipball/90a04bcbf03784066f16038e87e23a0a83cee3c2",
-                "reference": "90a04bcbf03784066f16038e87e23a0a83cee3c2",
+                "url": "https://api.github.com/repos/phpDocumentor/ReflectionDocBlock/zipball/90614c73d3800e187615e2dd236ad0e2a01bf761",
+                "reference": "90614c73d3800e187615e2dd236ad0e2a01bf761",
                 "shasum": ""
             },
             "require": {
@@ -2760,22 +2759,22 @@
             "description": "With this component, a library can provide support for annotations via DocBlocks or otherwise retrieve information that is embedded in a DocBlock.",
             "support": {
                 "issues": "https://github.com/phpDocumentor/ReflectionDocBlock/issues",
-                "source": "https://github.com/phpDocumentor/ReflectionDocBlock/tree/5.6.4"
+                "source": "https://github.com/phpDocumentor/ReflectionDocBlock/tree/5.6.5"
             },
-            "time": "2025-11-17T21:13:10+00:00"
+            "time": "2025-11-27T19:50:05+00:00"
         },
         {
             "name": "phpdocumentor/type-resolver",
-            "version": "1.10.1",
+            "version": "1.12.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpDocumentor/TypeResolver.git",
-                "reference": "431c02da15e566adb0ad9c5030fa6f6204d9de9e"
+                "reference": "92a98ada2b93d9b201a613cb5a33584dde25f195"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpDocumentor/TypeResolver/zipball/431c02da15e566adb0ad9c5030fa6f6204d9de9e",
-                "reference": "431c02da15e566adb0ad9c5030fa6f6204d9de9e",
+                "url": "https://api.github.com/repos/phpDocumentor/TypeResolver/zipball/92a98ada2b93d9b201a613cb5a33584dde25f195",
+                "reference": "92a98ada2b93d9b201a613cb5a33584dde25f195",
                 "shasum": ""
             },
             "require": {
@@ -2818,9 +2817,9 @@
             "description": "A PSR-5 based resolver of Class names, Types and Structural Element Names",
             "support": {
                 "issues": "https://github.com/phpDocumentor/TypeResolver/issues",
-                "source": "https://github.com/phpDocumentor/TypeResolver/tree/1.10.1"
+                "source": "https://github.com/phpDocumentor/TypeResolver/tree/1.12.0"
             },
-            "time": "2025-11-18T07:51:16+00:00"
+            "time": "2025-11-21T15:09:14+00:00"
         },
         {
             "name": "phpstan/phpdoc-parser",
@@ -3620,12 +3619,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/ai-agent.git",
-                "reference": "b1c61c8f0af9a7b02e033b950348271153da598d"
+                "reference": "5520763c7360af2fd1c291b70fabdba05e1222cc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/ai-agent/zipball/b1c61c8f0af9a7b02e033b950348271153da598d",
-                "reference": "b1c61c8f0af9a7b02e033b950348271153da598d",
+                "url": "https://api.github.com/repos/symfony/ai-agent/zipball/5520763c7360af2fd1c291b70fabdba05e1222cc",
+                "reference": "5520763c7360af2fd1c291b70fabdba05e1222cc",
                 "shasum": ""
             },
             "require": {
@@ -3643,14 +3642,11 @@
                 "symfony/type-info": "^7.3|^8.0"
             },
             "require-dev": {
-                "mrmysql/youtube-transcript": "^0.0.5",
                 "phpstan/phpstan": "^2.0",
                 "phpstan/phpstan-strict-rules": "^2.0",
                 "phpunit/phpunit": "^11.5.13",
                 "symfony/ai-store": "@dev",
                 "symfony/cache": "^7.3|^8.0",
-                "symfony/css-selector": "^7.3|^8.0",
-                "symfony/dom-crawler": "^7.3|^8.0",
                 "symfony/event-dispatcher": "^7.3|^8.0",
                 "symfony/http-foundation": "^7.3|^8.0",
                 "symfony/translation": "^7.3|^8.0",
@@ -3662,6 +3658,9 @@
                 "thanks": {
                     "url": "https://github.com/symfony/ai",
                     "name": "symfony/ai"
+                },
+                "branch-alias": {
+                    "dev-main": "0.x-dev"
                 }
             },
             "autoload": {
@@ -3681,6 +3680,10 @@
                 {
                     "name": "Oskar Stark",
                     "email": "oskarstark@googlemail.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
                 }
             ],
             "description": "PHP library for building agentic applications.",
@@ -3710,7 +3713,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-11-14T20:25:09+00:00"
+            "time": "2025-11-30T11:09:50+00:00"
         },
         {
             "name": "symfony/ai-bundle",
@@ -3718,12 +3721,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/ai-bundle.git",
-                "reference": "9e22e09973fb7a9ccf0a03a055a034a275ece64a"
+                "reference": "a470acceb959d828df802082fd13d4c3ce97c3c8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/ai-bundle/zipball/9e22e09973fb7a9ccf0a03a055a034a275ece64a",
-                "reference": "9e22e09973fb7a9ccf0a03a055a034a275ece64a",
+                "url": "https://api.github.com/repos/symfony/ai-bundle/zipball/a470acceb959d828df802082fd13d4c3ce97c3c8",
+                "reference": "a470acceb959d828df802082fd13d4c3ce97c3c8",
                 "shasum": ""
             },
             "require": {
@@ -3739,11 +3742,17 @@
                 "symfony/framework-bundle": "^7.3|^8.0",
                 "symfony/string": "^7.3|^8.0"
             },
+            "conflict": {
+                "mongodb/mongodb": "<1.21"
+            },
             "require-dev": {
+                "codewithkyrian/chromadb-php": "^0.2.1 || ^0.3 || ^0.4",
                 "google/auth": "^1.47",
+                "mongodb/mongodb": "^1.21 || ^2.0",
                 "phpstan/phpstan": "^2.1",
                 "phpstan/phpstan-strict-rules": "^2.0",
                 "phpunit/phpunit": "^11.5",
+                "probots-io/pinecone-php": "^1.0",
                 "symfony/expression-language": "^7.3|^8.0",
                 "symfony/security-core": "^7.3|^8.0",
                 "symfony/translation": "^7.3|^8.0"
@@ -3754,6 +3763,9 @@
                 "thanks": {
                     "url": "https://github.com/symfony/ai",
                     "name": "symfony/ai"
+                },
+                "branch-alias": {
+                    "dev-main": "0.x-dev"
                 }
             },
             "autoload": {
@@ -3773,6 +3785,10 @@
                 {
                     "name": "Oskar Stark",
                     "email": "oskarstark@googlemail.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
                 }
             ],
             "description": "Integration bundle for Symfony AI components",
@@ -3797,7 +3813,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-11-15T08:21:23+00:00"
+            "time": "2025-12-02T08:18:21+00:00"
         },
         {
             "name": "symfony/ai-chat",
@@ -3805,12 +3821,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/ai-chat.git",
-                "reference": "0c5554000220174b3f6a91e961b29833e1e56758"
+                "reference": "d401c20c8b0d337a94a49d933e28126c9d484265"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/ai-chat/zipball/0c5554000220174b3f6a91e961b29833e1e56758",
-                "reference": "0c5554000220174b3f6a91e961b29833e1e56758",
+                "url": "https://api.github.com/repos/symfony/ai-chat/zipball/d401c20c8b0d337a94a49d933e28126c9d484265",
+                "reference": "d401c20c8b0d337a94a49d933e28126c9d484265",
                 "shasum": ""
             },
             "require": {
@@ -3818,8 +3834,13 @@
                 "symfony/ai-agent": "@dev",
                 "symfony/ai-platform": "@dev"
             },
+            "conflict": {
+                "mongodb/mongodb": "<1.21"
+            },
             "require-dev": {
+                "doctrine/dbal": "^3.3 || ^4.0",
                 "ext-redis": "*",
+                "mongodb/mongodb": "^1.21 || ^2.0",
                 "phpstan/phpstan": "^2.0",
                 "phpstan/phpstan-strict-rules": "^2.0",
                 "phpunit/phpunit": "^11.5.13",
@@ -3830,15 +3851,15 @@
                 "symfony/http-foundation": "^7.3|^8.0",
                 "symfony/serializer": "^7.3|^8.0"
             },
-            "suggest": {
-                "symfony/clock": "To use stores that requires waiting for actions like Meilisearch"
-            },
             "default-branch": true,
             "type": "library",
             "extra": {
                 "thanks": {
                     "url": "https://github.com/symfony/ai",
                     "name": "symfony/ai"
+                },
+                "branch-alias": {
+                    "dev-main": "0.x-dev"
                 }
             },
             "autoload": {
@@ -3858,6 +3879,10 @@
                 {
                     "name": "Oskar Stark",
                     "email": "oskarstark@googlemail.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
                 }
             ],
             "description": "PHP library for building chats with agents.",
@@ -3888,7 +3913,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-11-14T07:56:39+00:00"
+            "time": "2025-11-30T11:09:50+00:00"
         },
         {
             "name": "symfony/ai-platform",
@@ -3896,12 +3921,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/ai-platform.git",
-                "reference": "95c14c280d0d0aa98308505eef87e888b386eeff"
+                "reference": "5cc308add466745bb36c56e5fec1a15bc9b496c1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/ai-platform/zipball/95c14c280d0d0aa98308505eef87e888b386eeff",
-                "reference": "95c14c280d0d0aa98308505eef87e888b386eeff",
+                "url": "https://api.github.com/repos/symfony/ai-platform/zipball/5cc308add466745bb36c56e5fec1a15bc9b496c1",
+                "reference": "5cc308add466745bb36c56e5fec1a15bc9b496c1",
                 "shasum": ""
             },
             "require": {
@@ -3929,6 +3954,7 @@
                 "phpstan/phpstan-symfony": "^2.0.6",
                 "phpunit/phpunit": "^11.5",
                 "symfony/ai-agent": "@dev",
+                "symfony/cache": "^7.3|^8.0",
                 "symfony/console": "^7.3|^8.0",
                 "symfony/dotenv": "^7.3|^8.0",
                 "symfony/finder": "^7.3|^8.0",
@@ -3941,6 +3967,9 @@
                 "thanks": {
                     "url": "https://github.com/symfony/ai",
                     "name": "symfony/ai"
+                },
+                "branch-alias": {
+                    "dev-main": "0.x-dev"
                 }
             },
             "autoload": {
@@ -3960,6 +3989,10 @@
                 {
                     "name": "Oskar Stark",
                     "email": "oskarstark@googlemail.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
                 }
             ],
             "description": "PHP library for interacting with AI platform provider.",
@@ -3977,6 +4010,7 @@
                 "elevenlabs",
                 "huggingface",
                 "inference",
+                "litellm",
                 "llama",
                 "lmstudio",
                 "meta",
@@ -4011,7 +4045,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-11-14T20:25:09+00:00"
+            "time": "2025-11-30T11:09:50+00:00"
         },
         {
             "name": "symfony/ai-store",
@@ -4019,12 +4053,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/ai-store.git",
-                "reference": "bd0c539fc62f83de2bdab4bfb37a8fea4c85aad5"
+                "reference": "fca3b607ed248d9045343521ecd2fa0afae8069d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/ai-store/zipball/bd0c539fc62f83de2bdab4bfb37a8fea4c85aad5",
-                "reference": "bd0c539fc62f83de2bdab4bfb37a8fea4c85aad5",
+                "url": "https://api.github.com/repos/symfony/ai-store/zipball/fca3b607ed248d9045343521ecd2fa0afae8069d",
+                "reference": "fca3b607ed248d9045343521ecd2fa0afae8069d",
                 "shasum": ""
             },
             "require": {
@@ -4059,6 +4093,9 @@
                 "thanks": {
                     "url": "https://github.com/symfony/ai",
                     "name": "symfony/ai"
+                },
+                "branch-alias": {
+                    "dev-main": "0.x-dev"
                 }
             },
             "autoload": {
@@ -4078,6 +4115,10 @@
                 {
                     "name": "Oskar Stark",
                     "email": "oskarstark@googlemail.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
                 }
             ],
             "description": "Low-level abstraction for storing and retrieving documents in a vector store.",
@@ -4121,7 +4162,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-11-12T22:20:44+00:00"
+            "time": "2025-11-30T11:09:50+00:00"
         },
         {
             "name": "symfony/asset",
@@ -14168,5 +14209,5 @@
         "ext-iconv": "*"
     },
     "platform-dev": {},
-    "plugin-api-version": "2.6.0"
+    "plugin-api-version": "2.9.0"
 }

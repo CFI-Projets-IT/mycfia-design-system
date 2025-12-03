@@ -66,7 +66,7 @@ class Task
     private int $tokensTotal = 0;
 
     #[ORM\Column(type: 'decimal', precision: 10, scale: 4, columnDefinition: 'DECIMAL(10,4) DEFAULT 0.0000')]
-    private float $cost = 0.0;
+    private string $cost = '0.0000';
 
     #[ORM\Column]
     private int $durationMs = 0;
@@ -269,12 +269,12 @@ class Task
         return $this;
     }
 
-    public function getCost(): float
+    public function getCost(): string
     {
         return $this->cost;
     }
 
-    public function setCost(float $cost): static
+    public function setCost(string $cost): static
     {
         $this->cost = $cost;
 
@@ -387,7 +387,7 @@ class Task
 
     public function getFormattedCost(): string
     {
-        return '$'.number_format($this->cost, 4);
+        return '$'.number_format((float) $this->cost, 4);
     }
 
     public function getAgentShortName(): string

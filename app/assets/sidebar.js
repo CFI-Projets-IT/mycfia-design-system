@@ -26,16 +26,16 @@ function toggleSidebar() {
             main.style.marginLeft = '60px';
 
             // Ajouter justify-content-center (Bootstrap) en mode collapsed
-            sidebarLinks.forEach(link => link.classList.add('justify-content-center'));
-            navLinks.forEach(link => link.classList.add('justify-content-center'));
-            navPills.forEach(pill => pill.classList.add('justify-content-center'));
+            sidebarLinks.forEach((link) => link.classList.add('justify-content-center'));
+            navLinks.forEach((link) => link.classList.add('justify-content-center'));
+            navPills.forEach((pill) => pill.classList.add('justify-content-center'));
         } else {
             main.style.marginLeft = '280px';
 
             // Retirer justify-content-center en mode ouvert
-            sidebarLinks.forEach(link => link.classList.remove('justify-content-center'));
-            navLinks.forEach(link => link.classList.remove('justify-content-center'));
-            navPills.forEach(pill => pill.classList.remove('justify-content-center'));
+            sidebarLinks.forEach((link) => link.classList.remove('justify-content-center'));
+            navLinks.forEach((link) => link.classList.remove('justify-content-center'));
+            navPills.forEach((pill) => pill.classList.remove('justify-content-center'));
         }
     }
 }
