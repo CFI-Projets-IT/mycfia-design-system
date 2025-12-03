@@ -317,8 +317,14 @@ deploy_services() {
     log_info "Environnement: $APP_ENV"
     log_info "Fichiers compose: $COMPOSE_FILES"
 
-    # Commande Docker Compose
-    local cmd="docker compose $COMPOSE_FILES"
+    # Commande Docker Compose avec fichier d'environnement
+    local env_file_arg=""
+    if [ -f "$SCRIPT_DIR/.env.local" ]; then
+        env_file_arg="--env-file .env.local"
+        log_info "Utilisation du fichier .env.local pour les variables d'environnement"
+    fi
+
+    local cmd="docker compose $env_file_arg $COMPOSE_FILES"
 
     if [ "$build_flag" = "true" ]; then
         log_info "Reconstruction des images..."
@@ -426,18 +432,30 @@ deploy_application() {
 
 stop_services() {
     log_info "Arrêt des services..."
-    docker compose $COMPOSE_FILES down
+    local env_file_arg=""
+    if [ -f "$SCRIPT_DIR/.env.local" ]; then
+        env_file_arg="--env-file .env.local"
+    fi
+    docker compose $env_file_arg $COMPOSE_FILES down
     log_success "Services arrêtés"
 }
 
 show_status() {
     log_info "Statut des services:"
-    docker compose $COMPOSE_FILES ps
+    local env_file_arg=""
+    if [ -f "$SCRIPT_DIR/.env.local" ]; then
+        env_file_arg="--env-file .env.local"
+    fi
+    docker compose $env_file_arg $COMPOSE_FILES ps
 }
 
 show_logs() {
     log_info "Logs des services (Ctrl+C pour quitter):"
-    docker compose $COMPOSE_FILES logs -f
+    local env_file_arg=""
+    if [ -f "$SCRIPT_DIR/.env.local" ]; then
+        env_file_arg="--env-file .env.local"
+    fi
+    docker compose $env_file_arg $COMPOSE_FILES logs -f
 }
 
 # === PROGRAMME PRINCIPAL ===
