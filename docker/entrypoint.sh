@@ -37,8 +37,9 @@ if [ "$APP_ENV" = "dev" ]; then
 
     # Créer les répertoires Symfony nécessaires
     mkdir -p /var/www/html/var/log/supervisor 2>/dev/null || true
+    mkdir -p /var/www/html/var/log/messenger 2>/dev/null || true
+    mkdir -p /var/www/html/var/log/marketing/{agents,stores,clients,tools,tasks} 2>/dev/null || true
     mkdir -p /var/www/html/var/cache 2>/dev/null || true
-    mkdir -p /var/www/html/var/log 2>/dev/null || true
 
     # Permissions spéciales Symfony en développement
     if [ -d "/var/www/html/var" ]; then
