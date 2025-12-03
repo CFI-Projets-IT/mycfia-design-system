@@ -98,8 +98,8 @@ final readonly class GeneratePersonasMessageHandler
                 );
 
                 // Appel de la vraie API du bundle : generatePersona(sector, target, options)
-                /** @var array<string, mixed> $personaData */
-                $personaData = $this->personaGenerator->generatePersona(
+                // v3.35.6+ : Retourne ['data' => ..., 'tokens_used' => ..., 'cost' => ...]
+                $result = $this->personaGenerator->generatePersona(
                     sector: $sector,
                     target: $target,
                     options: [
@@ -107,6 +107,9 @@ final readonly class GeneratePersonasMessageHandler
                         'additionalContext' => $message->additionalContext,
                     ]
                 );
+
+                /** @var array<string, mixed> $personaData */
+                $personaData = $result['data'];
 
                 // 5. Mapper les données vers l'entité Persona
                 $persona = new Persona();

@@ -1964,12 +1964,12 @@
             "source": {
                 "type": "git",
                 "url": "git@gitlab.com:gorillias/marketing-ai-bundle.git",
-                "reference": "ca31985c816b4dcd7429a489459b79c5b5494886"
+                "reference": "6705aa951c70200a056630b0a3475ba6e286a24c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://gitlab.com/api/v4/projects/gorillias%2Fmarketing-ai-bundle/repository/archive.zip?sha=ca31985c816b4dcd7429a489459b79c5b5494886",
-                "reference": "ca31985c816b4dcd7429a489459b79c5b5494886",
+                "url": "https://gitlab.com/api/v4/projects/gorillias%2Fmarketing-ai-bundle/repository/archive.zip?sha=6705aa951c70200a056630b0a3475ba6e286a24c",
+                "reference": "6705aa951c70200a056630b0a3475ba6e286a24c",
                 "shasum": ""
             },
             "require": {
@@ -2048,7 +2048,7 @@
                 "symfony",
                 "vector store"
             ],
-            "time": "2025-12-02T15:10:33+00:00"
+            "time": "2025-12-03T05:08:55+00:00"
         },
         {
             "name": "grpc/grpc",
@@ -3721,12 +3721,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/ai-bundle.git",
-                "reference": "cde057e2d67c4983ffdd5a8ea3cc8b120b311de6"
+                "reference": "a470acceb959d828df802082fd13d4c3ce97c3c8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/ai-bundle/zipball/cde057e2d67c4983ffdd5a8ea3cc8b120b311de6",
-                "reference": "cde057e2d67c4983ffdd5a8ea3cc8b120b311de6",
+                "url": "https://api.github.com/repos/symfony/ai-bundle/zipball/a470acceb959d828df802082fd13d4c3ce97c3c8",
+                "reference": "a470acceb959d828df802082fd13d4c3ce97c3c8",
                 "shasum": ""
             },
             "require": {
@@ -3752,6 +3752,7 @@
                 "phpstan/phpstan": "^2.1",
                 "phpstan/phpstan-strict-rules": "^2.0",
                 "phpunit/phpunit": "^11.5",
+                "probots-io/pinecone-php": "^1.0",
                 "symfony/expression-language": "^7.3|^8.0",
                 "symfony/security-core": "^7.3|^8.0",
                 "symfony/translation": "^7.3|^8.0"
@@ -3812,7 +3813,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-11-30T11:09:50+00:00"
+            "time": "2025-12-02T08:18:21+00:00"
         },
         {
             "name": "symfony/ai-chat",
