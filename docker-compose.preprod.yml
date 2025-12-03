@@ -57,8 +57,9 @@ services:
       - app_network
     restart: unless-stopped
     # Healthcheck via HTTP plutôt que port admin 2019 (désactivé)
+    # -f = fail on HTTP errors, -L = follow redirects, -k = accept self-signed certs
     healthcheck:
-      test: ["CMD-SHELL", "wget -q --spider http://localhost:80/ || exit 1"]
+      test: ["CMD-SHELL", "curl -fLk http://localhost:80/ || exit 1"]
       interval: 30s
       timeout: 10s
       retries: 3
