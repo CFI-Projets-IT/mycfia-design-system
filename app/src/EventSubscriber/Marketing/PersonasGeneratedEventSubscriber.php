@@ -230,77 +230,49 @@ final readonly class PersonasGeneratedEventSubscriber implements EventSubscriber
             'is_object' => is_object($result),
             'class' => is_object($result) ? get_class($result) : null,
             'array_keys' => is_array($result) ? array_keys($result) : null,
+            'first_element_type' => is_array($result) && ! empty($result) ? gettype(reset($result)) : null,
         ]);
 
-        // Si c'est un objet
-        if (is_object($result)) {
-            // Cas 1 : Objet PersonasCollectionStructuredOutput (v3.36.1+)
-            if (method_exists($result, 'getPersonas')) {
-                $this->logger->debug('normalizePersonasData: PersonasCollectionStructuredOutput detected', [
-                    'class' => get_class($result),
+        // Si c'est un tableau
+        if (is_array($result)) {
+            // Cas 1 : Array mono-persona direct (has 'name' key)
+            if (isset($result['name']) && is_string($result['name'])) {
+                $this->logger->debug('normalizePersonasData: Single persona array detected');
+
+                return [$result];
+            }
+
+            // Cas 2 : Tableau direct de personas (array of arrays avec 'name')
+            // Bundle v3.36.1+ retourne ['data' => [persona1, persona2, ...]]
+            // Après extraction on a directement [persona1, persona2, ...]
+            if (! empty($result) && is_array(reset($result)) && isset(reset($result)['name'])) {
+                $this->logger->debug('normalizePersonasData: Direct array of personas detected', [
+                    'personas_count' => count($result),
                 ]);
-                $personas = $result->getPersonas();
 
-                return array_map(
-                    fn ($persona) => $persona instanceof \Gorillias\MarketingBundle\StructuredOutput\PersonaItem
-                        ? $persona->toArray()
-                        : (is_array($persona) ? $persona : (array) $persona),
-                    $personas
-                );
+                return $result; // Déjà au bon format
             }
 
-            // Cas 2 : Objet PersonaStructuredOutput unique (ancien format)
-            if ($result instanceof PersonaStructuredOutput) {
-                $this->logger->debug('normalizePersonasData: Single PersonaStructuredOutput detected');
+            // Cas 3 : Tableau avec clé 'personas' (ancien format)
+            if (isset($result['personas']) && is_array($result['personas'])) {
+                $this->logger->debug('normalizePersonasData: Array with personas key detected', [
+                    'personas_count' => count($result['personas']),
+                ]);
 
-                return [$result->toArray()];
+                return $result['personas'];
             }
 
-            // Objet non reconnu
-            $this->logger->warning('normalizePersonasData: Unknown object format', [
-                'class' => get_class($result),
+            // Aucun format array reconnu
+            $this->logger->warning('normalizePersonasData: Unknown array format', [
+                'array_keys' => array_keys($result),
             ]);
 
             return [];
         }
 
-        // Si c'est un tableau
-        // Cas 3 : Tableau avec clé 'personas' contenant des StructuredOutput ou arrays
-        if (isset($result['personas']) && is_array($result['personas'])) {
-            $this->logger->debug('normalizePersonasData: Array with personas key detected', [
-                'personas_count' => count($result['personas']),
-            ]);
-
-            return array_map(
-                fn ($persona) => $persona instanceof \Gorillias\MarketingBundle\StructuredOutput\PersonaItem
-                    ? $persona->toArray()
-                    : $persona,
-                $result['personas']
-            );
-        }
-
-        // Cas 4 : Tableau direct de personas (StructuredOutput ou arrays)
-        if (! empty($result) && (reset($result) instanceof \Gorillias\MarketingBundle\StructuredOutput\PersonaItem || (is_array(reset($result)) && isset(reset($result)['name'])))) {
-            $this->logger->debug('normalizePersonasData: Direct array of personas detected');
-
-            return array_map(
-                fn ($persona) => $persona instanceof \Gorillias\MarketingBundle\StructuredOutput\PersonaItem
-                    ? $persona->toArray()
-                    : $persona,
-                $result
-            );
-        }
-
-        // Cas 5 : Array mono-persona direct
-        if (isset($result['name']) && is_string($result['name'])) {
-            $this->logger->debug('normalizePersonasData: Single persona array detected');
-
-            return [$result];
-        }
-
-        // Aucun format reconnu
-        $this->logger->warning('normalizePersonasData: Unknown array format', [
-            'array_keys' => array_keys($result),
+        // Aucun format reconnu (objet non géré)
+        $this->logger->warning('normalizePersonasData: Unknown format (object not supported)', [
+            'class' => get_class($result),
         ]);
 
         return [];
