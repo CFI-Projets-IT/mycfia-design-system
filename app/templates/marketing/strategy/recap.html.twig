@@ -102,7 +102,6 @@
     </div>
 
     {# Concurrents Validés #}
-    {% set competitors = competitorAnalysis.competitorsArray %}
     <div class="card shadow-sm mb-4">
         <div class="card-header bg-light">
             <div class="d-flex justify-content-between align-items-center">
@@ -110,18 +109,17 @@
                     <i class="bi bi-building text-primary"></i>
                     Concurrents validés
                 </h5>
-                <span class="badge bg-primary">{{ competitors|length }}</span>
+                <span class="badge bg-primary">{{ selectedCompetitors|length }}</span>
             </div>
         </div>
         <div class="card-body">
             <div class="d-flex flex-wrap gap-2">
-                {% for index, competitor in competitors %}
-                    {% set title = competitor.title|default(competitor.domain|default('N/A')) %}
+                {% for competitor in selectedCompetitors %}
                     <span class="badge bg-success fs-6 cursor-pointer"
                           data-bs-toggle="modal"
-                          data-bs-target="#competitorModal{{ index }}"
+                          data-bs-target="#competitorModal{{ competitor.id }}"
                           style="cursor: pointer;">
-                        <i class="bi bi-building"></i> {{ title }}
+                        <i class="bi bi-building"></i> {{ competitor.title }}
                     </span>
                 {% endfor %}
             </div>
@@ -176,9 +174,6 @@
 {% endblock %}
 
 {% block modals %}
-{# Redéfinir la variable competitors pour les modals #}
-{% set competitors = competitorAnalysis.competitorsArray %}
-
 {# Modals Personas #}
 {% for persona in selectedPersonas %}
 <div class="modal fade" id="personaModal{{ persona.id }}" tabindex="-1" aria-hidden="true">
@@ -274,16 +269,14 @@
 {% endfor %}
 
 {# Modals Concurrents #}
-{% for index, competitor in competitors %}
-{% set validation = competitor.validation|default({}) %}
-{% set title = competitor.title|default(competitor.domain|default('N/A')) %}
-<div class="modal fade" id="competitorModal{{ index }}" tabindex="-1" aria-hidden="true">
+{% for competitor in selectedCompetitors %}
+<div class="modal fade" id="competitorModal{{ competitor.id }}" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">
                     <i class="bi bi-building text-primary"></i>
-                    Concurrent : {{ title }}
+                    Concurrent : {{ competitor.title }}
                 </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
@@ -296,7 +289,7 @@
                     <div class="row g-3">
                         <div class="col-md-6">
                             <label class="form-label fw-semibold">Domaine</label>
-                            <p class="form-control-plaintext">{{ competitor.domain|default('N/A') }}</p>
+                            <p class="form-control-plaintext">{{ competitor.domain }}</p>
                         </div>
                         <div class="col-md-6">
                             <label class="form-label fw-semibold">URL</label>
@@ -307,38 +300,40 @@
                             </p>
                         </div>
                         <div class="col-12">
-                            <label class="form-label fw-semibold">Description</label>
-                            <p class="form-control-plaintext text-muted">{{ competitor.snippet|default('Aucune description') }}</p>
+                            <label class="form-label fw-semibold">Raisonnement IA</label>
+                            <p class="form-control-plaintext text-muted">{{ competitor.reasoning|default('Aucune analyse') }}</p>
                         </div>
                     </div>
                 </div>
 
                 {# Validation IA #}
-                {% if validation %}
                 <div class="mb-4">
                     <h6 class="text-uppercase text-muted fw-bold mb-3">
                         <i class="bi bi-robot"></i> Validation IA
                     </h6>
                     <div class="row g-3">
-                        <div class="col-md-6">
+                        <div class="col-md-12">
                             <label class="form-label fw-semibold">Score d'alignement</label>
                             <p class="form-control-plaintext">
-                                <span class="badge fs-6 {{ validation.alignmentScore|default(0) >= 70 ? 'bg-success' : (validation.alignmentScore|default(0) >= 50 ? 'bg-warning' : 'bg-secondary') }}">
-                                    {{ validation.alignmentScore|default('N/A') }}
+                                <span class="badge fs-6 {{ competitor.alignmentScore >= 70 ? 'bg-success' : (competitor.alignmentScore >= 50 ? 'bg-warning' : 'bg-secondary') }}">
+                                    {{ competitor.alignmentScore }}%
                                 </span>
                             </p>
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label fw-semibold">Overlaps</label>
+                            <label class="form-label fw-semibold">Overlap Offre</label>
                             <p class="form-control-plaintext">
-                                <span class="badge bg-primary me-1">Offre: {{ validation.offeringOverlap|default('N/A') }}</span>
-                                <span class="badge bg-info me-1">Marché: {{ validation.marketOverlap|default('N/A') }}</span>
-                                <span class="badge bg-secondary">Géo: {{ validation.geoOverlap|default('N/A') }}</span>
+                                <span class="badge bg-primary">{{ competitor.offeringOverlap|default('N/A') }}</span>
+                            </p>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Overlap Marché</label>
+                            <p class="form-control-plaintext">
+                                <span class="badge bg-info">{{ competitor.marketOverlap|default('N/A') }}</span>
                             </p>
                         </div>
                     </div>
                 </div>
-                {% endif %}
 
                 {# Signaux Marketing #}
                 <div class="mb-0">
@@ -346,25 +341,21 @@
                         <i class="bi bi-graph-up"></i> Signaux Marketing
                     </h6>
                     <div class="row g-3">
-                        <div class="col-md-4">
-                            <label class="form-label fw-semibold">Position Google</label>
-                            <p class="form-control-plaintext">#{{ competitor.position|default('N/A') }}</p>
-                        </div>
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             <label class="form-label fw-semibold">Google Ads</label>
                             <p class="form-control-plaintext">
-                                {% if competitor.has_ads|default(false) %}
+                                {% if competitor.hasAds %}
                                     <span class="badge bg-warning text-dark">💰 Actif</span>
                                 {% else %}
                                     <span class="badge bg-secondary">Non</span>
                                 {% endif %}
                             </p>
                         </div>
-                        <div class="col-md-4">
-                            <label class="form-label fw-semibold">Featured Snippet</label>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Sélectionné</label>
                             <p class="form-control-plaintext">
-                                {% if competitor.is_featured|default(false) %}
-                                    <span class="badge bg-info">🏆 Oui</span>
+                                {% if competitor.selected %}
+                                    <span class="badge bg-success">✓ Oui</span>
                                 {% else %}
                                     <span class="badge bg-secondary">Non</span>
                                 {% endif %}

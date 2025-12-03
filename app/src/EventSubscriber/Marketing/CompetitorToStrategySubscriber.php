@@ -114,15 +114,35 @@ final readonly class CompetitorToStrategySubscriber implements EventSubscriberIn
             $strategyContext = $this->buildStrategyContext($project);
             $strategyObjectives = ['main' => $project->getDetailedObjectives()];
 
-            // ÉTAPE 2 : Injecter competitor_analysis dans le context (backward compatibility)
-            $strategyContext['competitor_analysis'] = $competitorAnalysisResult;
+            // ÉTAPE 2 : Injecter competitor_analysis dans le context (v3.34.0)
+            // Récupérer l'analyse globale depuis Project
+            $globalAnalysis = [
+                'market_overview' => $project->getCompetitiveMarketOverview(),
+                'threats' => $project->getCompetitiveThreats(),
+                'opportunities' => $project->getCompetitiveOpportunities(),
+                'recommendations' => $project->getCompetitiveRecommendations(),
+            ];
 
-            // v3.28.0 : Récupérer les concurrents validés depuis l'entité CompetitorAnalysis (format Tool)
-            // Le template strategy_analyst_user.md.twig attend context.competitors avec domain, has_ads, validation
-            // Ne PAS utiliser $competitorAnalysisResult['competitors'] qui est la sortie LLM (format arrays indexés)
-            $competitorAnalysis = $project->getCompetitorAnalysis();
-            if ($competitorAnalysis) {
-                $strategyContext['competitors'] = $competitorAnalysis->getCompetitorsArray();
+            // Fusionner avec le résultat LLM (backward compatibility)
+            $strategyContext['competitor_analysis'] = array_merge($competitorAnalysisResult, $globalAnalysis);
+
+            // v3.34.0 : Récupérer les concurrents sélectionnés depuis les entités Competitor
+            // Le template strategy_analyst_user.md.twig attend context.competitors - envoyer TOUTES les données rawData
+            $selectedCompetitors = $project->getCompetitors()->filter(fn ($c) => $c->isSelected())->toArray();
+            if (! empty($selectedCompetitors)) {
+                $strategyContext['competitors'] = array_map(function ($c) {
+                    // Fusionner rawData (contient position, keyword_source, etc.) avec validation manuelle
+                    $rawData = $c->getRawData() ?? [];
+                    $rawData['validation'] = [
+                        'alignmentScore' => $c->getAlignmentScore(),
+                        'reasoning' => $c->getReasoning(),
+                        'offeringOverlap' => $c->getOfferingOverlap(),
+                        'marketOverlap' => $c->getMarketOverlap(),
+                        'geoOverlap' => $rawData['validation']['geoOverlap'] ?? 'N/A',
+                    ];
+
+                    return $rawData;
+                }, $selectedCompetitors);
             }
 
             $this->logger->info('CompetitorToStrategySubscriber: Dispatching strategy analysis with competitor context', [

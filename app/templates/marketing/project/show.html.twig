@@ -88,7 +88,7 @@
 
         {# Étape 3 : Concurrents #}
         <div class="col-6 col-md-2">
-            {% if project.competitorAnalysis %}
+            {% if project.competitiveAnalysisGeneratedAt %}
                 <div class="card border-success h-100">
                     <div class="card-body py-3 text-center">
                         <div class="rounded-circle bg-success text-white d-inline-flex align-items-center justify-content-center mb-2" style="width: 36px; height: 36px;">
@@ -150,7 +150,7 @@
                         </a>
                     </div>
                 </div>
-            {% elseif project.competitorAnalysis %}
+            {% elseif project.competitiveAnalysisGeneratedAt %}
                 <div class="card border-primary h-100">
                     <div class="card-body py-3 text-center">
                         <div class="rounded-circle bg-primary text-white d-inline-flex align-items-center justify-content-center mb-2" style="width: 36px; height: 36px;">
@@ -247,11 +247,7 @@
                         <span class="text-muted small">Concurrents</span>
                     </div>
                     <div class="fs-4 fw-semibold">
-                        {% if project.competitorAnalysis %}
-                            {{ project.competitorAnalysis.competitorsArray|length }}
-                        {% else %}
-                            0
-                        {% endif %}
+                        {{ project.competitors|length }}
                     </div>
                 </div>
             </div>
@@ -303,7 +299,7 @@
                     {% set assetIcon = 'bi-instagram' %}
                     {% set assetColor = 'text-danger' %}
                     {% set assetLabel = 'Instagram' %}
-                {% elseif type == 'mail' %}
+                {% elseif type == 'email' %}
                     {% set assetIcon = 'bi-envelope' %}
                     {% set assetColor = 'text-warning' %}
                     {% set assetLabel = 'Email' %}
@@ -311,11 +307,11 @@
                     {% set assetIcon = 'bi-microsoft' %}
                     {% set assetColor = 'text-info' %}
                     {% set assetLabel = 'Bing Ads' %}
-                {% elseif type == 'iab_banner' %}
+                {% elseif type == 'iab' %}
                     {% set assetIcon = 'bi-display' %}
                     {% set assetColor = 'text-success' %}
                     {% set assetLabel = 'Bannière IAB' %}
-                {% elseif type == 'article_seo' %}
+                {% elseif type == 'article' %}
                     {% set assetIcon = 'bi-newspaper' %}
                     {% set assetColor = 'text-dark' %}
                     {% set assetLabel = 'Article SEO' %}
@@ -861,7 +857,7 @@
     {% endif %}
 
     {# Section Concurrents #}
-    {% if project.competitorAnalysis %}
+    {% if project.competitors|length > 0 %}
         <div class="card mb-4" id="competitors">
             <div class="card-header">
                 <h5 class="mb-0">
@@ -875,34 +871,40 @@
                             <tr>
                                 <th class="px-3">Nom</th>
                                 <th>Domaine</th>
-                                <th>Description</th>
+                                <th>Score</th>
+                                <th>Raisonnement</th>
                                 <th class="text-end pe-3">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {% for competitor in project.competitorAnalysis.competitorsArray %}
+                            {% for competitor in project.competitors %}
                                 <tr>
                                     <td class="px-3">
-                                        <div class="fw-semibold">{{ competitor.title ?? 'N/A' }}</div>
+                                        <div class="fw-semibold">{{ competitor.title|default('N/A') }}</div>
                                     </td>
                                     <td>
-                                        {% if competitor.domain is defined %}
-                                            <a href="https://{{ competitor.domain }}" target="_blank" class="text-decoration-none">
+                                        {% if competitor.url %}
+                                            <a href="{{ competitor.url }}" target="_blank" class="text-decoration-none">
                                                 <i class="bi bi-link-45deg"></i> {{ competitor.domain }}
                                             </a>
                                         {% else %}
-                                            <span class="text-muted">-</span>
+                                            <span class="text-muted">{{ competitor.domain }}</span>
                                         {% endif %}
                                     </td>
                                     <td>
+                                        <span class="badge {% if competitor.alignmentScore >= 80 %}bg-success{% elseif competitor.alignmentScore >= 60 %}bg-primary{% else %}bg-warning{% endif %}">
+                                            {{ competitor.alignmentScore }}%
+                                        </span>
+                                    </td>
+                                    <td>
                                         <span class="text-muted small">
-                                            {{ competitor.description ?? 'Aucune description' }}
+                                            {{ competitor.reasoning|slice(0, 80)|default('Aucune analyse') }}{% if competitor.reasoning|length > 80 %}...{% endif %}
                                         </span>
                                     </td>
                                     <td class="text-end pe-3">
                                         <button type="button" class="btn btn-sm btn-outline-primary"
                                                 data-bs-toggle="modal"
-                                                data-bs-target="#competitorModal{{ loop.index }}"
+                                                data-bs-target="#competitorModal{{ competitor.id }}"
                                                 title="Voir les détails">
                                             <i class="bi bi-eye"></i>
                                         </button>
@@ -999,13 +1001,13 @@
                                             {% set assetIcon = 'bi-facebook' %}
                                         {% elseif asset.assetType == 'instagram_post' %}
                                             {% set assetIcon = 'bi-instagram' %}
-                                        {% elseif asset.assetType == 'mail' %}
+                                        {% elseif asset.assetType == 'email' %}
                                             {% set assetIcon = 'bi-envelope' %}
                                         {% elseif asset.assetType == 'bing_ads' %}
                                             {% set assetIcon = 'bi-microsoft' %}
-                                        {% elseif asset.assetType == 'iab_banner' %}
+                                        {% elseif asset.assetType == 'iab' %}
                                             {% set assetIcon = 'bi-display' %}
-                                        {% elseif asset.assetType == 'article_seo' %}
+                                        {% elseif asset.assetType == 'article' %}
                                             {% set assetIcon = 'bi-newspaper' %}
                                         {% endif %}
                                         <div class="fw-semibold">
@@ -1263,14 +1265,14 @@
 {% endif %}
 
 {# Modals pour afficher le détail des concurrents #}
-{% if project.competitorAnalysis %}
-    {% for competitor in project.competitorAnalysis.competitorsArray %}
-        <div class="modal fade" id="competitorModal{{ loop.index }}" tabindex="-1" aria-labelledby="competitorModalLabel{{ loop.index }}" aria-hidden="true">
+{% if project.competitors|length > 0 %}
+    {% for competitor in project.competitors %}
+        <div class="modal fade" id="competitorModal{{ competitor.id }}" tabindex="-1" aria-labelledby="competitorModalLabel{{ competitor.id }}" aria-hidden="true">
             <div class="modal-dialog modal-lg modal-dialog-scrollable">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="competitorModalLabel{{ loop.index }}">
-                            <i class="bi bi-trophy text-warning"></i> {{ competitor.title ?? 'Concurrent' }}
+                        <h5 class="modal-title" id="competitorModalLabel{{ competitor.id }}">
+                            <i class="bi bi-trophy text-warning"></i> {{ competitor.title|default('Concurrent') }}
                         </h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
                     </div>
@@ -1283,39 +1285,78 @@
                             <div class="row g-3">
                                 <div class="col-md-6">
                                     <div class="text-muted small mb-1">Nom</div>
-                                    <div class="fw-semibold">{{ competitor.title ?? 'N/A' }}</div>
+                                    <div class="fw-semibold">{{ competitor.title|default('N/A') }}</div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="text-muted small mb-1">Domaine</div>
-                                    {% if competitor.domain is defined %}
-                                        <a href="https://{{ competitor.domain }}" target="_blank" class="text-decoration-none">
+                                    {% if competitor.url %}
+                                        <a href="{{ competitor.url }}" target="_blank" class="text-decoration-none">
                                             <i class="bi bi-link-45deg"></i> {{ competitor.domain }}
                                         </a>
                                     {% else %}
-                                        <div>-</div>
+                                        <div>{{ competitor.domain }}</div>
                                     {% endif %}
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="text-muted small mb-1">Score d'alignement</div>
+                                    <div>
+                                        <span class="badge {% if competitor.alignmentScore >= 80 %}bg-success{% elseif competitor.alignmentScore >= 60 %}bg-primary{% else %}bg-warning{% endif %}">
+                                            {{ competitor.alignmentScore }}%
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="text-muted small mb-1">Google Ads</div>
+                                    <div>
+                                        {% if competitor.hasAds %}
+                                            <span class="badge bg-warning text-dark">💰 Actif</span>
+                                        {% else %}
+                                            <span class="badge bg-secondary">Non détecté</span>
+                                        {% endif %}
+                                    </div>
                                 </div>
                             </div>
                         </div>
 
-                        {# Description #}
-                        {% if competitor.description is defined %}
+                        {# Raisonnement IA #}
+                        {% if competitor.reasoning %}
                             <div class="mb-4">
                                 <h6 class="text-uppercase text-muted fw-bold mb-3">
-                                    <i class="bi bi-file-text"></i> Description
+                                    <i class="bi bi-file-text"></i> Raisonnement IA
                                 </h6>
-                                <p class="text-muted">{{ competitor.description }}</p>
+                                <p class="text-muted">{{ competitor.reasoning }}</p>
                             </div>
                         {% endif %}
 
-                        {# Metadata supplémentaires si disponibles #}
-                        {% if competitor.metadata is defined %}
-                            <div class="mb-4">
+                        {# Validation IA #}
+                        <div class="mb-4">
+                            <h6 class="text-uppercase text-muted fw-bold mb-3">
+                                <i class="bi bi-robot"></i> Validation IA
+                            </h6>
+                            <div class="row g-3">
+                                {% if competitor.offeringOverlap %}
+                                    <div class="col-md-6">
+                                        <div class="text-muted small mb-1">Overlap Offre</div>
+                                        <div><span class="badge bg-info">{{ competitor.offeringOverlap }}</span></div>
+                                    </div>
+                                {% endif %}
+                                {% if competitor.marketOverlap %}
+                                    <div class="col-md-6">
+                                        <div class="text-muted small mb-1">Overlap Marché</div>
+                                        <div><span class="badge bg-info">{{ competitor.marketOverlap }}</span></div>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        {# Données brutes si disponibles #}
+                        {% if competitor.rawData %}
+                            <div class="mb-0">
                                 <h6 class="text-uppercase text-muted fw-bold mb-3">
-                                    <i class="bi bi-database"></i> Métadonnées
+                                    <i class="bi bi-database"></i> Données brutes
                                 </h6>
                                 <div class="bg-light p-3 rounded">
-                                    <pre class="mb-0 small">{{ competitor.metadata|json_encode(constant('JSON_PRETTY_PRINT')) }}</pre>
+                                    <pre class="mb-0 small">{{ competitor.rawData|json_encode(constant('JSON_PRETTY_PRINT')) }}</pre>
                                 </div>
                             </div>
                         {% endif %}
@@ -1628,24 +1669,63 @@
                                         <strong>Variation {{ i + 1 }}</strong>
                                     </div>
                                     <div class="card-body">
-                                        {% for key, value in variation %}
-                                            <div class="mb-2">
-                                                <strong class="text-muted small">{{ key|replace({'_': ' '})|title }}:</strong>
-                                                <div>
-                                                    {% if value is iterable %}
-                                                        {% for item in value %}
-                                                            {% if item is iterable %}
-                                                                <span class="badge bg-secondary me-1">{{ item|json_encode }}</span>
-                                                            {% else %}
-                                                                <span class="badge bg-secondary me-1">{{ item }}</span>
-                                                            {% endif %}
-                                                        {% endfor %}
-                                                    {% else %}
-                                                        {{ value }}
-                                                    {% endif %}
+                                        {# Gérer les formats : STRING (LinkedIn, Facebook) OU OBJET (Google Ads, Bing Ads, Instagram, Email, IAB, Article) #}
+                                        {% set isObject = variation is iterable and (variation.headline_1 is defined or variation.caption is defined or variation.subject is defined or variation.headlines is defined or variation.banner_300x250 is defined or variation.banner_728x90 is defined or variation.banner_160x600 is defined or (variation.title is defined and variation.introduction is defined)) %}
+                                        {% if isObject %}
+                                            {# Format OBJET : Google Ads/Bing Ads/Instagram - Structures complexes imbriquées #}
+                                            {% for key, value in variation %}
+                                                <div class="mb-2">
+                                                    <strong class="text-muted small">{{ key|replace({'_': ' '})|title }}:</strong>
+                                                    <div>
+                                                        {% if value is iterable %}
+                                                            {% for item in value %}
+                                                                {% if item is iterable %}
+                                                                    <span class="badge bg-secondary me-1">{{ item|json_encode }}</span>
+                                                                {% else %}
+                                                                    <span class="badge bg-secondary me-1">{{ item }}</span>
+                                                                {% endif %}
+                                                            {% endfor %}
+                                                        {% else %}
+                                                            {# Valeur non-iterable OU objet complexe #}
+                                                            {%- if value is null -%}
+                                                                <div class="bg-light p-2 rounded">
+                                                                    <span class="text-muted">N/A</span>
+                                                                </div>
+                                                            {%- elseif value is iterable -%}
+                                                                {# Objet/array complexe - Décomposer pour affichage lisible #}
+                                                                <div class="bg-light p-3 rounded">
+                                                                    {% for subKey, subValue in value %}
+                                                                        <div class="mb-2">
+                                                                            {% if subKey matches '/^[a-zA-Z_]/' or subKey matches '/^banner_/' %}
+                                                                                {# Clé associative (objet) - commence par une lettre ou banner_ #}
+                                                                                <strong class="text-primary small d-block">{{ subKey|replace({'_': ' '})|title }}</strong>
+                                                                            {% endif %}
+                                                                            <div class="ms-2">
+                                                                                {% if subValue is iterable and subValue is not same as(subValue|join('')) %}
+                                                                                    {# Sous-objet/array imbriqué #}
+                                                                                    <pre class="mb-0 small">{{ subValue|json_encode(constant('JSON_PRETTY_PRINT') b-or constant('JSON_UNESCAPED_UNICODE') b-or constant('JSON_UNESCAPED_SLASHES'))|raw }}</pre>
+                                                                                {% else %}
+                                                                                    {# Valeur simple #}
+                                                                                    {{ subValue|nl2br }}
+                                                                                {% endif %}
+                                                                            </div>
+                                                                        </div>
+                                                                    {% endfor %}
+                                                                </div>
+                                                            {%- else -%}
+                                                                {# Valeur scalaire simple #}
+                                                                <div class="bg-light p-2 rounded">
+                                                                    {{ value|nl2br }}
+                                                                </div>
+                                                            {%- endif -%}
+                                                        {% endif %}
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        {% endfor %}
+                                            {% endfor %}
+                                        {% else %}
+                                            {# Format STRING : LinkedIn, Facebook, Instagram, Mail, IAB #}
+                                            <div class="bg-light p-3 rounded" style="white-space: pre-wrap;">{{ variation }}</div>
+                                        {% endif %}
                                     </div>
                                 </div>
                             {% endfor %}

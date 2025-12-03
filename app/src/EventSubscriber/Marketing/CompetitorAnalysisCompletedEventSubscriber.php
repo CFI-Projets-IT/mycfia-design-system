@@ -11,17 +11,17 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
- * Event Subscriber pour persister les résultats d'analyse concurrentielle dans l'entité CompetitorAnalysis.
+ * Event Subscriber pour persister l'analyse concurrentielle GLOBALE dans Project.
  *
  * Écoute l'événement TaskCompletedEvent dispatché par le CompetitorAnalystAgent,
- * extrait l'analyse détaillée (strengths, weaknesses, market_positioning, etc.)
- * et met à jour l'entité CompetitorAnalysis existante.
+ * extrait l'analyse globale du marché (market_overview, threats, opportunities, recommendations)
+ * et met à jour les champs de Project.
  *
  * Workflow :
- * 1. CompetitorController::validate() crée l'entité CompetitorAnalysis avec champs vides
+ * 1. Utilisateur sélectionne les concurrents via CompetitorController::validate()
  * 2. StrategyController::recap() dispatch CompetitorAnalystAgent
- * 3. CompetitorAnalystAgent génère l'analyse détaillée
- * 4. Ce subscriber met à jour l'entité avec les résultats
+ * 3. CompetitorAnalystAgent génère l'analyse globale du marché
+ * 4. Ce subscriber met à jour Project avec l'analyse globale
  * 5. CompetitorToStrategySubscriber chaîne vers StrategyAnalystAgent
  */
 final readonly class CompetitorAnalysisCompletedEventSubscriber implements EventSubscriberInterface
@@ -42,7 +42,7 @@ final readonly class CompetitorAnalysisCompletedEventSubscriber implements Event
     }
 
     /**
-     * Persiste les résultats d'analyse concurrentielle quand TaskCompletedEvent est reçu.
+     * Persiste l'analyse concurrentielle globale dans Project quand TaskCompletedEvent est reçu.
      *
      * Filtre sur l'agent CompetitorAnalystAgent pour ne traiter que les analyses concurrentielles.
      */
@@ -97,31 +97,19 @@ final readonly class CompetitorAnalysisCompletedEventSubscriber implements Event
             return;
         }
 
-        // Récupérer l'entité CompetitorAnalysis existante
-        $competitorAnalysis = $project->getCompetitorAnalysis();
-
-        if (null === $competitorAnalysis) {
-            $this->logger->error('CompetitorAnalysis entity not found for project', [
-                'task_id' => $taskId,
-                'project_id' => $projectId,
-            ]);
-
-            return;
-        }
-
         try {
-            // Mettre à jour l'entité avec les résultats de l'agent
-            $this->updateCompetitorAnalysisFromResult($competitorAnalysis, $result);
+            // Mettre à jour Project avec l'analyse globale
+            $this->updateProjectWithCompetitiveAnalysis($project, $result);
 
             // Flush en base de données
             $this->entityManager->flush();
 
-            $this->logger->info('CompetitorAnalysis updated successfully', [
+            $this->logger->info('Project competitive analysis updated successfully', [
                 'task_id' => $taskId,
                 'project_id' => $projectId,
             ]);
         } catch (\Throwable $e) {
-            $this->logger->error('Failed to update CompetitorAnalysis', [
+            $this->logger->error('Failed to update Project competitive analysis', [
                 'task_id' => $taskId,
                 'project_id' => $projectId,
                 'error' => $e->getMessage(),
@@ -133,62 +121,36 @@ final readonly class CompetitorAnalysisCompletedEventSubscriber implements Event
     }
 
     /**
-     * Met à jour l'entité CompetitorAnalysis depuis le résultat de l'agent IA.
+     * Met à jour Project avec l'analyse concurrentielle globale.
      *
-     * Structure attendue du résultat CompetitorAnalystAgent :
-     * - competitors : Liste des concurrents analysés
-     * - strengths : Forces identifiées par concurrent
-     * - weaknesses : Faiblesses identifiées par concurrent
-     * - market_positioning : Positionnement marché
-     * - differentiation_opportunities : Opportunités de différenciation
-     * - marketing_strategies : Stratégies marketing des concurrents
+     * Structure attendue du résultat CompetitorAnalystAgent (v3.34.0+) :
+     * - market_overview : Vue d'ensemble du marché (string narrative)
+     * - threats : Menaces concurrentielles globales (array)
+     * - opportunities : Opportunités de marché identifiées (array)
+     * - recommendations : Recommandations stratégiques (array)
      *
      * @param array<string, mixed> $result
      */
-    private function updateCompetitorAnalysisFromResult(\App\Entity\CompetitorAnalysis $competitorAnalysis, array $result): void
+    private function updateProjectWithCompetitiveAnalysis(\App\Entity\Project $project, array $result): void
     {
-        // Extraire et normaliser les données
-        $strengths = $result['strengths'] ?? $result['competitor_strengths'] ?? [];
-        $weaknesses = $result['weaknesses'] ?? $result['competitor_weaknesses'] ?? [];
-        $marketPositioning = $result['market_positioning'] ?? $result['positioning'] ?? [];
-        $differentiationOpportunities = $result['differentiation_opportunities'] ?? $result['opportunities'] ?? [];
-        $marketingStrategies = $result['marketing_strategies'] ?? $result['strategies'] ?? [];
+        // Extraire les données d'analyse globale
+        $marketOverview = $result['market_overview'] ?? '';
+        $threats = $result['threats'] ?? [];
+        $opportunities = $result['opportunities'] ?? [];
+        $recommendations = $result['recommendations'] ?? [];
 
-        // Mettre à jour les champs
-        $competitorAnalysis->setStrengths($this->normalizeJsonField($strengths));
-        $competitorAnalysis->setWeaknesses($this->normalizeJsonField($weaknesses));
-        $competitorAnalysis->setMarketPositioning($this->normalizeJsonField($marketPositioning));
-        $competitorAnalysis->setDifferentiationOpportunities($this->normalizeJsonField($differentiationOpportunities));
-        $competitorAnalysis->setMarketingStrategies($this->normalizeJsonField($marketingStrategies));
+        // Mettre à jour les champs de Project
+        $project->setCompetitiveMarketOverview($marketOverview);
+        $project->setCompetitiveThreats($threats);
+        $project->setCompetitiveOpportunities($opportunities);
+        $project->setCompetitiveRecommendations($recommendations);
+        $project->setCompetitiveAnalysisGeneratedAt(new \DateTimeImmutable());
 
-        $this->logger->debug('CompetitorAnalysis entity updated from agent result', [
-            'has_strengths' => ! empty($strengths),
-            'has_weaknesses' => ! empty($weaknesses),
-            'has_positioning' => ! empty($marketPositioning),
-            'has_opportunities' => ! empty($differentiationOpportunities),
-            'has_strategies' => ! empty($marketingStrategies),
+        $this->logger->debug('Project updated with competitive analysis', [
+            'has_market_overview' => ! empty($marketOverview),
+            'has_threats' => ! empty($threats),
+            'has_opportunities' => ! empty($opportunities),
+            'has_recommendations' => ! empty($recommendations),
         ]);
-    }
-
-    /**
-     * Normalise un champ JSON : convertit array en JSON string, garde string tel quel.
-     */
-    private function normalizeJsonField(mixed $value): string
-    {
-        if (is_array($value)) {
-            $json = json_encode($value, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
-            if (false === $json) {
-                throw new \RuntimeException('Failed to encode array to JSON: '.json_last_error_msg());
-            }
-
-            return $json;
-        }
-
-        if (is_string($value)) {
-            return $value;
-        }
-
-        // Fallback : convertir en string
-        return (string) $value;
     }
 }

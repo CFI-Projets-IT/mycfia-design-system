@@ -1,8 +1,8 @@
 import { Controller } from '@hotwired/stimulus';
 
 /**
- * Marketing Enrichment Controller
- * Gère l'enrichissement asynchrone de projet avec Mercure SSE
+ * Marketing Competitor Generating Controller
+ * Gère la détection asynchrone de concurrents avec Mercure SSE
  */
 export default class extends Controller {
     static targets = [
@@ -13,7 +13,6 @@ export default class extends Controller {
         'resultSummary',
         'errorDetails',
         'elapsedTime',
-        'status',
         'progressBar',
         'progressPercentage',
         'progressMessage',
@@ -21,7 +20,6 @@ export default class extends Controller {
     ];
 
     static values = {
-        projectId: Number,
         taskId: String,
         mercureUrl: String,
         mercureJwt: String,
@@ -29,8 +27,7 @@ export default class extends Controller {
     };
 
     connect() {
-        console.log('Marketing enrichment controller connected');
-        console.log('Project ID:', this.projectIdValue);
+        console.log('Marketing competitor controller connected');
         console.log('Task ID:', this.taskIdValue);
 
         this.startTime = Date.now();
@@ -98,17 +95,14 @@ export default class extends Controller {
     }
 
     /**
-     * Gère le démarrage de l'enrichissement
+     * Gère le démarrage de la détection
      */
     handleStart(_data) {
-        console.log('Enrichissement démarré');
-        if (this.hasStatusTarget) {
-            this.statusTarget.textContent = 'En cours...';
-        }
+        console.log('Détection de concurrents démarrée');
     }
 
     /**
-     * Gère la progression temps réel (v3.34.0)
+     * Gère la progression temps réel (v3.34.6)
      */
     handleProgress(data) {
         const { percentage, message, metadata } = data;
@@ -141,7 +135,7 @@ export default class extends Controller {
      * Gère la complétion
      */
     handleComplete(data) {
-        console.log('Enrichissement terminé avec succès');
+        console.log('Détection de concurrents terminée avec succès');
         this.showSuccess(data);
     }
 
@@ -149,13 +143,13 @@ export default class extends Controller {
      * Gère les erreurs
      */
     handleError(data) {
-        this.showError(data.error || "Une erreur est survenue lors de l'enrichissement");
+        this.showError(data.error || 'Une erreur est survenue lors de la détection des concurrents');
     }
 
     /**
      * Affiche le succès
      */
-    showSuccess(_data) {
+    showSuccess(data) {
         if (this.hasSpinnerTarget) {
             this.spinnerTarget.classList.add('d-none');
         }
@@ -169,11 +163,8 @@ export default class extends Controller {
         }
 
         if (this.hasResultSummaryTarget) {
-            this.resultSummaryTarget.textContent = 'Enrichissement terminé avec succès !';
-        }
-
-        if (this.hasStatusTarget) {
-            this.statusTarget.textContent = 'Terminé';
+            const competitorsCount = data.result?.competitors?.length || 0;
+            this.resultSummaryTarget.textContent = `${competitorsCount} concurrent(s) détecté(s) avec succès !`;
         }
 
         if (this.eventSource) {
@@ -204,10 +195,6 @@ export default class extends Controller {
 
         if (this.hasErrorDetailsTarget) {
             this.errorDetailsTarget.textContent = message;
-        }
-
-        if (this.hasStatusTarget) {
-            this.statusTarget.textContent = 'Erreur';
         }
 
         if (this.eventSource) {

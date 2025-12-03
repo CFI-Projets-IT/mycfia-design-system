@@ -63,10 +63,10 @@ asset:
     linkedin_post: LinkedIn Post
     facebook_post: Facebook Post
     instagram_post: Instagram Post
-    mail: Email Marketing
+    email: Email Marketing
     bing_ads: Bing Ads
-    iab_banner: Bannière IAB
-    article_seo: Article SEO
+    iab: Bannière IAB
+    article: Article SEO
 
   status:
     draft: Brouillon

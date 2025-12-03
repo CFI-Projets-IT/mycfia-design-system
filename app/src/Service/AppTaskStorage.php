@@ -77,7 +77,7 @@ final readonly class AppTaskStorage implements TaskStorageInterface
             $task->setTokensInput($result->tokensInput);
             $task->setTokensOutput($result->tokensOutput);
             $task->setTokensTotal($result->tokensTotal);
-            $task->setCost($result->cost);
+            $task->setCost((string) $result->cost);
             $task->setDurationMs($result->durationMs);
             $task->setModelUsed($result->modelUsed);
             $task->setCompletedAt($result->completedAt);
@@ -117,7 +117,7 @@ final readonly class AppTaskStorage implements TaskStorageInterface
             $task->setTokensInput($result->tokensInput);
             $task->setTokensOutput($result->tokensOutput);
             $task->setTokensTotal($result->tokensTotal);
-            $task->setCost($result->cost);
+            $task->setCost((string) $result->cost);
             $task->setDurationMs($result->durationMs);
             $task->setModelUsed($result->modelUsed);
             $task->setCompletedAt($result->completedAt);

@@ -295,16 +295,27 @@ final class AssetController extends AbstractController
             $brief['personas'] = $selectedPersonas;
         }
 
-        // Analyse concurrentielle
-        $competitorAnalysis = $project->getCompetitorAnalysis();
-        if (null !== $competitorAnalysis) {
+        // Analyse concurrentielle : Competitors sélectionnés + analyse globale du marché
+        $selectedCompetitors = $project->getCompetitors()->filter(fn ($c) => $c->isSelected())->toArray();
+        if (! empty($selectedCompetitors)) {
+            // Sérialiser les competitors pour le brief
+            $competitorsData = array_map(fn ($competitor) => [
+                'domain' => $competitor->getDomain(),
+                'title' => $competitor->getTitle(),
+                'url' => $competitor->getUrl(),
+                'alignmentScore' => $competitor->getAlignmentScore(),
+                'reasoning' => $competitor->getReasoning(),
+                'offeringOverlap' => $competitor->getOfferingOverlap(),
+                'marketOverlap' => $competitor->getMarketOverlap(),
+                'hasAds' => $competitor->hasAds(),
+            ], $selectedCompetitors);
+
             $brief['competitor_analysis'] = [
-                'competitors' => $competitorAnalysis->getCompetitorsArray(),
-                'strengths' => $competitorAnalysis->getStrengths(),
-                'weaknesses' => $competitorAnalysis->getWeaknesses(),
-                'market_positioning' => $competitorAnalysis->getMarketPositioning(),
-                'differentiation_opportunities' => $competitorAnalysis->getDifferentiationOpportunities(),
-                'marketing_strategies' => $competitorAnalysis->getMarketingStrategies(),
+                'competitors' => $competitorsData,
+                'market_overview' => $project->getCompetitiveMarketOverview(),
+                'threats' => $project->getCompetitiveThreats(),
+                'opportunities' => $project->getCompetitiveOpportunities(),
+                'recommendations' => $project->getCompetitiveRecommendations(),
             ];
         }
 

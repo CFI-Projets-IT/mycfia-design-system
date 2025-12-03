@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\MessageHandler;
 
-use App\Entity\CompetitorAnalysis;
 use App\Entity\Project;
 use App\Entity\Strategy;
 use App\Enum\ProjectStatus;
@@ -207,22 +206,13 @@ final readonly class GenerateStrategyMessageHandler
 
             $this->entityManager->persist($strategy);
 
-            // 6. Persister l'analyse concurrentielle si présente (mapper vers vrais champs TEXT)
+            // 6. Stocker l'analyse concurrentielle dans Project si présente
             if (null !== $competitorAnalysisData) {
-                $competitorAnalysis = new CompetitorAnalysis();
-                $competitorAnalysis->setProject($project);
-
-                // Champs TEXT stockant JSON/texte
-                $competitorAnalysis->setCompetitors(json_encode($competitorAnalysisData['competitors'], JSON_THROW_ON_ERROR));
-                $competitorAnalysis->setStrengths(json_encode($competitorAnalysisData['competitors'], JSON_THROW_ON_ERROR));
-                $competitorAnalysis->setWeaknesses(json_encode($competitorAnalysisData['threats'], JSON_THROW_ON_ERROR));
-                $competitorAnalysis->setMarketPositioning($competitorAnalysisData['market_overview']);
-                $competitorAnalysis->setDifferentiationOpportunities(json_encode($competitorAnalysisData['opportunities'], JSON_THROW_ON_ERROR));
-                $competitorAnalysis->setMarketingStrategies(json_encode($competitorAnalysisData['recommendations'], JSON_THROW_ON_ERROR));
-
-                // createdAt/updatedAt gérés automatiquement par Gedmo
-
-                $this->entityManager->persist($competitorAnalysis);
+                $project->setCompetitiveMarketOverview($competitorAnalysisData['market_overview'] ?? null);
+                $project->setCompetitiveThreats($competitorAnalysisData['threats'] ?? null);
+                $project->setCompetitiveOpportunities($competitorAnalysisData['opportunities'] ?? null);
+                $project->setCompetitiveRecommendations($competitorAnalysisData['recommendations'] ?? null);
+                $project->setCompetitiveAnalysisGeneratedAt(new \DateTimeImmutable());
             }
 
             // 7. Mettre à jour le statut du projet

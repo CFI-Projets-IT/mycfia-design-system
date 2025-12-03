@@ -117,14 +117,16 @@ final readonly class GeneratePersonasMessageHandler
                     ['progress' => round((($i + 1) / $message->numberOfPersonas) * 100, 2)]
                 );
 
-                // Appel de la vraie API du bundle avec contexte v3.32.0
-                // Le bundle dispatch automatiquement AgentExecutionStartedEvent/CompletedEvent/FailedEvent
-                /** @var array<string, mixed> $personaData */
-                $personaData = $this->personaGenerator->generatePersona(
+                // Appel de la vraie API du bundle : generatePersona(sector, target, options)
+                // v3.35.6+ : Retourne ['data' => ..., 'tokens_used' => ..., 'cost' => ...]
+                $result = $this->personaGenerator->generatePersona(
                     sector: $sector,
                     target: $target,
                     options: $baseOptions
                 );
+
+                /** @var array<string, mixed> $personaData */
+                $personaData = $result['data'];
 
                 // 5. Mapper les données vers l'entité Persona
                 $persona = new Persona();

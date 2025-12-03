@@ -247,6 +247,9 @@ final class PersonaController extends AbstractController
      * Cette méthode permet à l'utilisateur de choisir quels personas
      * cibler dans la stratégie et les assets générés (-60% tokens).
      *
+     * PUIS lance immédiatement la détection de concurrents et redirige
+     * vers la page de progression pour un flux UX cohérent.
+     *
      * @param Request $request Requête contenant selected_personas[]
      * @param Project $project Projet concerné
      */
@@ -276,15 +279,63 @@ final class PersonaController extends AbstractController
         $this->entityManager->flush();
 
         $selectedCount = count($selectedPersonaIds);
-        $totalCount = $project->getPersonas()->count();
 
+        // Flash message de confirmation
         $this->addFlash('success', $this->translator->trans(
             'persona.flash.selection_updated',
-            ['%count%' => $selectedCount, '%total%' => $totalCount],
+            ['%count%' => $selectedCount, '%total%' => $project->getPersonas()->count()],
             'marketing'
         ));
 
-        return $this->redirectToRoute('marketing_competitor_detect', ['id' => $project->getId()]);
+        // ========================================================
+        // NOUVEAU : Lancer immédiatement la détection de concurrents
+        // ========================================================
+
+        // Préparer le contexte projet pour CompetitorAnalystAgent
+        $keywordsData = $project->getKeywordsData();
+        $brandIdentity = $project->getBrandIdentity();
+        $businessIntelligence = $project->getBusinessIntelligence();
+        $scrapedContent = $project->getScrapedContent();
+
+        $projectContext = [
+            'website_url' => $project->getWebsiteUrl(),
+            'brand_analysis' => [
+                'brand_name' => $brandIdentity['brand_name'] ?? $project->getCompanyName(),
+                'extract' => [
+                    'geographicMarket' => $businessIntelligence['geography'] ?? 'France',
+                    'mainOffering' => $businessIntelligence['valueProposition'] ?? ($project->getProductInfo() ?: ''),
+                    'targetMarket' => $businessIntelligence['targetAudience'] ?? '',
+                ],
+            ],
+            'google_ads_keywords' => $keywordsData['keywords'] ?? [],
+            'scraped_content' => array_merge(
+                $scrapedContent ?? [],
+                [
+                    'project_context' => $businessIntelligence ?? [],
+                    'language' => $scrapedContent['language'] ?? 'fr',
+                ]
+            ),
+        ];
+
+        /** @var User $user */
+        $user = $this->getUser();
+
+        // Dispatcher la tâche asynchrone CompetitorAnalystAgent
+        $taskId = $this->agentTaskManager->dispatchCompetitorDetection(
+            sector: $project->getSector(),
+            maxCompetitors: 10,
+            projectContext: $projectContext,
+            options: [
+                'project_id' => $project->getId(),
+                'user_id' => $user->getId(),
+            ]
+        );
+
+        // Rediriger vers la page de progression (comme pour personas)
+        return $this->redirectToRoute('marketing_competitor_generating', [
+            'id' => $project->getId(),
+            'taskId' => $taskId,
+        ]);
     }
 
     /**

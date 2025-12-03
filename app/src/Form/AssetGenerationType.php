@@ -35,10 +35,10 @@ class AssetGenerationType extends AbstractType
         'linkedin_post' => 'LinkedIn Post (réseau professionnel)',
         'facebook_post' => 'Facebook Post (réseau social)',
         'instagram_post' => 'Instagram Post (réseau social visuel)',
-        'mail' => 'Email marketing',
+        'email' => 'Email marketing',
         'bing_ads' => 'Bing Ads (publicité search alternative)',
-        'iab_banner' => 'IAB Banner (bannière publicitaire)',
-        'article_seo' => 'Article SEO (contenu blog)',
+        'iab' => 'IAB Banner (bannière publicitaire)',
+        'article' => 'Article SEO (contenu blog)',
     ];
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
