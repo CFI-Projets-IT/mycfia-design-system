@@ -17,6 +17,20 @@ services:
       - MERCURE_PUBLIC_URL=${MERCURE_PUBLIC_URL:-http://localhost:3000/.well-known/mercure}
       - MERCURE_JWT_SECRET=${MERCURE_JWT_SECRET:-!ChangeThisMercureHubJWTSecretKey!}
       - CHROMA_URL=${CHROMA_URL:-http://chroma:8000}
+      - CFI_API_BASE_URL=${CFI_API_BASE_URL}
+      - CFI_API_CLEF=${CFI_API_CLEF}
+      - CFI_API_TIMEOUT=${CFI_API_TIMEOUT}
+      - CFI_TOKEN_TTL=${CFI_TOKEN_TTL}
+      - CFI_TOKEN_REFRESH_THRESHOLD=${CFI_TOKEN_REFRESH_THRESHOLD}
+      - MISTRAL_API_KEY=${MISTRAL_API_KEY}
+      - SERP_API_KEY=${SERP_API_KEY}
+      - FIRECRAWL_API_KEY=${FIRECRAWL_API_KEY}
+      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
+      - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
+      - GOOGLE_CLIENT_REFRESH_TOKEN=${GOOGLE_CLIENT_REFRESH_TOKEN}
+      - GOOGLE_CLIENT_CUSTOMER_ID=${GOOGLE_CLIENT_CUSTOMER_ID}
+      - GOOGLE_CLIENT_CM_ID=${GOOGLE_CLIENT_CM_ID}
+      - GOOGLE_TOKEN_DEV=${GOOGLE_TOKEN_DEV}
     depends_on:
       mariadb:
         condition: service_healthy
@@ -97,7 +111,7 @@ services:
       target: ${BUILD_TARGET:-development}
     container_name: ${PROJECT_NAME}_messenger_worker
     entrypoint: ["/usr/local/bin/entrypoint-worker.sh"]
-    command: ["php", "/var/www/html/bin/console", "messenger:consume", "async", "--time-limit=3600", "-vv"]
+    command: ["php", "/var/www/html/bin/console", "messenger:consume", "async", "--time-limit=3600", "--sleep=1", "-vv"]
     working_dir: /var/www/html
     environment:
       - APP_ENV=${APP_ENV:-dev}

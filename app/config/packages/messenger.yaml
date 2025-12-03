@@ -7,8 +7,10 @@ framework:
             async:
                 dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
                 options:
-                    use_notify: true
-                    check_delayed_interval: 60000
+                    use_notify: false
+                    check_delayed_interval: 1000
+                    # Note: use_notify ne fonctionne qu'avec PostgreSQL (LISTEN/NOTIFY)
+                    # MariaDB utilise polling avec check_delayed_interval (en ms)
                 retry_strategy:
                     max_retries: 3
                     multiplier: 2

@@ -23,6 +23,21 @@ services:
       - APP_DEBUG=1
       # Base de données développement
       - DATABASE_URL=mysql://${DB_USER:-app_user}:${DB_PASSWORD:-app_password}@mariadb:3306/${DB_NAME:-app_db}?serverVersion=${MARIADB_VERSION:-11}.0.0-MariaDB&charset=utf8mb4
+      # API externes
+      - CFI_API_BASE_URL=${CFI_API_BASE_URL}
+      - CFI_API_CLEF=${CFI_API_CLEF}
+      - CFI_API_TIMEOUT=${CFI_API_TIMEOUT}
+      - CFI_TOKEN_TTL=${CFI_TOKEN_TTL}
+      - CFI_TOKEN_REFRESH_THRESHOLD=${CFI_TOKEN_REFRESH_THRESHOLD}
+      - MISTRAL_API_KEY=${MISTRAL_API_KEY}
+      - SERP_API_KEY=${SERP_API_KEY}
+      - FIRECRAWL_API_KEY=${FIRECRAWL_API_KEY}
+      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
+      - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
+      - GOOGLE_CLIENT_REFRESH_TOKEN=${GOOGLE_CLIENT_REFRESH_TOKEN}
+      - GOOGLE_CLIENT_CUSTOMER_ID=${GOOGLE_CLIENT_CUSTOMER_ID}
+      - GOOGLE_CLIENT_CM_ID=${GOOGLE_CLIENT_CM_ID}
+      - GOOGLE_TOKEN_DEV=${GOOGLE_TOKEN_DEV}
     # Healthcheck personnalisé pour FrankenPHP
     healthcheck:
       test: ["CMD-SHELL", "php -v || exit 1"]
@@ -82,6 +97,14 @@ services:
     environment:
       - IS_PERSISTENT=TRUE
       - ANONYMIZED_TELEMETRY=FALSE
+
+  # Configuration Messenger Worker pour développement
+  messenger_worker:
+    environment:
+      # Base de données développement (nécessaire pour accéder à messenger_messages)
+      - DATABASE_URL=mysql://${DB_USER:-app_user}:${DB_PASSWORD:-app_password}@mariadb:3306/${DB_NAME:-app_db}?serverVersion=${MARIADB_VERSION:-11}.0.0-MariaDB&charset=utf8mb4
+      # Variables pour Messenger
+      - MESSENGER_TRANSPORT_DSN=doctrine://default?queue_name=async
 
 volumes:
   chroma_data:
