@@ -337,10 +337,15 @@ deploy_services() {
     # Forcer la recréation si configuration automatique des ports
     if [ "$AUTO_PORTS" = "true" ]; then
         log_info "Recréation des conteneurs pour appliquer les nouveaux ports..."
-        $cmd up -d --force-recreate --wait
+        $cmd up -d --force-recreate
     else
-        $cmd up -d --wait
+        $cmd up -d
     fi
+
+    # Attendre que les conteneurs critiques soient prêts
+    log_info "Attente du démarrage des conteneurs critiques..."
+    sleep 5
+    docker wait --condition=running ${PROJECT_NAME}_frankenphp ${PROJECT_NAME}_mariadb 2>/dev/null || true
 
     log_success "Services déployés avec succès"
 
@@ -410,6 +415,9 @@ deploy_application() {
         # Dev/Preprod : avec dépendances de dev
         docker exec --user www-data $container composer install --no-interaction
     fi
+
+    log_info "🗄️ Création de la base de données si nécessaire..."
+    docker exec --user www-data $container php bin/console doctrine:database:create --if-not-exists
 
     log_info "🗄️ Exécution des migrations Doctrine..."
     docker exec --user www-data $container php bin/console doctrine:migrations:migrate --no-interaction --allow-no-migration
@@ -526,18 +534,37 @@ check_requirements
 # Gestion des actions spéciales
 case $ACTION in
     "down")
-        # Arrêt avec configuration par défaut
+        # Détection automatique des fichiers compose actifs
         COMPOSE_FILES="-f docker-compose.yml -f docker-compose.override.yml"
+
+        # Vérifier si des conteneurs de monitoring sont actifs
+        if docker ps --format '{{.Names}}' | grep -q "${PROJECT_NAME}_prometheus\|${PROJECT_NAME}_grafana\|${PROJECT_NAME}_loki"; then
+            log_info "Stack monitoring détectée, ajout de docker-compose.monitoring.yml"
+            COMPOSE_FILES="$COMPOSE_FILES -f docker-compose.monitoring.yml"
+        fi
+
         stop_services
         exit 0
         ;;
     "status")
         COMPOSE_FILES="-f docker-compose.yml -f docker-compose.override.yml"
+
+        # Vérifier si des conteneurs de monitoring sont actifs
+        if docker ps --format '{{.Names}}' | grep -q "${PROJECT_NAME}_prometheus\|${PROJECT_NAME}_grafana\|${PROJECT_NAME}_loki"; then
+            COMPOSE_FILES="$COMPOSE_FILES -f docker-compose.monitoring.yml"
+        fi
+
         show_status
         exit 0
         ;;
     "logs")
         COMPOSE_FILES="-f docker-compose.yml -f docker-compose.override.yml"
+
+        # Vérifier si des conteneurs de monitoring sont actifs
+        if docker ps --format '{{.Names}}' | grep -q "${PROJECT_NAME}_prometheus\|${PROJECT_NAME}_grafana\|${PROJECT_NAME}_loki"; then
+            COMPOSE_FILES="$COMPOSE_FILES -f docker-compose.monitoring.yml"
+        fi
+
         show_logs
         exit 0
         ;;
@@ -564,8 +591,12 @@ if [ "$APP_ENV" = "dev" ] && [ "$ENVIRONMENT" != "preprod" ]; then
             log_info "Déploiement annulé. Relancez avec : ./deploy.sh dev --auto-ports"
             exit 1
         fi
+        # L'utilisateur a choisi de continuer SANS auto-ports
+        # On utilise les ports configurés dans .env
+    else
+        # L'utilisateur a utilisé --auto-ports, on configure automatiquement
+        auto_configure_ports "$SCRIPT_DIR/.env"
     fi
-    auto_configure_ports "$SCRIPT_DIR/.env"
 elif [ "$AUTO_PORTS" = "true" ] && [ "$APP_ENV" != "dev" ]; then
     log_warn "--auto-ports disponible uniquement en développement local"
     log_warn "Cette option sera ignorée pour $ENVIRONMENT"
@@ -573,9 +604,17 @@ elif [ "$AUTO_PORTS" = "true" ] && [ "$APP_ENV" != "dev" ]; then
 fi
 
 # Nom du projet personnalisé
-if [ -n "$PROJECT_NAME" ]; then
-    export PROJECT_NAME="$PROJECT_NAME"
+if [ -z "$PROJECT_NAME" ]; then
+    # Charger PROJECT_NAME depuis .env.local si non défini
+    if [ -f "$SCRIPT_DIR/.env.local" ]; then
+        PROJECT_NAME=$(grep "^PROJECT_NAME=" "$SCRIPT_DIR/.env.local" | cut -d= -f2)
+    fi
+    # Fallback sur .env si toujours vide
+    if [ -z "$PROJECT_NAME" ] && [ -f "$SCRIPT_DIR/.env" ]; then
+        PROJECT_NAME=$(grep "^PROJECT_NAME=" "$SCRIPT_DIR/.env" | cut -d= -f2)
+    fi
 fi
+export PROJECT_NAME="${PROJECT_NAME:-myCfia}"
 
 # Déploiement
 deploy_services "$BUILD_FLAG"

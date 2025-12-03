@@ -15,6 +15,7 @@ RUN apt-get update && apt-get install -y \
     lsof \
     tzdata \
     gosu \
+    supervisor \
     && rm -rf /var/lib/apt/lists/* \
     && ln -sf /usr/share/zoneinfo/$TZ /etc/localtime \
     && echo $TZ > /etc/timezone

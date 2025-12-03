@@ -21,7 +21,7 @@
         "gorillias/marketing-ai-bundle": "dev-main",
         "phpdocumentor/reflection-docblock": "^5.6.3",
         "phpstan/phpdoc-parser": "^2.3",
-        "promphp/prometheus_client_php": "^2.14",
+        "promphp/prometheus_client_php": "^2.14.1",
         "stof/doctrine-extensions-bundle": "^1.14",
         "symfony/ai-bundle": "dev-main",
         "symfony/asset": "7.3.*",

@@ -111,7 +111,7 @@ services:
       target: ${BUILD_TARGET:-development}
     container_name: ${PROJECT_NAME}_messenger_worker
     entrypoint: ["/usr/local/bin/entrypoint-worker.sh"]
-    command: ["php", "/var/www/html/bin/console", "messenger:consume", "async", "--time-limit=3600", "--sleep=1", "-vv"]
+    command: ["/usr/bin/supervisord", "-c", "/etc/supervisor/supervisord.conf"]
     working_dir: /var/www/html
     environment:
       - APP_ENV=${APP_ENV:-dev}
@@ -128,6 +128,8 @@ services:
     volumes:
       - ./app:/var/www/html
       - ./docker/entrypoint-worker.sh:/usr/local/bin/entrypoint-worker.sh:ro
+      - ./docker/supervisor/supervisord.conf:/etc/supervisor/supervisord.conf:ro
+      - ./docker/supervisor/messenger-worker.conf:/etc/supervisor/conf.d/messenger-worker.conf:ro
     restart: unless-stopped
     networks:
       - app_network
