@@ -262,6 +262,12 @@ setup_environment() {
             ENV_FILE=".env"
             COMPOSE_FILES="-f docker-compose.yml -f docker-compose.preprod.yml"
 
+            # Ajouter monitoring si activé
+            if [ "$MONITORING_ENABLED" = "true" ]; then
+                COMPOSE_FILES="$COMPOSE_FILES -f docker-compose.monitoring.yml"
+                log_info "Stack monitoring activée (Prometheus, Loki, Grafana)"
+            fi
+
             # Vérifier les variables de preprod
             if [ ! -f "$SCRIPT_DIR/.env.preprod.local" ]; then
                 log_error "Fichier .env.preprod.local requis pour preprod"

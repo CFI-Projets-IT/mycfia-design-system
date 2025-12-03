@@ -7,7 +7,7 @@ ai:
     # Vectorizer pour embeddings (RAG PersonaKnowledgeStore, CompetitorDataStore, BrandGuidelinesStore)
     vectorizer:
         mistral_embeddings:
-            platform: 'ai.traceable_platform.mistral'
+            platform: 'ai.platform.mistral'
             model: 'mistral-embed'
 
     # Stores ChromaDB pour stockage vectoriel RAG
