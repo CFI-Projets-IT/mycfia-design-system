@@ -67,7 +67,8 @@ allow_url_include = Off
 
 ; Limitation des fonctions dangereuses
 ; curl_exec et curl_multi_exec retirés pour permettre les requêtes HTTP
-disable_functions = exec,passthru,shell_exec,system,proc_open,popen,parse_ini_file,show_source
+; proc_open retiré pour permettre Composer et Symfony Process
+disable_functions = exec,passthru,shell_exec,system,popen,parse_ini_file,show_source
 
 ; Variables d'environnement
 variables_order = "GPCS"
