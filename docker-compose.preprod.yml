@@ -153,7 +153,7 @@ services:
       mariadb:
         condition: service_healthy
       frankenphp:
-        condition: service_started
+        condition: service_healthy
     restart: unless-stopped
     networks:
       - app_network
