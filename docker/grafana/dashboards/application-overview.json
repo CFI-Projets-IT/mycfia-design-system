@@ -93,7 +93,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "up{job=\"symfony-app\"}",
+          "expr": "up{job=\"symfony-app\",instance=\"frankenphp:80\"}",
           "legendFormat": "Symfony",
           "refId": "A"
         }

@@ -11,11 +11,9 @@
 /app/.env.local
 /app/.env.*.local
 
-# Docker volumes
-/docker/grafana/
-/docker/loki/
-/docker/prometheus/
-/docker/promtail/
+# Docker volumes (les données sont dans des volumes Docker nommés)
+# Les répertoires /docker/*/ contiennent des fichiers de configuration versionnés
+# Seul /docker/mysql/ contient des données temporaires à ignorer
 /docker/mysql/
 
 # Symfony
