@@ -4,7 +4,7 @@
     "repositories": [
         {
             "type": "vcs",
-            "url": "https://gitlab.com/gorillias/marketing-ai-bundle",
+            "url": "https://github.com/CFI-Projets-IT/marketing-ai-bundle",
             "no-api": true
         }
     ],
