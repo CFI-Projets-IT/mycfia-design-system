@@ -9,6 +9,10 @@
 /vendor/
 ###< symfony/framework-bundle ###
 
+###> composer ###
+/auth.json
+###< composer ###
+
 ###> phpunit/phpunit ###
 /phpunit.xml
 /.phpunit.cache/
