@@ -4,6 +4,7 @@
 /CLAUDE.md
 /FIXME.md
 /PLAN_*.md
+/MIGRATION_*.md
 
 # Environnement
 /.env.local
