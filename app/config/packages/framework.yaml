@@ -10,7 +10,11 @@ framework:
     trusted_headers: ['x-forwarded-for', 'x-forwarded-host', 'x-forwarded-proto', 'x-forwarded-port', 'x-forwarded-prefix']
 
     # Note that the session will be started ONLY if you read or write from it.
-    session: true
+    session:
+        handler_id: null
+        cookie_secure: false  # HTTP pour l'instant (pas encore HTTPS)
+        cookie_samesite: lax
+        cookie_httponly: true
 
     # Configuration HTTP Client pour Symfony AI / Mistral API
     # Timeout augmenté pour les requêtes IA longues (enrichissement, génération multi-personas)
