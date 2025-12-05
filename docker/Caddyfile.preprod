@@ -10,8 +10,8 @@
 	}
 }
 
-# Application principale - HTTPS
-mycfia.krystdev.com {
+# Application principale - HTTPS (tous les domaines)
+my-cfia.com, my-cfia.fr, mycfia.ai, mycfia.io {
 	# Dossier public Symfony
 	root * /var/www/html/public
 
@@ -31,9 +31,9 @@ mycfia.krystdev.com {
 	php_server
 	file_server
 
-	# Headers CORS pour l'application
+	# Headers CORS pour l'application (tous les domaines)
 	header {
-		Access-Control-Allow-Origin "https://mycfia.krystdev.com"
+		Access-Control-Allow-Origin "*"
 		Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS"
 		Access-Control-Allow-Headers "Authorization, Content-Type, Cache-Control"
 		Access-Control-Allow-Credentials "true"
@@ -46,7 +46,7 @@ mycfia.krystdev.com {
 	}
 }
 
-# Redirection HTTP → HTTPS
-http://mycfia.krystdev.com {
+# Redirection HTTP → HTTPS (tous les domaines)
+http://my-cfia.com, http://my-cfia.fr, http://mycfia.ai, http://mycfia.io {
 	redir https://{host}{uri} permanent
 }
