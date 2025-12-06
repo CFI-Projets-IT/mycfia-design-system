@@ -15,7 +15,7 @@
 }
 
 # Application Symfony principale
-http://:82 {
+http://:80 {
 # Dossier public Symfony
     root * /var/www/html/public
 
@@ -100,8 +100,8 @@ http://:8027 {
 # }
 }
 
-# Hub Mercure - Accès direct (DÉSACTIVÉ - utiliser proxy via port 82)
-# Le proxy Mercure est maintenant routé via http://:82/.well-known/mercure
+# Hub Mercure - Accès direct (DÉSACTIVÉ - utiliser proxy via port 80)
+# Le proxy Mercure est maintenant routé via http://:80/.well-known/mercure
 # Ce bloc est conservé pour référence mais peut être commenté/supprimé
 # http://:3001 {
 #     reverse_proxy mercure:80
