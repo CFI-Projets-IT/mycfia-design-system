@@ -1,0 +1,151 @@
+{# Modals pour afficher le contenu des assets formatés via AssetPresenters #}
+{% if formatted_assets is defined and formatted_assets|length > 0 %}
+    {% for item in formatted_assets %}
+        {% set asset = item.entity %}
+        {% set formatted = item.formatted %}
+
+        <div class="modal fade" id="assetModal{{ asset.id }}" tabindex="-1" aria-labelledby="assetModalLabel{{ asset.id }}" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="assetModalLabel{{ asset.id }}">
+                            <i class="bi bi-{{ formatted.icon }}"></i> {{ formatted.label }}
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                    </div>
+                    <div class="modal-body">
+                        {# Affichage du contenu principal #}
+                        {% if formatted.main_content is not empty %}
+                            {% for key, value in formatted.main_content %}
+                                <div class="mb-4">
+                                    <h6 class="text-primary mb-2">
+                                        <i class="bi bi-file-earmark-text"></i>
+                                        {{ key|replace({'_': ' '})|title }}
+                                    </h6>
+
+                                    {# Affichage selon le type de valeur #}
+                                    {% if value is iterable and value is not same as(null) %}
+                                        {# Array : afficher comme liste #}
+                                        {% if key == 'hashtags' %}
+                                            <div class="d-flex flex-wrap gap-1">
+                                                {% for tag in value %}
+                                                    <span class="badge bg-info">{{ tag starts with '#' ? tag : '#' ~ tag }}</span>
+                                                {% endfor %}
+                                            </div>
+                                        {% elseif key == 'headlines' or key == 'titles' %}
+                                            <div class="d-flex flex-wrap gap-2">
+                                                {% for item in value %}
+                                                    <span class="badge bg-primary fs-6 fw-normal">{{ item }}</span>
+                                                {% endfor %}
+                                            </div>
+                                        {% elseif key == 'keywords' %}
+                                            <div class="d-flex flex-wrap gap-1">
+                                                {% for kw in value %}
+                                                    <span class="badge bg-secondary">{{ kw }}</span>
+                                                {% endfor %}
+                                            </div>
+                                        {% elseif key == 'sections' %}
+                                            {% for section in value %}
+                                                <div class="card mb-2">
+                                                    <div class="card-header bg-light py-2">
+                                                        <strong>{{ section.heading ?? section.title ?? 'Section' }}</strong>
+                                                    </div>
+                                                    <div class="card-body">
+                                                        {{ (section.content ?? section.body ?? '')|nl2br }}
+                                                    </div>
+                                                </div>
+                                            {% endfor %}
+                                        {% else %}
+                                            {# Array générique #}
+                                            {% for item in value %}
+                                                <div class="bg-light p-2 rounded mb-2">{{ item }}</div>
+                                            {% endfor %}
+                                        {% endif %}
+                                    {% else %}
+                                        {# String : affichage simple #}
+                                        {% if key == 'call_to_action' %}
+                                            <button class="btn btn-primary" disabled>{{ value }}</button>
+                                        {% elseif key == 'subject' %}
+                                            <div class="bg-primary bg-opacity-10 p-3 rounded fw-semibold">{{ value }}</div>
+                                        {% elseif key == 'hook' %}
+                                            <div class="bg-warning bg-opacity-10 p-3 rounded border-start border-warning border-3">{{ value }}</div>
+                                        {% elseif key == 'meta_description' %}
+                                            <div class="bg-light p-3 rounded border-start border-success border-3">{{ value }}</div>
+                                        {% else %}
+                                            <div class="bg-light p-3 rounded">{{ value|nl2br }}</div>
+                                        {% endif %}
+                                    {% endif %}
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+
+                        {# Affichage des variations #}
+                        {% if formatted.variations is not empty %}
+                            <hr class="my-4">
+                            <h6 class="text-primary mb-3">
+                                <i class="bi bi-layers"></i> Variations ({{ formatted.variations|length }})
+                            </h6>
+
+                            {% for variation in formatted.variations %}
+                                <div class="card mb-3">
+                                    <div class="card-header bg-light">
+                                        <strong>Variation {{ loop.index }}</strong>
+                                    </div>
+                                    <div class="card-body">
+                                        {% for key, value in variation %}
+                                            {% if value is iterable %}
+                                                <p class="mb-2">
+                                                    <strong>{{ key|replace({'_': ' '})|title }} :</strong>
+                                                    {% if key == 'hashtags' or key == 'keywords' %}
+                                                        {% for item in value %}
+                                                            <span class="badge bg-secondary me-1">{{ item }}</span>
+                                                        {% endfor %}
+                                                    {% else %}
+                                                        <br>{{ value|join(', ') }}
+                                                    {% endif %}
+                                                </p>
+                                            {% else %}
+                                                <p class="mb-2"><strong>{{ key|replace({'_': ' '})|title }} :</strong> {{ value }}</p>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+
+                        {# Score de qualité #}
+                        {% if asset.qualityScore %}
+                            <hr class="my-4">
+                            {% set scorePercent = (asset.qualityScore * 100)|round %}
+                            <div class="mb-3">
+                                <div class="text-muted small mb-2"><i class="bi bi-speedometer2"></i> Score de qualité</div>
+                                <div class="d-flex align-items-center gap-3">
+                                    <div class="progress flex-grow-1" style="height: 10px;">
+                                        <div class="progress-bar bg-{{ scorePercent >= 80 ? 'success' : (scorePercent >= 50 ? 'warning' : 'danger') }}"
+                                             role="progressbar"
+                                             style="width: {{ scorePercent }}%">
+                                        </div>
+                                    </div>
+                                    <span class="fw-semibold">{{ scorePercent }}%</span>
+                                </div>
+                            </div>
+                        {% endif %}
+
+                        {# Notes #}
+                        {% if asset.notes %}
+                            <hr class="my-4">
+                            <div class="mb-3">
+                                <div class="text-muted small mb-2"><i class="bi bi-sticky"></i> Notes</div>
+                                <div class="bg-light p-3 rounded">{{ asset.notes|nl2br }}</div>
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+{% endif %}
+

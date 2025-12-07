@@ -201,3 +201,29 @@ services:
     App\Service\Screenshot\FilesystemScreenshotStorage:
         arguments:
             $publicDir: '%kernel.project_dir%/public'
+
+    # ========================================================================
+    # Asset Presenter Services - Pattern Strategy pour affichage assets
+    # ========================================================================
+    # Auto-configuration des AssetPresenters (GoogleAds, Instagram, etc.)
+    # Chaque presenter est tagué pour injection dans AssetPresenterLocator
+    # ========================================================================
+
+    # Auto-configuration des AssetPresenters avec tag app.asset_presenter
+    App\Service\Marketing\AssetPresenter\:
+        resource: '../src/Service/Marketing/AssetPresenter/'
+        exclude: '../src/Service/Marketing/AssetPresenter/Interface/'
+        tags: ['app.asset_presenter']
+
+    # DefaultAssetPresenter : Fallback avec priorité basse (exécuté en dernier)
+    # Supporte tous les types d'assets sans presenter spécialisé
+    App\Service\Marketing\AssetPresenter\DefaultAssetPresenter:
+        tags:
+            - { name: 'app.asset_presenter', priority: -100 }
+
+    # Service Locator avec injection automatique de tous les presenters taggés
+    # Les presenters sont triés par priorité (haute → basse)
+    # DefaultAssetPresenter (priority: -100) est toujours testé en dernier
+    App\Service\Marketing\AssetPresenter\AssetPresenterLocator:
+        arguments:
+            $presenters: !tagged_iterator app.asset_presenter
