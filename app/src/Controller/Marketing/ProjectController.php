@@ -12,6 +12,7 @@ use App\Enum\ProjectStatus;
 use App\Form\ProjectType;
 use App\Repository\ProjectEnrichmentDraftRepository;
 use App\Repository\ProjectRepository;
+use App\Service\Marketing\AssetPresenter\AssetPresenterLocator;
 use App\Service\MercureJwtGenerator;
 use Doctrine\ORM\EntityManagerInterface;
 use Gorillias\MarketingBundle\Service\AgentTaskManager;
@@ -54,6 +55,7 @@ final class ProjectController extends AbstractController
         private readonly TranslatorInterface $translator,
         private readonly CacheInterface $cache,
         private readonly MercureJwtGenerator $mercureJwtGenerator,
+        private readonly AssetPresenterLocator $assetPresenterLocator,
     ) {
     }
 
@@ -495,6 +497,9 @@ final class ProjectController extends AbstractController
     /**
      * Affiche les détails d'un projet avec workflow de génération.
      *
+     * Formate les assets du projet via AssetPresenterLocator pour affichage
+     * optimisé dans le template (extraction de la logique métier du template).
+     *
      * @param Project $project Projet à afficher
      *
      * @return Response Template détail avec statut et actions disponibles
@@ -504,8 +509,19 @@ final class ProjectController extends AbstractController
     {
         $this->denyAccessUnlessGranted('view', $project);
 
+        // Formater les assets via les AssetPresenters
+        $formattedAssets = [];
+        foreach ($project->getAssets() as $asset) {
+            $presenter = $this->assetPresenterLocator->getPresenter($asset);
+            $formattedAssets[] = [
+                'entity' => $asset,
+                'formatted' => $presenter->formatForDisplay($asset),
+            ];
+        }
+
         return $this->render('marketing/project/show.html.twig', [
             'project' => $project,
+            'formatted_assets' => $formattedAssets,
         ]);
     }
 
