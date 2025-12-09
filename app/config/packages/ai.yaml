@@ -12,7 +12,7 @@ ai:
 
     # Stores ChromaDB pour stockage vectoriel RAG
     store:
-        chroma_db:
+        chromadb:
             personas:
                 collection: 'marketing_personas'
                 client: 'Codewithkyrian\ChromaDB\Client'
@@ -31,7 +31,7 @@ ai:
             platform: 'ai.platform.mistral'
             model:
                 class: 'Symfony\AI\Platform\Bridge\Mistral\Mistral'
-                name: 'mistral-large-latest'
+                name: 'mistral-small-latest'
             prompt:
                 text: '@ai/prompts/chat_factures.md.twig'
                 include_tools: true  # CRITIQUE : Force injection définitions tools dans le prompt
@@ -48,7 +48,7 @@ ai:
             platform: 'ai.platform.mistral'
             model:
                 class: 'Symfony\AI\Platform\Bridge\Mistral\Mistral'
-                name: 'mistral-large-latest'
+                name: 'mistral-small-latest'
             prompt:
                 text: '@ai/prompts/chat_commandes.md.twig'
                 include_tools: true  # CRITIQUE : Force injection définitions tools dans le prompt
@@ -65,7 +65,7 @@ ai:
             platform: 'ai.platform.mistral'
             model:
                 class: 'Symfony\AI\Platform\Bridge\Mistral\Mistral'
-                name: 'mistral-large-latest'
+                name: 'mistral-small-latest'
             prompt:
                 text: '@ai/prompts/chat_stocks.md.twig'
                 include_tools: true  # CRITIQUE : Force injection définitions tools dans le prompt
@@ -85,7 +85,7 @@ ai:
             platform: 'ai.platform.mistral'
             model:
                 class: 'Symfony\AI\Platform\Bridge\Mistral\Mistral'
-                name: 'mistral-large-latest'
+                name: 'mistral-small-latest'
             prompt:
                 text: '@ai/prompts/chat_general.md.twig'
                 include_tools: true  # CRITIQUE : Force injection définitions tools dans le prompt

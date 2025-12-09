@@ -158,33 +158,24 @@ services:
         alias: 'http_client'  # Utilise le client HTTP par défaut (timeout: 300s)
 
     # ========================================================================
-    # ChromaDB Client Configuration
+    # ChromaDB Client Configuration (chromadb-php v1.0)
     # ========================================================================
     # Client ChromaDB pour le stockage vectoriel RAG (Marketing AI Bundle v3.4.0+)
     # Utilisé par PersonaKnowledgeStore, CompetitorDataStore, BrandGuidelinesStore
+    # Architecture v1.0 : utilise Factory au lieu de Generated\ChromaApiClient
     # ========================================================================
 
-    # HTTP Client pour ChromaDB
-    chroma.http_client:
-        class: GuzzleHttp\Client
-        arguments:
-            $config:
-                base_uri: '%env(CHROMA_URL)%'
-                timeout: 30
-                headers:
-                    Content-Type: 'application/json'
+    # ChromaDB Factory pour création du Client
+    Codewithkyrian\ChromaDB\Factory:
+        calls:
+            - withHost: ['%env(CHROMA_HOST)%']
+            - withPort: ['%env(int:CHROMA_PORT)%']
+            - withDatabase: ['marketing']
+            - withTenant: ['default_tenant']
 
-    # ChromaDB API Client
-    Codewithkyrian\ChromaDB\Generated\ChromaApiClient:
-        arguments:
-            $httpClient: '@chroma.http_client'
-
-    # ChromaDB Client principal
+    # ChromaDB Client principal (créé via Factory)
     Codewithkyrian\ChromaDB\Client:
-        arguments:
-            $apiClient: '@Codewithkyrian\ChromaDB\Generated\ChromaApiClient'
-            $database: 'marketing'
-            $tenant: 'default_tenant'
+        factory: ['@Codewithkyrian\ChromaDB\Factory', 'connect']
 
     # ========================================================================
     # Screenshot Storage Service - Production Ready
