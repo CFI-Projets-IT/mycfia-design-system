@@ -1967,12 +1967,12 @@
             "source": {
                 "type": "git",
                 "url": "git@github.com:CFI-Projets-IT/marketing-ai-bundle.git",
-                "reference": "4c7dc804cbb521b79706f97f33b8d7743d96797b"
+                "reference": "08c7f5895bb6e3201474dc852e8ef871bafee18a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/CFI-Projets-IT/marketing-ai-bundle/zipball/4c7dc804cbb521b79706f97f33b8d7743d96797b",
-                "reference": "4c7dc804cbb521b79706f97f33b8d7743d96797b",
+                "url": "https://api.github.com/repos/CFI-Projets-IT/marketing-ai-bundle/zipball/08c7f5895bb6e3201474dc852e8ef871bafee18a",
+                "reference": "08c7f5895bb6e3201474dc852e8ef871bafee18a",
                 "shasum": ""
             },
             "require": {
@@ -2052,10 +2052,10 @@
                 "vector store"
             ],
             "support": {
-                "source": "https://github.com/CFI-Projets-IT/marketing-ai-bundle/tree/v3.40.0",
+                "source": "https://github.com/CFI-Projets-IT/marketing-ai-bundle/tree/v3.40.5",
                 "issues": "https://github.com/CFI-Projets-IT/marketing-ai-bundle/issues"
             },
-            "time": "2025-12-10T10:25:15+00:00"
+            "time": "2025-12-10T13:57:10+00:00"
         },
         {
             "name": "grpc/grpc",

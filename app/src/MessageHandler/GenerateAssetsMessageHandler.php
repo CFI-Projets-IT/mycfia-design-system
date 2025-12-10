@@ -176,11 +176,13 @@ final class GenerateAssetsMessageHandler
                         'recommended_channels' => $strategy->getRecommendedChannels(),
                         'timeline' => $strategy->getTimeline(),
                         'budget_allocation' => $strategy->getBudgetAllocationData() ?? [],
-                        'kpis' => $strategy->getKpis(),
+                        'kpis' => json_decode($strategy->getKpis(), true) ?? [],
                     ];
 
                     $projectData = [
                         'project_id' => $project->getId(),
+                        'user_id' => $message->userId,
+                        'client_id' => null !== $message->tenantId ? (int) $message->tenantId : null,
                         'project_name' => $project->getName(),
                         'company_name' => $project->getCompanyName() ?: $project->getName(),
                         'sector' => $project->getSector() ?: '',
