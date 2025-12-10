@@ -17,6 +17,8 @@ services:
       - MERCURE_PUBLIC_URL=${MERCURE_PUBLIC_URL:-http://localhost:3000/.well-known/mercure}
       - MERCURE_JWT_SECRET=${MERCURE_JWT_SECRET:-!ChangeThisMercureHubJWTSecretKey!}
       - CHROMA_URL=${CHROMA_URL:-http://chroma:8000}
+      - CHROMA_HOST=${CHROMA_HOST:-http://chroma}
+      - CHROMA_PORT=${CHROMA_PORT:-8000}
       - CFI_API_BASE_URL=${CFI_API_BASE_URL}
       - CFI_API_CLEF=${CFI_API_CLEF}
       - CFI_API_TIMEOUT=${CFI_API_TIMEOUT}
@@ -120,6 +122,8 @@ services:
       - MERCURE_PUBLIC_URL=${MERCURE_PUBLIC_URL:-http://localhost:3000/.well-known/mercure}
       - MERCURE_JWT_SECRET=${MERCURE_JWT_SECRET:-!ChangeThisMercureHubJWTSecretKey!}
       - CHROMA_URL=${CHROMA_URL:-http://chroma:8000}
+      - CHROMA_HOST=${CHROMA_HOST:-http://chroma}
+      - CHROMA_PORT=${CHROMA_PORT:-8000}
     depends_on:
       mariadb:
         condition: service_healthy
