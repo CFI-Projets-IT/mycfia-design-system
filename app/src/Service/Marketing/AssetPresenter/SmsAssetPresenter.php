@@ -63,7 +63,14 @@ final readonly class SmsAssetPresenter implements AssetPresenterInterface
 
         $formatted = [];
         foreach ($variations as $variation) {
-            $formatted[] = $this->extractMainContent($variation);
+            // Si la variation est une string simple (le texte du SMS),
+            // la formater directement
+            if (is_string($variation)) {
+                $formatted[] = ['body' => $variation];
+            } elseif (is_array($variation)) {
+                // Si la variation est un objet complet, extraire le contenu
+                $formatted[] = $this->extractMainContent($variation);
+            }
         }
 
         return $formatted;
@@ -135,6 +142,11 @@ final readonly class SmsAssetPresenter implements AssetPresenterInterface
         // CNIL compliant (conformité validée)
         if (isset($data['cnil_compliant']) && is_bool($data['cnil_compliant'])) {
             $content['cnil_compliant'] = $data['cnil_compliant'];
+        }
+
+        // CNIL validation details (détails de validation CNIL)
+        if (isset($data['cnil_validation_details']) && is_array($data['cnil_validation_details'])) {
+            $content['cnil_validation_details'] = array_values(array_filter($data['cnil_validation_details'], 'is_string'));
         }
 
         // Optimization suggestions (suggestions d'optimisation)

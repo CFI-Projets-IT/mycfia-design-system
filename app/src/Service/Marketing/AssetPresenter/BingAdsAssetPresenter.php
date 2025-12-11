@@ -81,7 +81,36 @@ final readonly class BingAdsAssetPresenter implements AssetPresenterInterface
             $content['keywords'] = array_values(array_filter($data['keywords'], 'is_string'));
         }
 
-        // Call to Action
+        // Display URL (URL affichée dans l'annonce)
+        if (isset($data['display_url']) && is_string($data['display_url'])) {
+            $content['display_url'] = $data['display_url'];
+        }
+
+        // Final URL (URL de destination)
+        if (isset($data['final_url']) && is_string($data['final_url'])) {
+            $content['final_url'] = $data['final_url'];
+        }
+
+        // Ad Strength (force de l'annonce : poor, average, good, excellent)
+        if (isset($data['ad_strength']) && is_string($data['ad_strength'])) {
+            $content['ad_strength'] = $data['ad_strength'];
+        }
+
+        // Ad Extensions - Sitelinks
+        if (isset($data['ad_extensions']['sitelinks']) && is_array($data['ad_extensions']['sitelinks'])) {
+            $content['sitelinks'] = array_values(array_filter($data['ad_extensions']['sitelinks'], 'is_string'));
+        } elseif (isset($data['extensions']['sitelinks']) && is_array($data['extensions']['sitelinks'])) {
+            $content['sitelinks'] = array_values(array_filter($data['extensions']['sitelinks'], 'is_string'));
+        }
+
+        // Ad Extensions - Callouts (atouts)
+        if (isset($data['ad_extensions']['callouts']) && is_array($data['ad_extensions']['callouts'])) {
+            $content['callouts'] = array_values(array_filter($data['ad_extensions']['callouts'], 'is_string'));
+        } elseif (isset($data['extensions']['callouts']) && is_array($data['extensions']['callouts'])) {
+            $content['callouts'] = array_values(array_filter($data['extensions']['callouts'], 'is_string'));
+        }
+
+        // Call to Action (si présent dans les données)
         if (isset($data['call_to_action']) && is_string($data['call_to_action'])) {
             $content['call_to_action'] = $data['call_to_action'];
         }

@@ -76,6 +76,12 @@ final class GenerateAssetsMessageHandler
             $assetType = $result instanceof \BackedEnum ? $result->value : (string) $result;
             $this->buildersByType[$assetType] = $builder;
         }
+
+        // Log des builders mappés pour debug
+        $this->logger->debug('AssetBuilders mappés', [
+            'builders' => array_keys($this->buildersByType),
+            'count' => count($this->buildersByType),
+        ]);
     }
 
     /**
@@ -93,7 +99,13 @@ final class GenerateAssetsMessageHandler
             throw new \RuntimeException(sprintf('Aucun AssetBuilder trouvé pour le type "%s". Types disponibles : %s', $assetType, implode(', ', array_keys($this->buildersByType))));
         }
 
-        return $this->buildersByType[$assetType];
+        $builder = $this->buildersByType[$assetType];
+        $this->logger->debug('AssetBuilder récupéré', [
+            'asset_type' => $assetType,
+            'builder_class' => get_class($builder),
+        ]);
+
+        return $builder;
     }
 
     /**

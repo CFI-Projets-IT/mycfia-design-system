@@ -71,10 +71,38 @@
                                                     </div>
                                                 </div>
                                             {% endfor %}
+                                        {% elseif key == 'faq' %}
+                                            {# Article : FAQ (questions fréquentes) #}
+                                            <div class="accordion" id="faq-accordion-{{ loop.index }}">
+                                                {% for faqItem in value %}
+                                                    <div class="accordion-item">
+                                                        <h2 class="accordion-header" id="faq-heading-{{ loop.parent.loop.index }}-{{ loop.index }}">
+                                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq-collapse-{{ loop.parent.loop.index }}-{{ loop.index }}">
+                                                                <i class="bi bi-question-circle me-2"></i> {{ faqItem.question ?? 'Question' }}
+                                                            </button>
+                                                        </h2>
+                                                        <div id="faq-collapse-{{ loop.parent.loop.index }}-{{ loop.index }}" class="accordion-collapse collapse" data-bs-parent="#faq-accordion-{{ loop.parent.loop.index }}">
+                                                            <div class="accordion-body">
+                                                                {{ faqItem.answer ?? '' }}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                {% endfor %}
+                                            </div>
                                         {% else %}
                                             {# Array générique #}
                                             {% for item in value %}
-                                                <div class="bg-light p-2 rounded mb-2">{{ item }}</div>
+                                                {% if item is iterable %}
+                                                    {# Si item est un objet/array, afficher ses propriétés #}
+                                                    <div class="bg-light p-2 rounded mb-2">
+                                                        {% for k, v in item %}
+                                                            <strong>{{ k|replace({'_': ' '})|title }}:</strong> {{ v }}<br>
+                                                        {% endfor %}
+                                                    </div>
+                                                {% else %}
+                                                    {# Si item est une string, afficher directement #}
+                                                    <div class="bg-light p-2 rounded mb-2">{{ item }}</div>
+                                                {% endif %}
                                             {% endfor %}
                                         {% endif %}
                                     {% else %}

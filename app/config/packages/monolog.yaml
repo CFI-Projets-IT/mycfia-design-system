@@ -10,13 +10,14 @@ monolog:
         - tools         # Tools IA (GetFacturesTool, GetOperationsTool, GetStocksTool, etc.)
         - permissions   # Gestion des droits utilisateurs (PermissionsApiService, vérifications d'accès)
         - llm           # Appels LLM (Mistral via Symfony AI Bundle - temps génération, tokens, coût)
-        # Canaux marketing (8 assets + 4 agents + 3 stores + 3 tools + 2 services)
+        # Canaux marketing (9 assets + 5 agents + 3 stores + 4 tools + 3 clients + 2 services)
         - marketing.asset.google_ads
         - marketing.asset.bing_ads
         - marketing.asset.linkedin_post
         - marketing.asset.facebook_post
         - marketing.asset.instagram_post
-        - marketing.asset.mail
+        - marketing.asset.email
+        - marketing.asset.sms
         - marketing.asset.iab
         - marketing.asset.article
         - marketing.agent.persona
@@ -47,7 +48,7 @@ when@dev:
                 path: "%kernel.logs_dir%/%kernel.environment%.log"
                 level: debug
                 max_files: 7
-                channels: ["!event", "!auth", "!chat", "!streaming", "!cfi_api", "!messenger", "!api_services", "!tools", "!permissions", "!llm", "!marketing.asset.google_ads", "!marketing.asset.bing_ads", "!marketing.asset.linkedin_post", "!marketing.asset.facebook_post", "!marketing.asset.instagram_post", "!marketing.asset.mail", "!marketing.asset.iab", "!marketing.asset.article", "!marketing.agent.persona", "!marketing.agent.strategy", "!marketing.agent.competitor", "!marketing.agent.content", "!marketing.agent.project_enrichment", "!marketing.store.persona", "!marketing.store.competitor", "!marketing.store.brand", "!marketing.tool.budget", "!marketing.tool.competitor_intel", "!marketing.tool.brand_style", "!marketing.tool.project_context", "!marketing.prompt_builder", "!marketing.general", "!marketing.task", "!marketing.client.serpapi", "!marketing.client.firecrawl", "!marketing.client.tavily"]
+                channels: ["!event", "!auth", "!chat", "!streaming", "!cfi_api", "!messenger", "!api_services", "!tools", "!permissions", "!llm", "!marketing.asset.google_ads", "!marketing.asset.bing_ads", "!marketing.asset.linkedin_post", "!marketing.asset.facebook_post", "!marketing.asset.instagram_post", "!marketing.asset.email", "!marketing.asset.sms", "!marketing.asset.iab", "!marketing.asset.article", "!marketing.agent.persona", "!marketing.agent.strategy", "!marketing.agent.competitor", "!marketing.agent.content", "!marketing.agent.project_enrichment", "!marketing.store.persona", "!marketing.store.competitor", "!marketing.store.brand", "!marketing.tool.budget", "!marketing.tool.competitor_intel", "!marketing.tool.brand_style", "!marketing.tool.project_context", "!marketing.prompt_builder", "!marketing.general", "!marketing.task", "!marketing.client.serpapi", "!marketing.client.firecrawl", "!marketing.client.tavily"]
 
             # Logs d'authentification CFI
             auth:
@@ -121,7 +122,7 @@ when@dev:
                 max_files: 7
                 channels: ["llm"]
 
-            # === Marketing Bundle - Assets (8 handlers) ===
+            # === Marketing Bundle - Assets (9 handlers) ===
             marketing_asset_google_ads:
                 type: rotating_file
                 path: '%kernel.logs_dir%/marketing/assets/google_ads.log'
@@ -157,12 +158,19 @@ when@dev:
                 max_files: 7
                 channels: ['marketing.asset.instagram_post']
 
-            marketing_asset_mail:
+            marketing_asset_email:
                 type: rotating_file
-                path: '%kernel.logs_dir%/marketing/assets/mail.log'
+                path: '%kernel.logs_dir%/marketing/assets/email.log'
                 level: debug
                 max_files: 7
-                channels: ['marketing.asset.mail']
+                channels: ['marketing.asset.email']
+
+            marketing_asset_sms:
+                type: rotating_file
+                path: '%kernel.logs_dir%/marketing/assets/sms.log'
+                level: debug
+                max_files: 7
+                channels: ['marketing.asset.sms']
 
             marketing_asset_iab:
                 type: rotating_file

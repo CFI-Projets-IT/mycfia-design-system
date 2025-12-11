@@ -39,15 +39,28 @@ final readonly class InstagramPostAssetPresenter implements AssetPresenterInterf
 
     public function getVariations(Asset $asset): array
     {
-        $variations = $asset->getVariationsArray();
+        $content = $asset->getContentArray();
 
-        if (null === $variations || [] === $variations) {
+        if (null === $content) {
+            return [];
+        }
+
+        // Les variations peuvent être dans content['variations'] ou dans asset->variations
+        $variations = $content['variations'] ?? $asset->getVariationsArray() ?? [];
+
+        if ([] === $variations) {
             return [];
         }
 
         $formatted = [];
         foreach ($variations as $variation) {
-            $formatted[] = $this->extractMainContent($variation);
+            // Si la variation est une string simple, la formater directement
+            if (is_string($variation)) {
+                $formatted[] = ['caption' => $variation];
+            } elseif (is_array($variation)) {
+                // Si la variation est un array complet, extraire le contenu
+                $formatted[] = $this->extractMainContent($variation);
+            }
         }
 
         return $formatted;
@@ -64,9 +77,25 @@ final readonly class InstagramPostAssetPresenter implements AssetPresenterInterf
     {
         $content = [];
 
-        // Caption (légende)
+        // Caption (priorité : caption > caption_text > content > text)
         if (isset($data['caption']) && is_string($data['caption'])) {
             $content['caption'] = $data['caption'];
+        } elseif (isset($data['caption_text']) && is_string($data['caption_text'])) {
+            $content['caption'] = $data['caption_text'];
+        } elseif (isset($data['content']) && is_string($data['content'])) {
+            $content['caption'] = $data['content'];
+        } elseif (isset($data['text']) && is_string($data['text'])) {
+            $content['caption'] = $data['text'];
+        }
+
+        // Titre
+        if (isset($data['title']) && is_string($data['title'])) {
+            $content['title'] = $data['title'];
+        }
+
+        // Call-to-action
+        if (isset($data['cta']) && is_string($data['cta'])) {
+            $content['cta'] = $data['cta'];
         }
 
         // Hashtags

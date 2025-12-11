@@ -39,15 +39,28 @@ final readonly class FacebookPostAssetPresenter implements AssetPresenterInterfa
 
     public function getVariations(Asset $asset): array
     {
-        $variations = $asset->getVariationsArray();
+        $content = $asset->getContentArray();
 
-        if (null === $variations || [] === $variations) {
+        if (null === $content) {
+            return [];
+        }
+
+        // Les variations peuvent être dans content['variations'] ou dans asset->variations
+        $variations = $content['variations'] ?? $asset->getVariationsArray() ?? [];
+
+        if ([] === $variations) {
             return [];
         }
 
         $formatted = [];
         foreach ($variations as $variation) {
-            $formatted[] = $this->extractMainContent($variation);
+            // Si la variation est une string simple, la formater directement
+            if (is_string($variation)) {
+                $formatted[] = ['text' => $variation];
+            } elseif (is_array($variation)) {
+                // Si la variation est un array complet, extraire le contenu
+                $formatted[] = $this->extractMainContent($variation);
+            }
         }
 
         return $formatted;
@@ -64,16 +77,29 @@ final readonly class FacebookPostAssetPresenter implements AssetPresenterInterfa
     {
         $content = [];
 
-        // Texte du post (peut être 'text' ou 'body')
-        if (isset($data['text']) && is_string($data['text'])) {
+        // Texte du post (priorité : post_text > caption > content > text > body)
+        if (isset($data['post_text']) && is_string($data['post_text'])) {
+            $content['text'] = $data['post_text'];
+        } elseif (isset($data['caption']) && is_string($data['caption'])) {
+            $content['text'] = $data['caption'];
+        } elseif (isset($data['content']) && is_string($data['content'])) {
+            $content['text'] = $data['content'];
+        } elseif (isset($data['text']) && is_string($data['text'])) {
             $content['text'] = $data['text'];
         } elseif (isset($data['body']) && is_string($data['body'])) {
             $content['text'] = $data['body'];
         }
 
-        // Headline (titre)
-        if (isset($data['headline']) && is_string($data['headline'])) {
+        // Titre/Headline
+        if (isset($data['title']) && is_string($data['title'])) {
+            $content['headline'] = $data['title'];
+        } elseif (isset($data['headline']) && is_string($data['headline'])) {
             $content['headline'] = $data['headline'];
+        }
+
+        // Call-to-action
+        if (isset($data['cta']) && is_string($data['cta'])) {
+            $content['cta'] = $data['cta'];
         }
 
         // Description du lien
