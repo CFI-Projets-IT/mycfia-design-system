@@ -7,6 +7,7 @@ namespace App\EventSubscriber\Marketing;
 use App\Entity\Strategy;
 use App\Enum\ProjectStatus;
 use App\Repository\ProjectRepository;
+use App\Service\MarketingGenerationPublisher;
 use Doctrine\ORM\EntityManagerInterface;
 use Gorillias\MarketingBundle\Event\TaskCompletedEvent;
 use Psr\Log\LoggerInterface;
@@ -36,6 +37,7 @@ final readonly class StrategyOptimizedEventSubscriber implements EventSubscriber
         private EntityManagerInterface $entityManager,
         private ProjectRepository $projectRepository,
         private LoggerInterface $logger,
+        private MarketingGenerationPublisher $marketingGenerationPublisher,
     ) {
     }
 
@@ -119,6 +121,17 @@ final readonly class StrategyOptimizedEventSubscriber implements EventSubscriber
                 'task_id' => $taskId,
                 'project_id' => $projectId,
             ]);
+
+            // Publier événement Mercure pour informer l'UI que la stratégie est complète
+            $this->marketingGenerationPublisher->publishComplete(
+                $projectId,
+                'strategy',
+                'Stratégie marketing générée avec succès !',
+                [
+                    'task_id' => $taskId,
+                    'tactics_count' => count($result['tactics'] ?? []),
+                ]
+            );
         } catch (\Throwable $e) {
             $this->logger->error('Failed to persist strategy', [
                 'task_id' => $taskId,

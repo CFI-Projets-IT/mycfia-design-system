@@ -36,6 +36,11 @@ if [ "$APP_ENV" = "dev" ]; then
     mkdir -p /var/www/html/var/log/marketing/{agents,stores,clients,tools,tasks} 2>/dev/null || true
     mkdir -p /var/www/html/var/cache 2>/dev/null || true
 
+    # Créer les fichiers de log Supervisor (évite le fallback Docker logs)
+    touch /var/www/html/var/log/supervisor/supervisord.log 2>/dev/null || true
+    touch /var/www/html/var/log/messenger/worker-00.log 2>/dev/null || true
+    touch /var/www/html/var/log/messenger/worker-00-error.log 2>/dev/null || true
+
     # Permissions spéciales Symfony en développement
     if [ -d "/var/www/html/var" ]; then
         chmod -R 775 /var/www/html/var 2>/dev/null || true
@@ -45,6 +50,16 @@ if [ "$APP_ENV" = "dev" ]; then
 
 elif [ "$APP_ENV" = "prod" ]; then
     echo "🔒 Mode production - Configuration sécurisée"
+
+    # Créer les répertoires Symfony nécessaires
+    mkdir -p /var/www/html/var/log/supervisor 2>/dev/null || true
+    mkdir -p /var/www/html/var/log/messenger 2>/dev/null || true
+    mkdir -p /var/www/html/var/log/marketing/{agents,stores,clients,tools,tasks} 2>/dev/null || true
+
+    # Créer les fichiers de log Supervisor (évite le fallback Docker logs)
+    touch /var/www/html/var/log/supervisor/supervisord.log 2>/dev/null || true
+    touch /var/www/html/var/log/messenger/worker-00.log 2>/dev/null || true
+    touch /var/www/html/var/log/messenger/worker-00-error.log 2>/dev/null || true
 
     # Permissions production (restrictives)
     chown -R www-data:www-data /var/www/html 2>/dev/null || true
