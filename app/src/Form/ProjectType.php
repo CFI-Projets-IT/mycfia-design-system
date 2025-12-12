@@ -251,6 +251,7 @@ class ProjectType extends AbstractType
                     'Email marketing' => 'email',
                     'Publicité Bing Ads' => 'bing_ads',
                     'Bannière IAB' => 'iab',
+                    'SMS marketing' => 'sms',
                     'Article de blog' => 'article',
                 ],
             ])

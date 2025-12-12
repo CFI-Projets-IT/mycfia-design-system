@@ -11,10 +11,11 @@ use App\Enum\ProjectStatus;
 use App\Message\GenerateAssetsMessage;
 use App\Service\MarketingGenerationPublisher;
 use Doctrine\ORM\EntityManagerInterface;
-use Gorillias\MarketingBundle\Agent\ContentCreatorAgent;
+use Gorillias\MarketingBundle\AssetBuilder\AbstractAssetBuilder;
 use Gorillias\MarketingBundle\Service\MarketingLoggerFactory;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use Symfony\Component\DependencyInjection\Attribute\TaggedIterator;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
 /**
@@ -22,7 +23,7 @@ use Symfony\Component\Messenger\Attribute\AsMessageHandler;
  *
  * Responsabilités :
  * - Récupérer le projet et sa stratégie depuis la base de données
- * - Appeler ContentCreatorAgent pour génération assets (8 builders disponibles)
+ * - Appeler les AssetBuilders spécialisés pour génération assets (9 builders disponibles)
  * - Persister les assets générés dans la base (status DRAFT)
  * - Mettre à jour le statut du projet (STRATEGY_GENERATED → ASSETS_GENERATING → ASSETS_GENERATED)
  * - Publier des événements Mercure pour notification temps réel
@@ -30,32 +31,81 @@ use Symfony\Component\Messenger\Attribute\AsMessageHandler;
  *
  * Architecture :
  * - Traite les messages GenerateAssetsMessage de manière asynchrone
- * - Exécute la génération via ContentCreatorAgent + AssetBuilders (Mistral Large)
+ * - Exécute la génération via AssetBuilders spécialisés (Mistral Large)
  * - Permet au contrôleur de retourner immédiatement sans bloquer
  * - Notifie l'utilisateur en temps réel via Mercure
  *
  * Builders disponibles : GoogleAds, LinkedinPost, FacebookPost, InstagramPost,
- *                        Mail, BingAds, IabAsset, ArticleAsset
+ *                        Mail, BingAds, IabAsset, ArticleAsset, SmsAsset
  *
  * Durée estimée : ~20 secondes par asset (parallélisable)
  * Coût estimé : ~$0.0037-0.0233 par asset selon type
  */
 #[AsMessageHandler]
-final readonly class GenerateAssetsMessageHandler
+final class GenerateAssetsMessageHandler
 {
     private readonly LoggerInterface $logger;
     private readonly LoggerInterface $llmLogger;
 
+    /** @var array<string, AbstractAssetBuilder> */
+    private array $buildersByType = [];
+
+    /**
+     * @param iterable<AbstractAssetBuilder> $assetBuilders
+     */
     public function __construct(
-        private ContentCreatorAgent $contentCreator,
-        private MarketingGenerationPublisher $publisher,
-        private EntityManagerInterface $entityManager,
+        #[TaggedIterator('marketing.asset_builder')]
+        iterable $assetBuilders,
+        private readonly MarketingGenerationPublisher $publisher,
+        private readonly EntityManagerInterface $entityManager,
         MarketingLoggerFactory $loggerFactory,
         #[Autowire(service: 'monolog.logger.llm')]
         LoggerInterface $llmLogger,
     ) {
         $this->logger = $loggerFactory->getGeneralLogger();
         $this->llmLogger = $llmLogger;
+
+        // Indexer les builders par type d'asset via Réflexion
+        // (getAssetType() est protected dans AbstractAssetBuilder)
+        foreach ($assetBuilders as $builder) {
+            $reflection = new \ReflectionClass($builder);
+            $method = $reflection->getMethod('getAssetType');
+            $method->setAccessible(true);
+            $result = $method->invoke($builder);
+            // Gérer à la fois Enum et string
+            $assetType = $result instanceof \BackedEnum ? $result->value : (string) $result;
+            $this->buildersByType[$assetType] = $builder;
+        }
+
+        // Log des builders mappés pour debug
+        $this->logger->debug('AssetBuilders mappés', [
+            'builders' => array_keys($this->buildersByType),
+            'count' => count($this->buildersByType),
+        ]);
+    }
+
+    /**
+     * Récupérer le builder approprié pour un type d'asset donné.
+     *
+     * @param string $assetType Type d'asset (linkedin_post, google_ads, sms, etc.)
+     *
+     * @return AbstractAssetBuilder Builder spécialisé pour ce type d'asset
+     *
+     * @throws \RuntimeException Si aucun builder n'est trouvé pour ce type
+     */
+    private function getBuilder(string $assetType): AbstractAssetBuilder
+    {
+        if (! isset($this->buildersByType[$assetType])) {
+            throw new \RuntimeException(sprintf('Aucun AssetBuilder trouvé pour le type "%s". Types disponibles : %s', $assetType, implode(', ', array_keys($this->buildersByType))));
+        }
+
+        $builder = $this->buildersByType[$assetType];
+        $this->logger->debug('AssetBuilder récupéré', [
+            'asset_type' => $assetType,
+            'builder_class' => get_class($builder),
+        ]);
+
+        return $builder;
     }
 
     /**
@@ -127,34 +177,44 @@ final readonly class GenerateAssetsMessageHandler
                         ]
                     );
 
-                    // Préparer le brief pour ContentCreatorAgent (vraie API)
-                    $brief = [
-                        'persona' => sprintf(
-                            'Persona du projet %s',
-                            $project->getDescription() ?: $project->getGoalType()->value
-                        ),
-                        'objectif' => $project->getGoalType()->value,
-                        'tone' => $message->toneOfVoice ?: 'professionnel',
-                        'context' => sprintf(
-                            'Stratégie: %s. Contexte: %s',
-                            $strategy->getPositioning() ?: '',
-                            $message->additionalContext
-                        ),
+                    // Récupérer le builder spécialisé pour ce type d'asset
+                    $builder = $this->getBuilder($assetType);
+
+                    // Construire les paramètres requis par le builder
+                    $strategyData = [
+                        'name' => 'Stratégie marketing',
+                        'positioning' => $strategy->getPositioning(),
+                        'key_messages' => $strategy->getKeyMessages(),
+                        'recommended_channels' => $strategy->getRecommendedChannels(),
+                        'timeline' => $strategy->getTimeline(),
+                        'budget_allocation' => $strategy->getBudgetAllocationData() ?? [],
+                        'kpis' => json_decode($strategy->getKpis(), true) ?? [],
                     ];
 
-                    // Vraie API avec contexte v3.32.0 : createContent(assetType, brief, options)
-                    $assetOptions = array_merge($baseOptions, [
-                        'metadata' => [
-                            'step' => 'asset_generation',
-                            'asset_type' => $assetType,
-                            'variation' => $variation,
-                        ],
-                    ]);
-                    $assetData = $this->contentCreator->createContent(
-                        assetType: $assetType,
-                        brief: $brief,
-                        options: $assetOptions
-                    );
+                    $projectData = [
+                        'project_id' => $project->getId(),
+                        'user_id' => $message->userId,
+                        'client_id' => null !== $message->tenantId ? (int) $message->tenantId : null,
+                        'project_name' => $project->getName(),
+                        'company_name' => $project->getCompanyName() ?: $project->getName(),
+                        'sector' => $project->getSector() ?: '',
+                        'goal_type' => $project->getGoalType()->value,
+                        'budget' => $project->getBudget(),
+                        'description' => $project->getDescription() ?: '',
+                        'website_url' => $project->getWebsiteUrl() ?: '',
+                    ];
+
+                    // Agent personnalisé (optionnel)
+                    $customAgent = null;
+                    if ($message->toneOfVoice || $message->additionalContext) {
+                        $customAgent = [
+                            'tone_of_voice' => $message->toneOfVoice ?? 'professionnel',
+                            'additional_context' => $message->additionalContext,
+                        ];
+                    }
+
+                    // Appel du builder qui retourne la structure spécialisée
+                    $assetData = $builder->build($strategyData, $projectData, $customAgent);
 
                     // Log centralisé LLM pour Grafana (génération asset)
                     $this->llmLogger->info('Campaign LLM Call', [
@@ -179,11 +239,18 @@ final readonly class GenerateAssetsMessageHandler
                     $asset->setAssetType($assetType);
                     $asset->setChannel($assetType);  // Même valeur pour assetType et channel
                     $asset->setContent(json_encode($assetData, JSON_THROW_ON_ERROR));  // Tout le contenu en JSON
-                    $asset->setVariations(null);  // Pas de variations pour l'instant
+
+                    // Extraire et encoder les variations si présentes
+                    $variations = null;
+                    if (isset($assetData['variations']) && is_array($assetData['variations']) && ! empty($assetData['variations'])) {
+                        $variations = json_encode($assetData['variations'], JSON_THROW_ON_ERROR);
+                    }
+                    $asset->setVariations($variations);
+
                     $asset->setStatus(AssetStatus::DRAFT);
 
-                    // Calculer le score de qualité via l'analyse du bundle (retourne 0-100, converti en 0-1)
-                    $qualityScore = $this->contentCreator->analyzeContentQuality($assetData) / 100;
+                    // Le quality_score est déjà calculé par le builder
+                    $qualityScore = $assetData['quality_score'] ?? 0.5;
                     $asset->setQualityScore((string) $qualityScore);
 
                     // createdAt/updatedAt gérés automatiquement par Gedmo (#[Gedmo\Timestampable])

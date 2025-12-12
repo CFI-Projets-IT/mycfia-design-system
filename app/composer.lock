@@ -1967,12 +1967,12 @@
             "source": {
                 "type": "git",
                 "url": "git@github.com:CFI-Projets-IT/marketing-ai-bundle.git",
-                "reference": "42bac3760df02988d01048c53bd08e474b01f803"
+                "reference": "9e8ad4ff9af542ee42f8131783fea1f6c7c34460"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/CFI-Projets-IT/marketing-ai-bundle/zipball/42bac3760df02988d01048c53bd08e474b01f803",
-                "reference": "42bac3760df02988d01048c53bd08e474b01f803",
+                "url": "https://api.github.com/repos/CFI-Projets-IT/marketing-ai-bundle/zipball/9e8ad4ff9af542ee42f8131783fea1f6c7c34460",
+                "reference": "9e8ad4ff9af542ee42f8131783fea1f6c7c34460",
                 "shasum": ""
             },
             "require": {
@@ -2052,10 +2052,10 @@
                 "vector store"
             ],
             "support": {
-                "source": "https://github.com/CFI-Projets-IT/marketing-ai-bundle/tree/v3.38.1",
+                "source": "https://github.com/CFI-Projets-IT/marketing-ai-bundle/tree/develop",
                 "issues": "https://github.com/CFI-Projets-IT/marketing-ai-bundle/issues"
             },
-            "time": "2025-12-09T05:37:46+00:00"
+            "time": "2025-12-11T15:51:20+00:00"
         },
         {
             "name": "grpc/grpc",
@@ -4163,12 +4163,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/ai-platform.git",
-                "reference": "3b717c34f5e30efae2c6adf126363a379ad453e9"
+                "reference": "bdabc04f6cadb47a4f8a757425401e44a685b4d8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/ai-platform/zipball/3b717c34f5e30efae2c6adf126363a379ad453e9",
-                "reference": "3b717c34f5e30efae2c6adf126363a379ad453e9",
+                "url": "https://api.github.com/repos/symfony/ai-platform/zipball/bdabc04f6cadb47a4f8a757425401e44a685b4d8",
+                "reference": "bdabc04f6cadb47a4f8a757425401e44a685b4d8",
                 "shasum": ""
             },
             "require": {
@@ -4188,7 +4188,7 @@
                 "symfony/uid": "^7.3|^8.0"
             },
             "require-dev": {
-                "async-aws/bedrock-runtime": "^0.1.0",
+                "async-aws/bedrock-runtime": "^0.1|^1.0",
                 "codewithkyrian/transformers": "^0.6.2",
                 "google/auth": "^1.47",
                 "phpstan/phpstan": "^2.1.17",
@@ -4287,7 +4287,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-12-08T18:54:09+00:00"
+            "time": "2025-12-10T08:20:04+00:00"
         },
         {
             "name": "symfony/ai-store",
@@ -4295,12 +4295,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/ai-store.git",
-                "reference": "08422b6bbd5a64217da3b6ad2c2735df485bfd4e"
+                "reference": "612b45f2b8891f4aada9e2bafba25d4e7e2fb9e2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/ai-store/zipball/08422b6bbd5a64217da3b6ad2c2735df485bfd4e",
-                "reference": "08422b6bbd5a64217da3b6ad2c2735df485bfd4e",
+                "url": "https://api.github.com/repos/symfony/ai-store/zipball/612b45f2b8891f4aada9e2bafba25d4e7e2fb9e2",
+                "reference": "612b45f2b8891f4aada9e2bafba25d4e7e2fb9e2",
                 "shasum": ""
             },
             "require": {
@@ -4405,7 +4405,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-12-08T08:09:50+00:00"
+            "time": "2025-12-09T22:28:42+00:00"
         },
         {
             "name": "symfony/asset",

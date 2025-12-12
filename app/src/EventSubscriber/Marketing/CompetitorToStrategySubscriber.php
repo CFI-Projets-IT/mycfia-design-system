@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\EventSubscriber\Marketing;
 
 use App\Repository\ProjectRepository;
+use App\Service\MarketingGenerationPublisher;
 use Gorillias\MarketingBundle\Event\TaskCompletedEvent;
 use Gorillias\MarketingBundle\Service\AgentTaskManager;
 use Psr\Log\LoggerInterface;
@@ -30,6 +31,7 @@ final readonly class CompetitorToStrategySubscriber implements EventSubscriberIn
         private AgentTaskManager $agentTaskManager,
         private LoggerInterface $logger,
         private ProjectRepository $projectRepository,
+        private MarketingGenerationPublisher $marketingGenerationPublisher,
     ) {
     }
 
@@ -170,6 +172,13 @@ final readonly class CompetitorToStrategySubscriber implements EventSubscriberIn
                 'strategy_task_id' => $strategyTaskId,
                 'project_id' => $projectId,
             ]);
+
+            // Publier événement Mercure pour informer l'UI que la stratégie a démarré
+            $this->marketingGenerationPublisher->publishStart(
+                $projectId,
+                'strategy',
+                'Génération de la stratégie marketing en cours...'
+            );
         } catch (\Throwable $e) {
             $this->logger->error('CompetitorToStrategySubscriber: Failed to dispatch strategy analysis', [
                 'task_id' => $taskId,

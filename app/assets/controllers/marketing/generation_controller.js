@@ -7,6 +7,7 @@ import { Controller } from '@hotwired/stimulus';
 export default class extends Controller {
     static values = {
         taskId: String,
+        projectId: String, // ID du projet pour le topic marketing/project/{id}
         mercureUrl: String,
         mercureJwt: String,
         nextUrl: String,
@@ -15,7 +16,7 @@ export default class extends Controller {
 
     connect() {
         console.log('Marketing generation controller connected');
-        console.log('Task ID:', this.taskIdValue);
+        console.log('Project ID:', this.projectIdValue);
         console.log('Generation Type:', this.generationTypeValue);
 
         this.startTime = Date.now();
@@ -29,10 +30,12 @@ export default class extends Controller {
     }
 
     /**
-     * Connexion à Mercure EventSource avec système taskId du Marketing AI Bundle
+     * Connexion à Mercure EventSource avec système MarketingGenerationPublisher
+     * Topic : marketing/project/{projectId}
+     * Format : JSON générique avec type: "start" | "progress" | "complete" | "error"
      */
     connectToMercure() {
-        const topic = `/tasks/${this.taskIdValue}`;
+        const topic = `marketing/project/${this.projectIdValue}`;
         const mercureUrl = new URL(this.mercureUrlValue);
         mercureUrl.searchParams.append('topic', topic);
 
@@ -43,7 +46,7 @@ export default class extends Controller {
 
         const finalUrl = mercureUrl.toString();
         console.log('[MERCURE DEBUG] Connecting to Mercure:', finalUrl);
-        console.log('[MERCURE DEBUG] Task ID:', this.taskIdValue);
+        console.log('[MERCURE DEBUG] Project ID:', this.projectIdValue);
         console.log('[MERCURE DEBUG] Topic:', topic);
         console.log('[MERCURE DEBUG] Mercure URL base:', this.mercureUrlValue);
 
@@ -54,37 +57,36 @@ export default class extends Controller {
             console.log('[MERCURE DEBUG] EventSource connection opened');
         };
 
-        // Écouter TOUS les messages (debug)
+        // Écouter les messages génériques MarketingGenerationPublisher
         this.eventSource.onmessage = (event) => {
-            console.log('[MERCURE DEBUG] Generic message received:', event);
-            console.log('[MERCURE DEBUG] Message data:', event.data);
-            console.log('[MERCURE DEBUG] Message type:', event.type);
+            console.log('[MERCURE DEBUG] Message received:', event.data);
+
+            try {
+                const data = JSON.parse(event.data);
+                console.log('[MERCURE DEBUG] Parsed data:', data);
+                console.log('[MERCURE DEBUG] Event type:', data.type);
+
+                // Router selon le type d'événement
+                switch (data.type) {
+                    case 'start':
+                        this.handleStart(data);
+                        break;
+                    case 'progress':
+                        this.handleProgress(data);
+                        break;
+                    case 'complete':
+                        this.handleComplete(data);
+                        break;
+                    case 'error':
+                        this.handleError(data);
+                        break;
+                    default:
+                        console.warn('[MERCURE DEBUG] Unknown event type:', data.type);
+                }
+            } catch (error) {
+                console.error('[MERCURE DEBUG] Failed to parse message:', error);
+            }
         };
-
-        // Écouter les événements spécifiques du bundle
-        this.eventSource.addEventListener('TaskStartedEvent', (event) => {
-            console.log('[MERCURE DEBUG] TaskStartedEvent received:', event.data);
-            const data = JSON.parse(event.data);
-            this.handleStart(data);
-        });
-
-        this.eventSource.addEventListener('TaskProgressEvent', (event) => {
-            console.log('[MERCURE DEBUG] TaskProgressEvent received:', event.data);
-            const data = JSON.parse(event.data);
-            this.handleProgress(data);
-        });
-
-        this.eventSource.addEventListener('TaskCompletedEvent', (event) => {
-            console.log('[MERCURE DEBUG] TaskCompletedEvent received:', event.data);
-            const data = JSON.parse(event.data);
-            this.handleComplete(data);
-        });
-
-        this.eventSource.addEventListener('TaskFailedEvent', (event) => {
-            console.error('[MERCURE DEBUG] TaskFailedEvent received:', event.data);
-            const data = JSON.parse(event.data);
-            this.handleError(data);
-        });
 
         this.eventSource.onerror = (error) => {
             console.error('[MERCURE DEBUG] EventSource error:', error);
@@ -102,12 +104,24 @@ export default class extends Controller {
     }
 
     /**
-     * Gère la progression temps réel (v3.34.0)
+     * Gère la progression temps réel
+     *
+     * Format MarketingGenerationPublisher :
+     * {
+     *   type: "progress",
+     *   projectId: 1,
+     *   stage: "assets",
+     *   message: "Génération asset 1/1 : linkedin_post...",
+     *   data: { progress: 100, current_type: "linkedin_post", current_variation: 1 },
+     *   timestamp: "2025-12-09 16:52:27"
+     * }
      */
     handleProgress(data) {
-        const { percentage, message, metadata } = data;
+        // Le pourcentage est dans data.data.progress
+        const percentage = data.data?.progress || 0;
+        const message = data.message || 'En cours...';
 
-        console.log(`[PROGRESS] ${percentage}% - ${message}`, metadata);
+        console.log(`[PROGRESS] ${percentage}% - ${message}`, data.data);
 
         // Mettre à jour barre de progression si disponible
         const progressBar = document.querySelector('[data-progress-bar]');
@@ -119,7 +133,7 @@ export default class extends Controller {
         // Mettre à jour pourcentage texte
         const progressText = document.querySelector('[data-progress-percentage]');
         if (progressText) {
-            progressText.textContent = `${percentage}%`;
+            progressText.textContent = `${Math.round(percentage)}%`;
         }
 
         // Mettre à jour message
@@ -128,10 +142,10 @@ export default class extends Controller {
             progressMessage.textContent = message;
         }
 
-        // Mettre à jour indicateur de phase
+        // Mettre à jour indicateur de phase si disponible
         const phaseIndicator = document.querySelector('[data-phase-indicator]');
-        if (phaseIndicator && metadata.current_phase && metadata.total_phases) {
-            phaseIndicator.textContent = `Phase ${metadata.current_phase}/${metadata.total_phases}`;
+        if (phaseIndicator && data.data?.current_phase && data.data?.total_phases) {
+            phaseIndicator.textContent = `Phase ${data.data.current_phase}/${data.data.total_phases}`;
         }
 
         // Mettre à jour le statut général
@@ -141,42 +155,31 @@ export default class extends Controller {
     /**
      * Gère la complétion
      *
-     * FIX v3.30.0 : Pour la stratégie, CompetitorAnalystAgent est le point de complétion final
-     * car le subscriber lance StrategyAnalystAgent avec un nouveau taskId (non écouté par le frontend).
-     * La stratégie est bien générée en BDD par StrategyOptimizedEventSubscriber, donc on peut rediriger.
+     * Format MarketingGenerationPublisher :
+     * {
+     *   type: "complete",
+     *   projectId: 1,
+     *   stage: "assets" | "strategy" | "personas",
+     *   message: "X assets générés avec succès !",
+     *   metadata: { assets_count: 1, asset_types: [...], duration_ms: 15244 },
+     *   timestamp: "2025-12-09 16:52:42"
+     * }
      */
     handleComplete(data) {
         console.log('[MERCURE DEBUG] handleComplete called');
-        console.log('[MERCURE DEBUG] Task terminée:', data.agentName);
-        console.log('[MERCURE DEBUG] Generation type:', this.generationTypeValue);
+        console.log('[MERCURE DEBUG] Stage:', data.stage);
+        console.log('[MERCURE DEBUG] Message:', data.message);
         console.log('[MERCURE DEBUG] Full data:', JSON.stringify(data, null, 2));
 
-        // ✅ FIX v3.30.0: Pour la stratégie, CompetitorAnalystAgent = succès final
-        // Le subscriber CompetitorToStrategySubscriber lance StrategyAnalystAgent en arrière-plan
-        // avec un nouveau taskId, donc le frontend ne recevra jamais l'événement StrategyAnalystAgent
-        // sur ce taskId. La stratégie est bien générée (persistée par StrategyOptimizedEventSubscriber).
-        if (this.generationTypeValue === 'strategy') {
-            // Accepter CompetitorAnalystAgent comme succès final pour type "strategy"
-            if (data.agentName && data.agentName.includes('CompetitorAnalystAgent')) {
-                console.log(
-                    '[MERCURE DEBUG] CompetitorAnalystAgent completed, strategy generation continues in background'
-                );
-                this.updateStatus('Analyse terminée, génération de la stratégie en cours...');
-                // ✅ Polling pour vérifier que la stratégie existe en BDD avant de rediriger
-                this.pollStrategyCompletion();
-            } else if (data.agentName && data.agentName.includes('StrategyAnalystAgent')) {
-                // Au cas où on recevrait quand même StrategyAnalystAgent (ne devrait pas arriver)
-                console.log('[MERCURE DEBUG] StrategyAnalystAgent completed (unexpected), redirecting...');
-                setTimeout(() => {
-                    this.showSuccess(data);
-                }, 2000);
-            } else {
-                // Agent inconnu pour le type strategy
-                console.warn('[MERCURE DEBUG] Unknown agent for strategy generation:', data.agentName);
-            }
+        this.updateStatus(data.message || '✅ Génération terminée !');
+
+        // Pour la stratégie, utiliser le polling car elle peut être générée en arrière-plan
+        if (data.stage === 'strategy') {
+            console.log('[MERCURE DEBUG] Strategy generation completed, polling for BDD confirmation...');
+            this.pollStrategyCompletion();
         } else {
-            // Pour les autres types : redirection immédiate après 2s
-            console.log('[MERCURE DEBUG] Non-strategy generation, redirecting in 2s...');
+            // Pour les assets et personas : redirection immédiate après 2s
+            console.log('[MERCURE DEBUG] Generation completed, redirecting in 2s...');
             setTimeout(() => {
                 this.showSuccess(data);
             }, 2000);
@@ -263,10 +266,27 @@ export default class extends Controller {
 
     /**
      * Gère les erreurs
+     *
+     * Format MarketingGenerationPublisher :
+     * {
+     *   type: "error",
+     *   projectId: 1,
+     *   stage: "assets",
+     *   message: "Échec de la génération des assets. Veuillez réessayer.",
+     *   technical: "ContentCreatorAgent: Failed to parse...",
+     *   timestamp: "2025-12-09 16:52:42"
+     * }
      */
     handleError(data) {
-        console.error('Generation failed:', data.error);
-        this.showError(data.error || 'Une erreur est survenue lors de la génération');
+        const errorMessage = data.message || 'Une erreur est survenue lors de la génération';
+        const technicalError = data.technical || '';
+
+        console.error('[MERCURE DEBUG] Generation failed:', errorMessage);
+        if (technicalError) {
+            console.error('[MERCURE DEBUG] Technical error:', technicalError);
+        }
+
+        this.showError(errorMessage);
     }
 
     /**

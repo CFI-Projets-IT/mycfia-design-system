@@ -38,6 +38,7 @@ class AssetGenerationType extends AbstractType
         'email' => 'Email marketing',
         'bing_ads' => 'Bing Ads (publicité search alternative)',
         'iab' => 'IAB Banner (bannière publicitaire)',
+        'sms' => 'SMS marketing',
         'article' => 'Article SEO (contenu blog)',
     ];
 

@@ -10,6 +10,7 @@ use App\Entity\User;
 use App\Enum\AssetStatus;
 use App\Enum\ProjectStatus;
 use App\Form\AssetGenerationType;
+use App\Message\GenerateAssetsMessage;
 use App\Service\MercureJwtGenerator;
 use Doctrine\ORM\EntityManagerInterface;
 use Gorillias\MarketingBundle\Service\AgentTaskManager;
@@ -18,6 +19,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -27,15 +29,14 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  *
  * Workflow :
  * 1. GET /marketing/asset/new/{id} - Affiche formulaire sélection types/variations
- * 2. POST /marketing/asset/new/{id} - Dispatch vers ContentCreatorAgent
+ * 2. POST /marketing/asset/new/{id} - Dispatch GenerateAssetsMessage vers AssetBuilders
  * 3. Redirection vers page d'attente avec EventSource Mercure
- * 4. AssetsGeneratedEvent → EventListener stocke assets en BDD
+ * 4. GenerateAssetsMessageHandler génère les assets via AssetBuilders spécialisés
  * 5. Notification Mercure → Affichage résultats
  * 6. Validation par utilisateur (approve/reject workflow)
  *
- * Agent IA : ContentCreatorAgent (Marketing AI Bundle)
- * AssetBuilders : GoogleAds, LinkedinPost, FacebookPost, InstagramPost,
- *                 Mail, BingAds, IabAsset, ArticleAsset
+ * AssetBuilders spécialisés : GoogleAds, LinkedinPost, FacebookPost, InstagramPost,
+ *                              Mail, BingAds, IabAsset, ArticleAsset, SmsAsset
  * Durée : ~20 secondes par asset (parallélisation possible)
  */
 #[Route('/marketing/asset', name: 'marketing_asset_')]
@@ -63,6 +64,7 @@ final class AssetController extends AbstractController
         private readonly TranslatorInterface $translator,
         private readonly LoggerInterface $logger,
         private readonly MercureJwtGenerator $mercureJwtGenerator,
+        private readonly MessageBusInterface $messageBus,
         #[Autowire('%env(MERCURE_PUBLIC_URL)%')]
         private readonly string $mercurePublicUrl,
     ) {
@@ -118,30 +120,30 @@ final class AssetController extends AbstractController
             /** @var User $user */
             $user = $this->getUser();
 
-            // Préparer le brief de création enrichi
-            $brief = $this->buildEnrichedBrief($project);
+            // Mapper les types d'assets (mail → email)
+            $assetTypes = array_map(
+                fn (string $type): string => self::ASSET_TYPE_MAPPING[$type] ?? $type,
+                $data['assetTypes']
+            );
 
-            // Options de génération
-            // Note: project_id doit être dans options car le bundle extrait le context depuis options
-            $options = [
-                'user_id' => $user->getId(),
+            // Dispatcher le message de génération d'assets via AssetBuilders
+            $message = new GenerateAssetsMessage(
+                projectId: $project->getId(),
+                assetTypes: $assetTypes,
+                numberOfVariations: $data['numberOfVariations'],
+                userId: (int) $user->getId(),
+                tenantId: $project->getTenant()?->getId(),
+                toneOfVoice: $data['toneOfVoice'] ?? '',
+                additionalContext: $data['additionalContext'] ?? ''
+            );
+
+            $this->messageBus->dispatch($message);
+
+            $this->logger->info('GenerateAssetsMessage dispatched', [
                 'project_id' => $project->getId(),
+                'asset_types' => $assetTypes,
                 'variations' => $data['numberOfVariations'],
-                'tone_of_voice' => $data['toneOfVoice'] ?? null,
-                'additional_context' => $data['additionalContext'] ?? '',
-            ];
-
-            // Dispatcher une tâche pour chaque type d'asset avec retry logic
-            $taskIds = [];
-            foreach ($data['assetTypes'] as $assetType) {
-                // Mapper le type d'asset (mail → email)
-                $bundleAssetType = self::ASSET_TYPE_MAPPING[$assetType] ?? $assetType;
-
-                $taskId = $this->dispatchWithRetry($bundleAssetType, $brief, $options);
-                if (null !== $taskId) {
-                    $taskIds[] = $taskId;
-                }
-            }
+            ]);
 
             // Mettre à jour le statut du projet
             $project->setStatus(ProjectStatus::ASSETS_IN_PROGRESS);
@@ -149,11 +151,11 @@ final class AssetController extends AbstractController
 
             $this->addFlash('info', $this->translator->trans('asset.flash.generation_started', [], 'marketing'));
 
-            // Rediriger vers la page d'attente avec EventSource Mercure
-            // Note: On passe le premier taskId, mais Mercure écoutera tous les events
+            // Rediriger vers la page d'attente
+            // Note: Le MessageHandler publiera les événements Mercure sur le topic /project/{projectId}
             return $this->redirectToRoute('marketing_asset_generating', [
                 'id' => $project->getId(),
-                'taskId' => $taskIds[0] ?? '',
+                'taskId' => 'project-'.$project->getId(), // Placeholder pour compatibilité
             ]);
         }
 
@@ -174,9 +176,10 @@ final class AssetController extends AbstractController
     {
         $this->denyAccessUnlessGranted('view', $project);
 
-        // Générer un JWT Mercure pour autoriser l'abonnement au topic /tasks/{taskId}
+        // Générer un JWT Mercure pour autoriser l'abonnement au topic marketing/project/{id}
+        // utilisé par MarketingGenerationPublisher (start, progress, complete, error)
         $mercureJwt = $this->mercureJwtGenerator->generateSubscriberToken([
-            sprintf('tasks/%s', $taskId),
+            sprintf('marketing/project/%d', $project->getId()),
         ]);
 
         return $this->render('marketing/asset/generating.html.twig', [

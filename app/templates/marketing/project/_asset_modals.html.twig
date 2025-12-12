@@ -44,6 +44,22 @@
                                                     <span class="badge bg-secondary">{{ kw }}</span>
                                                 {% endfor %}
                                             </div>
+                                        {% elseif key == 'personalization_fields' %}
+                                            {# SMS : Champs de personnalisation #}
+                                            <div class="d-flex flex-wrap gap-1">
+                                                {% for field in value %}
+                                                    <span class="badge bg-primary">{{ field }}</span>
+                                                {% endfor %}
+                                            </div>
+                                        {% elseif key == 'optimization_suggestions' %}
+                                            {# SMS : Suggestions d'optimisation #}
+                                            <ul class="list-unstyled mb-0">
+                                                {% for suggestion in value %}
+                                                    <li class="mb-1">
+                                                        <i class="bi bi-lightbulb text-warning"></i> {{ suggestion }}
+                                                    </li>
+                                                {% endfor %}
+                                            </ul>
                                         {% elseif key == 'sections' %}
                                             {% for section in value %}
                                                 <div class="card mb-2">
@@ -55,10 +71,38 @@
                                                     </div>
                                                 </div>
                                             {% endfor %}
+                                        {% elseif key == 'faq' %}
+                                            {# Article : FAQ (questions fréquentes) #}
+                                            <div class="accordion" id="faq-accordion-{{ loop.index }}">
+                                                {% for faqItem in value %}
+                                                    <div class="accordion-item">
+                                                        <h2 class="accordion-header" id="faq-heading-{{ loop.parent.loop.index }}-{{ loop.index }}">
+                                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq-collapse-{{ loop.parent.loop.index }}-{{ loop.index }}">
+                                                                <i class="bi bi-question-circle me-2"></i> {{ faqItem.question ?? 'Question' }}
+                                                            </button>
+                                                        </h2>
+                                                        <div id="faq-collapse-{{ loop.parent.loop.index }}-{{ loop.index }}" class="accordion-collapse collapse" data-bs-parent="#faq-accordion-{{ loop.parent.loop.index }}">
+                                                            <div class="accordion-body">
+                                                                {{ faqItem.answer ?? '' }}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                {% endfor %}
+                                            </div>
                                         {% else %}
                                             {# Array générique #}
                                             {% for item in value %}
-                                                <div class="bg-light p-2 rounded mb-2">{{ item }}</div>
+                                                {% if item is iterable %}
+                                                    {# Si item est un objet/array, afficher ses propriétés #}
+                                                    <div class="bg-light p-2 rounded mb-2">
+                                                        {% for k, v in item %}
+                                                            <strong>{{ k|replace({'_': ' '})|title }}:</strong> {{ v }}<br>
+                                                        {% endfor %}
+                                                    </div>
+                                                {% else %}
+                                                    {# Si item est une string, afficher directement #}
+                                                    <div class="bg-light p-2 rounded mb-2">{{ item }}</div>
+                                                {% endif %}
                                             {% endfor %}
                                         {% endif %}
                                     {% else %}
@@ -71,12 +115,69 @@
                                             <div class="bg-warning bg-opacity-10 p-3 rounded border-start border-warning border-3">{{ value }}</div>
                                         {% elseif key == 'meta_description' %}
                                             <div class="bg-light p-3 rounded border-start border-success border-3">{{ value }}</div>
+                                        {% elseif key == 'encoding' %}
+                                            {# SMS : Encodage (GSM ou Unicode) #}
+                                            <span class="badge bg-{{ value == 'gsm' ? 'success' : 'warning' }} fs-6">
+                                                <i class="bi bi-cpu"></i> {{ value|upper }}
+                                            </span>
+                                        {% elseif key == 'segment_count' %}
+                                            {# SMS : Nombre de segments #}
+                                            <span class="badge bg-info fs-6">
+                                                <i class="bi bi-layers"></i> {{ value }} segment{{ value > 1 ? 's' : '' }}
+                                            </span>
+                                        {% elseif key == 'cnil_compliant' %}
+                                            {# SMS : Conformité CNIL #}
+                                            <span class="badge bg-{{ value ? 'success' : 'warning' }} fs-6">
+                                                <i class="bi bi-{{ value ? 'shield-check' : 'exclamation-triangle' }}"></i>
+                                                {{ value ? 'Conforme CNIL' : 'Non conforme CNIL' }}
+                                            </span>
+                                        {% elseif key == 'send_window' %}
+                                            {# SMS : Horaires légaux #}
+                                            <span class="badge bg-secondary fs-6">
+                                                <i class="bi bi-clock"></i> {{ value }}
+                                            </span>
+                                        {% elseif key == 'urgency_trigger' %}
+                                            {# SMS : Déclencheur d'urgence #}
+                                            <span class="badge bg-danger fs-6">
+                                                <i class="bi bi-alarm"></i> {{ value }}
+                                            </span>
+                                        {% elseif key == 'footer' %}
+                                            {# SMS : Mention légale STOP #}
+                                            <span class="badge bg-dark fs-6">
+                                                <i class="bi bi-stop-circle"></i> {{ value }}
+                                            </span>
+                                        {% elseif key == 'character_count' or key == 'character_budget' %}
+                                            {# SMS : Géré via barre de progression (ne pas afficher ici) #}
                                         {% else %}
                                             <div class="bg-light p-3 rounded">{{ value|nl2br }}</div>
                                         {% endif %}
                                     {% endif %}
                                 </div>
                             {% endfor %}
+                        {% endif %}
+
+                        {# Barre progression caractères SMS #}
+                        {% if formatted.main_content.character_count is defined and formatted.main_content.character_budget is defined %}
+                            <div class="mt-3">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <span class="text-muted small">
+                                        <i class="bi bi-file-text"></i> Utilisation caractères
+                                    </span>
+                                    <span class="badge bg-secondary">
+                                        {{ formatted.main_content.character_count }} / {{ formatted.main_content.character_budget }}
+                                    </span>
+                                </div>
+                                {% set usagePercent = (formatted.main_content.character_count / formatted.main_content.character_budget * 100)|round %}
+                                <div class="progress" style="height: 10px;">
+                                    <div class="progress-bar bg-{{ usagePercent >= 90 ? 'danger' : (usagePercent >= 75 ? 'warning' : 'success') }}"
+                                         role="progressbar"
+                                         style="width: {{ usagePercent }}%"
+                                         aria-valuenow="{{ usagePercent }}"
+                                         aria-valuemin="0"
+                                         aria-valuemax="100">
+                                    </div>
+                                </div>
+                            </div>
                         {% endif %}
 
                         {# Affichage des variations #}

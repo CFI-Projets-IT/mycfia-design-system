@@ -466,9 +466,12 @@ final class StrategyController extends AbstractController
     {
         $this->denyAccessUnlessGranted('view', $project);
 
-        // Générer un JWT Mercure pour autoriser l'abonnement au topic /tasks/{taskId}
+        // Générer un JWT Mercure pour autoriser l'abonnement aux topics nécessaires
+        // - /tasks/{taskId} : pour les événements de la tâche spécifique
+        // - marketing/project/{projectId} : pour tous les événements du projet (chaînage automatique)
         $mercureJwt = $this->mercureJwtGenerator->generateSubscriberToken([
             sprintf('tasks/%s', $taskId),
+            sprintf('marketing/project/%d', $project->getId()),
         ]);
 
         return $this->render('marketing/strategy/generating.html.twig', [
