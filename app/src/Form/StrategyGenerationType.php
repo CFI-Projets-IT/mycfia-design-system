@@ -49,11 +49,11 @@ class StrategyGenerationType extends AbstractType
                     'class' => 'form-label fw-semibold',
                 ],
                 'constraints' => [
-                    new Assert\NotBlank(['message' => 'Sélectionnez au moins un persona']),
-                    new Assert\Count([
-                        'min' => 1,
-                        'minMessage' => 'Sélectionnez au moins {{ limit }} persona',
-                    ]),
+                    new Assert\NotBlank(message: 'Sélectionnez au moins un persona'),
+                    new Assert\Count(
+                        min: 1,
+                        minMessage: 'Sélectionnez au moins {{ limit }} persona',
+                    ),
                 ],
             ])
             ->add('competitors', TextareaType::class, [

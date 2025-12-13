@@ -33,14 +33,14 @@ class PersonaGenerationType extends AbstractType
                     'max' => 5,
                 ],
                 'constraints' => [
-                    new Assert\NotBlank([
-                        'message' => 'Le nombre de personas est obligatoire',
-                    ]),
-                    new Assert\Range([
-                        'min' => 1,
-                        'max' => 5,
-                        'notInRangeMessage' => 'Vous pouvez générer entre {{ min }} et {{ max }} personas',
-                    ]),
+                    new Assert\NotBlank(
+                        message: 'Le nombre de personas est obligatoire',
+                    ),
+                    new Assert\Range(
+                        min: 1,
+                        max: 5,
+                        notInRangeMessage: 'Vous pouvez générer entre {{ min }} et {{ max }} personas',
+                    ),
                 ],
             ])
             ->add('additionalContext', TextareaType::class, [
@@ -52,10 +52,10 @@ class PersonaGenerationType extends AbstractType
                     'rows' => 4,
                 ],
                 'constraints' => [
-                    new Assert\Length([
-                        'max' => 1000,
-                        'maxMessage' => 'Le contexte additionnel ne peut pas dépasser {{ limit }} caractères',
-                    ]),
+                    new Assert\Length(
+                        max: 1000,
+                        maxMessage: 'Le contexte additionnel ne peut pas dépasser {{ limit }} caractères',
+                    ),
                 ],
             ])
         ;
