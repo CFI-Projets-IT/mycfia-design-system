@@ -162,6 +162,7 @@ class User implements UserInterface
         return ['ROLE_USER'];
     }
 
+    #[\Deprecated]
     public function eraseCredentials(): void
     {
         // Rien à effacer : pas de mot de passe stocké (CFI gère l'auth)

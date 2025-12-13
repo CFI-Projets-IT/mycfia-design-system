@@ -48,15 +48,15 @@ class ProjectType extends AbstractType
                     'maxlength' => 255,
                 ],
                 'constraints' => [
-                    new Assert\NotBlank([
-                        'message' => 'Le nom du projet est obligatoire',
-                    ]),
-                    new Assert\Length([
-                        'min' => 3,
-                        'max' => 255,
-                        'minMessage' => 'Le nom doit contenir au moins {{ limit }} caractères',
-                        'maxMessage' => 'Le nom ne peut pas dépasser {{ limit }} caractères',
-                    ]),
+                    new Assert\NotBlank(
+                        message: 'Le nom du projet est obligatoire',
+                    ),
+                    new Assert\Length(
+                        min: 3,
+                        max: 255,
+                        minMessage: 'Le nom doit contenir au moins {{ limit }} caractères',
+                        maxMessage: 'Le nom ne peut pas dépasser {{ limit }} caractères',
+                    ),
                 ],
             ])
             ->add('companyName', TextType::class, [
@@ -67,14 +67,14 @@ class ProjectType extends AbstractType
                     'maxlength' => 255,
                 ],
                 'constraints' => [
-                    new Assert\NotBlank([
-                        'message' => 'Le nom de l\'entreprise est obligatoire',
-                    ]),
-                    new Assert\Length([
-                        'min' => 2,
-                        'max' => 255,
-                        'minMessage' => 'Le nom doit contenir au moins {{ limit }} caractères',
-                    ]),
+                    new Assert\NotBlank(
+                        message: 'Le nom de l\'entreprise est obligatoire',
+                    ),
+                    new Assert\Length(
+                        min: 2,
+                        max: 255,
+                        minMessage: 'Le nom doit contenir au moins {{ limit }} caractères',
+                    ),
                 ],
             ])
             ->add('sector', ChoiceType::class, [
@@ -83,9 +83,9 @@ class ProjectType extends AbstractType
                 'choices' => Sector::choices(),
                 'placeholder' => 'Choisissez un secteur',
                 'constraints' => [
-                    new Assert\NotBlank([
-                        'message' => 'Le secteur est obligatoire',
-                    ]),
+                    new Assert\NotBlank(
+                        message: 'Le secteur est obligatoire',
+                    ),
                 ],
             ])
 
@@ -98,13 +98,13 @@ class ProjectType extends AbstractType
                     'rows' => 4,
                 ],
                 'constraints' => [
-                    new Assert\NotBlank([
-                        'message' => 'La description du projet est obligatoire',
-                    ]),
-                    new Assert\Length([
-                        'min' => 10,
-                        'minMessage' => 'La description doit contenir au moins {{ limit }} caractères',
-                    ]),
+                    new Assert\NotBlank(
+                        message: 'La description du projet est obligatoire',
+                    ),
+                    new Assert\Length(
+                        min: 10,
+                        minMessage: 'La description doit contenir au moins {{ limit }} caractères',
+                    ),
                 ],
             ])
             ->add('productInfo', TextareaType::class, [
@@ -115,13 +115,13 @@ class ProjectType extends AbstractType
                     'rows' => 4,
                 ],
                 'constraints' => [
-                    new Assert\NotBlank([
-                        'message' => 'Les informations produit sont obligatoires',
-                    ]),
-                    new Assert\Length([
-                        'min' => 10,
-                        'minMessage' => 'Les informations produit doivent contenir au moins {{ limit }} caractères',
-                    ]),
+                    new Assert\NotBlank(
+                        message: 'Les informations produit sont obligatoires',
+                    ),
+                    new Assert\Length(
+                        min: 10,
+                        minMessage: 'Les informations produit doivent contenir au moins {{ limit }} caractères',
+                    ),
                 ],
             ])
 
@@ -139,9 +139,9 @@ class ProjectType extends AbstractType
                 },
                 'placeholder' => 'Sélectionnez un objectif',
                 'constraints' => [
-                    new Assert\NotNull([
-                        'message' => 'L\'objectif marketing est obligatoire',
-                    ]),
+                    new Assert\NotNull(
+                        message: 'L\'objectif marketing est obligatoire',
+                    ),
                 ],
             ])
             ->add('detailedObjectives', TextareaType::class, [
@@ -152,13 +152,13 @@ class ProjectType extends AbstractType
                     'rows' => 5,
                 ],
                 'constraints' => [
-                    new Assert\NotBlank([
-                        'message' => 'Les objectifs détaillés sont obligatoires',
-                    ]),
-                    new Assert\Length([
-                        'min' => 20,
-                        'minMessage' => 'Les objectifs doivent contenir au moins {{ limit }} caractères pour être précis',
-                    ]),
+                    new Assert\NotBlank(
+                        message: 'Les objectifs détaillés sont obligatoires',
+                    ),
+                    new Assert\Length(
+                        min: 20,
+                        minMessage: 'Les objectifs doivent contenir au moins {{ limit }} caractères pour être précis',
+                    ),
                 ],
             ])
 
@@ -173,17 +173,17 @@ class ProjectType extends AbstractType
                     'step' => '0.01',
                 ],
                 'constraints' => [
-                    new Assert\NotBlank([
-                        'message' => 'Le budget est obligatoire',
-                    ]),
-                    new Assert\Positive([
-                        'message' => 'Le budget doit être supérieur à zéro',
-                    ]),
-                    new Assert\Range([
-                        'min' => 100,
-                        'max' => 10000000,
-                        'notInRangeMessage' => 'Le budget doit être entre {{ min }}€ et {{ max }}€',
-                    ]),
+                    new Assert\NotBlank(
+                        message: 'Le budget est obligatoire',
+                    ),
+                    new Assert\Positive(
+                        message: 'Le budget doit être supérieur à zéro',
+                    ),
+                    new Assert\Range(
+                        min: 100,
+                        max: 10000000,
+                        notInRangeMessage: 'Le budget doit être entre {{ min }}€ et {{ max }}€',
+                    ),
                 ],
             ])
             ->add('startDate', DateType::class, [
@@ -195,13 +195,13 @@ class ProjectType extends AbstractType
                     'min' => (new \DateTimeImmutable())->format('Y-m-d'),
                 ],
                 'constraints' => [
-                    new Assert\NotBlank([
-                        'message' => 'La date de début est obligatoire',
-                    ]),
-                    new Assert\GreaterThanOrEqual([
-                        'value' => 'today',
-                        'message' => 'La date de début ne peut pas être dans le passé',
-                    ]),
+                    new Assert\NotBlank(
+                        message: 'La date de début est obligatoire',
+                    ),
+                    new Assert\GreaterThanOrEqual(
+                        value: 'today',
+                        message: 'La date de début ne peut pas être dans le passé',
+                    ),
                 ],
             ])
             ->add('endDate', DateType::class, [
@@ -213,13 +213,13 @@ class ProjectType extends AbstractType
                     'min' => (new \DateTimeImmutable())->format('Y-m-d'),
                 ],
                 'constraints' => [
-                    new Assert\NotBlank([
-                        'message' => 'La date de fin est obligatoire',
-                    ]),
-                    new Assert\GreaterThan([
-                        'propertyPath' => 'parent.all[startDate].data',
-                        'message' => 'La date de fin doit être postérieure à la date de début',
-                    ]),
+                    new Assert\NotBlank(
+                        message: 'La date de fin est obligatoire',
+                    ),
+                    new Assert\GreaterThan(
+                        propertyPath: 'parent.all[startDate].data',
+                        message: 'La date de fin doit être postérieure à la date de début',
+                    ),
                 ],
             ])
 
@@ -228,13 +228,14 @@ class ProjectType extends AbstractType
                 'label' => 'URL du site web (optionnel)',
                 'help' => 'URL de votre site web pour analyse automatique de l\'identité visuelle de marque',
                 'required' => false,
+                'default_protocol' => null,
                 'attr' => [
                     'placeholder' => 'https://www.example.com',
                 ],
                 'constraints' => [
-                    new Assert\Url([
-                        'message' => 'L\'URL doit être valide (ex: https://example.com)',
-                    ]),
+                    new Assert\Url(
+                        message: 'L\'URL doit être valide (ex: https://example.com)',
+                    ),
                 ],
             ])
             ->add('selectedAssetTypes', ChoiceType::class, [

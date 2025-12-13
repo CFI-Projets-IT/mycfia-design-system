@@ -70,15 +70,15 @@ class AssetGenerationType extends AbstractType
                 'expanded' => true,
                 'choices' => $choices,
                 'constraints' => [
-                    new Assert\NotBlank([
-                        'message' => 'Vous devez sélectionner au moins un type d\'asset',
-                    ]),
-                    new Assert\Count([
-                        'min' => 1,
-                        'max' => count($choices),
-                        'minMessage' => 'Vous devez sélectionner au moins {{ limit }} type d\'asset',
-                        'maxMessage' => 'Vous ne pouvez sélectionner que {{ limit }} types maximum',
-                    ]),
+                    new Assert\NotBlank(
+                        message: 'Vous devez sélectionner au moins un type d\'asset',
+                    ),
+                    new Assert\Count(
+                        min: 1,
+                        max: count($choices),
+                        minMessage: 'Vous devez sélectionner au moins {{ limit }} type d\'asset',
+                        maxMessage: 'Vous ne pouvez sélectionner que {{ limit }} types maximum',
+                    ),
                 ],
             ])
             ->add('numberOfVariations', IntegerType::class, [
@@ -90,14 +90,14 @@ class AssetGenerationType extends AbstractType
                     'max' => 3,
                 ],
                 'constraints' => [
-                    new Assert\NotBlank([
-                        'message' => 'Le nombre de variations est obligatoire',
-                    ]),
-                    new Assert\Range([
-                        'min' => 1,
-                        'max' => 3,
-                        'notInRangeMessage' => 'Vous pouvez générer entre {{ min }} et {{ max }} variations',
-                    ]),
+                    new Assert\NotBlank(
+                        message: 'Le nombre de variations est obligatoire',
+                    ),
+                    new Assert\Range(
+                        min: 1,
+                        max: 3,
+                        notInRangeMessage: 'Vous pouvez générer entre {{ min }} et {{ max }} variations',
+                    ),
                 ],
             ])
             ->add('toneOfVoice', ChoiceType::class, [
@@ -123,10 +123,10 @@ class AssetGenerationType extends AbstractType
                     'rows' => 4,
                 ],
                 'constraints' => [
-                    new Assert\Length([
-                        'max' => 1000,
-                        'maxMessage' => 'Les instructions ne peuvent pas dépasser {{ limit }} caractères',
-                    ]),
+                    new Assert\Length(
+                        max: 1000,
+                        maxMessage: 'Les instructions ne peuvent pas dépasser {{ limit }} caractères',
+                    ),
                 ],
             ])
         ;
