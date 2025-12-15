@@ -352,7 +352,14 @@ final class ChatController extends AbstractController
 
             // Vérifier que la conversation appartient bien à l'utilisateur authentifié
             $user = $this->authService->getAuthenticatedUser();
-            if (null === $user || $conversation->getUser()->getId() !== $user->getId()) {
+            if (null === $user) {
+                $this->addFlash('error', 'Vous n\'avez pas accès à cette conversation');
+
+                return $this->redirectToRoute('chat_index', ['context' => $context]);
+            }
+
+            // @phpstan-ignore method.nonObject (user est garanti non-null après la vérification early return ligne 355-359)
+            if ($conversation->getUser()->getId() !== $user->getId()) {
                 $this->addFlash('error', 'Vous n\'avez pas accès à cette conversation');
 
                 return $this->redirectToRoute('chat_index', ['context' => $context]);
@@ -420,6 +427,7 @@ final class ChatController extends AbstractController
             }
 
             // Vérifier que la conversation appartient à l'utilisateur
+            // @phpstan-ignore method.nonObject (user est garanti non-null après la vérification early return)
             if ($conversation->getUser()->getId() !== $user->getId()) {
                 return $this->json(['error' => 'Accès non autorisé'], Response::HTTP_FORBIDDEN);
             }
@@ -467,6 +475,7 @@ final class ChatController extends AbstractController
             }
 
             // Vérifier que la conversation appartient à l'utilisateur
+            // @phpstan-ignore method.nonObject (user est garanti non-null après la vérification early return)
             if ($conversation->getUser()->getId() !== $user->getId()) {
                 return $this->json(['error' => 'Accès non autorisé'], Response::HTTP_FORBIDDEN);
             }

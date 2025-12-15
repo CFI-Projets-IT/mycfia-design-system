@@ -39,7 +39,7 @@ final readonly class TenantDto
     {
         return new self(
             idCfi: $utilisateur->idDivision,
-            nom: $utilisateur->nomDivision,
+            nom: $utilisateur->nomDivision ?? 'Division sans nom',
             code: null, // TODO Sprint S1+: Ajouter code division si disponible dans API CFI
             actif: true,
             permissions: [], // TODO Sprint S1+: Extraire permissions depuis API CFI

@@ -472,10 +472,6 @@ final class CompetitorController extends AbstractController
         // Récupérer les IDs des concurrents sélectionnés
         $selectedIds = $request->request->all('competitor_ids');
 
-        if (! is_array($selectedIds)) {
-            $selectedIds = [];
-        }
-
         // Convertir en entiers
         $selectedIds = array_map('intval', $selectedIds);
         $selectedIds = array_filter($selectedIds);

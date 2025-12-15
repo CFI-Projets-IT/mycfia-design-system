@@ -52,6 +52,7 @@ class CfiAuthService
         $errors = $this->validator->validate($requestDto);
         if (count($errors) > 0) {
             $firstError = $errors[0];
+            assert(null !== $firstError);
             $message = $this->translator->trans(
                 (string) $firstError->getMessage(),
                 [],
@@ -144,6 +145,7 @@ class CfiAuthService
         $errors = $this->validator->validate($requestDto);
         if (count($errors) > 0) {
             $firstError = $errors[0];
+            assert(null !== $firstError);
             $message = $this->translator->trans(
                 (string) $firstError->getMessage(),
                 [],

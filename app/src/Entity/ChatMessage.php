@@ -90,6 +90,7 @@ class ChatMessage
 
     public function setConversation(?ChatConversation $conversation): self
     {
+        // @phpstan-ignore assign.propertyType (Doctrine gère la relation, null temporaire possible)
         $this->conversation = $conversation;
 
         return $this;

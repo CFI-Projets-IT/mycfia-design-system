@@ -59,8 +59,13 @@ final class ProjectVoter extends Voter
      */
     private function canView(Project $project, User $user): bool
     {
+        $userDivision = $user->getDivision();
+        if (null === $userDivision) {
+            return false;
+        }
+
         // L'utilisateur peut voir si c'est le même tenant
-        return $project->getTenant()->getIdDivision() === $user->getDivision()->getIdDivision();
+        return $project->getTenant()->getIdDivision() === $userDivision->getIdDivision();
     }
 
     /**

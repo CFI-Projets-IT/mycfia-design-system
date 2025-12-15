@@ -72,8 +72,9 @@ final class GenerateAssetsMessageHandler
             $method = $reflection->getMethod('getAssetType');
             $method->setAccessible(true);
             $result = $method->invoke($builder);
-            // Gérer à la fois Enum et string
-            $assetType = $result instanceof \BackedEnum ? $result->value : (string) $result;
+            // Gérer à la fois Enum et string, forcer en string pour l'indexation
+            $assetTypeRaw = $result instanceof \BackedEnum ? $result->value : $result;
+            $assetType = (string) $assetTypeRaw;
             $this->buildersByType[$assetType] = $builder;
         }
 

@@ -388,10 +388,10 @@ final readonly class GetCommandesTool
                 'type' => strtoupper($operation->type ?? ''),
                 'date_creation' => $operation->dateCreation->format('d/m/Y H:i'),
                 'statut' => $operation->statut ?? '',
-                'destinataires' => number_format($operation->nbDestinataires, 0, ',', ' '),
+                'destinataires' => number_format((float) ($operation->nbDestinataires ?? 0), 0, ',', ' '),
             ];
 
-            $totalDestinataires += $operation->nbDestinataires;
+            $totalDestinataires += $operation->nbDestinataires ?? 0;
         }
 
         // Ligne Total

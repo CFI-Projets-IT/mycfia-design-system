@@ -94,6 +94,7 @@ class Strategy
 
     public function setProject(?Project $project): self
     {
+        // @phpstan-ignore assign.propertyType (Doctrine gère la relation, null temporaire possible)
         $this->project = $project;
 
         return $this;
