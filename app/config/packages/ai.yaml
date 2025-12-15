@@ -35,7 +35,6 @@ ai:
             prompt:
                 text: '@ai/prompts/chat_factures.md.twig'
                 include_tools: true  # CRITIQUE : Force injection définitions tools dans le prompt
-            track_token_usage: true
             tools:
                 - service: 'App\Service\Tool\GetFacturesTool'
                   name: 'get_factures'
@@ -52,7 +51,6 @@ ai:
             prompt:
                 text: '@ai/prompts/chat_commandes.md.twig'
                 include_tools: true  # CRITIQUE : Force injection définitions tools dans le prompt
-            track_token_usage: true
             tools:
                 - service: 'App\Service\Tool\GetCommandesTool'
                   name: 'get_commandes'
@@ -69,7 +67,6 @@ ai:
             prompt:
                 text: '@ai/prompts/chat_stocks.md.twig'
                 include_tools: true  # CRITIQUE : Force injection définitions tools dans le prompt
-            track_token_usage: true
             tools:
                 - service: 'App\Service\Tool\GetStocksTool'
                   name: 'get_stocks'
@@ -89,7 +86,6 @@ ai:
             prompt:
                 text: '@ai/prompts/chat_general.md.twig'
                 include_tools: true  # CRITIQUE : Force injection définitions tools dans le prompt
-            track_token_usage: true
             tools:
                 - service: 'App\Service\Tool\GetOperationsTool'
                   name: 'get_operations'
