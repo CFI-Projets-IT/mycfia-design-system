@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mon Profil - myCFiA (Thème Sombre Bleu)</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --color-primary: #5fa8d3;
+            --color-secondary: #7ec8e3;
+            --font-title: 'Poppins', sans-serif;
+            --bg-primary: linear-gradient(135deg, #0f1729 0%, #2a3f5f 100%);
+            --bg-card: rgba(95,168,211,0.1);
+            --text-primary: #e8f0f7;
+            --text-secondary: #8fa3b8;
+            --border: rgba(95,168,211,0.2);
+            --sidebar-bg: #0a0f1a;
+            --success-color: #4ade80;
+            --disabled-color: #f87171;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Calibri', Arial, sans-serif;
+            background: linear-gradient(135deg, #0f1729 0%, #2a3f5f 100%);
+            background-attachment: fixed;
+            color: var(--text-primary);
+        }
+        h1, h2, h3 { font-family: var(--font-title); }
+
+        /* Layout */
+        .app { display: flex; min-height: 100vh; }
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 260px;
+            height: 100vh;
+            background: var(--sidebar-bg);
+            color: white;
+            padding: 0;
+            z-index: 1000;
+            transition: width 0.3s ease, transform 0.3s ease;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+        .main {
+            margin-left: 260px;
+            flex: 1;
+            transition: margin-left 0.3s ease;
+        }
+        .sidebar.collapsed ~ .main {
+            margin-left: 70px;
+        }
+
+        /* Header */
+        .header {
+            background: var(--bg-card);
+            backdrop-filter: blur(20px);
+            padding: 20px 30px;
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* Content */
+        .content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 30px;
+        }
+
+        /* Two Column Layout */
+        .profile-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+        @media (max-width: 992px) {
+            .profile-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Sections */
+        .section {
+            background: var(--bg-card);
+            backdrop-filter: blur(20px);
+            border-radius: 16px;
+            padding: 30px;
+            border: 1px solid var(--border);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+        }
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 2px solid var(--border);
+        }
+        .section-header h2 {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--color-primary);
+            margin: 0;
+        }
+
+        /* Info Table */
+        .info-table {
+            width: 100%;
+        }
+        .info-table tr {
+            border-bottom: 1px solid var(--border);
+        }
+        .info-table tr:last-child {
+            border-bottom: none;
+        }
+        .info-table td {
+            padding: 16px 0;
+        }
+        .info-table td:first-child {
+            color: var(--text-secondary);
+            width: 40%;
+            font-weight: 500;
+        }
+        .info-table td:last-child {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        .info-table code {
+            background: rgba(95,168,211,0.2);
+            color: var(--color-secondary);
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+        }
+
+        /* Preference Cards */
+        .pref-cards {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            justify-content: center;
+        }
+        .pref-card {
+            background: rgba(95,168,211,0.15);
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .pref-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(95,168,211,0.3);
+            border-color: var(--color-secondary);
+        }
+        .pref-card i {
+            font-size: 24px;
+            color: var(--color-primary);
+        }
+        .pref-card span {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        .pref-card.clickable {
+            cursor: pointer;
+            border-color: var(--color-primary);
+        }
+        .pref-card.clickable:hover {
+            background: rgba(95,168,211,0.25);
+        }
+
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+        .stat-card {
+            background: rgba(95,168,211,0.1);
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            padding: 16px;
+            text-align: center;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(95,168,211,0.3);
+            border-color: var(--color-secondary);
+        }
+        .stat-card small {
+            display: block;
+            color: var(--text-secondary);
+            font-size: 12px;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .stat-card h3 {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--color-primary);
+            margin: 0;
+        }
+        .stat-card .stat-detail {
+            font-size: 11px;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+
+        /* Permissions */
+        .permissions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+        }
+        .permission-category h3 {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .permission-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .permission-list li {
+            padding: 8px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+        }
+        .permission-list li i {
+            font-size: 16px;
+        }
+        .permission-active {
+            color: var(--success-color);
+        }
+        .permission-disabled {
+            color: var(--disabled-color);
+            opacity: 0.6;
+        }
+
+        /* Buttons */
+        .btn-primary-custom {
+            background: var(--color-primary);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(95,168,211,0.3);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn-primary-custom:hover {
+            background: var(--color-secondary);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(126,200,227,0.4);
+        }
+        .btn-primary-custom:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 8px rgba(95,168,211,0.3);
+        }
+
+        /* Floating Action Button */
+        .fab-back {
+            position: fixed;
+            bottom: 32px;
+            right: 32px;
+            background: var(--color-primary);
+            color: white;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(95,168,211,0.4);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 999;
+            text-decoration: none;
+            border: none;
+        }
+        .fab-back:hover {
+            background: var(--color-secondary);
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(126,200,227,0.5);
+        }
+        .fab-back:active {
+            transform: scale(0.95);
+        }
+        .fab-tooltip {
+            position: absolute;
+            right: 70px;
+            background: rgba(0,0,0,0.9);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 14px;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        .fab-back:hover .fab-tooltip {
+            opacity: 1;
+        }
+        @media (max-width: 768px) {
+            .fab-back {
+                bottom: 24px;
+                right: 24px;
+                width: 48px;
+                height: 48px;
+                font-size: 20px;
+            }
+        }
+
+        /* Header Logos */
+        .header-logo-picto {
+            width: 37px;
+            height: 40px;
+        }
+        .header-logo {
+            width: auto;
+            max-width: 180px;
+            height: 55px;
+        }
+
+        /* Header Buttons */
+        .header-btn {
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            white-space: nowrap;
+            transition: all 0.3s ease;
+        }
+        .header-btn-text {
+            display: inline;
+        }
+        /* Responsive header - Bootstrap lg breakpoint */
+        @media (max-width: 991px) {
+            .header-logo {
+                display: none;
+            }
+            .header-btn {
+                padding: 8px;
+                gap: 0;
+                min-width: 40px;
+                justify-content: center;
+            }
+            .header-btn-text {
+                display: none;
+            }
+            .header-content {
+                gap: 8px;
+            }
+            .header-content > div {
+                gap: 8px !important;
+            }
+        }
+
+        /* Réseau géométrique en arrière-plan */
+        body::after {
+            content: '';
+            position: fixed;
+            bottom: 0;
+            right: 0;
+            width: 466.094px;
+            height: 346.397px;
+            background-image: url('../images/web-background.svg');
+            background-repeat: no-repeat;
+            background-size: contain;
+            background-position: bottom right;
+            pointer-events: none;
+            z-index: -1;
+            opacity: 0.6;
+            filter: invert(0);
+        }
+
+        /* Sidebar collapsed state */
+        .sidebar {
+            transition: width 0.3s ease;
+        }
+        .sidebar.collapsed {
+            width: 70px !important;
+        }
+        .sidebar.collapsed span:not(.sidebar-header span),
+        .sidebar.collapsed .bi-chevron-down,
+        .sidebar.collapsed .bi-arrow-left-circle {
+            display: none !important;
+        }
+        .sidebar.collapsed .sidebar-header {
+            justify-content: center !important;
+        }
+        .sidebar.collapsed .nav-section-title-pill {
+            padding: 0.75rem;
+            background: transparent !important;
+            border: none !important;
+        }
+
+        /* Navigation section styling */
+        .nav-section-title-pill {
+            font-size: 0.875rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: rgba(255, 255, 255, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .nav-section-title-pill:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        /* Sidebar links */
+        .sidebar-link {
+            transition: background 0.2s ease;
+        }
+        .sidebar-link:hover {
+            background: rgba(255, 255, 255, 0.1) !important;
+        }
+
+        /* Main content adjustment */
+        .main {
+            transition: margin-left 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="app">
+        <!-- Sidebar -->
+        <aside class="sidebar d-flex flex-column">
+            <!-- Header -->
+            <div class="sidebar-header d-flex align-items-center justify-content-between mb-4 pb-3 px-3 pt-4">
+                <button class="btn btn-link text-white-50 p-0" type="button" onclick="toggleSidebar()" style="font-size: 2rem;">
+                    <i class="bi bi-list"></i>
+                </button>
+                <button class="btn btn-link text-white-50 p-0" type="button" onclick="toggleSidebar()" style="font-size: 2rem;">
+                    <i class="bi bi-arrow-left-circle"></i>
+                </button>
+            </div>
+
+            <!-- Navigation -->
+            <nav class="flex-grow-1 overflow-auto px-3">
+                <!-- Section Favoris -->
+                <div class="nav-section mb-4">
+                    <div class="nav-section-title-pill">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-star"></i>
+                            <span>Favoris</span>
+                        </div>
+                        <i class="bi bi-chevron-down"></i>
+                    </div>
+                    <div class="px-3 py-2 text-white-50 small">
+                        <span>Aucune conversation favorite</span>
+                    </div>
+                </div>
+
+                <!-- Section Historique -->
+                <div class="nav-section mb-4">
+                    <div class="nav-section-title-pill">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-clock-history"></i>
+                            <span>Historique</span>
+                        </div>
+                        <i class="bi bi-chevron-down"></i>
+                    </div>
+                </div>
+            </nav>
+
+            <!-- Footer -->
+            <div class="mt-auto pt-4 border-top border-white border-opacity-10 d-flex flex-column gap-2 px-3 pb-3">
+                <a href="#" class="d-flex align-items-center gap-3 px-3 py-2 rounded text-white text-decoration-none sidebar-link">
+                    <i class="bi bi-gear fs-5"></i>
+                    <span>Paramètres</span>
+                </a>
+                <a href="#" class="d-flex align-items-center gap-3 px-3 py-2 rounded text-white text-decoration-none sidebar-link" style="background: var(--color-primary);">
+                    <i class="bi bi-person-circle fs-5"></i>
+                    <span>Mon compte</span>
+                </a>
+                <a href="#" class="d-flex align-items-center gap-3 px-3 py-2 rounded text-white text-decoration-none sidebar-link">
+                    <i class="bi bi-box-arrow-right fs-5"></i>
+                    <span>Quitter</span>
+                </a>
+            </div>
+        </aside>
+
+        <!-- Main -->
+        <main class="main">
+            <!-- Header -->
+            <header class="header">
+                <div class="header-content">
+                    <a href="#" style="display: flex; align-items: center; gap: 12px; text-decoration: none;">
+                        <img src="../images/assistant-picto.svg" alt="CFI" class="header-logo-picto">
+                        <img src="../images/logo.svg" alt="myCFiia" class="header-logo">
+                    </a>
+                    <div style="display: flex; gap: 16px;">
+                        <button class="header-btn" style="border: 2px solid var(--color-primary); background: transparent; color: var(--color-primary);">
+                            <i class="bi bi-building"></i><span class="header-btn-text"> Ma Division</span>
+                        </button>
+                        <button class="header-btn" style="background: var(--color-primary); color: white; border: none;">
+                            <i class="bi bi-moon-stars-fill"></i><span class="header-btn-text"> Sombre Bleu</span>
+                        </button>
+                        <a href="#" class="header-btn" style="border: 2px solid var(--color-primary); background: transparent; color: var(--color-primary); text-decoration: none;">
+                            <i class="bi bi-arrow-left-circle"></i><span class="header-btn-text"> Retour CFI</span>
+                        </a>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Content -->
+            <div class="content">
+                <div style="text-align: center; margin-bottom: 40px;">
+                    <h1 style="font-size: 36px; font-weight: 800; color: var(--color-primary); margin-bottom: 8px;">Mon Profil</h1>
+                    <p style="font-size: 18px; color: var(--text-secondary);">Informations personnelles et préférences</p>
+                </div>
+
+                <!-- Section Informations & Préférences -->
+                <div class="profile-grid">
+                    <!-- Informations personnelles -->
+                    <div class="section">
+                        <div class="section-header">
+                            <i class="bi bi-person-circle" style="font-size: 24px; color: var(--color-primary);"></i>
+                            <h2>Informations personnelles</h2>
+                        </div>
+                        <table class="info-table">
+                            <tbody>
+                                <tr>
+                                    <td>Nom complet</td>
+                                    <td>Christophe Bichon</td>
+                                </tr>
+                                <tr>
+                                    <td>Email</td>
+                                    <td>c.bichon@BNPPRE</td>
+                                </tr>
+                                <tr>
+                                    <td>Organisation</td>
+                                    <td>BNP Paribas Real Estate</td>
+                                </tr>
+                                <tr>
+                                    <td>ID CFI</td>
+                                    <td><code>12345</code></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Préférences & Statistiques -->
+                    <div style="display: flex; flex-direction: column; gap: 24px;">
+                        <!-- Préférences -->
+                        <div class="section">
+                            <div class="section-header">
+                                <i class="bi bi-sliders" style="font-size: 24px; color: var(--color-primary);"></i>
+                                <h2>Préférences</h2>
+                            </div>
+                            <div class="pref-cards">
+                                <div class="pref-card">
+                                    <i class="bi bi-moon-stars-fill"></i>
+                                    <span>Sombre Bleu</span>
+                                </div>
+                                <div class="pref-card">
+                                    <span style="font-size: 28px;">🇫🇷</span>
+                                    <span>Français</span>
+                                </div>
+                                <div class="pref-card clickable">
+                                    <i class="bi bi-gear"></i>
+                                    <span>Modifier</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Statistiques -->
+                        <div class="section">
+                            <div class="section-header">
+                                <i class="bi bi-graph-up" style="font-size: 24px; color: var(--color-primary);"></i>
+                                <h2>Statistiques d'utilisation</h2>
+                            </div>
+                            <div class="stats-grid">
+                                <div class="stat-card">
+                                    <small>Membre depuis</small>
+                                    <h3>15/03/2024</h3>
+                                    <div class="stat-detail">Il y a 279 jours</div>
+                                </div>
+                                <div class="stat-card">
+                                    <small>Dernière connexion</small>
+                                    <h3>17/12/2024</h3>
+                                    <div class="stat-detail">14:30</div>
+                                </div>
+                                <div class="stat-card">
+                                    <small>Connexions</small>
+                                    <h3>147</h3>
+                                    <div class="stat-detail">connexions</div>
+                                </div>
+                                <div class="stat-card">
+                                    <small>Dernière modification</small>
+                                    <h3>12/12/2024</h3>
+                                    <div class="stat-detail">09:15</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section Permissions -->
+                <div class="section" style="margin-bottom: 24px;">
+                    <div class="section-header">
+                        <i class="bi bi-shield-lock" style="font-size: 24px; color: var(--color-primary);"></i>
+                        <h2>Permissions</h2>
+                    </div>
+                    <div class="permissions-grid">
+                        <!-- Système -->
+                        <div class="permission-category">
+                            <h3><i class="bi bi-gear"></i> Système</h3>
+                            <ul class="permission-list">
+                                <li class="permission-active"><i class="bi bi-check-circle-fill"></i> Connexion</li>
+                                <li class="permission-active"><i class="bi bi-check-circle-fill"></i> Application PWA</li>
+                                <li class="permission-active"><i class="bi bi-check-circle-fill"></i> Administrateur</li>
+                                <li class="permission-disabled"><i class="bi bi-x-circle"></i> Logistique</li>
+                                <li class="permission-disabled"><i class="bi bi-x-circle"></i> Production</li>
+                                <li class="permission-active"><i class="bi bi-check-circle-fill"></i> Développement</li>
+                            </ul>
+                        </div>
+
+                        <!-- Utilisateurs -->
+                        <div class="permission-category">
+                            <h3><i class="bi bi-people"></i> Utilisateurs</h3>
+                            <ul class="permission-list">
+                                <li class="permission-active"><i class="bi bi-check-circle-fill"></i> Créer</li>
+                                <li class="permission-active"><i class="bi bi-check-circle-fill"></i> Modifier</li>
+                                <li class="permission-active"><i class="bi bi-check-circle-fill"></i> Supprimer</li>
+                                <li class="permission-active"><i class="bi bi-check-circle-fill"></i> Emprunter identité</li>
+                            </ul>
+                        </div>
+
+                        <!-- Divisions -->
+                        <div class="permission-category">
+                            <h3><i class="bi bi-building"></i> Divisions</h3>
+                            <ul class="permission-list">
+                                <li class="permission-active"><i class="bi bi-check-circle-fill"></i> Créer</li>
+                                <li class="permission-active"><i class="bi bi-check-circle-fill"></i> Modifier</li>
+                                <li class="permission-active"><i class="bi bi-check-circle-fill"></i> Visualiser</li>
+                            </ul>
+                        </div>
+
+                        <!-- Stocks -->
+                        <div class="permission-category">
+                            <h3><i class="bi bi-box-seam"></i> Stocks</h3>
+                            <ul class="permission-list">
+                                <li class="permission-active"><i class="bi bi-check-circle-fill"></i> Créer</li>
+                                <li class="permission-active"><i class="bi bi-check-circle-fill"></i> Modifier</li>
+                                <li class="permission-active"><i class="bi bi-check-circle-fill"></i> Visualiser</li>
+                                <li class="permission-disabled"><i class="bi bi-x-circle"></i> Supprimer</li>
+                            </ul>
+                        </div>
+
+                        <!-- Opérations -->
+                        <div class="permission-category">
+                            <h3><i class="bi bi-activity"></i> Opérations</h3>
+                            <ul class="permission-list">
+                                <li class="permission-active"><i class="bi bi-check-circle-fill"></i> Créer</li>
+                                <li class="permission-active"><i class="bi bi-check-circle-fill"></i> Valider</li>
+                                <li class="permission-active"><i class="bi bi-check-circle-fill"></i> Visualiser</li>
+                            </ul>
+                        </div>
+
+                        <!-- Campagnes -->
+                        <div class="permission-category">
+                            <h3><i class="bi bi-megaphone"></i> Campagnes</h3>
+                            <ul class="permission-list">
+                                <li class="permission-active"><i class="bi bi-check-circle-fill"></i> Commander</li>
+                                <li class="permission-active"><i class="bi bi-check-circle-fill"></i> Éditer</li>
+                            </ul>
+                        </div>
+
+                        <!-- Autres -->
+                        <div class="permission-category">
+                            <h3><i class="bi bi-grid-3x3-gap"></i> Autres</h3>
+                            <ul class="permission-list">
+                                <li class="permission-active"><i class="bi bi-check-circle-fill"></i> Visualiser factures</li>
+                                <li class="permission-active"><i class="bi bi-check-circle-fill"></i> Visualiser reprises</li>
+                                <li class="permission-disabled"><i class="bi bi-x-circle"></i> Créer NPAI</li>
+                                <li class="permission-active"><i class="bi bi-check-circle-fill"></i> Visualiser NPAI</li>
+                                <li class="permission-active"><i class="bi bi-check-circle-fill"></i> Signataire</li>
+                                <li class="permission-active"><i class="bi bi-check-circle-fill"></i> Valideur</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- Floating Action Button - Retour -->
+    <a href="#" class="fab-back" title="Retour à l'accueil">
+        <span class="fab-tooltip">Retour à l'accueil</span>
+        <i class="bi bi-house-fill"></i>
+    </a>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Sidebar toggle function
+        function toggleSidebar() {
+            const sidebar = document.querySelector('.sidebar');
+            const main = document.querySelector('.main');
+            if (sidebar && main) {
+                sidebar.classList.toggle('collapsed');
+                if (sidebar.classList.contains('collapsed')) {
+                    main.style.marginLeft = '70px';
+                } else {
+                    main.style.marginLeft = '280px';
+                }
+            }
+        }
+    </script>
+</body>
+</html>
