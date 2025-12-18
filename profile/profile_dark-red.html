@@ -466,6 +466,40 @@
         .main {
             transition: margin-left 0.3s ease;
         }
+
+        /* Glassmorphism Effect */
+        .btn-glass {
+            background: rgba(255, 255, 255, 0.1) !important;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2) !important;
+            transition: all 0.3s ease;
+        }
+        .btn-glass:hover {
+            background: rgba(255, 255, 255, 0.15) !important;
+            border-color: rgba(255, 255, 255, 0.3) !important;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+        .btn-glass:active {
+            transform: translateY(0);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Glassmorphism variant - Primary accent */
+        .btn-glass-primary {
+            background: rgba(0, 48, 128, 0.2) !important;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(57, 191, 239, 0.3) !important;
+            color: white !important;
+        }
+        .btn-glass-primary:hover {
+            background: rgba(0, 48, 128, 0.3) !important;
+            border-color: rgba(57, 191, 239, 0.5) !important;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(57, 191, 239, 0.3);
+        }
     </style>
 </head>
 <body>
@@ -537,13 +571,13 @@
                         <img src="../images/logo.svg" alt="myCFiia" class="header-logo">
                     </a>
                     <div style="display: flex; gap: 16px;">
-                        <button class="header-btn" style="border: 2px solid var(--color-primary); background: transparent; color: var(--color-primary);">
+                        <button class="header-btn btn-glass" style="color: white;">
                             <i class="bi bi-building"></i><span class="header-btn-text"> Ma Division</span>
                         </button>
-                        <button class="header-btn" style="background: var(--color-primary); color: white; border: none;">
+                        <button class="header-btn btn-glass-primary">
                             <i class="bi bi-moon-fill"></i><span class="header-btn-text"> Sombre Rouge</span>
                         </button>
-                        <a href="#" class="header-btn" style="border: 2px solid var(--color-primary); background: transparent; color: var(--color-primary); text-decoration: none;">
+                        <a href="#" class="header-btn btn-glass" style="color: white; text-decoration: none;">
                             <i class="bi bi-arrow-left-circle"></i><span class="header-btn-text"> Retour CFI</span>
                         </a>
                     </div>
@@ -750,7 +784,7 @@
                 if (sidebar.classList.contains('collapsed')) {
                     main.style.marginLeft = '70px';
                 } else {
-                    main.style.marginLeft = '280px';
+                    main.style.marginLeft = '260px';
                 }
             }
         }
