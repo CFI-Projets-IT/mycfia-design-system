@@ -1,0 +1,56 @@
+/**
+ * myCFiA Design System - Main Entry Point
+ * Point d'entrée principal qui importe tous les modules CSS
+ *
+ * ATTENTION : Les thèmes (light.css, dark-blue.css, dark-red.css)
+ * doivent être importés séparément dans le HTML selon le thème actif
+ */
+
+/* ==========================================================================
+   TOKENS (variables CSS globales)
+   ========================================================================== */
+@import 'tokens/_colors.css';
+@import 'tokens/_spacing.css';
+@import 'tokens/_typography.css';
+@import 'tokens/_effects.css';
+@import 'tokens/_animations.css';
+
+/* ==========================================================================
+   LAYOUT (structure de l'application)
+   ========================================================================== */
+@import 'layout/_app-layout.css';
+@import 'layout/_sidebar.css';
+@import 'layout/_header.css';
+@import 'layout/_content.css';
+
+/* ==========================================================================
+   COMPONENTS (composants réutilisables)
+   ========================================================================== */
+@import 'components/_buttons.css';
+@import 'components/_cards.css';
+@import 'components/_fab.css';
+@import 'components/_forms.css';
+@import 'components/_theme-preview.css';
+@import 'components/_profile.css';
+@import 'components/_index.css';
+
+/* ==========================================================================
+   USAGE
+   ========================================================================== */
+/*
+Dans vos fichiers HTML, importez main.css + le thème souhaité :
+
+<!-- Styles du design system -->
+<link rel="stylesheet" href="assets/css/main.css">
+<link rel="stylesheet" href="assets/css/themes/light.css" id="theme-stylesheet">
+
+Ou :
+
+<link rel="stylesheet" href="assets/css/main.css">
+<link rel="stylesheet" href="assets/css/themes/dark-blue.css" id="theme-stylesheet">
+
+Ou :
+
+<link rel="stylesheet" href="assets/css/main.css">
+<link rel="stylesheet" href="assets/css/themes/dark-red.css" id="theme-stylesheet">
+*/

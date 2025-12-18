@@ -1,0 +1,94 @@
+/**
+ * Component - Theme Preview
+ * Miniatures de preview des thèmes (utilisées dans les settings)
+ */
+
+/* Note: Les classes de base .theme-preview-* sont définies dans _cards.css */
+/* Ce fichier contient les variantes spécifiques de couleurs par thème */
+
+/* ==========================================================================
+   LIGHT THEME PREVIEW
+   ========================================================================== */
+.theme-preview-light-bg {
+    background: #f5f5f7;
+}
+
+.theme-preview-light-sidebar {
+    background: #001f3f;
+}
+
+.theme-preview-light-section {
+    background: rgba(0, 48, 128, 0.15);
+    color: #003080;
+}
+
+.theme-preview-light-icon {
+    background: #003080;
+    color: white;
+}
+
+.theme-preview-light-dot {
+    background: #39BFEF;
+}
+
+.theme-preview-light-bar {
+    background: #003080;
+}
+
+/* ==========================================================================
+   DARK BLUE THEME PREVIEW
+   ========================================================================== */
+.theme-preview-dark-blue-bg {
+    background: linear-gradient(135deg, #0f1729 0%, #2a3f5f 100%);
+}
+
+.theme-preview-dark-blue-sidebar {
+    background: #0a0f1a;
+}
+
+.theme-preview-dark-blue-section {
+    background: rgba(95, 168, 211, 0.15);
+    color: #5fa8d3;
+}
+
+.theme-preview-dark-blue-icon {
+    background: #5fa8d3;
+    color: white;
+}
+
+.theme-preview-dark-blue-dot {
+    background: #7ec8e3;
+}
+
+.theme-preview-dark-blue-bar {
+    background: #5fa8d3;
+}
+
+/* ==========================================================================
+   DARK RED THEME PREVIEW
+   ========================================================================== */
+.theme-preview-dark-red-bg {
+    background: linear-gradient(135deg, #1a0a0e 0%, #3d1f27 100%);
+}
+
+.theme-preview-dark-red-sidebar {
+    background: #0f0507;
+}
+
+.theme-preview-dark-red-section {
+    background: rgba(211, 95, 141, 0.15);
+    color: #d35f8d;
+}
+
+.theme-preview-dark-red-icon {
+    background: #d35f8d;
+    color: white;
+}
+
+.theme-preview-dark-red-dot {
+    background: #e387ab;
+}
+
+.theme-preview-dark-red-bar {
+    background: #d35f8d;
+}

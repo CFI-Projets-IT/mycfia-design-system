@@ -1,0 +1,50 @@
+/**
+ * Design Tokens - Typography
+ * Polices, tailles, poids, hauteurs de ligne et espacements de lettres
+ */
+
+:root {
+    /* ==========================================================================
+       FONT FAMILIES
+       ========================================================================== */
+    --font-family-base: 'Calibri', Arial, sans-serif;
+    --font-family-title: 'Poppins', sans-serif;
+    --font-family-mono: 'Courier New', monospace;
+
+    /* ==========================================================================
+       FONT SIZES
+       ========================================================================== */
+    --font-size-xs: 11px;
+    --font-size-sm: 12px;
+    --font-size-base: 14px;
+    --font-size-md: 16px;
+    --font-size-lg: 18px;
+    --font-size-xl: 20px;
+    --font-size-2xl: 24px;
+    --font-size-3xl: 28px;
+    --font-size-4xl: 32px;
+    --font-size-5xl: 36px;
+
+    /* ==========================================================================
+       FONT WEIGHTS
+       ========================================================================== */
+    --font-weight-regular: 400;
+    --font-weight-medium: 500;
+    --font-weight-semibold: 600;
+    --font-weight-bold: 700;
+    --font-weight-extrabold: 800;
+
+    /* ==========================================================================
+       LINE HEIGHTS
+       ========================================================================== */
+    --line-height-tight: 1.2;
+    --line-height-base: 1.5;
+    --line-height-relaxed: 1.75;
+
+    /* ==========================================================================
+       LETTER SPACING
+       ========================================================================== */
+    --letter-spacing-tight: 0.05em;
+    --letter-spacing-normal: normal;
+    --letter-spacing-wide: 0.5px;
+}

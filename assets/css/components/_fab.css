@@ -1,0 +1,76 @@
+/**
+ * Component - FAB (Floating Action Button)
+ * Bouton flottant de retour avec tooltip
+ */
+
+/* ==========================================================================
+   FLOATING ACTION BUTTON
+   ========================================================================== */
+.fab-back {
+    position: fixed;
+    bottom: var(--spacing-4xl);
+    right: var(--spacing-4xl);
+    background: var(--color-primary);
+    color: var(--white);
+    width: 56px;
+    height: 56px;
+    border-radius: var(--border-radius-full);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: var(--font-size-2xl);
+    cursor: pointer;
+    box-shadow: var(--shadow-fab);
+    transition: all var(--transition-base) var(--easing-smooth);
+    z-index: var(--z-index-fab);
+    text-decoration: none;
+    border: none;
+}
+
+.fab-back:hover {
+    background: var(--color-secondary);
+    transform: scale(1.1);
+    box-shadow: var(--shadow-fab-hover);
+}
+
+.fab-back:active {
+    transform: scale(0.95);
+}
+
+/* ==========================================================================
+   FAB TOOLTIP
+   ========================================================================== */
+.fab-tooltip {
+    position: absolute;
+    right: 64px;
+    background: var(--black-alpha-80);
+    color: var(--white);
+    padding: var(--spacing-sm) var(--spacing-lg);
+    border-radius: var(--border-radius-md);
+    font-size: var(--font-size-base);
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--transition-base) var(--easing-base);
+}
+
+.fab-back:hover .fab-tooltip {
+    opacity: 1;
+}
+
+/* ==========================================================================
+   RESPONSIVE FAB
+   ========================================================================== */
+@media (max-width: 768px) {
+    .fab-back {
+        width: 48px;
+        height: 48px;
+        font-size: var(--font-size-xl);
+        bottom: var(--spacing-xl);
+        right: var(--spacing-xl);
+    }
+
+    .fab-tooltip {
+        display: none;
+    }
+}

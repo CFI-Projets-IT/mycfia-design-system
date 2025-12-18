@@ -1,0 +1,52 @@
+/**
+ * Design Tokens - Effects
+ * Border-radius, shadows, border-widths
+ */
+
+:root {
+    /* ==========================================================================
+       BORDER RADIUS
+       ========================================================================== */
+    --border-radius-none: 0;
+    --border-radius-xs: 3px;
+    --border-radius-sm: 4px;
+    --border-radius-md: 8px;
+    --border-radius-lg: 12px;
+    --border-radius-xl: 16px;
+    --border-radius-2xl: 20px;
+    --border-radius-full: 50%;
+
+    /* ==========================================================================
+       BOX SHADOWS
+       ========================================================================== */
+    /* Light theme shadows */
+    --shadow-sm-light: 0 2px 8px rgba(0, 0, 0, 0.04);
+    --shadow-md-light: 0 4px 12px rgba(0, 48, 128, 0.3);
+    --shadow-lg-light: 0 8px 20px rgba(0, 48, 128, 0.15);
+    --shadow-xl-light: 0 6px 20px rgba(57, 191, 239, 0.4);
+
+    /* Dark theme shadows */
+    --shadow-sm-dark: 0 2px 8px rgba(0, 0, 0, 0.3);
+    --shadow-md-dark: 0 4px 12px rgba(0, 0, 0, 0.3);
+    --shadow-lg-dark: 0 8px 32px rgba(0, 0, 0, 0.3);
+    --shadow-xl-dark: 0 8px 16px rgba(0, 0, 0, 0.2);
+
+    /* Component specific shadows */
+    --shadow-button: 0 2px 8px rgba(0, 48, 128, 0.2);
+    --shadow-button-hover: 0 4px 16px rgba(57, 191, 239, 0.3);
+    --shadow-fab: 0 4px 12px rgba(0, 48, 128, 0.3);
+    --shadow-fab-hover: 0 6px 20px rgba(57, 191, 239, 0.4);
+
+    /* ==========================================================================
+       BORDER WIDTHS
+       ========================================================================== */
+    --border-width-thin: 1px;
+    --border-width-base: 2px;
+    --border-width-thick: 3px;
+
+    /* ==========================================================================
+       BACKDROP FILTERS
+       ========================================================================== */
+    --backdrop-blur-sm: blur(10px);
+    --backdrop-blur-md: blur(20px);
+}

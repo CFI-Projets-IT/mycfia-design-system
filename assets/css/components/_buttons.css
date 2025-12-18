@@ -1,0 +1,75 @@
+/**
+ * Component - Buttons
+ * Tous les styles de boutons (primary, glass, glassmorphism)
+ */
+
+/* ==========================================================================
+   PRIMARY BUTTON
+   ========================================================================== */
+.btn-primary-custom {
+    background: var(--color-primary);
+    color: var(--white);
+    border: none;
+    padding: var(--padding-button-y) var(--padding-button-x);
+    border-radius: var(--border-radius-md);
+    font-weight: var(--font-weight-semibold);
+    cursor: pointer;
+    transition: all var(--transition-base) var(--easing-base);
+    box-shadow: var(--shadow-button);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.btn-primary-custom:hover {
+    background: var(--color-secondary);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-button-hover);
+}
+
+.btn-primary-custom:active {
+    transform: translateY(0);
+    box-shadow: var(--shadow-button);
+}
+
+/* ==========================================================================
+   GLASSMORPHISM BUTTON (Base)
+   ========================================================================== */
+.btn-glass {
+    background: var(--white-alpha-10) !important;
+    backdrop-filter: var(--backdrop-blur-sm);
+    -webkit-backdrop-filter: var(--backdrop-blur-sm);
+    border: var(--border-width-thin) solid var(--white-alpha-20) !important;
+    transition: all var(--transition-base) var(--easing-base);
+}
+
+.btn-glass:hover {
+    background: var(--white-alpha-15) !important;
+    border-color: var(--white-alpha-20) !important;
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-xl-dark);
+}
+
+.btn-glass:active {
+    transform: translateY(0);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* ==========================================================================
+   GLASSMORPHISM BUTTON (Primary accent)
+   ========================================================================== */
+.btn-glass-primary {
+    background: rgba(0, 48, 128, 0.2) !important;
+    backdrop-filter: var(--backdrop-blur-sm);
+    -webkit-backdrop-filter: var(--backdrop-blur-sm);
+    border: var(--border-width-thin) solid rgba(57, 191, 239, 0.3) !important;
+    color: var(--white) !important;
+}
+
+.btn-glass-primary:hover {
+    background: rgba(0, 48, 128, 0.3) !important;
+    border-color: rgba(57, 191, 239, 0.5) !important;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(57, 191, 239, 0.3);
+}

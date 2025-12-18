@@ -1,0 +1,155 @@
+/**
+ * Couleurs du réseau géométrique SVG par thème
+ * Basé sur l'analyse des mockups Adobe XD
+ * Date : 2025-12-16
+ */
+
+/* =============================================================================
+   VARIABLES CSS PAR THÈME
+   ============================================================================= */
+
+:root[data-theme="light"] {
+  --network-color: #003E82; /* Bleu marine foncé */
+  --network-opacity: 0.7;
+  --network-stroke-width: 1px;
+}
+
+:root[data-theme="dark-blue"] {
+  --network-color: #FFFFFF; /* Blanc */
+  --network-opacity: 0.6;
+  --network-stroke-width: 1px;
+}
+
+:root[data-theme="dark-red"] {
+  --network-color: #FFFFFF; /* Blanc */
+  --network-opacity: 0.6;
+  --network-stroke-width: 1px;
+}
+
+/* =============================================================================
+   STYLES DU RÉSEAU SVG
+   ============================================================================= */
+
+/* Container du réseau */
+.network-background {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 600px;
+  height: 400px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Éléments SVG du réseau */
+.network-background svg {
+  width: 100%;
+  height: 100%;
+}
+
+/* Lignes du réseau */
+.network-background path,
+.network-background line {
+  stroke: var(--network-color);
+  stroke-width: var(--network-stroke-width);
+  fill: none;
+  opacity: var(--network-opacity);
+}
+
+/* Nœuds du réseau */
+.network-background circle {
+  fill: var(--network-color);
+  opacity: var(--network-opacity);
+}
+
+/* =============================================================================
+   APPROCHE ALTERNATIVE : FILTRES CSS
+   ============================================================================= */
+
+/* Si vous utilisez un SVG source unique et souhaitez le colorer via filtres */
+
+/* Light theme : assombrir et teinter en bleu */
+[data-theme="light"] .network-background {
+  filter: brightness(0.2) sepia(1) saturate(5) hue-rotate(200deg);
+  opacity: 0.7;
+}
+
+/* Dark Blue theme : éclaircir */
+[data-theme="dark-blue"] .network-background {
+  filter: brightness(1.8) invert(1);
+  opacity: 0.6;
+}
+
+/* Dark Red theme : éclaircir */
+[data-theme="dark-red"] .network-background {
+  filter: brightness(1.8) invert(1);
+  opacity: 0.6;
+}
+
+/* =============================================================================
+   RESPONSIVE
+   ============================================================================= */
+
+@media (max-width: 768px) {
+  .network-background {
+    width: 400px;
+    height: 300px;
+  }
+}
+
+@media (max-width: 480px) {
+  .network-background {
+    width: 300px;
+    height: 200px;
+  }
+}
+
+/* =============================================================================
+   VARIANTES DE COULEUR POUR TESTS
+   ============================================================================= */
+
+/* Si #003E82 ne convient pas parfaitement pour le thème Light,
+   voici des alternatives à tester : */
+
+/*
+:root[data-theme="light"] {
+  --network-color: #004A99; /* Bleu marine légèrement plus clair
+  --network-color: #003366; /* Bleu marine plus foncé
+  --network-color: #0052A5; /* Bleu plus vif
+}
+*/
+
+/* Si #FFFFFF semble trop fort pour les thèmes Dark,
+   voici des alternatives avec teinte légère : */
+
+/*
+:root[data-theme="dark-blue"] {
+  --network-color: #E8F4FF; /* Blanc légèrement teinté bleu
+  --network-color: #F0F8FF; /* Alice Blue
+}
+
+:root[data-theme="dark-red"] {
+  --network-color: #FFE8E8; /* Blanc légèrement teinté rose
+  --network-color: #FFF0F0; /* Blanc rosé très léger
+}
+*/
+
+/* =============================================================================
+   NOTES D'IMPLÉMENTATION
+   ============================================================================= */
+
+/*
+ * OPTION 1 : Variables CSS + couleur directe (recommandé)
+ * - Plus de contrôle précis
+ * - Meilleure performance
+ * - Plus facile à maintenir
+ *
+ * OPTION 2 : Filtres CSS
+ * - Utile si vous avez un seul SVG source
+ * - Peut nécessiter des ajustements selon le navigateur
+ * - Moins de contrôle précis
+ *
+ * RECOMMANDATION :
+ * Tester visuellement les deux approches et comparer avec les mockups Adobe XD.
+ * Les valeurs proposées sont des estimations basées sur une analyse visuelle.
+ */

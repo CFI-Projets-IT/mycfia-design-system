@@ -1,0 +1,115 @@
+/**
+ * Theme - Light
+ * Thème clair pour myCFiA
+ */
+
+/* Import des tokens */
+@import '../tokens/_colors.css';
+@import '../tokens/_spacing.css';
+@import '../tokens/_typography.css';
+@import '../tokens/_effects.css';
+@import '../tokens/_animations.css';
+
+/* ==========================================================================
+   LIGHT THEME VARIABLES
+   ========================================================================== */
+:root {
+    /* Apply light theme colors */
+    --color-primary: var(--theme-light-primary);
+    --color-secondary: var(--theme-light-secondary);
+    --bg-primary: var(--theme-light-bg-primary);
+    --bg-card: var(--theme-light-bg-card);
+    --text-primary: var(--theme-light-text-primary);
+    --text-secondary: var(--theme-light-text-secondary);
+    --border: var(--theme-light-border);
+    --sidebar-bg: var(--theme-light-sidebar-bg);
+
+    /* State colors for light theme */
+    --success-color: var(--success-color-light);
+    --disabled-color: var(--disabled-color-light);
+
+    /* Shadows for light theme */
+    --shadow-sm: var(--shadow-sm-light);
+    --shadow-md: var(--shadow-md-light);
+    --shadow-lg: var(--shadow-lg-light);
+    --shadow-xl: var(--shadow-xl-light);
+}
+
+/* ==========================================================================
+   BODY STYLES
+   ========================================================================== */
+body {
+    font-family: var(--font-family-base);
+    background: var(--bg-primary);
+    color: var(--text-primary);
+}
+
+h1, h2, h3 {
+    font-family: var(--font-family-title);
+}
+
+/* ==========================================================================
+   BACKGROUND FILTER (Réseau géométrique)
+   ========================================================================== */
+body::after {
+    content: '';
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    width: 466.094px;
+    height: 346.397px;
+    background-image: url('../images/web-background.svg');
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: bottom right;
+    pointer-events: none;
+    z-index: var(--z-index-background);
+    opacity: 0.7;
+    /* Appliquer filtre bleu pour thème light */
+    filter: brightness(0) saturate(100%) invert(13%) sepia(98%) saturate(2466%) hue-rotate(203deg) brightness(93%) contrast(101%);
+}
+
+/* ==========================================================================
+   LIGHT THEME SPECIFIC OVERRIDES
+   ========================================================================== */
+
+/* Header logos */
+.header-logo {
+    filter: brightness(0) saturate(100%) invert(23%) sepia(73%) saturate(1647%) hue-rotate(203deg) brightness(93%) contrast(94%);
+}
+
+/* Glassmorphism variant for light theme */
+.btn-glass {
+    background: var(--white-alpha-60) !important;
+    backdrop-filter: var(--backdrop-blur-sm);
+    -webkit-backdrop-filter: var(--backdrop-blur-sm);
+    border: var(--border-width-thin) solid rgba(0, 48, 128, 0.2) !important;
+}
+
+.btn-glass:hover {
+    background: var(--white-alpha-80) !important;
+    border-color: rgba(0, 48, 128, 0.3) !important;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(0, 48, 128, 0.15);
+}
+
+.btn-glass:active {
+    transform: translateY(0);
+    box-shadow: 0 4px 8px rgba(0, 48, 128, 0.1);
+}
+
+/* Glassmorphism primary for light theme */
+.btn-glass-primary {
+    background: rgba(0, 48, 128, 0.85) !important;
+    backdrop-filter: var(--backdrop-blur-sm);
+    -webkit-backdrop-filter: var(--backdrop-blur-sm);
+    border: var(--border-width-thin) solid rgba(57, 191, 239, 0.3) !important;
+    color: var(--white) !important;
+}
+
+.btn-glass-primary:hover {
+    background: rgba(0, 48, 128, 0.95) !important;
+    border-color: rgba(57, 191, 239, 0.5) !important;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(0, 48, 128, 0.3);
+}
