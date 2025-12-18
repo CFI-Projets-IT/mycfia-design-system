@@ -3,6 +3,25 @@
 
 marketing:
     # ========================================================================
+    # FIRECRAWL - Configuration du service de scraping web
+    # ========================================================================
+    # Mode Self-Hosted : Firecrawl déployé en Docker Compose local
+    # Voir : docker-compose.firecrawl.yml et docs/FIRECRAWL_SELF_HOSTED.md
+    #
+    # Pour rollback vers le mode cloud :
+    #   base_url: 'https://api.firecrawl.dev'
+    #   api_key: '%env(FIRECRAWL_API_KEY)%'
+    # ========================================================================
+    firecrawl:
+#       Version SelfHosted
+#        base_url: 'http://firecrawl-api:3002'  # Service Docker interne
+#        api_key: null                           # Pas d'API key en self-hosted (USE_DB_AUTHENTICATION=false)
+#       Version Cloud
+        base_url: 'https://api.firecrawl.dev'  # Cloud (au lieu de http://firecrawl-api:3002)
+        api_key: '%env(FIRECRAWL_API_KEY)%'    # Obligatoire pour Cloud
+
+
+    # ========================================================================
     # LLM PROVIDERS - Configuration des fournisseurs LLM
     # ========================================================================
     # Tous configurés pour utiliser Mistral (98.75% succès benchmark)

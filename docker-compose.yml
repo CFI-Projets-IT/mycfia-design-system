@@ -145,6 +145,7 @@ services:
 networks:
   app_network:
     driver: bridge
+    name: ${NETWORK_NAME:-mycfia_app_network}
 
 volumes:
   mariadb_data:

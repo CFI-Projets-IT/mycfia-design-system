@@ -1,0 +1,187 @@
+# Configuration Firecrawl Self-Hosted
+# Intégration dans le réseau app_network de myCfia
+# Version : 2.0.0 (adapté depuis firecrawl/firecrawl officiel)
+# Date : 2025-12-15
+#
+# IMPORTANT : Firecrawl est intégré via Git submodule dans docker/firecrawl/
+# Pour initialiser : git submodule update --init --recursive
+
+services:
+  firecrawl-postgres:
+    build: docker/firecrawl/apps/nuq-postgres
+    container_name: ${PROJECT_NAME}_firecrawl_postgres
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=firecrawl
+      - POSTGRES_PASSWORD=firecrawl_password
+      - POSTGRES_DB=postgres
+    volumes:
+      - firecrawl_postgres_data:/var/lib/postgresql/data
+    networks:
+      - app_network
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+        compress: "true"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U firecrawl"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  firecrawl-redis:
+    image: redis:7-alpine
+    container_name: ${PROJECT_NAME}_firecrawl_redis
+    restart: unless-stopped
+    command: redis-server --bind 0.0.0.0
+    volumes:
+      - firecrawl_redis_data:/data
+    networks:
+      - app_network
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "5m"
+        max-file: "2"
+        compress: "true"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  firecrawl-playwright:
+    build: docker/firecrawl/apps/playwright-service-ts
+    container_name: ${PROJECT_NAME}_firecrawl_playwright
+    restart: unless-stopped
+    environment:
+      - PORT=3000
+      - PROXY_SERVER=${PROXY_SERVER:-}
+      - PROXY_USERNAME=${PROXY_USERNAME:-}
+      - PROXY_PASSWORD=${PROXY_PASSWORD:-}
+      - BLOCK_MEDIA=${BLOCK_MEDIA:-false}
+      - MAX_CONCURRENT_PAGES=${CRAWL_CONCURRENT_REQUESTS:-10}
+    networks:
+      - app_network
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 4G
+    tmpfs:
+      - /tmp/.cache:noexec,nosuid,size=1g
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+        compress: "true"
+    healthcheck:
+      test: ["CMD-SHELL", "node -e \"require('http').get('http://localhost:3000/', (res) => process.exit(0)).on('error', () => process.exit(1))\""]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+  firecrawl-api:
+    build: docker/firecrawl/apps/api
+    container_name: ${PROJECT_NAME}_firecrawl_api
+    restart: unless-stopped
+    ports:
+      - "${FIRECRAWL_PORT:-3002}:3002"
+    environment:
+      # Configuration réseau
+      - HOST=0.0.0.0
+      - PORT=3002
+      - INTERNAL_PORT=3002
+      - EXTRACT_WORKER_PORT=3004
+      - WORKER_PORT=3005
+      - ENV=local
+
+      # Configuration Redis
+      - REDIS_URL=redis://firecrawl-redis:6379
+      - REDIS_RATE_LIMIT_URL=redis://firecrawl-redis:6379
+
+      # Configuration Playwright
+      - PLAYWRIGHT_MICROSERVICE_URL=http://firecrawl-playwright:3000/scrape
+
+      # Configuration PostgreSQL (requise pour le système de queues NUQ)
+      - POSTGRES_USER=firecrawl
+      - POSTGRES_PASSWORD=firecrawl_password
+      - POSTGRES_DB=postgres
+      - POSTGRES_HOST=firecrawl-postgres
+      - POSTGRES_PORT=5432
+
+      # Configuration authentification (désactivée en self-hosted)
+      - USE_DB_AUTHENTICATION=false
+      - BULL_AUTH_KEY=${FIRECRAWL_BULL_AUTH_KEY:-changeme_production}
+
+      # Configuration workers et performance
+      - NUM_WORKERS_PER_QUEUE=${NUM_WORKERS_PER_QUEUE:-8}
+      - CRAWL_CONCURRENT_REQUESTS=${CRAWL_CONCURRENT_REQUESTS:-10}
+      - MAX_CONCURRENT_JOBS=${MAX_CONCURRENT_JOBS:-5}
+      - BROWSER_POOL_SIZE=${BROWSER_POOL_SIZE:-5}
+
+      # Configuration OpenAI (optionnel - pour extraction structurée)
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+      - OPENAI_BASE_URL=${OPENAI_BASE_URL:-}
+      - MODEL_NAME=${MODEL_NAME:-}
+      - MODEL_EMBEDDING_NAME=${MODEL_EMBEDDING_NAME:-}
+
+      # Configuration webhooks et logs
+      - ALLOW_LOCAL_WEBHOOKS=true
+      - SELF_HOSTED_WEBHOOK_URL=${SELF_HOSTED_WEBHOOK_URL:-}
+      - LOGGING_LEVEL=${LOGGING_LEVEL:-info}
+
+      # Configuration proxy (optionnel)
+      - PROXY_SERVER=${PROXY_SERVER:-}
+      - PROXY_USERNAME=${PROXY_USERNAME:-}
+      - PROXY_PASSWORD=${PROXY_PASSWORD:-}
+    depends_on:
+      firecrawl-postgres:
+        condition: service_healthy
+      firecrawl-redis:
+        condition: service_healthy
+      firecrawl-playwright:
+        condition: service_healthy
+    networks:
+      - app_network
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    deploy:
+      resources:
+        limits:
+          cpus: '4.0'
+          memory: 8G
+    ulimits:
+      nofile:
+        soft: 65535
+        hard: 65535
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+        compress: "true"
+    command: node dist/src/harness.js --start-docker
+    healthcheck:
+      test: ["CMD-SHELL", "node -e \"require('http').get('http://localhost:3002/', (res) => process.exit(res.statusCode === 200 ? 0 : 1)).on('error', () => process.exit(1))\""]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+# Le réseau app_network existe déjà (créé par docker-compose.yml)
+# On le déclare comme externe pour se connecter au réseau existant
+networks:
+  app_network:
+    external: true
+    name: ${NETWORK_NAME:-mycfia_app_network}
+
+volumes:
+  firecrawl_postgres_data:
+    name: ${PROJECT_NAME}_firecrawl_postgres_data
+  firecrawl_redis_data:
+    name: ${PROJECT_NAME}_firecrawl_redis_data

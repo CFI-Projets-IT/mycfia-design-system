@@ -12,6 +12,7 @@ ENV_FILE=""
 COMPOSE_FILES=""
 BUILD_ARGS=""
 MONITORING_ENABLED=false
+FIRECRAWL_ENABLED=false
 
 # === FONCTIONS ===
 
@@ -141,16 +142,18 @@ OPTIONS:
     --full-deploy             Déploiement complet (Composer, migrations, cache, assets)
                               Automatique pour preprod/prod, optionnel pour dev
     --monitoring              Activer la stack monitoring (Prometheus, Loki, Grafana)
+    --firecrawl               Activer Firecrawl self-hosted (scraping web local)
     --down                    Arrêter les services
     --logs                    Afficher les logs
     --status                  Afficher le statut des services
     -h, --help               Afficher cette aide
 
 EXEMPLES:
-    ./deploy.sh dev --auto-ports              # Déploiement dev avec auto-configuration
-    ./deploy.sh dev --auto-ports --monitoring # Déploiement dev avec monitoring Grafana
-    ./deploy.sh dev --auto-ports --full-deploy # Déploiement dev complet (avec migrations)
-    ./deploy.sh preprod                       # Déploiement preprod (full-deploy automatique)
+    ./deploy.sh dev                           # Déploiement dev simple
+    ./deploy.sh dev --monitoring              # Déploiement dev avec monitoring Grafana
+    ./deploy.sh dev --firecrawl               # Déploiement dev avec Firecrawl self-hosted
+    ./deploy.sh dev --full-deploy             # Déploiement dev complet (avec migrations)
+    ./deploy.sh preprod --firecrawl           # Déploiement preprod avec Firecrawl
     ./deploy.sh prod --build                  # Production avec rebuild (full-deploy automatique)
     ./deploy.sh --down                        # Arrêter tous les services
     ./deploy.sh --status                      # Statut des services
@@ -217,6 +220,12 @@ setup_environment() {
                 log_info "Stack monitoring activée (Prometheus, Loki, Grafana)"
             fi
 
+            # Ajouter Firecrawl si activé
+            if [ "$FIRECRAWL_ENABLED" = "true" ]; then
+                COMPOSE_FILES="$COMPOSE_FILES -f docker-compose.firecrawl.yml"
+                log_info "Firecrawl self-hosted activé (scraping web local)"
+            fi
+
             # Détecter UID/GID automatiquement sur Linux/Mac
             if [[ "$OSTYPE" != "msys" && "$OSTYPE" != "cygwin" ]]; then
                 # Éviter l'erreur UID readonly
@@ -266,6 +275,12 @@ setup_environment() {
             if [ "$MONITORING_ENABLED" = "true" ]; then
                 COMPOSE_FILES="$COMPOSE_FILES -f docker-compose.monitoring.yml"
                 log_info "Stack monitoring activée (Prometheus, Loki, Grafana)"
+            fi
+
+            # Ajouter Firecrawl si activé
+            if [ "$FIRECRAWL_ENABLED" = "true" ]; then
+                COMPOSE_FILES="$COMPOSE_FILES -f docker-compose.firecrawl.yml"
+                log_info "Firecrawl self-hosted activé (scraping web local)"
             fi
 
             # Vérifier les variables de preprod
@@ -511,6 +526,10 @@ while [[ $# -gt 0 ]]; do
             MONITORING_ENABLED=true
             shift
             ;;
+        --firecrawl)
+            FIRECRAWL_ENABLED=true
+            shift
+            ;;
         --down)
             ACTION="down"
             shift
@@ -550,6 +569,12 @@ case $ACTION in
             COMPOSE_FILES="$COMPOSE_FILES -f docker-compose.monitoring.yml"
         fi
 
+        # Vérifier si des conteneurs Firecrawl sont actifs
+        if docker ps --format '{{.Names}}' | grep -q "${PROJECT_NAME}_firecrawl"; then
+            log_info "Firecrawl self-hosted détecté, ajout de docker-compose.firecrawl.yml"
+            COMPOSE_FILES="$COMPOSE_FILES -f docker-compose.firecrawl.yml"
+        fi
+
         stop_services
         exit 0
         ;;
@@ -561,6 +586,11 @@ case $ACTION in
             COMPOSE_FILES="$COMPOSE_FILES -f docker-compose.monitoring.yml"
         fi
 
+        # Vérifier si des conteneurs Firecrawl sont actifs
+        if docker ps --format '{{.Names}}' | grep -q "${PROJECT_NAME}_firecrawl"; then
+            COMPOSE_FILES="$COMPOSE_FILES -f docker-compose.firecrawl.yml"
+        fi
+
         show_status
         exit 0
         ;;
@@ -570,6 +600,11 @@ case $ACTION in
         # Vérifier si des conteneurs de monitoring sont actifs
         if docker ps --format '{{.Names}}' | grep -q "${PROJECT_NAME}_prometheus\|${PROJECT_NAME}_grafana\|${PROJECT_NAME}_loki"; then
             COMPOSE_FILES="$COMPOSE_FILES -f docker-compose.monitoring.yml"
+        fi
+
+        # Vérifier si des conteneurs Firecrawl sont actifs
+        if docker ps --format '{{.Names}}' | grep -q "${PROJECT_NAME}_firecrawl"; then
+            COMPOSE_FILES="$COMPOSE_FILES -f docker-compose.firecrawl.yml"
         fi
 
         show_logs
