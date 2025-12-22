@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mes Campagnes Marketing | myCFiA</title>
+
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Design System myCFiA -->
+    <link rel="stylesheet" href="../assets/css/main.css">
+    <link rel="stylesheet" href="../assets/css/themes/light.css" id="theme-stylesheet">
+</head>
+<body>
+    <div class="app">
+        <aside class="sidebar d-flex flex-column">
+            <div class="sidebar-header">
+                <button class="btn btn-link text-white-50 p-0" data-sidebar-toggle>
+                    <i class="bi bi-list fs-4"></i>
+                </button>
+                <button class="btn btn-link text-white-50 p-0" data-sidebar-toggle>
+                    <i class="bi bi-arrow-left-circle fs-5"></i>
+                </button>
+            </div>
+
+            <nav class="flex-grow-1 overflow-auto px-3">
+                <div class="nav-section mb-4">
+                    <div class="nav-section-title-pill mb-3">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-megaphone"></i>
+                            <span>Marketing</span>
+                        </div>
+                        <i class="bi bi-chevron-down"></i>
+                    </div>
+                    <div class="nav-section-content">
+                        <a href="step1_create.html" class="sidebar-link">
+                            <i class="bi bi-plus-circle"></i>
+                            <span>Nouvelle campagne</span>
+                        </a>
+                        <a href="dashboard.html" class="sidebar-link active">
+                            <i class="bi bi-grid"></i>
+                            <span>Mes campagnes</span>
+                        </a>
+                        <a href="analytics.html" class="sidebar-link">
+                            <i class="bi bi-bar-chart-line"></i>
+                            <span>Analytics</span>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="nav-section mb-4">
+                    <div class="nav-section-title-pill mb-3">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-star"></i>
+                            <span>Favoris</span>
+                        </div>
+                        <i class="bi bi-chevron-down"></i>
+                    </div>
+                    <div class="px-3 py-2 text-white-50 small">
+                        <span>Aucune campagne favorite</span>
+                    </div>
+                </div>
+
+                <div class="nav-section mb-4">
+                    <div class="nav-section-title-pill mb-3">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-clock-history"></i>
+                            <span>Historique</span>
+                        </div>
+                        <i class="bi bi-chevron-down"></i>
+                    </div>
+                </div>
+            </nav>
+
+            <div class="sidebar-footer">
+                <a href="../settings_index/settings_index_light.html" class="sidebar-link">
+                    <i class="bi bi-gear"></i>
+                    <span>Paramètres</span>
+                </a>
+                <a href="../profile/profile_light.html" class="sidebar-link">
+                    <i class="bi bi-person-circle"></i>
+                    <span>Mon compte</span>
+                </a>
+                <a href="#" class="sidebar-link">
+                    <i class="bi bi-box-arrow-right"></i>
+                    <span>Quitter</span>
+                </a>
+            </div>
+        </aside>
+
+        <main class="main">
+            <header class="header">
+                <div class="header-content">
+                    <a href="../index.html" style="display: flex; align-items: center; gap: 12px; text-decoration: none;">
+                        <img src="../images/logo_picto.svg" alt="CFI" class="header-logo-picto">
+                        <img src="../images/logo.svg" alt="myCFiA" class="header-logo">
+                    </a>
+
+                    <div style="display: flex; gap: 16px; align-items: center;">
+                        <button class="btn btn-glass header-btn" style="color: var(--color-primary);">
+                            <i class="bi bi-building"></i>
+                            <span class="header-btn-text">Ma Division</span>
+                        </button>
+                        <button class="btn btn-glass-primary header-btn">
+                            <i class="bi bi-sun-fill"></i>
+                            <span class="header-btn-text">Clair</span>
+                        </button>
+                        <a href="#" class="btn btn-glass header-btn" style="color: var(--color-primary); text-decoration: none;">
+                            <i class="bi bi-arrow-left-circle"></i>
+                            <span class="header-btn-text">Retour CFI</span>
+                        </a>
+                    </div>
+                </div>
+            </header>
+
+            <div class="content">
+                <!-- Page Header -->
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <div>
+                        <h1 style="font-size: var(--font-size-3xl); font-weight: var(--font-weight-bold); color: var(--color-text-primary); margin-bottom: var(--spacing-xs);">
+                            Mes Campagnes Marketing
+                        </h1>
+                        <p class="text-secondary mb-0">Gérez et suivez vos campagnes multicanales générées par IA</p>
+                    </div>
+                    <a href="step1_create.html" class="btn-ai">
+                        <i class="bi bi-plus-circle"></i>
+                        Nouvelle campagne
+                    </a>
+                </div>
+
+                <!-- Stats Cards -->
+                <div class="row g-4 mb-4">
+                    <div class="col-md-3">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <div class="d-flex align-items-center justify-content-between mb-2">
+                                    <div class="p-2" style="background: rgba(0, 48, 128, 0.1); border-radius: var(--border-radius-md); color: var(--color-primary);">
+                                        <i class="bi bi-megaphone" style="font-size: 1.5rem;"></i>
+                                    </div>
+                                    <span class="badge bg-success">+12%</span>
+                                </div>
+                                <h3 class="mb-1" style="color: var(--color-primary);">8</h3>
+                                <p class="small text-secondary mb-0">Campagnes actives</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <div class="d-flex align-items-center justify-content-between mb-2">
+                                    <div class="p-2" style="background: rgba(57, 191, 239, 0.1); border-radius: var(--border-radius-md); color: var(--color-secondary);">
+                                        <i class="bi bi-cash-stack" style="font-size: 1.5rem;"></i>
+                                    </div>
+                                    <span class="badge bg-primary">Total</span>
+                                </div>
+                                <h3 class="mb-1" style="color: var(--color-primary);">340K€</h3>
+                                <p class="small text-secondary mb-0">Budget cumulé</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <div class="d-flex align-items-center justify-content-between mb-2">
+                                    <div class="p-2" style="background: rgba(40, 167, 69, 0.1); border-radius: var(--border-radius-md); color: #28a745;">
+                                        <i class="bi bi-graph-up-arrow" style="font-size: 1.5rem;"></i>
+                                    </div>
+                                    <span class="badge bg-success">+24%</span>
+                                </div>
+                                <h3 class="mb-1" style="color: var(--color-primary);">3.8x</h3>
+                                <p class="small text-secondary mb-0">ROI moyen</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <div class="d-flex align-items-center justify-content-between mb-2">
+                                    <div class="p-2" style="background: rgba(255, 193, 7, 0.1); border-radius: var(--border-radius-md); color: #ffc107;">
+                                        <i class="bi bi-people" style="font-size: 1.5rem;"></i>
+                                    </div>
+                                    <span class="badge bg-warning text-dark">+18%</span>
+                                </div>
+                                <h3 class="mb-1" style="color: var(--color-primary);">2.4K</h3>
+                                <p class="small text-secondary mb-0">Leads générés</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Filters -->
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <div class="row g-3">
+                            <div class="col-md-3">
+                                <label class="form-label small">Statut</label>
+                                <select class="form-select">
+                                    <option selected>Tous les statuts</option>
+                                    <option>Active</option>
+                                    <option>En pause</option>
+                                    <option>Terminée</option>
+                                    <option>Brouillon</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label small">Canal principal</label>
+                                <select class="form-select">
+                                    <option selected>Tous les canaux</option>
+                                    <option>Linkedin</option>
+                                    <option>GoogleAds</option>
+                                    <option>Facebook/Instagram</option>
+                                    <option>Mail</option>
+                                    <option>Article</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label small">Période</label>
+                                <select class="form-select">
+                                    <option selected>30 derniers jours</option>
+                                    <option>90 derniers jours</option>
+                                    <option>Cette année</option>
+                                    <option>Personnalisé</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label small">Recherche</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-search"></i></span>
+                                    <input type="text" class="form-control" placeholder="Nom de campagne...">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Campaigns Table -->
+                <div class="card">
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle">
+                                <thead>
+                                    <tr>
+                                        <th>Campagne</th>
+                                        <th>Statut</th>
+                                        <th>Canaux</th>
+                                        <th>Budget</th>
+                                        <th>Performance</th>
+                                        <th>Créée le</th>
+                                        <th class="text-end">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Campaign 1 -->
+                                    <tr>
+                                        <td>
+                                            <a href="campaign_show.html" style="text-decoration: none; color: inherit;">
+                                                <div class="d-flex align-items-center gap-3">
+                                                    <div style="width: 40px; height: 40px; background: linear-gradient(135deg, var(--color-primary), var(--color-secondary)); border-radius: var(--border-radius-md); display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">
+                                                        LP
+                                                    </div>
+                                                    <div>
+                                                        <strong>Lancement Produit Q1 2025</strong>
+                                                        <p class="small text-secondary mb-0">Formation professionnelle</p>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-success">
+                                                <i class="bi bi-circle-fill" style="font-size: 0.5rem;"></i> Active
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <div class="d-flex gap-1">
+                                                <span class="badge bg-primary" title="Linkedin"><i class="bi bi-linkedin"></i></span>
+                                                <span class="badge bg-primary" title="GoogleAds"><i class="bi bi-google"></i></span>
+                                                <span class="badge bg-primary" title="Mail"><i class="bi bi-envelope"></i></span>
+                                                <span class="badge bg-secondary">+3</span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <strong>50 000€</strong>
+                                            <p class="small text-secondary mb-0">Dépensé: 32 450€</p>
+                                        </td>
+                                        <td>
+                                            <div class="d-flex flex-column gap-1">
+                                                <div class="d-flex align-items-center gap-2">
+                                                    <div class="progress" style="width: 80px; height: 6px;">
+                                                        <div class="progress-bar bg-success" style="width: 87%;"></div>
+                                                    </div>
+                                                    <span class="small">ROI: 4.2x</span>
+                                                </div>
+                                                <span class="small text-secondary">387 leads • 18% conv.</span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <span class="small">15 Jan 2025</span>
+                                            <p class="small text-secondary mb-0">il y a 4 jours</p>
+                                        </td>
+                                        <td class="text-end">
+                                            <div class="btn-group">
+                                                <a href="campaign_show.html" class="btn btn-sm btn-outline-primary">
+                                                    <i class="bi bi-eye"></i>
+                                                </a>
+                                                <button class="btn btn-sm btn-outline-primary">
+                                                    <i class="bi bi-pencil"></i>
+                                                </button>
+                                                <button class="btn btn-sm btn-outline-secondary">
+                                                    <i class="bi bi-three-dots-vertical"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+
+                                    <!-- Campaign 2 -->
+                                    <tr>
+                                        <td>
+                                            <a href="campaign_show.html" style="text-decoration: none; color: inherit;">
+                                                <div class="d-flex align-items-center gap-3">
+                                                    <div style="width: 40px; height: 40px; background: linear-gradient(135deg, #FF6B6B, #FFE66D); border-radius: var(--border-radius-md); display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">
+                                                        GD
+                                                    </div>
+                                                    <div>
+                                                        <strong>Génération Demande B2B</strong>
+                                                        <p class="small text-secondary mb-0">Logiciel SaaS</p>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-success">
+                                                <i class="bi bi-circle-fill" style="font-size: 0.5rem;"></i> Active
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <div class="d-flex gap-1">
+                                                <span class="badge bg-primary" title="Linkedin"><i class="bi bi-linkedin"></i></span>
+                                                <span class="badge bg-primary" title="GoogleAds"><i class="bi bi-google"></i></span>
+                                                <span class="badge bg-primary" title="Article"><i class="bi bi-file-text"></i></span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <strong>75 000€</strong>
+                                            <p class="small text-secondary mb-0">Dépensé: 48 200€</p>
+                                        </td>
+                                        <td>
+                                            <div class="d-flex flex-column gap-1">
+                                                <div class="d-flex align-items-center gap-2">
+                                                    <div class="progress" style="width: 80px; height: 6px;">
+                                                        <div class="progress-bar bg-success" style="width: 73%;"></div>
+                                                    </div>
+                                                    <span class="small">ROI: 3.1x</span>
+                                                </div>
+                                                <span class="small text-secondary">542 leads • 22% conv.</span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <span class="small">08 Jan 2025</span>
+                                            <p class="small text-secondary mb-0">il y a 11 jours</p>
+                                        </td>
+                                        <td class="text-end">
+                                            <div class="btn-group">
+                                                <a href="campaign_show.html" class="btn btn-sm btn-outline-primary">
+                                                    <i class="bi bi-eye"></i>
+                                                </a>
+                                                <button class="btn btn-sm btn-outline-primary">
+                                                    <i class="bi bi-pencil"></i>
+                                                </button>
+                                                <button class="btn btn-sm btn-outline-secondary">
+                                                    <i class="bi bi-three-dots-vertical"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+
+                                    <!-- Campaign 3 -->
+                                    <tr>
+                                        <td>
+                                            <a href="campaign_show.html" style="text-decoration: none; color: inherit;">
+                                                <div class="d-flex align-items-center gap-3">
+                                                    <div style="width: 40px; height: 40px; background: linear-gradient(135deg, #845EC2, #00C9A7); border-radius: var(--border-radius-md); display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">
+                                                        NL
+                                                    </div>
+                                                    <div>
+                                                        <strong>Nurturing Leads Q4</strong>
+                                                        <p class="small text-secondary mb-0">E-commerce</p>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-warning text-dark">
+                                                <i class="bi bi-pause-circle-fill" style="font-size: 0.5rem;"></i> En pause
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <div class="d-flex gap-1">
+                                                <span class="badge bg-primary" title="Mail"><i class="bi bi-envelope"></i></span>
+                                                <span class="badge bg-primary" title="Sms"><i class="bi bi-phone"></i></span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <strong>25 000€</strong>
+                                            <p class="small text-secondary mb-0">Dépensé: 25 000€</p>
+                                        </td>
+                                        <td>
+                                            <div class="d-flex flex-column gap-1">
+                                                <div class="d-flex align-items-center gap-2">
+                                                    <div class="progress" style="width: 80px; height: 6px;">
+                                                        <div class="progress-bar bg-success" style="width: 92%;"></div>
+                                                    </div>
+                                                    <span class="small">ROI: 5.6x</span>
+                                                </div>
+                                                <span class="small text-secondary">823 leads • 31% conv.</span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <span class="small">20 Déc 2024</span>
+                                            <p class="small text-secondary mb-0">il y a 30 jours</p>
+                                        </td>
+                                        <td class="text-end">
+                                            <div class="btn-group">
+                                                <a href="campaign_show.html" class="btn btn-sm btn-outline-primary">
+                                                    <i class="bi bi-eye"></i>
+                                                </a>
+                                                <button class="btn btn-sm btn-outline-primary">
+                                                    <i class="bi bi-pencil"></i>
+                                                </button>
+                                                <button class="btn btn-sm btn-outline-secondary">
+                                                    <i class="bi bi-three-dots-vertical"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+
+                                    <!-- Campaign 4 -->
+                                    <tr>
+                                        <td>
+                                            <div class="d-flex align-items-center gap-3">
+                                                <div style="width: 40px; height: 40px; background: linear-gradient(135deg, #1877F2, #E4405F); border-radius: var(--border-radius-md); display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">
+                                                    RS
+                                                </div>
+                                                <div>
+                                                    <strong>Réseaux Sociaux Automne</strong>
+                                                    <p class="small text-secondary mb-0">Retail mode</p>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-secondary">
+                                                <i class="bi bi-check-circle-fill" style="font-size: 0.5rem;"></i> Terminée
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <div class="d-flex gap-1">
+                                                <span class="badge bg-primary" title="Facebook"><i class="bi bi-facebook"></i></span>
+                                                <span class="badge bg-primary" title="Instagram"><i class="bi bi-instagram"></i></span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <strong>40 000€</strong>
+                                            <p class="small text-secondary mb-0">Dépensé: 40 000€</p>
+                                        </td>
+                                        <td>
+                                            <div class="d-flex flex-column gap-1">
+                                                <div class="d-flex align-items-center gap-2">
+                                                    <div class="progress" style="width: 80px; height: 6px;">
+                                                        <div class="progress-bar bg-success" style="width: 65%;"></div>
+                                                    </div>
+                                                    <span class="small">ROI: 2.8x</span>
+                                                </div>
+                                                <span class="small text-secondary">624 leads • 14% conv.</span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <span class="small">05 Nov 2024</span>
+                                            <p class="small text-secondary mb-0">il y a 75 jours</p>
+                                        </td>
+                                        <td class="text-end">
+                                            <div class="btn-group">
+                                                <button class="btn btn-sm btn-outline-primary">
+                                                    <i class="bi bi-eye"></i>
+                                                </button>
+                                                <button class="btn btn-sm btn-outline-primary">
+                                                    <i class="bi bi-archive"></i>
+                                                </button>
+                                                <button class="btn btn-sm btn-outline-secondary">
+                                                    <i class="bi bi-three-dots-vertical"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+
+                                    <!-- Campaign 5 (Draft) -->
+                                    <tr style="opacity: 0.7;">
+                                        <td>
+                                            <div class="d-flex align-items-center gap-3">
+                                                <div style="width: 40px; height: 40px; background: #e9ecef; border-radius: var(--border-radius-md); display: flex; align-items: center; justify-content: center; color: #6c757d; font-weight: bold;">
+                                                    <i class="bi bi-file-earmark"></i>
+                                                </div>
+                                                <div>
+                                                    <strong>Campagne Printemps 2025</strong>
+                                                    <p class="small text-secondary mb-0">En préparation</p>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-light text-dark">
+                                                <i class="bi bi-pencil-fill" style="font-size: 0.5rem;"></i> Brouillon
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <span class="small text-secondary">Non défini</span>
+                                        </td>
+                                        <td>
+                                            <strong>60 000€</strong>
+                                            <p class="small text-secondary mb-0">Budget planifié</p>
+                                        </td>
+                                        <td>
+                                            <span class="small text-secondary">Pas encore lancée</span>
+                                        </td>
+                                        <td>
+                                            <span class="small">18 Jan 2025</span>
+                                            <p class="small text-secondary mb-0">il y a 1 jour</p>
+                                        </td>
+                                        <td class="text-end">
+                                            <div class="btn-group">
+                                                <button class="btn btn-sm btn-outline-primary">
+                                                    <i class="bi bi-pencil"></i>
+                                                </button>
+                                                <button class="btn btn-sm btn-outline-danger">
+                                                    <i class="bi bi-trash"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Pagination -->
+                        <div class="d-flex justify-content-between align-items-center mt-4">
+                            <div class="text-secondary small">
+                                Affichage de 5 campagnes sur 8
+                            </div>
+                            <nav>
+                                <ul class="pagination mb-0">
+                                    <li class="page-item disabled">
+                                        <a class="page-link" href="#"><i class="bi bi-chevron-left"></i></a>
+                                    </li>
+                                    <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                                    <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                    <li class="page-item">
+                                        <a class="page-link" href="#"><i class="bi bi-chevron-right"></i></a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <a href="step1_create.html" class="fab-back" style="background: var(--color-primary);">
+        <i class="bi bi-plus"></i>
+        <span class="fab-tooltip">Nouvelle campagne</span>
+    </a>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../assets/js/main.js" type="module"></script>
+</body>
+</html>

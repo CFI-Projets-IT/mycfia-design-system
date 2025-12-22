@@ -7,6 +7,9 @@ import { initSidebarToggle, restoreSidebarState } from './core/sidebar-toggle.js
 import { initThemeSwitcher } from './core/theme-switcher.js';
 import { initThemeCards } from './components/theme-cards.js';
 import { initButtonAnimations } from './components/button-animations.js';
+import './components/campaign-stepper.js';
+import './components/campaign-form.js';
+import './components/campaign-loader.js';
 
 /**
  * Initialisation au chargement du DOM

@@ -8,7 +8,7 @@
  * Attache les événements de clic sur tous les boutons toggle
  */
 export function initSidebarToggle() {
-    const toggleButtons = document.querySelectorAll('[data-sidebar-toggle], .sidebar-header button');
+    const toggleButtons = document.querySelectorAll('[data-sidebar-toggle]');
 
     if (toggleButtons.length === 0) {
         console.warn('[sidebar-toggle] Aucun bouton toggle trouvé');

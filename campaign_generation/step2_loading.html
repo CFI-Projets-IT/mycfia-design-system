@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Génération Personas - Étape 2 | myCFiA</title>
+
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Design System myCFiA -->
+    <link rel="stylesheet" href="../assets/css/main.css">
+    <link rel="stylesheet" href="../assets/css/themes/light.css" id="theme-stylesheet">
+</head>
+<body>
+    <div class="app">
+        <!-- Sidebar -->
+        <aside class="sidebar d-flex flex-column">
+            <div class="sidebar-header">
+                <button class="btn btn-link text-white-50 p-0" data-sidebar-toggle>
+                    <i class="bi bi-list fs-4"></i>
+                </button>
+                <button class="btn btn-link text-white-50 p-0" data-sidebar-toggle>
+                    <i class="bi bi-arrow-left-circle fs-5"></i>
+                </button>
+            </div>
+
+            <nav class="flex-grow-1 overflow-auto px-3">
+                <!-- Marketing -->
+                <div class="nav-section mb-4">
+                    <div class="nav-section-title-pill mb-3">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-megaphone"></i>
+                            <span>Marketing</span>
+                        </div>
+                        <i class="bi bi-chevron-down"></i>
+                    </div>
+                    <div class="nav-section-content">
+                        <a href="step1_create.html" class="sidebar-link active">
+                            <i class="bi bi-plus-circle"></i>
+                            <span>Nouvelle campagne</span>
+                        </a>
+                        <a href="dashboard.html" class="sidebar-link">
+                            <i class="bi bi-grid"></i>
+                            <span>Mes campagnes</span>
+                        </a>
+                        <a href="analytics.html" class="sidebar-link">
+                            <i class="bi bi-bar-chart-line"></i>
+                            <span>Analytics</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Favoris -->
+                <div class="nav-section mb-4">
+                    <div class="nav-section-title-pill mb-3">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-star"></i>
+                            <span>Favoris</span>
+                        </div>
+                        <i class="bi bi-chevron-down"></i>
+                    </div>
+                    <div class="px-3 py-2 text-white-50 small">
+                        <span>Aucune campagne favorite</span>
+                    </div>
+                </div>
+
+                <!-- Historique -->
+                <div class="nav-section mb-4">
+                    <div class="nav-section-title-pill mb-3">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-clock-history"></i>
+                            <span>Historique</span>
+                        </div>
+                        <i class="bi bi-chevron-down"></i>
+                    </div>
+                </div>
+            </nav>
+
+            <div class="sidebar-footer">
+                <a href="../settings_index/settings_index_light.html" class="sidebar-link">
+                    <i class="bi bi-gear"></i>
+                    <span>Paramètres</span>
+                </a>
+                <a href="../profile/profile_light.html" class="sidebar-link">
+                    <i class="bi bi-person-circle"></i>
+                    <span>Mon compte</span>
+                </a>
+                <a href="#" class="sidebar-link">
+                    <i class="bi bi-box-arrow-right"></i>
+                    <span>Quitter</span>
+                </a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main">
+            <header class="header">
+                <div class="header-content">
+                    <a href="../index.html" style="display: flex; align-items: center; gap: 12px; text-decoration: none;">
+                        <img src="../images/logo_picto.svg" alt="CFI" class="header-logo-picto">
+                        <img src="../images/logo.svg" alt="myCFiA" class="header-logo">
+                    </a>
+
+                    <div style="display: flex; gap: 16px; align-items: center;">
+                        <button class="btn btn-glass header-btn" style="color: var(--color-primary);">
+                            <i class="bi bi-building"></i>
+                            <span class="header-btn-text">Ma Division</span>
+                        </button>
+                        <button class="btn btn-glass-primary header-btn">
+                            <i class="bi bi-sun-fill"></i>
+                            <span class="header-btn-text">Clair</span>
+                        </button>
+                        <a href="#" class="btn btn-glass header-btn" style="color: var(--color-primary); text-decoration: none;">
+                            <i class="bi bi-arrow-left-circle"></i>
+                            <span class="header-btn-text">Retour CFI</span>
+                        </a>
+                    </div>
+                </div>
+            </header>
+
+            <div class="content">
+                <!-- Breadcrumb -->
+                <nav aria-label="breadcrumb" style="margin-bottom: var(--spacing-3xl);">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="dashboard.html" style="color: var(--color-primary); text-decoration: none;">Campagnes Marketing</a></li>
+                        <li class="breadcrumb-item"><a href="step1_create.html" style="color: var(--color-primary); text-decoration: none;">Nouvelle campagne</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Génération Personas</li>
+                    </ol>
+                </nav>
+
+                <!-- Stepper -->
+                <div class="campaign-stepper">
+                    <div class="stepper-container">
+                        <div class="stepper-line">
+                            <div class="stepper-progress" style="width: 25%;"></div>
+                        </div>
+
+                        <div class="stepper-step completed">
+                            <div class="stepper-circle"><i class="bi bi-check-lg"></i></div>
+                            <div class="stepper-label">Projet</div>
+                        </div>
+
+                        <div class="stepper-step active">
+                            <div class="stepper-circle">2</div>
+                            <div class="stepper-label">Personas</div>
+                        </div>
+
+                        <div class="stepper-step">
+                            <div class="stepper-circle">3</div>
+                            <div class="stepper-label">Concurrents</div>
+                        </div>
+
+                        <div class="stepper-step">
+                            <div class="stepper-circle">4</div>
+                            <div class="stepper-label">Stratégie</div>
+                        </div>
+
+                        <div class="stepper-step">
+                            <div class="stepper-circle">5</div>
+                            <div class="stepper-label">Assets</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2-Column Layout -->
+                <div class="row g-4">
+                    <!-- Left Column: Campaign Information (40%) -->
+                    <div class="col-md-5">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h5 class="mb-4">
+                                    <i class="bi bi-briefcase text-primary"></i>
+                                    Campagne en cours d'analyse
+                                </h5>
+
+                                <div class="mb-3">
+                                    <label class="form-label small text-secondary">Nom de la campagne</label>
+                                    <p class="mb-0"><strong>Lancement Produit Q1 2025</strong></p>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label small text-secondary">Secteur d'activité</label>
+                                    <p class="mb-0">Formation professionnelle</p>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label small text-secondary">Objectif marketing</label>
+                                    <p class="mb-0">Générer des leads qualifiés pour formations finance/comptabilité</p>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label small text-secondary">Budget total</label>
+                                    <p class="mb-0"><strong>50 000€</strong></p>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label small text-secondary">Durée de la campagne</label>
+                                    <p class="mb-0">3 mois (Q1 2025)</p>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label small text-secondary">Canaux marketing</label>
+                                    <div class="d-flex flex-wrap gap-2 mt-2">
+                                        <span class="badge bg-primary">Linkedin</span>
+                                        <span class="badge bg-primary">GoogleAds</span>
+                                        <span class="badge bg-primary">Facebook</span>
+                                        <span class="badge bg-primary">Mail</span>
+                                    </div>
+                                </div>
+
+                                <div class="mb-0">
+                                    <label class="form-label small text-secondary">URL analysée</label>
+                                    <p class="mb-0">
+                                        <a href="https://www.cfi-groupe.fr" target="_blank" style="color: var(--color-primary);">
+                                            <i class="bi bi-link-45deg"></i> www.cfi-groupe.fr
+                                        </a>
+                                    </p>
+                                </div>
+
+                                <div class="alert alert-info mt-4 mb-0" style="padding: 0.75rem;">
+                                    <small>
+                                        <i class="bi bi-info-circle"></i>
+                                        <strong>Génération intelligente</strong><br>
+                                        L'IA analyse vos données enrichies pour créer des personas précis et actionnables.
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Column: Loader (60%) -->
+                    <div class="col-md-7">
+                        <div class="loader-container">
+                            <!-- AI Animation -->
+                            <div class="ai-animation">
+                                <div class="ai-icon-ring"></div>
+                                <div class="ai-icon-ring"></div>
+                                <div class="ai-icon-main">
+                                    <i class="bi bi-people-fill"></i>
+                                </div>
+                            </div>
+
+                            <!-- Title -->
+                            <h1 class="loader-title">Génération des personas en cours</h1>
+                            <p class="loader-subtitle">L'IA crée des profils détaillés de votre audience cible...</p>
+
+                            <!-- Phase Indicators -->
+                            <div class="phase-indicators">
+                                <div class="phase-dot active"></div>
+                                <div class="phase-dot"></div>
+                                <div class="phase-dot"></div>
+                                <div class="phase-dot"></div>
+                                <div class="phase-dot"></div>
+                            </div>
+
+                            <!-- Status Message -->
+                            <div class="status-message" style="transition: opacity 0.3s ease;">
+                                Analyse de votre audience cible...
+                            </div>
+
+                            <!-- Progress Bar -->
+                            <div class="progress-wrapper">
+                                <div class="progress">
+                                    <div class="progress-bar" style="width: 0%;"></div>
+                                </div>
+                                <div class="progress-text">0% complété</div>
+                            </div>
+
+                            <!-- Tips Section -->
+                            <div class="tips-section">
+                                <div class="tips-icon">
+                                    <i class="bi bi-lightbulb-fill"></i>
+                                </div>
+                                <h3 class="tips-title">Le saviez-vous ?</h3>
+                                <p class="tips-text">...</p>
+                            </div>
+
+                            <!-- Metadata -->
+                            <div class="loader-metadata">
+                                <div class="metadata-item">
+                                    <i class="bi bi-cpu"></i>
+                                    <span>Modèle: Mistral Large</span>
+                                </div>
+                                <div class="metadata-item">
+                                    <i class="bi bi-people"></i>
+                                    <span>5 personas en génération</span>
+                                </div>
+                                <div class="metadata-item">
+                                    <i class="bi bi-clock-history"></i>
+                                    <span>Durée estimée: ~12 secondes</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- FAB Retour -->
+    <a href="step1_review.html" class="fab-back">
+        <i class="bi bi-arrow-left"></i>
+        <span class="fab-tooltip">Retour à la configuration</span>
+    </a>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Design System JS -->
+    <script src="../assets/js/main.js" type="module"></script>
+</body>
+</html>
