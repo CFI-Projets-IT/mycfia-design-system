@@ -1,0 +1,176 @@
+/**
+ * Component - Profile
+ * Composants spécifiques à la page profil
+ */
+
+/* ==========================================================================
+   PROFILE HEADER
+   ========================================================================== */
+.profile-header {
+    display: flex;
+    align-items: center;
+    gap: var(--gap-lg);
+    margin-bottom: var(--margin-section-bottom);
+}
+
+/* ==========================================================================
+   AVATAR
+   ========================================================================== */
+.avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: var(--border-radius-full);
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--white);
+    font-size: var(--font-size-4xl);
+    font-weight: var(--font-weight-bold);
+}
+
+/* ==========================================================================
+   PROFILE INFO
+   ========================================================================== */
+.profile-info h3 {
+    font-size: var(--font-size-2xl);
+    font-weight: var(--font-weight-bold);
+    margin: 0 0 var(--spacing-xs) 0;
+}
+
+.profile-info p {
+    color: var(--text-secondary);
+    margin: 0;
+}
+
+/* ==========================================================================
+   INFO TABLE
+   ========================================================================== */
+.info-table {
+    width: 100%;
+}
+
+.info-table tr {
+    border-bottom: var(--border-width-thin) solid var(--border);
+}
+
+.info-table tr:last-child {
+    border-bottom: none;
+}
+
+.info-table td {
+    padding: var(--spacing-lg) 0;
+}
+
+.info-table td:first-child {
+    color: var(--text-secondary);
+    width: 40%;
+    font-weight: var(--font-weight-medium);
+}
+
+.info-table td:last-child {
+    font-weight: var(--font-weight-semibold);
+}
+
+.info-table code {
+    background: rgba(0, 48, 128, 0.1);
+    color: var(--color-secondary);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: var(--border-radius-sm);
+    font-family: var(--font-family-mono);
+}
+
+/* ==========================================================================
+   STATS CARDS
+   ========================================================================== */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--gap-sm);
+}
+
+.stat-card {
+    background: var(--bg-card);
+    border: var(--border-width-base) solid var(--border);
+    border-radius: var(--border-radius-lg);
+    padding: var(--spacing-lg);
+    text-align: center;
+    transition: all var(--transition-base) var(--easing-smooth);
+}
+
+.stat-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg-light);
+    border-color: var(--color-secondary);
+}
+
+.stat-card small {
+    display: block;
+    color: var(--text-secondary);
+    font-size: var(--font-size-sm);
+    margin-bottom: var(--spacing-sm);
+    text-transform: uppercase;
+    letter-spacing: var(--letter-spacing-wide);
+}
+
+.stat-card h3 {
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-primary);
+    margin: 0;
+}
+
+.stat-card .stat-detail {
+    font-size: var(--font-size-xs);
+    color: var(--text-secondary);
+    margin-top: var(--spacing-xs);
+}
+
+/* ==========================================================================
+   PERMISSIONS GRID
+   ========================================================================== */
+.permissions-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--gap-lg);
+}
+
+.permission-category h3 {
+    font-size: var(--font-size-md);
+    font-weight: var(--font-weight-semibold);
+    color: var(--text-secondary);
+    margin-bottom: var(--spacing-lg);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+/* ==========================================================================
+   PERMISSION LIST
+   ========================================================================== */
+.permission-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.permission-list li {
+    padding: var(--spacing-sm) 0;
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    font-size: var(--font-size-base);
+}
+
+.permission-list li i {
+    font-size: var(--font-size-md);
+}
+
+.permission-active {
+    color: var(--success-color);
+}
+
+.permission-disabled {
+    color: var(--disabled-color);
+    opacity: 0.6;
+}

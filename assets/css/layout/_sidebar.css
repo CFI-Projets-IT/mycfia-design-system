@@ -1,0 +1,225 @@
+/**
+ * Layout - Sidebar
+ * Navigation latérale avec état collapsed
+ */
+
+/* ==========================================================================
+   SIDEBAR CONTAINER
+   ========================================================================== */
+.sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 260px;
+    height: 100vh;
+    background: var(--sidebar-bg);
+    color: var(--white);
+    padding: 0;
+    z-index: var(--z-index-sidebar);
+    transition: width var(--transition-base) var(--easing-base),
+                transform var(--transition-base) var(--easing-base);
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+/* ==========================================================================
+   SIDEBAR COLLAPSED STATE
+   ========================================================================== */
+.sidebar.collapsed {
+    width: 70px !important;
+}
+
+/* Masquer les textes en mode collapsed */
+.sidebar.collapsed span:not(.sidebar-header span),
+.sidebar.collapsed .bi-chevron-down,
+.sidebar.collapsed .bi-arrow-left-circle {
+    display: none !important;
+}
+
+/* Header centré en mode collapsed */
+.sidebar.collapsed .sidebar-header {
+    justify-content: center !important;
+}
+
+/* Pills sans fond en mode collapsed */
+.sidebar.collapsed .nav-section-title-pill {
+    padding: 0.75rem;
+    background: transparent !important;
+    border: none !important;
+}
+
+/* ==========================================================================
+   SIDEBAR HEADER
+   ========================================================================== */
+.sidebar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--spacing-xl) var(--spacing-lg);
+    border-bottom: var(--border-width-thin) solid var(--white-alpha-10);
+}
+
+.sidebar-brand {
+    display: flex;
+    align-items: center;
+    gap: var(--gap-sm);
+}
+
+.sidebar-logo {
+    width: 40px;
+    height: 40px;
+    min-width: 40px;
+}
+
+.sidebar-brand-text {
+    font-family: var(--font-family-title);
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-bold);
+    transition: opacity var(--transition-base) var(--easing-base);
+}
+
+/* Bouton toggle sidebar */
+.btn-sidebar-toggle {
+    background: var(--white-alpha-10);
+    border: var(--border-width-thin) solid var(--white-alpha-20);
+    color: var(--white);
+    padding: var(--spacing-sm);
+    border-radius: var(--border-radius-md);
+    cursor: pointer;
+    transition: all var(--transition-base) var(--easing-base);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-sidebar-toggle:hover {
+    background: var(--white-alpha-20);
+    transform: scale(1.05);
+}
+
+.btn-sidebar-toggle i {
+    font-size: var(--font-size-2xl);
+}
+
+/* Boutons header sans style Bootstrap */
+.sidebar-header .btn-link {
+    background: none !important;
+    border: none !important;
+    box-shadow: none !important;
+    text-decoration: none !important;
+}
+
+/* ==========================================================================
+   SIDEBAR NAVIGATION
+   ========================================================================== */
+.sidebar-nav {
+    flex-grow: 1;
+    overflow: auto;
+    padding: var(--spacing-lg) 0;
+}
+
+/* ==========================================================================
+   SIDEBAR SECTIONS
+   ========================================================================== */
+.sidebar-section {
+    margin-bottom: var(--spacing-xl);
+}
+
+.sidebar-section-header {
+    background: var(--white-alpha-10);
+    border-radius: var(--border-radius-2xl);
+    padding: 10px var(--spacing-lg);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 0 var(--spacing-lg);
+    transition: all var(--transition-base) var(--easing-base);
+}
+
+.sidebar-section-header:hover {
+    background: var(--white-alpha-15);
+}
+
+.sidebar-section-title {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    transition: opacity var(--transition-base) var(--easing-base);
+}
+
+.sidebar-section-content {
+    padding: 10px var(--spacing-lg);
+    color: var(--white-alpha-50);
+    font-size: var(--font-size-base);
+}
+
+/* Navigation section pill styling */
+.nav-section-title-pill {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+    text-transform: uppercase;
+    letter-spacing: var(--letter-spacing-tight);
+    color: var(--white-alpha-80);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--white-alpha-10);
+    border: var(--border-width-thin) solid var(--white-alpha-20);
+    border-radius: var(--border-radius-md);
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    transition: all var(--transition-fast) var(--easing-base);
+}
+
+.nav-section-title-pill:hover {
+    background: var(--white-alpha-15);
+}
+
+/* ==========================================================================
+   SIDEBAR LINKS
+   ========================================================================== */
+.sidebar-link {
+    display: flex;
+    align-items: center;
+    gap: var(--gap-sm);
+    padding: 10px var(--spacing-md);
+    border-radius: var(--border-radius-md);
+    color: var(--white-alpha-70);
+    text-decoration: none;
+    transition: all var(--transition-base) var(--easing-base);
+}
+
+.sidebar-link:hover {
+    background: var(--white-alpha-10) !important;
+    color: var(--white);
+    padding-left: var(--spacing-lg);
+}
+
+.sidebar-link.active {
+    background: var(--color-primary);
+    color: var(--white);
+}
+
+.sidebar-link i {
+    font-size: var(--font-size-xl);
+    min-width: 24px;
+    text-align: center;
+    transition: transform var(--transition-base) var(--easing-base);
+}
+
+.sidebar-link:hover i {
+    transform: scale(1.1);
+}
+
+/* ==========================================================================
+   SIDEBAR FOOTER
+   ========================================================================== */
+.sidebar-footer {
+    margin-top: auto;
+    padding: var(--spacing-lg);
+    border-top: var(--border-width-thin) solid var(--white-alpha-10);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+}

@@ -1,0 +1,116 @@
+/* ========================================
+   CAMPAIGN STEPPER COMPONENT
+   Stepper visuel moderne pour workflow campagne
+   ======================================== */
+
+.campaign-stepper {
+    background: var(--bg-card);
+    backdrop-filter: var(--backdrop-blur-md);
+    border-radius: var(--border-radius-xl);
+    padding: var(--spacing-3xl);
+    margin-bottom: var(--spacing-4xl);
+    border: var(--border-width-thin) solid var(--border);
+    box-shadow: var(--shadow-sm-light);
+}
+
+.stepper-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+}
+
+.stepper-line {
+    position: absolute;
+    top: 20px;
+    left: 60px;
+    right: 60px;
+    height: 3px;
+    background: var(--border);
+    z-index: 0;
+}
+
+.stepper-progress {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    background: linear-gradient(90deg, var(--color-primary), var(--color-secondary));
+    transition: width 0.6s var(--easing-smooth);
+    border-radius: 2px;
+}
+
+.stepper-step {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    flex: 1;
+}
+
+.stepper-circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--bg-card);
+    border: 3px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto var(--spacing-sm);
+    font-weight: var(--font-weight-bold);
+    font-size: var(--font-size-base);
+    color: var(--text-secondary);
+    transition: all var(--transition-base) var(--easing-smooth);
+}
+
+.stepper-step.active .stepper-circle {
+    background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+    border-color: var(--color-secondary);
+    color: var(--white);
+    transform: scale(1.1);
+    box-shadow: 0 4px 12px rgba(57, 191, 239, 0.4);
+}
+
+.stepper-step.completed .stepper-circle {
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+    color: var(--white);
+}
+
+.stepper-label {
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary);
+    font-weight: var(--font-weight-medium);
+    transition: all var(--transition-base) var(--easing-base);
+}
+
+.stepper-step.active .stepper-label {
+    color: var(--color-primary);
+    font-weight: var(--font-weight-semibold);
+}
+
+.stepper-step.completed .stepper-label {
+    color: var(--text-primary);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .campaign-stepper {
+        padding: var(--spacing-xl);
+    }
+
+    .stepper-label {
+        font-size: 10px;
+    }
+
+    .stepper-circle {
+        width: 32px;
+        height: 32px;
+        font-size: var(--font-size-sm);
+    }
+
+    .stepper-line {
+        left: 40px;
+        right: 40px;
+    }
+}

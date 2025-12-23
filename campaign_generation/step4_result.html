@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stratégie Marketing - Étape 4 | myCFiA</title>
+
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Design System myCFiA -->
+    <link rel="stylesheet" href="../assets/css/main.css">
+    <link rel="stylesheet" href="../assets/css/themes/light.css" id="theme-stylesheet">
+</head>
+<body>
+    <div class="app">
+        <aside class="sidebar d-flex flex-column">
+            <div class="sidebar-header">
+                <button class="btn btn-link text-white-50 p-0" data-sidebar-toggle>
+                    <i class="bi bi-list fs-4"></i>
+                </button>
+            </div>
+            <nav class="flex-grow-1 overflow-auto px-3">
+                <!-- Marketing -->
+                <div class="nav-section mb-4">
+                    <div class="nav-section-title-pill mb-3">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-megaphone"></i>
+                            <span>Marketing</span>
+                        </div>
+                        <i class="bi bi-chevron-down"></i>
+                    </div>
+                    <div class="nav-section-content">
+                        <a href="step1_create.html" class="sidebar-link active">
+                            <i class="bi bi-plus-circle"></i>
+                            <span>Nouvelle campagne</span>
+                        </a>
+                        <a href="dashboard.html" class="sidebar-link">
+                            <i class="bi bi-grid"></i>
+                            <span>Mes campagnes</span>
+                        </a>
+                        <a href="analytics.html" class="sidebar-link">
+                            <i class="bi bi-bar-chart-line"></i>
+                            <span>Analytics</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Favoris -->
+                <div class="nav-section mb-4">
+                    <div class="nav-section-title-pill mb-3">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-star"></i>
+                            <span>Favoris</span>
+                        </div>
+                        <i class="bi bi-chevron-down"></i>
+                    </div>
+                    <div class="px-3 py-2 text-white-50 small">
+                        <span>Aucune campagne favorite</span>
+                    </div>
+                </div>
+
+                <!-- Historique -->
+                <div class="nav-section mb-4">
+                    <div class="nav-section-title-pill mb-3">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-clock-history"></i>
+                            <span>Historique</span>
+                        </div>
+                        <i class="bi bi-chevron-down"></i>
+                    </div>
+                </div>
+            </nav>
+
+            <!-- Footer -->
+            <div class="sidebar-footer">
+                <a href="../settings_index/settings_index_light.html" class="sidebar-link">
+                    <i class="bi bi-gear"></i>
+                    <span>Paramètres</span>
+                </a>
+                <a href="../profile/profile_light.html" class="sidebar-link">
+                    <i class="bi bi-person-circle"></i>
+                    <span>Mon compte</span>
+                </a>
+                <a href="#" class="sidebar-link">
+                    <i class="bi bi-box-arrow-right"></i>
+                    <span>Quitter</span>
+                </a>
+            </div>
+        </aside>
+
+        <main class="main">
+            <header class="header">
+                <div class="header-content">
+                    <a href="../index.html" class="step4-result-header-logo-link">
+                        <img src="../images/logo_picto.svg" alt="CFI" class="header-logo-picto">
+                        <img src="../images/logo.svg" alt="myCFiA" class="header-logo">
+                    </a>
+                    <!-- Actions -->
+                    <div class="step4-result-header-buttons">
+                        <button class="btn btn-glass header-btn step4-result-header-btn-primary">
+                            <i class="bi bi-building"></i>
+                            <span class="header-btn-text">Ma Division</span>
+                        </button>
+                        <button class="btn btn-glass-primary header-btn">
+                            <i class="bi bi-sun-fill"></i>
+                            <span class="header-btn-text">Clair</span>
+                        </button>
+                        <a href="#" class="btn btn-glass header-btn step4-result-header-link">
+                            <i class="bi bi-arrow-left-circle"></i>
+                            <span class="header-btn-text">Retour CFI</span>
+                        </a>
+                    </div>
+                </div>
+            </header>
+
+            <div class="content">
+                <nav aria-label="breadcrumb" class="step4-result-breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="dashboard.html" class="step4-result-breadcrumb-link">Campagnes</a></li>
+                        <li class="breadcrumb-item active">Stratégie Marketing</li>
+                    </ol>
+                </nav>
+
+                <div class="campaign-stepper">
+                    <div class="stepper-container">
+                        <div class="stepper-line">
+                            <div class="stepper-progress step4-result-stepper-progress"></div>
+                        </div>
+                        <div class="stepper-step completed">
+                            <div class="stepper-circle"><i class="bi bi-check-lg"></i></div>
+                            <div class="stepper-label">Projet</div>
+                        </div>
+                        <div class="stepper-step completed">
+                            <div class="stepper-circle"><i class="bi bi-check-lg"></i></div>
+                            <div class="stepper-label">Personas</div>
+                        </div>
+                        <div class="stepper-step completed">
+                            <div class="stepper-circle"><i class="bi bi-check-lg"></i></div>
+                            <div class="stepper-label">Concurrents</div>
+                        </div>
+                        <div class="stepper-step active">
+                            <div class="stepper-circle"><i class="bi bi-check-lg"></i></div>
+                            <div class="stepper-label">Stratégie</div>
+                        </div>
+                        <div class="stepper-step">
+                            <div class="stepper-circle">5</div>
+                            <div class="stepper-label">Assets</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <div class="form-section-header">
+                        <div class="form-section-icon">
+                            <i class="bi bi-graph-up-arrow"></i>
+                        </div>
+                        <h2 class="form-section-title">Stratégie marketing générée</h2>
+                        <p class="form-section-subtitle">Votre stratégie optimisée basée sur vos personas et concurrents</p>
+                    </div>
+
+                    <!-- Positionnement Stratégique -->
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h5 class="card-title mb-4">
+                                <i class="bi bi-bullseye text-primary"></i>
+                                Positionnement stratégique
+                            </h5>
+                            <p class="mb-3">
+                                <strong>Proposition de valeur unique :</strong><br>
+                                Formation professionnelle premium centrée sur l'accompagnement personnalisé et la transformation digitale des compétences,
+                                avec un focus sur l'employabilité immédiate et la certification reconnue.
+                            </p>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <div class="p-3 strategic-strengths-box">
+                                        <strong><i class="bi bi-trophy text-primary"></i> Forces clés</strong>
+                                        <ul class="mb-0 mt-2">
+                                            <li>Taux de placement 92% vs 78% (AFPA)</li>
+                                            <li>Pédagogie personnalisée avec suivi 1-to-1</li>
+                                            <li>Certifications reconnues RNCP niveau 6</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="p-3 strategic-differentiation-box">
+                                        <strong><i class="bi bi-flag text-primary"></i> Axes de différenciation</strong>
+                                        <ul class="mb-0 mt-2">
+                                            <li>Plateforme d'apprentissage hybride innovante</li>
+                                            <li>Réseau d'entreprises partenaires (200+)</li>
+                                            <li>Garantie employabilité sous 6 mois</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tactiques par Canal -->
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h5 class="card-title mb-4">
+                                <i class="bi bi-megaphone text-primary"></i>
+                                Tactiques recommandées par canal
+                            </h5>
+                            <div class="row g-3">
+                                <div class="col-md-4">
+                                    <div class="p-3 tactics-card">
+                                        <h6><i class="bi bi-linkedin text-primary"></i> Linkedin</h6>
+                                        <p class="small mb-2">Cible : Sophie Martin, Marc Dubois</p>
+                                        <ul class="small mb-0">
+                                            <li>Posts thought leadership (3x/semaine)</li>
+                                            <li>Témoignages alumni certifiés</li>
+                                            <li>LinkedIn Ads ciblés RH/Managers</li>
+                                        </ul>
+                                        <div class="mt-2">
+                                            <span class="badge bg-primary">Budget: 12 000€</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="p-3 tactics-card">
+                                        <h6><i class="bi bi-google text-primary"></i> GoogleAds</h6>
+                                        <p class="small mb-2">Cible : Claire Rousseau, Sophie Martin</p>
+                                        <ul class="small mb-0">
+                                            <li>Mots-clés "reconversion professionnelle"</li>
+                                            <li>Extensions certifications RNCP</li>
+                                            <li>Landing pages personnalisées</li>
+                                        </ul>
+                                        <div class="mt-2">
+                                            <span class="badge bg-primary">Budget: 18 000€</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="p-3 tactics-card">
+                                        <h6><i class="bi bi-facebook text-primary"></i> Facebook/Instagram</h6>
+                                        <p class="small mb-2">Cible : Claire Rousseau</p>
+                                        <ul class="small mb-0">
+                                            <li>Stories avant/après alumni</li>
+                                            <li>Vidéos courtes formation immersive</li>
+                                            <li>Retargeting prospects engagés</li>
+                                        </ul>
+                                        <div class="mt-2">
+                                            <span class="badge bg-primary">Budget: 8 000€</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="p-3 tactics-card">
+                                        <h6><i class="bi bi-envelope text-primary"></i> Mail</h6>
+                                        <p class="small mb-2">Nurturing multi-personas</p>
+                                        <ul class="small mb-0">
+                                            <li>Séquences automation 7 emails</li>
+                                            <li>Contenu éducatif carrière</li>
+                                            <li>Invitations webinaires mensuels</li>
+                                        </ul>
+                                        <div class="mt-2">
+                                            <span class="badge bg-primary">Budget: 4 000€</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="p-3 tactics-card">
+                                        <h6><i class="bi bi-file-text text-primary"></i> Article</h6>
+                                        <p class="small mb-2">SEO + Autorité</p>
+                                        <ul class="small mb-0">
+                                            <li>Blog expert 2 articles/semaine</li>
+                                            <li>Guides téléchargeables (lead magnets)</li>
+                                            <li>Études de cas alumni détaillées</li>
+                                        </ul>
+                                        <div class="mt-2">
+                                            <span class="badge bg-primary">Budget: 6 000€</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="p-3 tactics-card">
+                                        <h6><i class="bi bi-phone text-primary"></i> Sms</h6>
+                                        <p class="small mb-2">Activation urgente</p>
+                                        <ul class="small mb-0">
+                                            <li>Rappels sessions info J-1</li>
+                                            <li>Offres limitées inscriptions</li>
+                                            <li>Confirmations rendez-vous conseiller</li>
+                                        </ul>
+                                        <div class="mt-2">
+                                            <span class="badge bg-primary">Budget: 2 000€</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- KPIs -->
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h5 class="card-title mb-4">
+                                <i class="bi bi-bar-chart-line text-primary"></i>
+                                KPIs à suivre
+                            </h5>
+                            <div class="row g-4">
+                                <div class="col-md-3">
+                                    <div class="text-center p-3 kpi-card-primary">
+                                        <i class="bi bi-people-fill text-primary" class="kpi-icon"></i>
+                                        <h3 class="mt-2 mb-1" class="kpi-value">450</h3>
+                                        <p class="small mb-0 text-secondary">Leads qualifiés attendus</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="text-center p-3 kpi-card-secondary">
+                                        <i class="bi bi-percent text-primary" class="kpi-icon"></i>
+                                        <h3 class="mt-2 mb-1" class="kpi-value">18%</h3>
+                                        <p class="small mb-0 text-secondary">Taux conversion Lead → Inscrit</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="text-center p-3 kpi-card-primary">
+                                        <i class="bi bi-cash-coin text-primary" class="kpi-icon"></i>
+                                        <h3 class="mt-2 mb-1" class="kpi-value">617€</h3>
+                                        <p class="small mb-0 text-secondary">CPL cible (Cost Per Lead)</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="text-center p-3 kpi-card-secondary">
+                                        <i class="bi bi-trophy text-primary" class="kpi-icon"></i>
+                                        <h3 class="mt-2 mb-1" class="kpi-value">81</h3>
+                                        <p class="small mb-0 text-secondary">Inscriptions finales (objectif)</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mt-4">
+                                <h6>Suivi hebdomadaire recommandé :</h6>
+                                <ul class="small">
+                                    <li><strong>CTR Ads</strong> : Objectif ≥ 3.2% (benchmarks secteur: 2.8%)</li>
+                                    <li><strong>Taux d'engagement LinkedIn</strong> : Objectif ≥ 4.5%</li>
+                                    <li><strong>Taux d'ouverture Mail</strong> : Objectif ≥ 28%</li>
+                                    <li><strong>Quality Score Google Ads</strong> : Maintenir ≥ 7/10</li>
+                                    <li><strong>ROI global</strong> : Objectif 3.2x sur 90 jours</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Budget Allocation -->
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title mb-4">
+                                <i class="bi bi-pie-chart text-primary"></i>
+                                Répartition budgétaire
+                            </h5>
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <div class="mb-3">
+                                        <div class="d-flex justify-content-between mb-1">
+                                            <span>GoogleAds</span>
+                                            <strong>18 000€ (36%)</strong>
+                                        </div>
+                                        <div class="progress budget-progress">
+                                            <div class="progress-bar budget-progress-primary" style="width: 36%">36%</div>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <div class="d-flex justify-content-between mb-1">
+                                            <span>Linkedin</span>
+                                            <strong>12 000€ (24%)</strong>
+                                        </div>
+                                        <div class="progress budget-progress">
+                                            <div class="progress-bar budget-progress-secondary" style="width: 24%">24%</div>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <div class="d-flex justify-content-between mb-1">
+                                            <span>Facebook/Instagram</span>
+                                            <strong>8 000€ (16%)</strong>
+                                        </div>
+                                        <div class="progress budget-progress">
+                                            <div class="progress-bar budget-progress-primary" style="width: 16%">16%</div>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <div class="d-flex justify-content-between mb-1">
+                                            <span>Article</span>
+                                            <strong>6 000€ (12%)</strong>
+                                        </div>
+                                        <div class="progress budget-progress">
+                                            <div class="progress-bar budget-progress-secondary" style="width: 12%">12%</div>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <div class="d-flex justify-content-between mb-1">
+                                            <span>Mail</span>
+                                            <strong>4 000€ (8%)</strong>
+                                        </div>
+                                        <div class="progress budget-progress">
+                                            <div class="progress-bar budget-progress-primary" style="width: 8%">8%</div>
+                                        </div>
+                                    </div>
+                                    <div class="mb-0">
+                                        <div class="d-flex justify-content-between mb-1">
+                                            <span>Sms</span>
+                                            <strong>2 000€ (4%)</strong>
+                                        </div>
+                                        <div class="progress budget-progress">
+                                            <div class="progress-bar budget-progress-secondary" style="width: 4%">4%</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="p-4 text-center budget-total-card">
+                                        <i class="bi bi-cash-stack budget-total-icon"></i>
+                                        <h2 class="mt-3 mb-2">50 000€</h2>
+                                        <p class="mb-0">Budget total alloué</p>
+                                        <hr class="budget-total-divider">
+                                        <p class="small mb-0">Durée : 90 jours<br>ROI attendu : 3.2x</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="alert alert-success alert-dismissible fade show strategy-success-alert">
+                    <i class="bi bi-check-circle-fill strategy-success-alert-icon"></i>
+                    <div>
+                        <strong>Stratégie optimisée avec succès</strong><br>
+                        Votre stratégie est prête. Passez à la génération des assets marketing pour chaque canal.
+                    </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- Speed Dial FAB - Boîte à outils -->
+    <div class="speed-dial-container">
+        <!-- Action : Continuer vers génération d'assets -->
+        <div class="speed-dial-action">
+            <span class="speed-dial-label">Continuer vers génération d'assets</span>
+            <a href="step5_config.html" class="speed-dial-btn speed-dial-primary">
+                <i class="bi bi-arrow-right"></i>
+            </a>
+        </div>
+
+        <!-- Bouton principal -->
+        <div class="speed-dial-btn speed-dial-main">
+            <i class="bi bi-three-dots-vertical"></i>
+        </div>
+    </div>
+
+    <a href="step4_recap.html" class="fab-back">
+        <i class="bi bi-arrow-left"></i>
+        <span class="fab-tooltip">Retour au récap</span>
+    </a>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../assets/js/main.js" type="module"></script>
+</body>
+</html>

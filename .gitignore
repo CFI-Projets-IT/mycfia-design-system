@@ -1,0 +1,26 @@
+# Fichiers de backup
+*.bak
+*.backup
+
+# Logs et fichiers temporaires
+*.log
+*.tmp
+*.temp
+
+# Dossiers de cache
+.cache/
+.temp/
+
+# Environnements de test
+.playwright-mcp/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~

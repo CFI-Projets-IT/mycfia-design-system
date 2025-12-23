@@ -1,0 +1,86 @@
+/**
+ * Layout - Header
+ * En-tête sticky avec logos et boutons
+ */
+
+/* ==========================================================================
+   HEADER CONTAINER
+   ========================================================================== */
+.header {
+    background: var(--bg-card);
+    backdrop-filter: var(--backdrop-blur-md);
+    padding: var(--padding-header-y) var(--padding-header-x);
+    border-bottom: var(--border-width-thin) solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: var(--z-index-dropdown);
+}
+
+.header-content {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* ==========================================================================
+   HEADER LOGOS
+   ========================================================================== */
+.header-logo-picto {
+    width: 37px;
+    height: 40px;
+}
+
+.header-logo {
+    width: auto;
+    max-width: 180px;
+    height: 55px;
+}
+
+/* ==========================================================================
+   HEADER BUTTONS
+   ========================================================================== */
+.header-btn {
+    padding: var(--spacing-sm) var(--spacing-lg);
+    border-radius: var(--border-radius-md);
+    font-weight: var(--font-weight-semibold);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    white-space: nowrap;
+    transition: all var(--transition-base) var(--easing-base);
+}
+
+.header-btn-text {
+    display: inline;
+}
+
+/* ==========================================================================
+   RESPONSIVE HEADER - Bootstrap lg breakpoint
+   ========================================================================== */
+@media (max-width: 991px) {
+    .header-logo {
+        display: none;
+    }
+
+    .header-btn {
+        padding: var(--spacing-sm);
+        gap: 0;
+        min-width: 40px;
+        justify-content: center;
+    }
+
+    .header-btn-text {
+        display: none;
+    }
+
+    .header-content {
+        gap: var(--spacing-sm);
+    }
+
+    .header-content > div {
+        gap: var(--spacing-sm) !important;
+    }
+}

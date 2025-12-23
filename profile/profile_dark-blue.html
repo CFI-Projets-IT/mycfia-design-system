@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mon Profil - myCFiA (Thème Sombre Bleu)</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <!-- Design System myCFiA -->
+    <link rel="stylesheet" href="../assets/css/main.css">
+    <link rel="stylesheet" href="../assets/css/themes/dark-blue.css" id="theme-stylesheet">
+</head>
+<body>
+    <div class="app">
+        <!-- Sidebar -->
+        <aside class="sidebar d-flex flex-column">
+            <!-- Header -->
+            <div class="sidebar-header d-flex align-items-center justify-content-between mb-4 pb-3 px-3 pt-4">
+                <button class="btn btn-link text-white-50 p-0" type="button" data-sidebar-toggle style="font-size: 2rem;">
+                    <i class="bi bi-list"></i>
+                </button>
+                <button class="btn btn-link text-white-50 p-0" type="button" data-sidebar-toggle style="font-size: 2rem;">
+                    <i class="bi bi-arrow-left-circle"></i>
+                </button>
+            </div>
+
+            <!-- Navigation -->
+            <nav class="flex-grow-1 overflow-auto px-3">
+                <!-- Section Favoris -->
+                <div class="nav-section mb-4">
+                    <div class="nav-section-title-pill">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-star"></i>
+                            <span>Favoris</span>
+                        </div>
+                        <i class="bi bi-chevron-down"></i>
+                    </div>
+                    <div class="px-3 py-2 text-white-50 small">
+                        <span>Aucune conversation favorite</span>
+                    </div>
+                </div>
+
+                <!-- Section Historique -->
+                <div class="nav-section mb-4">
+                    <div class="nav-section-title-pill">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-clock-history"></i>
+                            <span>Historique</span>
+                        </div>
+                        <i class="bi bi-chevron-down"></i>
+                    </div>
+                </div>
+            </nav>
+
+            <!-- Footer -->
+            <div class="mt-auto pt-4 border-top border-white border-opacity-10 d-flex flex-column gap-2 px-3 pb-3">
+                <a href="#" class="d-flex align-items-center gap-3 px-3 py-2 rounded text-white text-decoration-none sidebar-link">
+                    <i class="bi bi-gear fs-5"></i>
+                    <span>Paramètres</span>
+                </a>
+                <a href="#" class="d-flex align-items-center gap-3 px-3 py-2 rounded text-white text-decoration-none sidebar-link" style="background: var(--color-primary);">
+                    <i class="bi bi-person-circle fs-5"></i>
+                    <span>Mon compte</span>
+                </a>
+                <a href="#" class="d-flex align-items-center gap-3 px-3 py-2 rounded text-white text-decoration-none sidebar-link">
+                    <i class="bi bi-box-arrow-right fs-5"></i>
+                    <span>Quitter</span>
+                </a>
+            </div>
+        </aside>
+
+        <!-- Main -->
+        <main class="main">
+            <!-- Header -->
+            <header class="header">
+                <div class="header-content">
+                    <a href="#" style="display: flex; align-items: center; gap: 12px; text-decoration: none;">
+                        <img src="../images/assistant-picto.svg" alt="CFI" class="header-logo-picto">
+                        <img src="../images/logo.svg" alt="myCFiia" class="header-logo">
+                    </a>
+                    <div style="display: flex; gap: 16px;">
+                        <button class="header-btn btn-glass" style="color: white;">
+                            <i class="bi bi-building"></i><span class="header-btn-text"> Ma Division</span>
+                        </button>
+                        <button class="header-btn btn-glass-primary">
+                            <i class="bi bi-moon-stars-fill"></i><span class="header-btn-text"> Sombre Bleu</span>
+                        </button>
+                        <a href="#" class="header-btn btn-glass" style="color: white; text-decoration: none;">
+                            <i class="bi bi-arrow-left-circle"></i><span class="header-btn-text"> Retour CFI</span>
+                        </a>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Content -->
+            <div class="content">
+                <div style="text-align: center; margin-bottom: 40px;">
+                    <h1 style="font-size: 36px; font-weight: 800; color: var(--color-primary); margin-bottom: 8px;">Mon Profil</h1>
+                    <p style="font-size: 18px; color: var(--text-secondary);">Informations personnelles et préférences</p>
+                </div>
+
+                <!-- Section Informations & Préférences -->
+                <div class="profile-grid">
+                    <!-- Informations personnelles -->
+                    <div class="section">
+                        <div class="section-header">
+                            <i class="bi bi-person-circle" style="font-size: 24px; color: var(--color-primary);"></i>
+                            <h2>Informations personnelles</h2>
+                        </div>
+                        <table class="info-table">
+                            <tbody>
+                                <tr>
+                                    <td>Nom complet</td>
+                                    <td>Christophe Bichon</td>
+                                </tr>
+                                <tr>
+                                    <td>Email</td>
+                                    <td>c.bichon@BNPPRE</td>
+                                </tr>
+                                <tr>
+                                    <td>Organisation</td>
+                                    <td>BNP Paribas Real Estate</td>
+                                </tr>
+                                <tr>
+                                    <td>ID CFI</td>
+                                    <td><code>12345</code></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Préférences & Statistiques -->
+                    <div style="display: flex; flex-direction: column; gap: 24px;">
+                        <!-- Préférences -->
+                        <div class="section">
+                            <div class="section-header">
+                                <i class="bi bi-sliders" style="font-size: 24px; color: var(--color-primary);"></i>
+                                <h2>Préférences</h2>
+                            </div>
+                            <div class="pref-cards">
+                                <div class="pref-card">
+                                    <i class="bi bi-moon-stars-fill"></i>
+                                    <span>Sombre Bleu</span>
+                                </div>
+                                <div class="pref-card">
+                                    <span style="font-size: 28px;">🇫🇷</span>
+                                    <span>Français</span>
+                                </div>
+                                <div class="pref-card clickable">
+                                    <i class="bi bi-gear"></i>
+                                    <span>Modifier</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Statistiques -->
+                        <div class="section">
+                            <div class="section-header">
+                                <i class="bi bi-graph-up" style="font-size: 24px; color: var(--color-primary);"></i>
+                                <h2>Statistiques d'utilisation</h2>
+                            </div>
+                            <div class="stats-grid">
+                                <div class="stat-card">
+                                    <small>Membre depuis</small>
+                                    <h3>15/03/2024</h3>
+                                    <div class="stat-detail">Il y a 279 jours</div>
+                                </div>
+                                <div class="stat-card">
+                                    <small>Dernière connexion</small>
+                                    <h3>17/12/2024</h3>
+                                    <div class="stat-detail">14:30</div>
+                                </div>
+                                <div class="stat-card">
+                                    <small>Connexions</small>
+                                    <h3>147</h3>
+                                    <div class="stat-detail">connexions</div>
+                                </div>
+                                <div class="stat-card">
+                                    <small>Dernière modification</small>
+                                    <h3>12/12/2024</h3>
+                                    <div class="stat-detail">09:15</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section Permissions -->
+                <div class="section" style="margin-bottom: 24px;">
+                    <div class="section-header">
+                        <i class="bi bi-shield-lock" style="font-size: 24px; color: var(--color-primary);"></i>
+                        <h2>Permissions</h2>
+                    </div>
+                    <div class="permissions-grid">
+                        <!-- Système -->
+                        <div class="permission-category">
+                            <h3><i class="bi bi-gear"></i> Système</h3>
+                            <ul class="permission-list">
+                                <li class="permission-active"><i class="bi bi-check-circle-fill"></i> Connexion</li>
+                                <li class="permission-active"><i class="bi bi-check-circle-fill"></i> Application PWA</li>
+                                <li class="permission-active"><i class="bi bi-check-circle-fill"></i> Administrateur</li>
+                                <li class="permission-disabled"><i class="bi bi-x-circle"></i> Logistique</li>
+                                <li class="permission-disabled"><i class="bi bi-x-circle"></i> Production</li>
+                                <li class="permission-active"><i class="bi bi-check-circle-fill"></i> Développement</li>
+                            </ul>
+                        </div>
+
+                        <!-- Utilisateurs -->
+                        <div class="permission-category">
+                            <h3><i class="bi bi-people"></i> Utilisateurs</h3>
+                            <ul class="permission-list">
+                                <li class="permission-active"><i class="bi bi-check-circle-fill"></i> Créer</li>
+                                <li class="permission-active"><i class="bi bi-check-circle-fill"></i> Modifier</li>
+                                <li class="permission-active"><i class="bi bi-check-circle-fill"></i> Supprimer</li>
+                                <li class="permission-active"><i class="bi bi-check-circle-fill"></i> Emprunter identité</li>
+                            </ul>
+                        </div>
+
+                        <!-- Divisions -->
+                        <div class="permission-category">
+                            <h3><i class="bi bi-building"></i> Divisions</h3>
+                            <ul class="permission-list">
+                                <li class="permission-active"><i class="bi bi-check-circle-fill"></i> Créer</li>
+                                <li class="permission-active"><i class="bi bi-check-circle-fill"></i> Modifier</li>
+                                <li class="permission-active"><i class="bi bi-check-circle-fill"></i> Visualiser</li>
+                            </ul>
+                        </div>
+
+                        <!-- Stocks -->
+                        <div class="permission-category">
+                            <h3><i class="bi bi-box-seam"></i> Stocks</h3>
+                            <ul class="permission-list">
+                                <li class="permission-active"><i class="bi bi-check-circle-fill"></i> Créer</li>
+                                <li class="permission-active"><i class="bi bi-check-circle-fill"></i> Modifier</li>
+                                <li class="permission-active"><i class="bi bi-check-circle-fill"></i> Visualiser</li>
+                                <li class="permission-disabled"><i class="bi bi-x-circle"></i> Supprimer</li>
+                            </ul>
+                        </div>
+
+                        <!-- Opérations -->
+                        <div class="permission-category">
+                            <h3><i class="bi bi-activity"></i> Opérations</h3>
+                            <ul class="permission-list">
+                                <li class="permission-active"><i class="bi bi-check-circle-fill"></i> Créer</li>
+                                <li class="permission-active"><i class="bi bi-check-circle-fill"></i> Valider</li>
+                                <li class="permission-active"><i class="bi bi-check-circle-fill"></i> Visualiser</li>
+                            </ul>
+                        </div>
+
+                        <!-- Campagnes -->
+                        <div class="permission-category">
+                            <h3><i class="bi bi-megaphone"></i> Campagnes</h3>
+                            <ul class="permission-list">
+                                <li class="permission-active"><i class="bi bi-check-circle-fill"></i> Commander</li>
+                                <li class="permission-active"><i class="bi bi-check-circle-fill"></i> Éditer</li>
+                            </ul>
+                        </div>
+
+                        <!-- Autres -->
+                        <div class="permission-category">
+                            <h3><i class="bi bi-grid-3x3-gap"></i> Autres</h3>
+                            <ul class="permission-list">
+                                <li class="permission-active"><i class="bi bi-check-circle-fill"></i> Visualiser factures</li>
+                                <li class="permission-active"><i class="bi bi-check-circle-fill"></i> Visualiser reprises</li>
+                                <li class="permission-disabled"><i class="bi bi-x-circle"></i> Créer NPAI</li>
+                                <li class="permission-active"><i class="bi bi-check-circle-fill"></i> Visualiser NPAI</li>
+                                <li class="permission-active"><i class="bi bi-check-circle-fill"></i> Signataire</li>
+                                <li class="permission-active"><i class="bi bi-check-circle-fill"></i> Valideur</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- Floating Action Button - Retour -->
+    <a href="#" class="fab-back" title="Retour à l'accueil">
+        <span class="fab-tooltip">Retour à l'accueil</span>
+        <i class="bi bi-house-fill"></i>
+    </a>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Design System myCFiA - JavaScript -->
+    <script type="module" src="../assets/js/main.js"></script>
+</body>
+</html>

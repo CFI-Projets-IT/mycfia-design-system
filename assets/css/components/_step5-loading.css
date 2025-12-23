@@ -1,0 +1,76 @@
+/**
+ * Step 5 Loading - Assets Generation Loading Page Styles
+ * Styles spécifiques pour la page de loading de génération d'assets
+ */
+
+/* ==========================================================================
+   Header Styles
+   ========================================================================== */
+.step5-loading-header-logo-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+}
+
+.step5-loading-header-buttons {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+}
+
+.step5-loading-header-btn-primary {
+    color: var(--color-primary);
+}
+
+.step5-loading-header-link {
+    color: var(--color-primary);
+    text-decoration: none;
+}
+
+/* ==========================================================================
+   Stepper Progress
+   ========================================================================== */
+.step5-loading-stepper-progress {
+    width: 100%;
+}
+
+/* ==========================================================================
+   Campaign Context Card
+   ========================================================================== */
+.campaign-context-divider {
+    border-bottom: 1px solid var(--border);
+}
+
+.campaign-badge-small {
+    font-size: 0.7rem;
+}
+
+.campaign-spinner-small {
+    width: 12px;
+    height: 12px;
+}
+
+.campaign-icon-small {
+    font-size: 0.5rem;
+}
+
+.campaign-text-small {
+    font-size: 0.7rem;
+}
+
+.campaign-total-text {
+    font-size: 0.7rem;
+    font-weight: 600;
+}
+
+.campaign-alert-compact {
+    padding: 0.75rem;
+}
+
+/* ==========================================================================
+   Progress Bar (initial state)
+   ========================================================================== */
+.step5-loading-progress-initial {
+    width: 0%;
+}

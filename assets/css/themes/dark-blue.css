@@ -1,0 +1,89 @@
+/**
+ * Theme - Dark Blue
+ * Thème sombre bleu pour myCFiA
+ */
+
+/* Import des tokens */
+@import '../tokens/_colors.css';
+@import '../tokens/_spacing.css';
+@import '../tokens/_typography.css';
+@import '../tokens/_effects.css';
+@import '../tokens/_animations.css';
+
+/* ==========================================================================
+   DARK BLUE THEME VARIABLES
+   ========================================================================== */
+:root {
+    /* Apply dark blue theme colors */
+    --color-primary: var(--theme-dark-blue-primary);
+    --color-secondary: var(--theme-dark-blue-secondary);
+    --bg-primary: var(--theme-dark-blue-bg-primary);
+    --bg-card: var(--theme-dark-blue-bg-card);
+    --text-primary: var(--theme-dark-blue-text-primary);
+    --text-secondary: var(--theme-dark-blue-text-secondary);
+    --border: var(--theme-dark-blue-border);
+    --sidebar-bg: var(--theme-dark-blue-sidebar-bg);
+
+    /* State colors for dark theme */
+    --success-color: var(--success-color-dark);
+    --disabled-color: var(--disabled-color-dark);
+
+    /* Shadows for dark theme */
+    --shadow-sm: var(--shadow-sm-dark);
+    --shadow-md: var(--shadow-md-dark);
+    --shadow-lg: var(--shadow-lg-dark);
+    --shadow-xl: var(--shadow-xl-dark);
+}
+
+/* ==========================================================================
+   BODY STYLES
+   ========================================================================== */
+body {
+    font-family: var(--font-family-base);
+    background: linear-gradient(135deg, #0f1729 0%, #2a3f5f 100%);
+    background-attachment: fixed;
+    color: var(--text-primary);
+}
+
+h1, h2, h3 {
+    font-family: var(--font-family-title);
+}
+
+/* ==========================================================================
+   BACKGROUND FILTER (Réseau géométrique)
+   ========================================================================== */
+body::after {
+    content: '';
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    width: 466.094px;
+    height: 346.397px;
+    background-image: url('../images/web-background.svg');
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: bottom right;
+    pointer-events: none;
+    z-index: var(--z-index-background);
+    opacity: 0.6;
+    /* Garder le blanc pour contraste avec fond sombre */
+    filter: invert(0);
+}
+
+/* ==========================================================================
+   DARK BLUE THEME SPECIFIC OVERRIDES
+   ========================================================================== */
+
+/* Section shadow override for dark theme */
+.section {
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+/* FAB shadow for dark blue */
+.fab-back {
+    box-shadow: 0 4px 12px rgba(95, 168, 211, 0.4);
+}
+
+.fab-back:hover {
+    box-shadow: 0 6px 20px rgba(126, 200, 227, 0.5);
+}

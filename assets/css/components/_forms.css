@@ -1,0 +1,31 @@
+/**
+ * Component - Forms
+ * Switches, inputs, form-check
+ */
+
+/* ==========================================================================
+   TOGGLE SWITCHES
+   ========================================================================== */
+.form-check-input {
+    transition: all var(--transition-base) var(--easing-base);
+}
+
+.form-check-input:checked {
+    background-color: var(--color-primary);
+    border-color: var(--color-primary);
+}
+
+/* ==========================================================================
+   FORM LABELS
+   ========================================================================== */
+.form-label {
+    font-weight: var(--font-weight-medium);
+    color: var(--text-primary);
+}
+
+/* ==========================================================================
+   FORM GROUPS
+   ========================================================================== */
+.form-group {
+    margin-bottom: var(--spacing-2xl);
+}

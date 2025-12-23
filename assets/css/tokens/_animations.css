@@ -1,0 +1,67 @@
+/**
+ * Design Tokens - Animations
+ * Transitions, easing, z-index, @keyframes
+ */
+
+:root {
+    /* ==========================================================================
+       TRANSITIONS DURATIONS
+       ========================================================================== */
+    --transition-fast: 0.2s;
+    --transition-base: 0.3s;
+    --transition-slow: 0.6s;
+
+    /* ==========================================================================
+       EASING FUNCTIONS
+       ========================================================================== */
+    --easing-base: ease;
+    --easing-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+    --easing-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+
+    /* ==========================================================================
+       Z-INDEX LAYERS
+       ========================================================================== */
+    --z-index-background: -1;
+    --z-index-base: 0;
+    --z-index-dropdown: 50;
+    --z-index-fab: 999;
+    --z-index-sidebar: 1000;
+    --z-index-modal: 1050;
+    --z-index-tooltip: 1100;
+}
+
+/* ==========================================================================
+   KEYFRAMES ANIMATIONS
+   ========================================================================== */
+
+/**
+ * Animation de pulsation lors de la sélection d'une carte thème
+ */
+@keyframes selectPulse {
+    0% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(0, 48, 128, 0.4);
+    }
+    50% {
+        transform: scale(1.03);
+        box-shadow: 0 0 0 10px rgba(0, 48, 128, 0);
+    }
+    100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(0, 48, 128, 0);
+    }
+}
+
+/**
+ * Animation de fade-in avec scale
+ */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}

@@ -1,0 +1,68 @@
+/**
+ * Layout - App
+ * Structure principale de l'application (flexbox)
+ */
+
+/* ==========================================================================
+   BASE RESET
+   ========================================================================== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* ==========================================================================
+   APP CONTAINER
+   ========================================================================== */
+.app {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* ==========================================================================
+   MAIN CONTENT AREA
+   ========================================================================== */
+.main {
+    margin-left: 260px;
+    flex: 1;
+    transition: margin-left var(--transition-base) var(--easing-base);
+}
+
+/* Adjustment when sidebar is collapsed */
+.sidebar.collapsed ~ .main {
+    margin-left: 70px;
+}
+
+/* ==========================================================================
+   RESPONSIVE BREAKPOINTS
+   ========================================================================== */
+
+/* Tablet and below */
+@media (max-width: 768px) {
+    .sidebar {
+        transform: translateX(-100%);
+    }
+
+    .sidebar:not(.collapsed) {
+        transform: translateX(0);
+    }
+
+    .sidebar.collapsed {
+        transform: translateX(-100%);
+        width: 260px;
+    }
+
+    .main {
+        margin-left: 0;
+    }
+
+    .sidebar.collapsed ~ .main {
+        margin-left: 0;
+    }
+}
+
+/* Desktop large screens */
+@media (min-width: 1400px) {
+    /* Content max-width handled in _content.css */
+}

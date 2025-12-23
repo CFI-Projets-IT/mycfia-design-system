@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paramètres - myCFiA (Thème Sombre Rouge)</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <!-- Design System myCFiA -->
+    <link rel="stylesheet" href="../assets/css/main.css">
+    <link rel="stylesheet" href="../assets/css/themes/dark-red.css" id="theme-stylesheet">
+</head>
+<body>
+    <div class="app">
+        <!-- Sidebar -->
+        <aside class="sidebar d-flex flex-column">
+            <!-- Header -->
+            <div class="sidebar-header d-flex align-items-center justify-content-between mb-4 pb-3 px-3 pt-4">
+                <button class="btn btn-link text-white-50 p-0" type="button" data-sidebar-toggle style="font-size: 2rem;">
+                    <i class="bi bi-list"></i>
+                </button>
+                <button class="btn btn-link text-white-50 p-0" type="button" data-sidebar-toggle style="font-size: 2rem;">
+                    <i class="bi bi-arrow-left-circle"></i>
+                </button>
+            </div>
+
+            <!-- Navigation -->
+            <nav class="flex-grow-1 overflow-auto px-3">
+                <!-- Section Favoris -->
+                <div class="nav-section mb-4">
+                    <div class="nav-section-title-pill">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-star"></i>
+                            <span>Favoris</span>
+                        </div>
+                        <i class="bi bi-chevron-down"></i>
+                    </div>
+                    <div class="px-3 py-2 text-white-50 small">
+                        <span>Aucune conversation favorite</span>
+                    </div>
+                </div>
+
+                <!-- Section Historique -->
+                <div class="nav-section mb-4">
+                    <div class="nav-section-title-pill">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-clock-history"></i>
+                            <span>Historique</span>
+                        </div>
+                        <i class="bi bi-chevron-down"></i>
+                    </div>
+                </div>
+            </nav>
+
+            <!-- Footer -->
+            <div class="mt-auto pt-4 border-top border-white border-opacity-10 d-flex flex-column gap-2 px-3 pb-3">
+                <a href="#" class="d-flex align-items-center gap-3 px-3 py-2 rounded text-white text-decoration-none sidebar-link" style="background: var(--color-primary);">
+                    <i class="bi bi-gear fs-5"></i>
+                    <span>Paramètres</span>
+                </a>
+                <a href="#" class="d-flex align-items-center gap-3 px-3 py-2 rounded text-white text-decoration-none sidebar-link">
+                    <i class="bi bi-person-circle fs-5"></i>
+                    <span>Mon compte</span>
+                </a>
+                <a href="#" class="d-flex align-items-center gap-3 px-3 py-2 rounded text-white text-decoration-none sidebar-link">
+                    <i class="bi bi-box-arrow-right fs-5"></i>
+                    <span>Quitter</span>
+                </a>
+            </div>
+        </aside>
+        
+        <!-- Main -->
+        <main class="main">
+            <!-- Header -->
+            <header class="header">
+                <div class="header-content">
+                    <a href="#" style="display: flex; align-items: center; gap: 12px; text-decoration: none;">
+                        <img src="../images/assistant-picto.svg" alt="CFI" class="header-logo-picto">
+                        <img src="../images/logo.svg" alt="myCFiia" class="header-logo">
+                    </a>
+                    <div style="display: flex; gap: 16px;">
+                        <button class="header-btn btn-glass" style="color: white;">
+                            <i class="bi bi-building"></i><span class="header-btn-text"> Ma Division</span>
+                        </button>
+                        <button class="header-btn btn-glass-primary">
+                            <i class="bi bi-moon-fill"></i><span class="header-btn-text"> Sombre Rouge</span>
+                        </button>
+                        <a href="#" class="header-btn btn-glass" style="color: white; text-decoration: none;">
+                            <i class="bi bi-arrow-left-circle"></i><span class="header-btn-text"> Retour CFI</span>
+                        </a>
+                    </div>
+                </div>
+            </header>
+            
+            <!-- Content -->
+            <div class="content">
+                <div style="text-align: center; margin-bottom: 40px;">
+                    <h1 style="font-size: 36px; font-weight: 800; color: var(--color-primary); margin-bottom: 8px;">Paramètres</h1>
+                    <p style="font-size: 18px; color: var(--text-secondary);">Gérez votre compte et vos préférences</p>
+                </div>
+
+                <div class="settings-grid">
+                    <!-- Colonne Gauche -->
+                    <div>
+                        <!-- Section Profil -->
+                        <section class="section">
+                    <div class="section-header">
+                        <i class="bi bi-person-circle" style="font-size: 24px; color: var(--color-primary);"></i>
+                        <h2>Mon Profil</h2>
+                    </div>
+                    <div class="profile-header">
+                        <div class="avatar">CB</div>
+                        <div class="profile-info">
+                            <h3>Christophe Bichon</h3>
+                            <p>c.bichon@BNPPRE</p>
+                        </div>
+                    </div>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px;">
+                        <div>
+                            <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 4px;">Organisation</div>
+                            <div style="font-weight: 600;">BNP Paribas Real Estate</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 4px;">ID CFI</div>
+                            <div style="font-weight: 600; color: var(--color-secondary);">12345</div>
+                        </div>
+                    </div>
+                        </section>
+                    </div>
+
+                    <!-- Colonne Droite -->
+                    <div>
+                        <!-- Section Apparence -->
+                        <section class="section">
+                    <div class="section-header">
+                        <i class="bi bi-palette" style="font-size: 24px; color: var(--color-primary);"></i>
+                        <h2>Apparence</h2>
+                    </div>
+                    
+                    <h3 style="font-size: 16px; font-weight: 600; margin-bottom: 16px; color: var(--text-primary);">
+                        <i class="bi bi-brush me-2"></i>Thème
+                    </h3>
+                    <div class="theme-grid">
+                        <label class="theme-card">
+                            <input type="radio" name="theme" value="light" style="display: none;">
+                            <div class="theme-preview" style="border: 1px solid #e3e4e9;">
+                                <div class="theme-preview-bg" style="background: #f5f5f7;">
+                                    <div class="theme-preview-bar" style="background: #003080;"></div>
+                                    <div class="theme-preview-bar" style="background: #39BFEF;"></div>
+                                    <div class="theme-preview-bar" style="background: #e3e4e9;"></div>
+                                </div>
+                                <div class="theme-preview-sidebar" style="background: #001f3f;">
+                                    <img src="../images/logo_picto.svg" alt="myCFiia" class="theme-preview-logo">
+                                    <div class="theme-preview-section" style="background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.7);"><i class="bi bi-star-fill"></i></div>
+                                    <div class="theme-preview-section" style="background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.7);"><i class="bi bi-clock-history"></i></div>
+                                    <div class="theme-preview-footer">
+                                        <div class="theme-preview-icon" style="background: transparent; color: rgba(255,255,255,0.6);"><i class="bi bi-gear"></i></div>
+                                        <div class="theme-preview-icon" style="background: transparent; color: rgba(255,255,255,0.6);"><i class="bi bi-person-circle"></i></div>
+                                        <div class="theme-preview-icon" style="background: transparent; color: rgba(255,255,255,0.6);"><i class="bi bi-box-arrow-right"></i></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <i class="bi bi-sun-fill" style="font-size: 20px; color: var(--color-primary);"></i>
+                                <span style="font-weight: 600; color: var(--text-primary);">Clair</span>
+                            </div>
+                        </label>
+
+                        <label class="theme-card">
+                            <input type="radio" name="theme" value="dark-blue" style="display: none;">
+                            <div class="theme-preview" style="border: 1px solid #2a3f5f;">
+                                <div class="theme-preview-bg" style="background: linear-gradient(135deg, #0f1729 0%, #2a3f5f 100%);">
+                                    <div class="theme-preview-bar" style="background: rgba(95,168,211,0.3); backdrop-filter: blur(10px);"></div>
+                                    <div class="theme-preview-bar" style="background: rgba(95,168,211,0.3); backdrop-filter: blur(10px);"></div>
+                                    <div class="theme-preview-bar" style="background: rgba(95,168,211,0.3); backdrop-filter: blur(10px);"></div>
+                                </div>
+                                <div class="theme-preview-sidebar" style="background: #0a0f1a;">
+                                    <img src="../images/assistant-picto.svg" alt="Assistant" class="theme-preview-logo">
+                                    <div class="theme-preview-section" style="background: rgba(95,168,211,0.15); color: rgba(95,168,211,0.7);"><i class="bi bi-star-fill"></i></div>
+                                    <div class="theme-preview-section" style="background: rgba(95,168,211,0.15); color: rgba(95,168,211,0.7);"><i class="bi bi-clock-history"></i></div>
+                                    <div class="theme-preview-footer">
+                                        <div class="theme-preview-icon" style="background: transparent; color: rgba(95,168,211,0.5);"><i class="bi bi-gear"></i></div>
+                                        <div class="theme-preview-icon" style="background: transparent; color: rgba(95,168,211,0.5);"><i class="bi bi-person-circle"></i></div>
+                                        <div class="theme-preview-icon" style="background: transparent; color: rgba(95,168,211,0.5);"><i class="bi bi-box-arrow-right"></i></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <i class="bi bi-moon-stars-fill" style="font-size: 20px; color: var(--color-primary);"></i>
+                                <span style="font-weight: 600; color: var(--text-primary);">Sombre Bleu</span>
+                            </div>
+                        </label>
+
+                        <label class="theme-card active">
+                            <input type="radio" name="theme" value="dark-red" checked style="display: none;">
+                            <div class="theme-preview" style="border: 1px solid #3d1f27;">
+                                <div class="theme-preview-bg" style="background: linear-gradient(135deg, #1a0a0e 0%, #3d1f27 100%);">
+                                    <div class="theme-preview-bar" style="background: rgba(211,95,141,0.3); backdrop-filter: blur(10px);"></div>
+                                    <div class="theme-preview-bar" style="background: rgba(211,95,141,0.3); backdrop-filter: blur(10px);"></div>
+                                    <div class="theme-preview-bar" style="background: rgba(211,95,141,0.3); backdrop-filter: blur(10px);"></div>
+                                </div>
+                                <div class="theme-preview-sidebar" style="background: #0f0507;">
+                                    <img src="../images/assistant-picto.svg" alt="Assistant" class="theme-preview-logo">
+                                    <div class="theme-preview-section" style="background: rgba(211,95,141,0.15); color: rgba(211,95,141,0.7);"><i class="bi bi-star-fill"></i></div>
+                                    <div class="theme-preview-section" style="background: rgba(211,95,141,0.15); color: rgba(211,95,141,0.7);"><i class="bi bi-clock-history"></i></div>
+                                    <div class="theme-preview-footer">
+                                        <div class="theme-preview-icon" style="background: transparent; color: rgba(211,95,141,0.5);"><i class="bi bi-gear"></i></div>
+                                        <div class="theme-preview-icon" style="background: transparent; color: rgba(211,95,141,0.5);"><i class="bi bi-person-circle"></i></div>
+                                        <div class="theme-preview-icon" style="background: transparent; color: rgba(211,95,141,0.5);"><i class="bi bi-box-arrow-right"></i></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <i class="bi bi-moon-fill" style="font-size: 20px; color: var(--color-primary);"></i>
+                                <span style="font-weight: 600; color: var(--text-primary);">Sombre Rouge</span>
+                            </div>
+                        </label>
+                    </div>
+
+                    <h3 style="font-size: 16px; font-weight: 600; margin: 24px 0 16px; color: var(--text-primary);">
+                        <i class="bi bi-translate me-2"></i>Langue
+                    </h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
+                        <label class="theme-card active">
+                            <input type="radio" name="locale" value="fr" checked style="display: none;">
+                            <div style="display: flex; align-items: center; gap: 12px;">
+                                <span style="font-size: 32px;">🇫🇷</span>
+                                <span style="font-weight: 600; color: var(--text-primary);">Français</span>
+                            </div>
+                        </label>
+                        <label class="theme-card">
+                            <input type="radio" name="locale" value="en" style="display: none;">
+                            <div style="display: flex; align-items: center; gap: 12px;">
+                                <span style="font-size: 32px;">🇬🇧</span>
+                                <span style="font-weight: 600; color: var(--text-primary);">English</span>
+                            </div>
+                        </label>
+                    </div>
+                        </section>
+                    </div>
+                </div>
+
+                <!-- Boutons Actions -->
+                <div style="display: flex; justify-content: center; gap: 16px; margin-top: 32px; flex-wrap: wrap;">
+                    <button class="btn-primary-custom" style="padding: 16px 48px; font-size: 16px;">
+                        <i class="bi bi-check-circle me-2"></i>Enregistrer les modifications
+                    </button>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Design System myCFiA - JavaScript -->
+    <script type="module" src="../assets/js/main.js"></script>
+
+    <!-- Floating Action Button - Retour -->
+    <a href="#" class="fab-back" title="Retour à l'accueil">
+        <span class="fab-tooltip">Retour à l'accueil</span>
+        <i class="bi bi-house-fill"></i>
+    </a>
+</body>
+</html>

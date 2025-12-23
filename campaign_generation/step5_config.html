@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configuration Assets - Étape 5 | myCFiA</title>
+
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Design System myCFiA -->
+    <link rel="stylesheet" href="../assets/css/main.css">
+    <link rel="stylesheet" href="../assets/css/themes/light.css" id="theme-stylesheet">
+</head>
+<body>
+    <div class="app">
+        <aside class="sidebar d-flex flex-column">
+            <div class="sidebar-header">
+                <button class="btn btn-link text-white-50 p-0" data-sidebar-toggle>
+                    <i class="bi bi-list fs-4"></i>
+                </button>
+            </div>
+            <nav class="flex-grow-1 overflow-auto px-3">
+                <!-- Marketing -->
+                <div class="nav-section mb-4">
+                    <div class="nav-section-title-pill mb-3">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-megaphone"></i>
+                            <span>Marketing</span>
+                        </div>
+                        <i class="bi bi-chevron-down"></i>
+                    </div>
+                    <div class="nav-section-content">
+                        <a href="step1_create.html" class="sidebar-link active">
+                            <i class="bi bi-plus-circle"></i>
+                            <span>Nouvelle campagne</span>
+                        </a>
+                        <a href="dashboard.html" class="sidebar-link">
+                            <i class="bi bi-grid"></i>
+                            <span>Mes campagnes</span>
+                        </a>
+                        <a href="analytics.html" class="sidebar-link">
+                            <i class="bi bi-bar-chart-line"></i>
+                            <span>Analytics</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Favoris -->
+                <div class="nav-section mb-4">
+                    <div class="nav-section-title-pill mb-3">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-star"></i>
+                            <span>Favoris</span>
+                        </div>
+                        <i class="bi bi-chevron-down"></i>
+                    </div>
+                    <div class="px-3 py-2 text-white-50 small">
+                        <span>Aucune campagne favorite</span>
+                    </div>
+                </div>
+
+                <!-- Historique -->
+                <div class="nav-section mb-4">
+                    <div class="nav-section-title-pill mb-3">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-clock-history"></i>
+                            <span>Historique</span>
+                        </div>
+                        <i class="bi bi-chevron-down"></i>
+                    </div>
+                </div>
+            </nav>
+
+            <!-- Footer -->
+            <div class="sidebar-footer">
+                <a href="../settings_index/settings_index_light.html" class="sidebar-link">
+                    <i class="bi bi-gear"></i>
+                    <span>Paramètres</span>
+                </a>
+                <a href="../profile/profile_light.html" class="sidebar-link">
+                    <i class="bi bi-person-circle"></i>
+                    <span>Mon compte</span>
+                </a>
+                <a href="#" class="sidebar-link">
+                    <i class="bi bi-box-arrow-right"></i>
+                    <span>Quitter</span>
+                </a>
+            </div>
+        </aside>
+
+        <main class="main">
+            <header class="header">
+                <div class="header-content">
+                    <a href="../index.html" class="step5-config-header-logo-link">
+                        <img src="../images/logo_picto.svg" alt="CFI" class="header-logo-picto">
+                        <img src="../images/logo.svg" alt="myCFiA" class="header-logo">
+                    </a>
+                    <!-- Actions -->
+                    <div class="step5-config-header-buttons">
+                        <button class="btn btn-glass header-btn step5-config-header-btn-primary">
+                            <i class="bi bi-building"></i>
+                            <span class="header-btn-text">Ma Division</span>
+                        </button>
+                        <button class="btn btn-glass-primary header-btn">
+                            <i class="bi bi-sun-fill"></i>
+                            <span class="header-btn-text">Clair</span>
+                        </button>
+                        <a href="#" class="btn btn-glass header-btn step5-config-header-link">
+                            <i class="bi bi-arrow-left-circle"></i>
+                            <span class="header-btn-text">Retour CFI</span>
+                        </a>
+                    </div>
+                </div>
+            </header>
+
+            <div class="content">
+                <nav aria-label="breadcrumb" class="step5-config-breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="dashboard.html" class="step5-config-breadcrumb-link">Campagnes</a></li>
+                        <li class="breadcrumb-item active">Génération Assets</li>
+                    </ol>
+                </nav>
+
+                <div class="campaign-stepper">
+                    <div class="stepper-container">
+                        <div class="stepper-line">
+                            <div class="stepper-progress step5-config-stepper-progress"></div>
+                        </div>
+                        <div class="stepper-step completed">
+                            <div class="stepper-circle"><i class="bi bi-check-lg"></i></div>
+                            <div class="stepper-label">Projet</div>
+                        </div>
+                        <div class="stepper-step completed">
+                            <div class="stepper-circle"><i class="bi bi-check-lg"></i></div>
+                            <div class="stepper-label">Personas</div>
+                        </div>
+                        <div class="stepper-step completed">
+                            <div class="stepper-circle"><i class="bi bi-check-lg"></i></div>
+                            <div class="stepper-label">Concurrents</div>
+                        </div>
+                        <div class="stepper-step completed">
+                            <div class="stepper-circle"><i class="bi bi-check-lg"></i></div>
+                            <div class="stepper-label">Stratégie</div>
+                        </div>
+                        <div class="stepper-step active">
+                            <div class="stepper-circle">5</div>
+                            <div class="stepper-label">Assets</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <div class="form-section-header">
+                        <div class="form-section-icon">
+                            <i class="bi bi-images"></i>
+                        </div>
+                        <h2 class="form-section-title">Configuration de la génération d'assets</h2>
+                        <p class="form-section-subtitle">Paramétrez la génération automatique d'assets marketing par l'IA</p>
+                    </div>
+
+                    <div class="alert alert-info alert-dismissible fade show mb-4 step5-config-alert">
+                        <i class="bi bi-info-circle-fill step5-config-alert-icon"></i>
+                        <div>
+                            <strong>Génération intelligente</strong><br>
+                            L'IA créera des assets optimisés selon votre identité de marque et votre stratégie marketing.
+                        </div>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+
+                    <div class="mb-4">
+                        <h4 class="step5-config-section-title">
+                            <i class="bi bi-collection text-primary"></i> Sélectionnez vos assets marketing
+                        </h4>
+                        <p class="text-secondary">Cliquez sur une carte pour l'activer, puis définissez le nombre de variations (1-3)</p>
+                    </div>
+
+                    <div class="row g-4 mb-5">
+                        <!-- Linkedin -->
+                        <div class="col-lg-3 col-md-4 col-sm-6">
+                            <div class="asset-card-modern active" data-asset="linkedin">
+                                <span class="badge bg-success position-absolute top-0 end-0 m-2 asset-card-badge">Recommandé</span>
+                                <div class="asset-icon-wrapper asset-icon-linkedin">
+                                    <i class="bi bi-linkedin"></i>
+                                </div>
+                                <h6 class="asset-card-title">Linkedin</h6>
+                                <p class="text-secondary small mb-3">Réseau professionnel</p>
+                                <div class="d-flex align-items-center justify-content-between">
+                                    <span class="small text-secondary">Activer</span>
+                                    <div class="toggle-switch active"></div>
+                                </div>
+                                <div class="stepper-control">
+                                    <div class="stepper-btn"><i class="bi bi-dash"></i></div>
+                                    <div class="stepper-value">3</div>
+                                    <div class="stepper-btn"><i class="bi bi-plus"></i></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- GoogleAds -->
+                        <div class="col-lg-3 col-md-4 col-sm-6">
+                            <div class="asset-card-modern active" data-asset="googleads">
+                                <span class="badge bg-warning text-dark position-absolute top-0 end-0 m-2 asset-card-badge">Populaire</span>
+                                <div class="asset-icon-wrapper asset-icon-google">
+                                    <i class="bi bi-google"></i>
+                                </div>
+                                <h6 class="asset-card-title">GoogleAds</h6>
+                                <p class="text-secondary small mb-3">Publicité search Google</p>
+                                <div class="d-flex align-items-center justify-content-between">
+                                    <span class="small text-secondary">Activer</span>
+                                    <div class="toggle-switch active"></div>
+                                </div>
+                                <div class="stepper-control">
+                                    <div class="stepper-btn"><i class="bi bi-dash"></i></div>
+                                    <div class="stepper-value">2</div>
+                                    <div class="stepper-btn"><i class="bi bi-plus"></i></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- BingAds -->
+                        <div class="col-lg-3 col-md-4 col-sm-6">
+                            <div class="asset-card-modern" data-asset="bingads">
+                                <div class="asset-icon-wrapper asset-icon-bing">
+                                    <i class="bi bi-bing"></i>
+                                </div>
+                                <h6 class="asset-card-title">BingAds</h6>
+                                <p class="text-secondary small mb-3">Publicité search Bing</p>
+                                <div class="d-flex align-items-center justify-content-between">
+                                    <span class="small text-secondary">Activer</span>
+                                    <div class="toggle-switch"></div>
+                                </div>
+                                <div class="stepper-control stepper-control-inactive">
+                                    <div class="stepper-btn"><i class="bi bi-dash"></i></div>
+                                    <div class="stepper-value">1</div>
+                                    <div class="stepper-btn"><i class="bi bi-plus"></i></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Facebook -->
+                        <div class="col-lg-3 col-md-4 col-sm-6">
+                            <div class="asset-card-modern active" data-asset="facebook">
+                                <span class="badge bg-success position-absolute top-0 end-0 m-2 asset-card-badge">Recommandé</span>
+                                <div class="asset-icon-wrapper asset-icon-facebook">
+                                    <i class="bi bi-facebook"></i>
+                                </div>
+                                <h6 class="asset-card-title">Facebook</h6>
+                                <p class="text-secondary small mb-3">Réseau social</p>
+                                <div class="d-flex align-items-center justify-content-between">
+                                    <span class="small text-secondary">Activer</span>
+                                    <div class="toggle-switch active"></div>
+                                </div>
+                                <div class="stepper-control">
+                                    <div class="stepper-btn"><i class="bi bi-dash"></i></div>
+                                    <div class="stepper-value">2</div>
+                                    <div class="stepper-btn"><i class="bi bi-plus"></i></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Instagram -->
+                        <div class="col-lg-3 col-md-4 col-sm-6">
+                            <div class="asset-card-modern" data-asset="instagram">
+                                <div class="asset-icon-wrapper asset-icon-instagram">
+                                    <i class="bi bi-instagram"></i>
+                                </div>
+                                <h6 class="asset-card-title">Instagram</h6>
+                                <p class="text-secondary small mb-3">Réseau social visuel</p>
+                                <div class="d-flex align-items-center justify-content-between">
+                                    <span class="small text-secondary">Activer</span>
+                                    <div class="toggle-switch"></div>
+                                </div>
+                                <div class="stepper-control stepper-control-inactive">
+                                    <div class="stepper-btn"><i class="bi bi-dash"></i></div>
+                                    <div class="stepper-value">1</div>
+                                    <div class="stepper-btn"><i class="bi bi-plus"></i></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Iab -->
+                        <div class="col-lg-3 col-md-4 col-sm-6">
+                            <div class="asset-card-modern" data-asset="iab">
+                                <div class="asset-icon-wrapper asset-icon-iab">
+                                    <i class="bi bi-badge-ad"></i>
+                                </div>
+                                <h6 class="asset-card-title">Iab</h6>
+                                <p class="text-secondary small mb-3">Bannière publicitaire</p>
+                                <div class="d-flex align-items-center justify-content-between">
+                                    <span class="small text-secondary">Activer</span>
+                                    <div class="toggle-switch"></div>
+                                </div>
+                                <div class="stepper-control stepper-control-inactive">
+                                    <div class="stepper-btn"><i class="bi bi-dash"></i></div>
+                                    <div class="stepper-value">1</div>
+                                    <div class="stepper-btn"><i class="bi bi-plus"></i></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Mail -->
+                        <div class="col-lg-3 col-md-4 col-sm-6">
+                            <div class="asset-card-modern active" data-asset="mail">
+                                <span class="badge bg-warning text-dark position-absolute top-0 end-0 m-2 asset-card-badge">Populaire</span>
+                                <div class="asset-icon-wrapper asset-icon-mail">
+                                    <i class="bi bi-envelope-fill"></i>
+                                </div>
+                                <h6 class="asset-card-title">Mail</h6>
+                                <p class="text-secondary small mb-3">Campagnes emailing</p>
+                                <div class="d-flex align-items-center justify-content-between">
+                                    <span class="small text-secondary">Activer</span>
+                                    <div class="toggle-switch active"></div>
+                                </div>
+                                <div class="stepper-control">
+                                    <div class="stepper-btn"><i class="bi bi-dash"></i></div>
+                                    <div class="stepper-value">2</div>
+                                    <div class="stepper-btn"><i class="bi bi-plus"></i></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Sms -->
+                        <div class="col-lg-3 col-md-4 col-sm-6">
+                            <div class="asset-card-modern active" data-asset="sms">
+                                <div class="asset-icon-wrapper asset-icon-sms">
+                                    <i class="bi bi-phone"></i>
+                                </div>
+                                <h6 class="asset-card-title">Sms</h6>
+                                <p class="text-secondary small mb-3">Messages courts</p>
+                                <div class="d-flex align-items-center justify-content-between">
+                                    <span class="small text-secondary">Activer</span>
+                                    <div class="toggle-switch active"></div>
+                                </div>
+                                <div class="stepper-control">
+                                    <div class="stepper-btn"><i class="bi bi-dash"></i></div>
+                                    <div class="stepper-value">2</div>
+                                    <div class="stepper-btn"><i class="bi bi-plus"></i></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Article -->
+                        <div class="col-lg-3 col-md-4 col-sm-6">
+                            <div class="asset-card-modern active" data-asset="article">
+                                <span class="badge bg-success position-absolute top-0 end-0 m-2 asset-card-badge">Recommandé</span>
+                                <div class="asset-icon-wrapper asset-icon-article">
+                                    <i class="bi bi-file-text"></i>
+                                </div>
+                                <h6 class="asset-card-title">Article</h6>
+                                <p class="text-secondary small mb-3">Contenu blog SEO</p>
+                                <div class="d-flex align-items-center justify-content-between">
+                                    <span class="small text-secondary">Activer</span>
+                                    <div class="toggle-switch active"></div>
+                                </div>
+                                <div class="stepper-control">
+                                    <div class="stepper-btn"><i class="bi bi-dash"></i></div>
+                                    <div class="stepper-value">1</div>
+                                    <div class="stepper-btn"><i class="bi bi-plus"></i></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Courrier (A4) -->
+                        <div class="col-lg-3 col-md-4 col-sm-6">
+                            <div class="asset-card-modern" data-asset="courrier">
+                                <span class="badge bg-info position-absolute top-0 end-0 m-2 asset-card-badge">Nouveau</span>
+                                <div class="asset-icon-wrapper asset-icon-courrier">
+                                    <i class="bi bi-mailbox"></i>
+                                </div>
+                                <h6 class="asset-card-title">Courrier (A4)</h6>
+                                <p class="text-secondary small mb-3">Courrier postal</p>
+                                <div class="d-flex align-items-center justify-content-between">
+                                    <span class="small text-secondary">Activer</span>
+                                    <div class="toggle-switch"></div>
+                                </div>
+                                <div class="stepper-control stepper-control-inactive">
+                                    <div class="stepper-btn"><i class="bi bi-dash"></i></div>
+                                    <div class="stepper-value">1</div>
+                                    <div class="stepper-btn"><i class="bi bi-plus"></i></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Instructions optionnelles (collapsible) -->
+                    <div class="mb-5">
+                        <div class="d-flex align-items-center gap-2 mb-3 instructions-toggle">
+                            <i class="bi bi-chevron-right" id="instructionsChevron"></i>
+                            <h6 class="mb-0 instructions-title">
+                                <i class="bi bi-pencil-square text-primary"></i>
+                                Instructions spécifiques (optionnel)
+                            </h6>
+                        </div>
+                        <div id="instructionsArea" class="d-none">
+                            <div class="card">
+                                <div class="card-body">
+                                    <p class="text-secondary small mb-3">Directives particulières, mots-clés à inclure, call-to-action spécifique...</p>
+                                    <textarea class="form-control" id="instructions" rows="6" placeholder="Ex: Inclure le hashtag #EcoFriendly, mettre en avant la livraison gratuite, éviter les superlatifs..."></textarea>
+                                    <small class="form-text text-secondary">Maximum 1000 caractères</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Estimation Card -->
+                    <div class="card mb-4 estimation-card">
+                        <div class="card-body">
+                            <div class="row align-items-center">
+                                <div class="col-md-auto">
+                                    <div class="estimation-icon-circle">
+                                        <i class="bi bi-lightning-charge-fill"></i>
+                                    </div>
+                                </div>
+                                <div class="col-md">
+                                    <h5 class="mb-2">
+                                        <i class="bi bi-check-circle-fill text-success"></i>
+                                        Prêt à générer
+                                    </h5>
+                                    <p class="mb-0 text-secondary">
+                                        <strong id="selectedAssetsCount">6 types d'assets</strong> •
+                                        <strong id="totalVariations">12 variations</strong> •
+                                        Durée estimée : <strong>~1 minute</strong>
+                                    </p>
+                                </div>
+                                <div class="col-md-auto">
+                                    <div class="d-flex gap-2">
+                                        <span class="badge bg-success estimation-badge">Linkedin (3)</span>
+                                        <span class="badge bg-success estimation-badge">GoogleAds (2)</span>
+                                        <span class="badge bg-success estimation-badge">Facebook (2)</span>
+                                        <span class="badge bg-secondary estimation-badge">+3 autres</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- Speed Dial FAB - Boîte à outils -->
+    <div class="speed-dial-container">
+        <!-- Action : Générer les assets marketing -->
+        <div class="speed-dial-action">
+            <span class="speed-dial-label">Générer les assets marketing</span>
+            <a href="step5_loading.html" class="speed-dial-btn speed-dial-primary">
+                <i class="bi bi-lightning-charge-fill"></i>
+            </a>
+        </div>
+
+        <!-- Bouton principal -->
+        <div class="speed-dial-btn speed-dial-main">
+            <i class="bi bi-three-dots-vertical"></i>
+        </div>
+    </div>
+
+    <a href="step4_result.html" class="fab-back">
+        <i class="bi bi-arrow-left"></i>
+        <span class="fab-tooltip">Retour à la stratégie</span>
+    </a>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../assets/js/main.js" type="module"></script>
+</body>
+</html>

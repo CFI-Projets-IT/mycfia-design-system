@@ -1,0 +1,47 @@
+/**
+ * Design Tokens - Spacing
+ * Échelle d'espacements, gaps, paddings et marges
+ */
+
+:root {
+    /* ==========================================================================
+       BASE SPACING SCALE
+       ========================================================================== */
+    --spacing-0: 0;
+    --spacing-xs: 4px;
+    --spacing-sm: 8px;
+    --spacing-md: 12px;
+    --spacing-lg: 16px;
+    --spacing-xl: 20px;
+    --spacing-2xl: 24px;
+    --spacing-3xl: 30px;
+    --spacing-4xl: 32px;
+    --spacing-5xl: 40px;
+    --spacing-6xl: 60px;
+
+    /* ==========================================================================
+       GAP UTILITIES
+       ========================================================================== */
+    --gap-xs: 8px;
+    --gap-sm: 12px;
+    --gap-md: 16px;
+    --gap-lg: 24px;
+    --gap-xl: 32px;
+
+    /* ==========================================================================
+       COMPONENT SPACING
+       ========================================================================== */
+    /* Padding */
+    --padding-card: 30px;
+    --padding-section-y: 16px;
+    --padding-section-x: 0;
+    --padding-button-y: 12px;
+    --padding-button-x: 24px;
+    --padding-header-y: 20px;
+    --padding-header-x: 30px;
+    --padding-content-y: 40px;
+    --padding-content-x: 30px;
+
+    /* Margins */
+    --margin-section-bottom: 24px;
+}
