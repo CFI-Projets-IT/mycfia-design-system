@@ -1,0 +1,48 @@
+/**
+ * Step 4 Recap - Strategy Summary Page Styles
+ * Styles spécifiques pour la page de récapitulatif stratégie (étape 4)
+ */
+
+/* ==========================================================================
+   Header Styles (réutilisables)
+   ========================================================================== */
+.step4-recap-header-logo-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+}
+
+.step4-recap-header-buttons {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+}
+
+.step4-recap-header-btn-primary {
+    color: var(--color-primary);
+}
+
+.step4-recap-header-link {
+    color: var(--color-primary);
+    text-decoration: none;
+}
+
+/* ==========================================================================
+   Breadcrumb
+   ========================================================================== */
+.step4-recap-breadcrumb {
+    margin-bottom: var(--spacing-3xl);
+}
+
+.step4-recap-breadcrumb-link {
+    color: var(--color-primary);
+    text-decoration: none;
+}
+
+/* ==========================================================================
+   Stepper Progress
+   ========================================================================== */
+.step4-recap-stepper-progress {
+    width: 75%;
+}

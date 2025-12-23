@@ -17,20 +17,6 @@
     <!-- Design System myCFiA -->
     <link rel="stylesheet" href="../assets/css/main.css">
     <link rel="stylesheet" href="../assets/css/themes/light.css" id="theme-stylesheet">
-
-    <style>
-        .metric-card {
-            transition: all 0.3s ease;
-        }
-        .metric-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 8px 24px rgba(0, 48, 128, 0.15);
-        }
-        .chart-container {
-            position: relative;
-            height: 350px;
-        }
-    </style>
 </head>
 <body>
     <div class="app">
@@ -38,6 +24,9 @@
             <div class="sidebar-header">
                 <button class="btn btn-link text-white-50 p-0" data-sidebar-toggle>
                     <i class="bi bi-list fs-4"></i>
+                </button>
+                <button class="btn btn-link text-white-50 p-0" data-sidebar-toggle>
+                    <i class="bi bi-arrow-left-circle fs-5"></i>
                 </button>
             </div>
 
@@ -109,13 +98,13 @@
         <main class="main">
             <header class="header">
                 <div class="header-content">
-                    <a href="../index.html" style="display: flex; align-items: center; gap: 12px; text-decoration: none;">
+                    <a href="../index.html" class="analytics-header-logo-link">
                         <img src="../images/logo_picto.svg" alt="CFI" class="header-logo-picto">
                         <img src="../images/logo.svg" alt="myCFiA" class="header-logo">
                     </a>
 
-                    <div style="display: flex; gap: 16px; align-items: center;">
-                        <button class="btn btn-glass header-btn" style="color: var(--color-primary);">
+                    <div class="analytics-header-buttons">
+                        <button class="btn btn-glass header-btn analytics-header-btn-primary">
                             <i class="bi bi-building"></i>
                             <span class="header-btn-text">Ma Division</span>
                         </button>
@@ -123,7 +112,7 @@
                             <i class="bi bi-sun-fill"></i>
                             <span class="header-btn-text">Clair</span>
                         </button>
-                        <a href="#" class="btn btn-glass header-btn" style="color: var(--color-primary); text-decoration: none;">
+                        <a href="#" class="btn btn-glass header-btn analytics-header-link">
                             <i class="bi bi-arrow-left-circle"></i>
                             <span class="header-btn-text">Retour CFI</span>
                         </a>
@@ -135,13 +124,13 @@
                 <!-- Page Header -->
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <div>
-                        <h1 style="font-size: var(--font-size-3xl); font-weight: var(--font-weight-bold); color: var(--color-text-primary); margin-bottom: var(--spacing-xs);">
+                        <h1 class="analytics-page-title">
                             Analytics Marketing
                         </h1>
                         <p class="text-secondary mb-0">Analysez les performances de vos campagnes marketing</p>
                     </div>
                     <div class="d-flex gap-2">
-                        <select class="form-select" style="width: auto;">
+                        <select class="form-select analytics-period-select">
                             <option selected>30 derniers jours</option>
                             <option>90 derniers jours</option>
                             <option>Cette année</option>
@@ -160,17 +149,17 @@
                         <div class="card metric-card h-100">
                             <div class="card-body">
                                 <div class="d-flex align-items-center justify-content-between mb-3">
-                                    <div class="p-3" style="background: rgba(0, 48, 128, 0.1); border-radius: var(--border-radius-md); color: var(--color-primary);">
-                                        <i class="bi bi-megaphone" style="font-size: 1.75rem;"></i>
+                                    <div class="kpi-icon-wrapper kpi-icon-campaigns">
+                                        <i class="bi bi-megaphone"></i>
                                     </div>
                                     <span class="badge bg-success">+12%</span>
                                 </div>
-                                <h2 class="mb-2" style="color: var(--color-primary); font-weight: 800;">12</h2>
+                                <h2 class="mb-2 kpi-value">12</h2>
                                 <p class="small text-secondary mb-2">Campagnes totales</p>
                                 <div class="small text-secondary">
-                                    <i class="bi bi-circle-fill text-success" style="font-size: 0.5rem;"></i> 8 actives •
-                                    <i class="bi bi-circle-fill text-warning" style="font-size: 0.5rem;"></i> 2 en pause •
-                                    <i class="bi bi-circle-fill text-secondary" style="font-size: 0.5rem;"></i> 2 terminées
+                                    <i class="bi bi-circle-fill text-success status-bullet"></i> 8 actives •
+                                    <i class="bi bi-circle-fill text-warning status-bullet"></i> 2 en pause •
+                                    <i class="bi bi-circle-fill text-secondary status-bullet"></i> 2 terminées
                                 </div>
                             </div>
                         </div>
@@ -180,15 +169,15 @@
                         <div class="card metric-card h-100">
                             <div class="card-body">
                                 <div class="d-flex align-items-center justify-content-between mb-3">
-                                    <div class="p-3" style="background: rgba(57, 191, 239, 0.1); border-radius: var(--border-radius-md); color: var(--color-secondary);">
-                                        <i class="bi bi-cash-stack" style="font-size: 1.75rem;"></i>
+                                    <div class="kpi-icon-wrapper kpi-icon-budget">
+                                        <i class="bi bi-cash-stack"></i>
                                     </div>
                                     <span class="badge bg-primary">65%</span>
                                 </div>
-                                <h2 class="mb-2" style="color: var(--color-primary); font-weight: 800;">340K€</h2>
+                                <h2 class="mb-2 kpi-value">340K€</h2>
                                 <p class="small text-secondary mb-2">Budget total</p>
-                                <div class="progress" style="height: 6px;">
-                                    <div class="progress-bar bg-primary" style="width: 65%;" title="222K€ dépensés"></div>
+                                <div class="progress analytics-progress">
+                                    <div class="progress-bar bg-primary analytics-progress-bar" title="222K€ dépensés"></div>
                                 </div>
                                 <div class="small text-secondary mt-2">222K€ dépensés • 118K€ restants</div>
                             </div>
@@ -199,12 +188,12 @@
                         <div class="card metric-card h-100">
                             <div class="card-body">
                                 <div class="d-flex align-items-center justify-content-between mb-3">
-                                    <div class="p-3" style="background: rgba(40, 167, 69, 0.1); border-radius: var(--border-radius-md); color: #28a745;">
-                                        <i class="bi bi-graph-up-arrow" style="font-size: 1.75rem;"></i>
+                                    <div class="kpi-icon-wrapper kpi-icon-roi">
+                                        <i class="bi bi-graph-up-arrow"></i>
                                     </div>
                                     <span class="badge bg-success">+24%</span>
                                 </div>
-                                <h2 class="mb-2" style="color: var(--color-primary); font-weight: 800;">3.8x</h2>
+                                <h2 class="mb-2 kpi-value">3.8x</h2>
                                 <p class="small text-secondary mb-2">ROI moyen</p>
                                 <div class="small">
                                     <span class="text-success">
@@ -219,12 +208,12 @@
                         <div class="card metric-card h-100">
                             <div class="card-body">
                                 <div class="d-flex align-items-center justify-content-between mb-3">
-                                    <div class="p-3" style="background: rgba(255, 193, 7, 0.1); border-radius: var(--border-radius-md); color: #ffc107;">
-                                        <i class="bi bi-people" style="font-size: 1.75rem;"></i>
+                                    <div class="kpi-icon-wrapper kpi-icon-leads">
+                                        <i class="bi bi-people"></i>
                                     </div>
                                     <span class="badge bg-warning text-dark">+18%</span>
                                 </div>
-                                <h2 class="mb-2" style="color: var(--color-primary); font-weight: 800;">2 418</h2>
+                                <h2 class="mb-2 kpi-value">2 418</h2>
                                 <p class="small text-secondary mb-2">Leads générés</p>
                                 <div class="small">
                                     <span class="text-warning">
@@ -523,253 +512,10 @@
         <i class="bi bi-arrow-left"></i>
     </a>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="../assets/js/main.js" type="module"></script>
-
-    <!-- Chart.js -->
+    <!-- Chart.js (doit être chargé avant main.js) -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 
-    <script>
-        // Couleurs du design system
-        const colors = {
-            primary: 'rgb(0, 48, 128)',
-            primaryLight: 'rgba(0, 48, 128, 0.1)',
-            secondary: 'rgb(57, 191, 239)',
-            secondaryLight: 'rgba(57, 191, 239, 0.1)',
-            success: 'rgb(40, 167, 69)',
-            warning: 'rgb(255, 193, 7)',
-            danger: 'rgb(220, 53, 69)',
-        };
-
-        // Configuration globale Chart.js
-        Chart.defaults.font.family = "'Poppins', sans-serif";
-        Chart.defaults.color = '#6c757d';
-
-        // 1. Performance par canal (Bar Chart)
-        const channelCtx = document.getElementById('channelChart').getContext('2d');
-        const channelChart = new Chart(channelCtx, {
-            type: 'bar',
-            data: {
-                labels: ['LinkedIn', 'GoogleAds', 'Facebook', 'Email', 'Article'],
-                datasets: [{
-                    label: 'Budget dépensé (K€)',
-                    data: [68, 52, 45, 32, 25],
-                    backgroundColor: colors.primary,
-                    borderRadius: 8,
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        display: false
-                    },
-                    tooltip: {
-                        backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                        padding: 12,
-                        borderRadius: 8,
-                        callbacks: {
-                            label: function(context) {
-                                return context.parsed.y + 'K€';
-                            }
-                        }
-                    }
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        grid: {
-                            color: 'rgba(0, 0, 0, 0.05)'
-                        },
-                        ticks: {
-                            callback: function(value) {
-                                return value + 'K€';
-                            }
-                        }
-                    },
-                    x: {
-                        grid: {
-                            display: false
-                        }
-                    }
-                }
-            }
-        });
-
-        // 2. Répartition budgétaire (Doughnut Chart)
-        const budgetCtx = document.getElementById('budgetChart').getContext('2d');
-        new Chart(budgetCtx, {
-            type: 'doughnut',
-            data: {
-                labels: ['Dépensé', 'Restant'],
-                datasets: [{
-                    data: [222, 118],
-                    backgroundColor: [colors.primary, colors.secondary],
-                    borderWidth: 0,
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        position: 'bottom',
-                        labels: {
-                            padding: 15,
-                            usePointStyle: true,
-                            pointStyle: 'circle'
-                        }
-                    },
-                    tooltip: {
-                        backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                        padding: 12,
-                        borderRadius: 8,
-                        callbacks: {
-                            label: function(context) {
-                                const label = context.label || '';
-                                const value = context.parsed;
-                                const total = context.dataset.data.reduce((a, b) => a + b, 0);
-                                const percentage = Math.round((value / total) * 100);
-                                return label + ': ' + value + 'K€ (' + percentage + '%)';
-                            }
-                        }
-                    }
-                }
-            }
-        });
-
-        // 3. Évolution du ROI (Line Chart)
-        const roiCtx = document.getElementById('roiChart').getContext('2d');
-        new Chart(roiCtx, {
-            type: 'line',
-            data: {
-                labels: ['Sem 1', 'Sem 2', 'Sem 3', 'Sem 4', 'Sem 5', 'Sem 6', 'Sem 7', 'Sem 8'],
-                datasets: [{
-                    label: 'ROI',
-                    data: [2.1, 2.4, 2.8, 3.2, 3.5, 3.6, 3.7, 3.8],
-                    borderColor: colors.success,
-                    backgroundColor: 'rgba(40, 167, 69, 0.1)',
-                    borderWidth: 3,
-                    fill: true,
-                    tension: 0.4,
-                    pointRadius: 5,
-                    pointBackgroundColor: colors.success,
-                    pointBorderColor: '#fff',
-                    pointBorderWidth: 2,
-                    pointHoverRadius: 7,
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        display: false
-                    },
-                    tooltip: {
-                        backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                        padding: 12,
-                        borderRadius: 8,
-                        callbacks: {
-                            label: function(context) {
-                                return 'ROI: ' + context.parsed.y + 'x';
-                            }
-                        }
-                    }
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        grid: {
-                            color: 'rgba(0, 0, 0, 0.05)'
-                        },
-                        ticks: {
-                            callback: function(value) {
-                                return value + 'x';
-                            }
-                        }
-                    },
-                    x: {
-                        grid: {
-                            display: false
-                        }
-                    }
-                }
-            }
-        });
-
-        // 4. Évolution des leads (Line Chart)
-        const leadsCtx = document.getElementById('leadsChart').getContext('2d');
-        new Chart(leadsCtx, {
-            type: 'line',
-            data: {
-                labels: ['Sem 1', 'Sem 2', 'Sem 3', 'Sem 4', 'Sem 5', 'Sem 6', 'Sem 7', 'Sem 8'],
-                datasets: [{
-                    label: 'Leads',
-                    data: [187, 234, 298, 356, 412, 478, 521, 602],
-                    borderColor: colors.warning,
-                    backgroundColor: 'rgba(255, 193, 7, 0.1)',
-                    borderWidth: 3,
-                    fill: true,
-                    tension: 0.4,
-                    pointRadius: 5,
-                    pointBackgroundColor: colors.warning,
-                    pointBorderColor: '#fff',
-                    pointBorderWidth: 2,
-                    pointHoverRadius: 7,
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        display: false
-                    },
-                    tooltip: {
-                        backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                        padding: 12,
-                        borderRadius: 8,
-                        callbacks: {
-                            label: function(context) {
-                                return 'Leads: ' + context.parsed.y;
-                            }
-                        }
-                    }
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        grid: {
-                            color: 'rgba(0, 0, 0, 0.05)'
-                        }
-                    },
-                    x: {
-                        grid: {
-                            display: false
-                        }
-                    }
-                }
-            }
-        });
-
-        // Switch entre métriques pour le graphique canaux
-        document.querySelectorAll('input[name="channelMetric"]').forEach(input => {
-            input.addEventListener('change', function() {
-                if (this.id === 'metric1') {
-                    channelChart.data.datasets[0].label = 'Budget dépensé (K€)';
-                    channelChart.data.datasets[0].data = [68, 52, 45, 32, 25];
-                } else if (this.id === 'metric2') {
-                    channelChart.data.datasets[0].label = 'Leads générés';
-                    channelChart.data.datasets[0].data = [724, 598, 512, 387, 197];
-                } else if (this.id === 'metric3') {
-                    channelChart.data.datasets[0].label = 'ROI';
-                    channelChart.data.datasets[0].data = [4.2, 3.8, 3.5, 4.0, 3.2];
-                }
-                channelChart.update();
-            });
-        });
-    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../assets/js/main.js" type="module"></script>
 </body>
 </html>

@@ -103,13 +103,13 @@
         <main class="main">
             <header class="header">
                 <div class="header-content">
-                    <a href="../index.html" style="display: flex; align-items: center; gap: 12px; text-decoration: none;">
+                    <a href="../index.html" class="step1-review-header-logo-link">
                         <img src="../images/logo_picto.svg" alt="CFI" class="header-logo-picto">
                         <img src="../images/logo.svg" alt="myCFiA" class="header-logo">
                     </a>
 
-                    <div style="display: flex; gap: 16px; align-items: center;">
-                        <button class="btn btn-glass header-btn" style="color: var(--color-primary);">
+                    <div class="step1-review-header-buttons">
+                        <button class="btn btn-glass header-btn step1-review-header-btn-primary">
                             <i class="bi bi-building"></i>
                             <span class="header-btn-text">Ma Division</span>
                         </button>
@@ -117,7 +117,7 @@
                             <i class="bi bi-sun-fill"></i>
                             <span class="header-btn-text">Clair</span>
                         </button>
-                        <a href="#" class="btn btn-glass header-btn" style="color: var(--color-primary); text-decoration: none;">
+                        <a href="#" class="btn btn-glass header-btn step1-review-header-link">
                             <i class="bi bi-arrow-left-circle"></i>
                             <span class="header-btn-text">Retour CFI</span>
                         </a>
@@ -127,10 +127,10 @@
 
             <div class="content">
                 <!-- Breadcrumb -->
-                <nav aria-label="breadcrumb" style="margin-bottom: var(--spacing-3xl);">
+                <nav aria-label="breadcrumb" class="step1-review-breadcrumb">
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="dashboard.html" style="color: var(--color-primary); text-decoration: none;">Campagnes Marketing</a></li>
-                        <li class="breadcrumb-item"><a href="step1_create.html" style="color: var(--color-primary); text-decoration: none;">Nouvelle campagne</a></li>
+                        <li class="breadcrumb-item"><a href="dashboard.html" class="step1-review-breadcrumb-link">Campagnes Marketing</a></li>
+                        <li class="breadcrumb-item"><a href="step1_create.html" class="step1-review-breadcrumb-link">Nouvelle campagne</a></li>
                         <li class="breadcrumb-item active" aria-current="page">Validation enrichissement</li>
                     </ol>
                 </nav>
@@ -139,7 +139,7 @@
                 <div class="campaign-stepper">
                     <div class="stepper-container">
                         <div class="stepper-line">
-                            <div class="stepper-progress" style="width: 0%;"></div>
+                            <div class="stepper-progress step1-review-stepper-progress"></div>
                         </div>
 
                         <div class="stepper-step active">
@@ -170,8 +170,8 @@
                 </div>
 
                 <!-- Success Alert -->
-                <div class="alert alert-success alert-dismissible fade show" style="display: flex; align-items: center; gap: var(--gap-md); margin-bottom: var(--spacing-3xl);">
-                    <i class="bi bi-check-circle-fill" style="font-size: var(--font-size-3xl);"></i>
+                <div class="alert alert-success alert-dismissible fade show ai-enrichment-alert">
+                    <i class="bi bi-check-circle-fill ai-enrichment-alert-icon"></i>
                     <div>
                         <strong>Enrichissement terminé avec succès!</strong><br>
                         L'IA a analysé vos informations et généré des données enrichies. Vérifiez et validez les informations ci-dessous.
@@ -192,9 +192,9 @@
                     <div class="row g-3">
                         <div class="col-md-4">
                             <input type="radio" class="btn-check" name="campaignName" id="name1" autocomplete="off" checked>
-                            <label class="btn btn-outline-primary w-100 text-start p-3" for="name1" style="height: 100%; border-width: 2px;">
+                            <label class="btn btn-outline-primary w-100 text-start p-3 name-proposal-label" for="name1">
                                 <div class="d-flex align-items-start gap-2">
-                                    <i class="bi bi-check-circle-fill" style="font-size: 1.25rem; margin-top: 2px;"></i>
+                                    <i class="bi bi-check-circle-fill name-proposal-icon"></i>
                                     <div>
                                         <strong class="d-block mb-1">Lancement Produit Q1 2025</strong>
                                         <small class="text-secondary">Nom direct et temporel</small>
@@ -204,9 +204,9 @@
                         </div>
                         <div class="col-md-4">
                             <input type="radio" class="btn-check" name="campaignName" id="name2" autocomplete="off">
-                            <label class="btn btn-outline-primary w-100 text-start p-3" for="name2" style="height: 100%; border-width: 2px;">
+                            <label class="btn btn-outline-primary w-100 text-start p-3 name-proposal-label" for="name2">
                                 <div class="d-flex align-items-start gap-2">
-                                    <i class="bi bi-circle" style="font-size: 1.25rem; margin-top: 2px;"></i>
+                                    <i class="bi bi-circle name-proposal-icon"></i>
                                     <div>
                                         <strong class="d-block mb-1">Formation Pro Connect 2025</strong>
                                         <small class="text-secondary">Nom évocateur et moderne</small>
@@ -216,9 +216,9 @@
                         </div>
                         <div class="col-md-4">
                             <input type="radio" class="btn-check" name="campaignName" id="name3" autocomplete="off">
-                            <label class="btn btn-outline-primary w-100 text-start p-3" for="name3" style="height: 100%; border-width: 2px;">
+                            <label class="btn btn-outline-primary w-100 text-start p-3 name-proposal-label" for="name3">
                                 <div class="d-flex align-items-start gap-2">
-                                    <i class="bi bi-circle" style="font-size: 1.25rem; margin-top: 2px;"></i>
+                                    <i class="bi bi-circle name-proposal-icon"></i>
                                     <div>
                                         <strong class="d-block mb-1">Révolution Compétences Q1</strong>
                                         <small class="text-secondary">Nom impactant et engageant</small>
@@ -271,10 +271,10 @@
                                     <div class="mb-3">
                                         <label class="form-label small">Palette de couleurs</label>
                                         <div class="d-flex gap-2 mt-2">
-                                            <div style="width: 40px; height: 40px; background: #003080; border-radius: 6px; border: 2px solid var(--border);"></div>
-                                            <div style="width: 40px; height: 40px; background: #39BFEF; border-radius: 6px; border: 2px solid var(--border);"></div>
-                                            <div style="width: 40px; height: 40px; background: #FFFFFF; border-radius: 6px; border: 2px solid var(--border);"></div>
-                                            <div style="width: 40px; height: 40px; background: #F5F5F7; border-radius: 6px; border: 2px solid var(--border);"></div>
+                                            <div class="color-swatch color-swatch-primary"></div>
+                                            <div class="color-swatch color-swatch-secondary"></div>
+                                            <div class="color-swatch color-swatch-white"></div>
+                                            <div class="color-swatch color-swatch-light"></div>
                                         </div>
                                     </div>
                                     <div class="mb-0">
@@ -327,25 +327,25 @@
 
                                     <div class="row g-2 mb-3">
                                         <div class="col-6">
-                                            <div class="text-center p-2" style="background: var(--background-secondary); border-radius: var(--border-radius-md);">
+                                            <div class="text-center p-2 asset-preview-item">
                                                 <h6 class="text-primary mb-0">42</h6>
                                                 <small class="text-secondary">Mots-clés</small>
                                             </div>
                                         </div>
                                         <div class="col-6">
-                                            <div class="text-center p-2" style="background: var(--background-secondary); border-radius: var(--border-radius-md);">
+                                            <div class="text-center p-2 asset-preview-item">
                                                 <h6 class="text-primary mb-0">18 500</h6>
                                                 <small class="text-secondary">Vol. moy/mois</small>
                                             </div>
                                         </div>
                                         <div class="col-6">
-                                            <div class="text-center p-2" style="background: var(--background-secondary); border-radius: var(--border-radius-md);">
+                                            <div class="text-center p-2 asset-preview-item">
                                                 <h6 class="text-primary mb-0">2.45€</h6>
                                                 <small class="text-secondary">CPC moyen</small>
                                             </div>
                                         </div>
                                         <div class="col-6">
-                                            <div class="text-center p-2" style="background: var(--background-secondary); border-radius: var(--border-radius-md);">
+                                            <div class="text-center p-2 asset-preview-item">
                                                 <h6 class="text-primary mb-0">Moyenne</h6>
                                                 <small class="text-secondary">Concurrence</small>
                                             </div>
@@ -367,31 +367,31 @@
                                                     <td class="small"><strong>formation finance</strong></td>
                                                     <td class="small">8 100</td>
                                                     <td class="small">3.20€</td>
-                                                    <td><span class="badge bg-warning" style="font-size: 0.7rem;">Élevée</span></td>
+                                                    <td><span class="badge bg-warning competitor-priority-badge">Élevée</span></td>
                                                 </tr>
                                                 <tr>
                                                     <td class="small"><strong>formation comptabilité</strong></td>
                                                     <td class="small">6 600</td>
                                                     <td class="small">2.85€</td>
-                                                    <td><span class="badge bg-info" style="font-size: 0.7rem;">Moyenne</span></td>
+                                                    <td><span class="badge bg-info competitor-priority-badge">Moyenne</span></td>
                                                 </tr>
                                                 <tr>
                                                     <td class="small"><strong>contrôle de gestion</strong></td>
                                                     <td class="small">2 400</td>
                                                     <td class="small">3.50€</td>
-                                                    <td><span class="badge bg-warning" style="font-size: 0.7rem;">Élevée</span></td>
+                                                    <td><span class="badge bg-warning competitor-priority-badge">Élevée</span></td>
                                                 </tr>
                                                 <tr>
                                                     <td class="small"><strong>formation pro finance</strong></td>
                                                     <td class="small">1 900</td>
                                                     <td class="small">2.90€</td>
-                                                    <td><span class="badge bg-info" style="font-size: 0.7rem;">Moyenne</span></td>
+                                                    <td><span class="badge bg-info competitor-priority-badge">Moyenne</span></td>
                                                 </tr>
                                                 <tr>
                                                     <td class="small"><strong>certification comptable</strong></td>
                                                     <td class="small">1 300</td>
                                                     <td class="small">2.15€</td>
-                                                    <td><span class="badge bg-success" style="font-size: 0.7rem;">Faible</span></td>
+                                                    <td><span class="badge bg-success competitor-priority-badge">Faible</span></td>
                                                 </tr>
                                             </tbody>
                                         </table>
@@ -409,7 +409,7 @@
                                         Recommandations IA
                                     </h5>
 
-                                    <div class="alert alert-info alert-dismissible fade show mb-3" style="padding: 0.5rem 0.75rem;">
+                                    <div class="alert alert-info alert-dismissible fade show mb-3 alert-compact">
                                         <small>
                                             <i class="bi bi-lightbulb"></i>
                                             <strong>Suggestions générées automatiquement</strong>
@@ -452,97 +452,6 @@
     </div>
 
     <!-- Speed Dial FAB - Boîte à outils -->
-    <style>
-        .speed-dial-container {
-            position: fixed;
-            bottom: 100px;
-            right: 24px;
-            z-index: 90;
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
-            gap: 12px;
-        }
-
-        .speed-dial-action {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            opacity: 0;
-            transform: translateY(20px) scale(0.8);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            pointer-events: none;
-        }
-
-        .speed-dial-container:hover .speed-dial-action {
-            opacity: 1;
-            transform: translateY(0) scale(1);
-            pointer-events: all;
-        }
-
-        .speed-dial-action:nth-child(1) {
-            transition-delay: 0.05s;
-        }
-
-        .speed-dial-action:nth-child(2) {
-            transition-delay: 0.1s;
-        }
-
-        .speed-dial-label {
-            background: white;
-            color: var(--color-text);
-            padding: 8px 16px;
-            border-radius: var(--border-radius-lg);
-            font-weight: var(--font-weight-semibold);
-            font-size: var(--font-size-sm);
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-            white-space: nowrap;
-        }
-
-        .speed-dial-btn {
-            width: 56px;
-            height: 56px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            border: none;
-            cursor: pointer;
-            text-decoration: none;
-        }
-
-        .speed-dial-btn:hover {
-            transform: scale(1.1);
-            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
-        }
-
-        .speed-dial-cancel {
-            background: #6c757d;
-            color: white;
-        }
-
-        .speed-dial-primary {
-            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
-            color: white;
-        }
-
-        .speed-dial-main {
-            width: 64px;
-            height: 64px;
-            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
-            color: white;
-            font-size: 24px;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .speed-dial-container:hover .speed-dial-main {
-            transform: rotate(45deg);
-        }
-    </style>
-
     <div class="speed-dial-container">
         <!-- Action 1: Régénérer -->
         <div class="speed-dial-action">

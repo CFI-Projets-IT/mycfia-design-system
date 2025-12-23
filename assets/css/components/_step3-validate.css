@@ -1,0 +1,169 @@
+/**
+ * Step 3 Validate - Competitor Validation Page Styles
+ * Styles spécifiques pour la page de validation des concurrents (étape 3)
+ */
+
+/* ==========================================================================
+   Header Styles (réutilisables)
+   ========================================================================== */
+.step3-validate-header-logo-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+}
+
+.step3-validate-header-buttons {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+}
+
+.step3-validate-header-btn-primary {
+    color: var(--color-primary);
+}
+
+.step3-validate-header-link {
+    color: var(--color-primary);
+    text-decoration: none;
+}
+
+/* ==========================================================================
+   Breadcrumb
+   ========================================================================== */
+.step3-validate-breadcrumb {
+    margin-bottom: var(--spacing-3xl);
+}
+
+.step3-validate-breadcrumb-link {
+    color: var(--color-primary);
+    text-decoration: none;
+}
+
+/* ==========================================================================
+   Stepper Progress
+   ========================================================================== */
+.step3-validate-stepper-progress {
+    width: 50%;
+}
+
+/* ==========================================================================
+   Success Alert
+   ========================================================================== */
+.competitors-detected-alert {
+    display: flex;
+    align-items: center;
+    gap: var(--gap-md);
+    margin-bottom: var(--spacing-3xl);
+}
+
+.competitors-detected-alert-icon {
+    font-size: var(--font-size-3xl);
+}
+
+/* ==========================================================================
+   Section Headers
+   ========================================================================== */
+.competitor-section-header {
+    color: var(--text-primary);
+    font-weight: var(--font-weight-bold);
+    margin-bottom: var(--spacing-lg);
+    padding-bottom: var(--spacing-sm);
+    border-bottom: 2px solid var(--border-color);
+}
+
+/* ==========================================================================
+   Competitor Cards - Full Layout
+   ========================================================================== */
+.competitor-card {
+    text-align: left;
+    padding: var(--spacing-lg);
+    cursor: pointer;
+}
+
+.competitor-name {
+    color: var(--text-primary);
+    font-weight: var(--font-weight-bold);
+    margin-bottom: var(--spacing-xs);
+}
+
+.competitor-badge {
+    font-size: 0.75rem;
+}
+
+.competitor-url {
+    color: var(--text-secondary);
+}
+
+.competitor-description {
+    color: var(--text-secondary);
+    line-height: 1.5;
+}
+
+.competitor-tag {
+    font-size: 0.7rem;
+}
+
+.competitor-score {
+    font-size: 2.5rem;
+    font-weight: var(--font-weight-extrabold);
+    margin-bottom: 0.25rem;
+}
+
+.competitor-score-danger {
+    color: #dc3545;
+}
+
+.competitor-score-warning {
+    color: #ffc107;
+}
+
+.competitor-score-info {
+    color: #17a2b8;
+}
+
+.competitor-score-label {
+    font-size: 0.7rem;
+}
+
+.competitor-metric-label {
+    font-size: 0.7rem;
+}
+
+.competitor-progress {
+    height: 6px;
+}
+
+/* ==========================================================================
+   Competitor Cards - Compact Layout
+   ========================================================================== */
+.competitor-card-compact {
+    padding: var(--spacing-lg);
+    cursor: pointer;
+}
+
+.competitor-card-compact-name {
+    color: var(--text-primary);
+    margin-bottom: 0.25rem;
+}
+
+.competitor-card-compact-score {
+    min-width: 60px;
+}
+
+.competitor-card-compact-score-value {
+    font-size: 1.75rem;
+    font-weight: var(--font-weight-extrabold);
+}
+
+.competitor-card-compact-score-value-info {
+    color: #17a2b8;
+}
+
+.competitor-card-compact-score-value-secondary {
+    color: #6c757d;
+}
+
+.competitor-card-compact-score-label {
+    font-size: 0.65rem;
+}

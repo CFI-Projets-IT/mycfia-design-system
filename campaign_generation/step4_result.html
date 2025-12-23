@@ -98,13 +98,13 @@
         <main class="main">
             <header class="header">
                 <div class="header-content">
-                    <a href="../index.html" style="display: flex; align-items: center; gap: 12px; text-decoration: none;">
+                    <a href="../index.html" class="step4-result-header-logo-link">
                         <img src="../images/logo_picto.svg" alt="CFI" class="header-logo-picto">
                         <img src="../images/logo.svg" alt="myCFiA" class="header-logo">
                     </a>
                     <!-- Actions -->
-                    <div style="display: flex; gap: 16px; align-items: center;">
-                        <button class="btn btn-glass header-btn" style="color: var(--color-primary);">
+                    <div class="step4-result-header-buttons">
+                        <button class="btn btn-glass header-btn step4-result-header-btn-primary">
                             <i class="bi bi-building"></i>
                             <span class="header-btn-text">Ma Division</span>
                         </button>
@@ -112,7 +112,7 @@
                             <i class="bi bi-sun-fill"></i>
                             <span class="header-btn-text">Clair</span>
                         </button>
-                        <a href="#" class="btn btn-glass header-btn" style="color: var(--color-primary); text-decoration: none;">
+                        <a href="#" class="btn btn-glass header-btn step4-result-header-link">
                             <i class="bi bi-arrow-left-circle"></i>
                             <span class="header-btn-text">Retour CFI</span>
                         </a>
@@ -121,9 +121,9 @@
             </header>
 
             <div class="content">
-                <nav aria-label="breadcrumb" style="margin-bottom: var(--spacing-3xl);">
+                <nav aria-label="breadcrumb" class="step4-result-breadcrumb">
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="dashboard.html" style="color: var(--color-primary); text-decoration: none;">Campagnes</a></li>
+                        <li class="breadcrumb-item"><a href="dashboard.html" class="step4-result-breadcrumb-link">Campagnes</a></li>
                         <li class="breadcrumb-item active">Stratégie Marketing</li>
                     </ol>
                 </nav>
@@ -131,7 +131,7 @@
                 <div class="campaign-stepper">
                     <div class="stepper-container">
                         <div class="stepper-line">
-                            <div class="stepper-progress" style="width: 75%;"></div>
+                            <div class="stepper-progress step4-result-stepper-progress"></div>
                         </div>
                         <div class="stepper-step completed">
                             <div class="stepper-circle"><i class="bi bi-check-lg"></i></div>
@@ -179,7 +179,7 @@
                             </p>
                             <div class="row g-3">
                                 <div class="col-md-6">
-                                    <div class="p-3" style="background: rgba(0, 48, 128, 0.03); border-radius: var(--border-radius-md);">
+                                    <div class="p-3 strategic-strengths-box">
                                         <strong><i class="bi bi-trophy text-primary"></i> Forces clés</strong>
                                         <ul class="mb-0 mt-2">
                                             <li>Taux de placement 92% vs 78% (AFPA)</li>
@@ -189,7 +189,7 @@
                                     </div>
                                 </div>
                                 <div class="col-md-6">
-                                    <div class="p-3" style="background: rgba(57, 191, 239, 0.05); border-radius: var(--border-radius-md);">
+                                    <div class="p-3 strategic-differentiation-box">
                                         <strong><i class="bi bi-flag text-primary"></i> Axes de différenciation</strong>
                                         <ul class="mb-0 mt-2">
                                             <li>Plateforme d'apprentissage hybride innovante</li>
@@ -211,7 +211,7 @@
                             </h5>
                             <div class="row g-3">
                                 <div class="col-md-4">
-                                    <div class="p-3" style="border: 1px solid var(--border-color); border-radius: var(--border-radius-md);">
+                                    <div class="p-3 tactics-card">
                                         <h6><i class="bi bi-linkedin text-primary"></i> Linkedin</h6>
                                         <p class="small mb-2">Cible : Sophie Martin, Marc Dubois</p>
                                         <ul class="small mb-0">
@@ -225,7 +225,7 @@
                                     </div>
                                 </div>
                                 <div class="col-md-4">
-                                    <div class="p-3" style="border: 1px solid var(--border-color); border-radius: var(--border-radius-md);">
+                                    <div class="p-3 tactics-card">
                                         <h6><i class="bi bi-google text-primary"></i> GoogleAds</h6>
                                         <p class="small mb-2">Cible : Claire Rousseau, Sophie Martin</p>
                                         <ul class="small mb-0">
@@ -239,7 +239,7 @@
                                     </div>
                                 </div>
                                 <div class="col-md-4">
-                                    <div class="p-3" style="border: 1px solid var(--border-color); border-radius: var(--border-radius-md);">
+                                    <div class="p-3 tactics-card">
                                         <h6><i class="bi bi-facebook text-primary"></i> Facebook/Instagram</h6>
                                         <p class="small mb-2">Cible : Claire Rousseau</p>
                                         <ul class="small mb-0">
@@ -253,7 +253,7 @@
                                     </div>
                                 </div>
                                 <div class="col-md-4">
-                                    <div class="p-3" style="border: 1px solid var(--border-color); border-radius: var(--border-radius-md);">
+                                    <div class="p-3 tactics-card">
                                         <h6><i class="bi bi-envelope text-primary"></i> Mail</h6>
                                         <p class="small mb-2">Nurturing multi-personas</p>
                                         <ul class="small mb-0">
@@ -267,7 +267,7 @@
                                     </div>
                                 </div>
                                 <div class="col-md-4">
-                                    <div class="p-3" style="border: 1px solid var(--border-color); border-radius: var(--border-radius-md);">
+                                    <div class="p-3 tactics-card">
                                         <h6><i class="bi bi-file-text text-primary"></i> Article</h6>
                                         <p class="small mb-2">SEO + Autorité</p>
                                         <ul class="small mb-0">
@@ -281,7 +281,7 @@
                                     </div>
                                 </div>
                                 <div class="col-md-4">
-                                    <div class="p-3" style="border: 1px solid var(--border-color); border-radius: var(--border-radius-md);">
+                                    <div class="p-3 tactics-card">
                                         <h6><i class="bi bi-phone text-primary"></i> Sms</h6>
                                         <p class="small mb-2">Activation urgente</p>
                                         <ul class="small mb-0">
@@ -307,30 +307,30 @@
                             </h5>
                             <div class="row g-4">
                                 <div class="col-md-3">
-                                    <div class="text-center p-3" style="background: rgba(0, 48, 128, 0.03); border-radius: var(--border-radius-md);">
-                                        <i class="bi bi-people-fill text-primary" style="font-size: 2rem;"></i>
-                                        <h3 class="mt-2 mb-1" style="color: var(--color-primary);">450</h3>
+                                    <div class="text-center p-3 kpi-card-primary">
+                                        <i class="bi bi-people-fill text-primary" class="kpi-icon"></i>
+                                        <h3 class="mt-2 mb-1" class="kpi-value">450</h3>
                                         <p class="small mb-0 text-secondary">Leads qualifiés attendus</p>
                                     </div>
                                 </div>
                                 <div class="col-md-3">
-                                    <div class="text-center p-3" style="background: rgba(57, 191, 239, 0.05); border-radius: var(--border-radius-md);">
-                                        <i class="bi bi-percent text-primary" style="font-size: 2rem;"></i>
-                                        <h3 class="mt-2 mb-1" style="color: var(--color-primary);">18%</h3>
+                                    <div class="text-center p-3 kpi-card-secondary">
+                                        <i class="bi bi-percent text-primary" class="kpi-icon"></i>
+                                        <h3 class="mt-2 mb-1" class="kpi-value">18%</h3>
                                         <p class="small mb-0 text-secondary">Taux conversion Lead → Inscrit</p>
                                     </div>
                                 </div>
                                 <div class="col-md-3">
-                                    <div class="text-center p-3" style="background: rgba(0, 48, 128, 0.03); border-radius: var(--border-radius-md);">
-                                        <i class="bi bi-cash-coin text-primary" style="font-size: 2rem;"></i>
-                                        <h3 class="mt-2 mb-1" style="color: var(--color-primary);">617€</h3>
+                                    <div class="text-center p-3 kpi-card-primary">
+                                        <i class="bi bi-cash-coin text-primary" class="kpi-icon"></i>
+                                        <h3 class="mt-2 mb-1" class="kpi-value">617€</h3>
                                         <p class="small mb-0 text-secondary">CPL cible (Cost Per Lead)</p>
                                     </div>
                                 </div>
                                 <div class="col-md-3">
-                                    <div class="text-center p-3" style="background: rgba(57, 191, 239, 0.05); border-radius: var(--border-radius-md);">
-                                        <i class="bi bi-trophy text-primary" style="font-size: 2rem;"></i>
-                                        <h3 class="mt-2 mb-1" style="color: var(--color-primary);">81</h3>
+                                    <div class="text-center p-3 kpi-card-secondary">
+                                        <i class="bi bi-trophy text-primary" class="kpi-icon"></i>
+                                        <h3 class="mt-2 mb-1" class="kpi-value">81</h3>
                                         <p class="small mb-0 text-secondary">Inscriptions finales (objectif)</p>
                                     </div>
                                 </div>
@@ -362,8 +362,8 @@
                                             <span>GoogleAds</span>
                                             <strong>18 000€ (36%)</strong>
                                         </div>
-                                        <div class="progress" style="height: 24px;">
-                                            <div class="progress-bar" style="width: 36%; background: var(--color-primary);">36%</div>
+                                        <div class="progress budget-progress">
+                                            <div class="progress-bar budget-progress-primary" style="width: 36%">36%</div>
                                         </div>
                                     </div>
                                     <div class="mb-3">
@@ -371,8 +371,8 @@
                                             <span>Linkedin</span>
                                             <strong>12 000€ (24%)</strong>
                                         </div>
-                                        <div class="progress" style="height: 24px;">
-                                            <div class="progress-bar" style="width: 24%; background: var(--color-secondary);">24%</div>
+                                        <div class="progress budget-progress">
+                                            <div class="progress-bar budget-progress-secondary" style="width: 24%">24%</div>
                                         </div>
                                     </div>
                                     <div class="mb-3">
@@ -380,8 +380,8 @@
                                             <span>Facebook/Instagram</span>
                                             <strong>8 000€ (16%)</strong>
                                         </div>
-                                        <div class="progress" style="height: 24px;">
-                                            <div class="progress-bar" style="width: 16%; background: var(--color-primary);">16%</div>
+                                        <div class="progress budget-progress">
+                                            <div class="progress-bar budget-progress-primary" style="width: 16%">16%</div>
                                         </div>
                                     </div>
                                     <div class="mb-3">
@@ -389,8 +389,8 @@
                                             <span>Article</span>
                                             <strong>6 000€ (12%)</strong>
                                         </div>
-                                        <div class="progress" style="height: 24px;">
-                                            <div class="progress-bar" style="width: 12%; background: var(--color-secondary);">12%</div>
+                                        <div class="progress budget-progress">
+                                            <div class="progress-bar budget-progress-secondary" style="width: 12%">12%</div>
                                         </div>
                                     </div>
                                     <div class="mb-3">
@@ -398,8 +398,8 @@
                                             <span>Mail</span>
                                             <strong>4 000€ (8%)</strong>
                                         </div>
-                                        <div class="progress" style="height: 24px;">
-                                            <div class="progress-bar" style="width: 8%; background: var(--color-primary);">8%</div>
+                                        <div class="progress budget-progress">
+                                            <div class="progress-bar budget-progress-primary" style="width: 8%">8%</div>
                                         </div>
                                     </div>
                                     <div class="mb-0">
@@ -407,17 +407,17 @@
                                             <span>Sms</span>
                                             <strong>2 000€ (4%)</strong>
                                         </div>
-                                        <div class="progress" style="height: 24px;">
-                                            <div class="progress-bar" style="width: 4%; background: var(--color-secondary);">4%</div>
+                                        <div class="progress budget-progress">
+                                            <div class="progress-bar budget-progress-secondary" style="width: 4%">4%</div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-md-4">
-                                    <div class="p-4 text-center" style="background: linear-gradient(135deg, var(--color-primary), var(--color-secondary)); border-radius: var(--border-radius-md); color: white;">
-                                        <i class="bi bi-cash-stack" style="font-size: 3rem; opacity: 0.9;"></i>
+                                    <div class="p-4 text-center budget-total-card">
+                                        <i class="bi bi-cash-stack budget-total-icon"></i>
                                         <h2 class="mt-3 mb-2">50 000€</h2>
                                         <p class="mb-0">Budget total alloué</p>
-                                        <hr style="border-color: rgba(255,255,255,0.2); margin: 1rem 0;">
+                                        <hr class="budget-total-divider">
                                         <p class="small mb-0">Durée : 90 jours<br>ROI attendu : 3.2x</p>
                                     </div>
                                 </div>
@@ -426,8 +426,8 @@
                     </div>
                 </div>
 
-                <div class="alert alert-success alert-dismissible fade show" style="margin-top: var(--spacing-2xl); display: flex; align-items: center; gap: var(--gap-md);">
-                    <i class="bi bi-check-circle-fill" style="font-size: var(--font-size-2xl);"></i>
+                <div class="alert alert-success alert-dismissible fade show strategy-success-alert">
+                    <i class="bi bi-check-circle-fill strategy-success-alert-icon"></i>
                     <div>
                         <strong>Stratégie optimisée avec succès</strong><br>
                         Votre stratégie est prête. Passez à la génération des assets marketing pour chaque canal.
@@ -440,88 +440,6 @@
     </div>
 
     <!-- Speed Dial FAB - Boîte à outils -->
-    <style>
-        .speed-dial-container {
-            position: fixed;
-            bottom: 100px;
-            right: 24px;
-            z-index: 90;
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
-            gap: 12px;
-        }
-
-        .speed-dial-action {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            opacity: 0;
-            transform: translateY(20px) scale(0.8);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            pointer-events: none;
-        }
-
-        .speed-dial-container:hover .speed-dial-action {
-            opacity: 1;
-            transform: translateY(0) scale(1);
-            pointer-events: all;
-        }
-
-        .speed-dial-action:nth-child(1) {
-            transition-delay: 0.05s;
-        }
-
-        .speed-dial-label {
-            background: white;
-            color: var(--color-text);
-            padding: 8px 16px;
-            border-radius: var(--border-radius-lg);
-            font-weight: var(--font-weight-semibold);
-            font-size: var(--font-size-sm);
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-            white-space: nowrap;
-        }
-
-        .speed-dial-btn {
-            width: 56px;
-            height: 56px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            border: none;
-            cursor: pointer;
-            text-decoration: none;
-        }
-
-        .speed-dial-btn:hover {
-            transform: scale(1.1);
-            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
-        }
-
-        .speed-dial-primary {
-            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
-            color: white;
-        }
-
-        .speed-dial-main {
-            width: 64px;
-            height: 64px;
-            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
-            color: white;
-            font-size: 24px;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .speed-dial-container:hover .speed-dial-main {
-            transform: rotate(45deg);
-        }
-    </style>
-
     <div class="speed-dial-container">
         <!-- Action : Continuer vers génération d'assets -->
         <div class="speed-dial-action">

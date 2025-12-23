@@ -128,13 +128,15 @@
     opacity: 0.05;
 }
 
-.asset-card.selected {
+.asset-card.selected,
+.asset-card.active {
     border-color: var(--color-primary);
     background: rgba(0, 48, 128, 0.03);
     box-shadow: 0 4px 16px rgba(0, 48, 128, 0.15);
 }
 
-.asset-card.selected::before {
+.asset-card.selected::before,
+.asset-card.active::before {
     opacity: 0.08;
 }
 
@@ -176,7 +178,8 @@
     z-index: 2;
 }
 
-.asset-card.selected .asset-card-check {
+.asset-card.selected .asset-card-check,
+.asset-card.active .asset-card-check {
     display: flex;
     animation: checkPop 0.3s var(--easing-bounce);
 }

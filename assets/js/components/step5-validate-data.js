@@ -1,0 +1,1978 @@
+/**
+ * Step 5 Validate - Assets Data Repository
+ * Contient toutes les données des assets générés (linkedin, google, facebook, mail, sms, article)
+ */
+
+// Data repository pour les assets
+export const assetsData = {
+            linkedin_1: {
+                type: '<i class="bi bi-linkedin"></i> Linkedin',
+                variation: '1/3',
+                reasoning: [
+                    {
+                        title: 'Stratégie de copywriting',
+                        icon: 'bi-pen',
+                        content: "L'IA a choisi une approche <strong>story-driven</strong> avec un témoignage concret (Sophie, 34 ans). Cette stratégie génère 67% plus d'engagement sur Linkedin qu'un message corporate classique."
+                    },
+                    {
+                        title: 'Choix du ton',
+                        icon: 'bi-mic',
+                        content: "Ton <strong>inspirant et accessible</strong> adapté au réseau professionnel. Équilibre entre crédibilité (chiffres précis) et émotion (transformation personnelle)."
+                    },
+                    {
+                        title: 'Call-to-Action',
+                        icon: 'bi-cursor',
+                        content: "CTA implicite via <em>\"Découvrez comment...\"</em> pour générer de la curiosité sans agressivité commerciale. Taux de clic prédit: <strong>+42%</strong> vs CTA direct."
+                    },
+                    {
+                        title: 'Optimisation algorithme',
+                        icon: 'bi-gear',
+                        content: "Utilisation d'un emoji ciblé (🎯) en début de post pour augmenter la visibilité dans le feed. Longueur optimale: 120 caractères pour maximiser le <em>Read More</em>."
+                    }
+                ],
+                kpis: [
+                    { label: 'Score d\'engagement prédit', value: '94%', color: 'success', icon: 'bi-heart-fill' },
+                    { label: 'Readability Score (Flesch)', value: '68/100', color: 'primary', icon: 'bi-book' },
+                    { label: 'Probabilité de conversion', value: '12.4%', color: 'warning', icon: 'bi-graph-up' },
+                    { label: 'Sentiment Analysis', value: 'Positif', color: 'success', icon: 'bi-emoji-smile' },
+                    { label: 'Longueur optimale', value: 'Oui', color: 'success', icon: 'bi-check-circle' }
+                ],
+                preview: `
+                    <div style="max-width: 600px; margin: 0 auto; background: white; border: 1px solid #e0e0e0; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+                        <div style="padding: 16px; border-bottom: 1px solid #e0e0e0;">
+                            <div style="display: flex; align-items: center; gap: 12px;">
+                                <div style="width: 48px; height: 48px; background: linear-gradient(135deg, #0A66C2, #004182); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 18px;">
+                                    CF
+                                </div>
+                                <div>
+                                    <div style="font-weight: 600; color: #000; font-size: 14px;">CFI Formation</div>
+                                    <div style="color: #666; font-size: 12px;">Organisme de formation • 12 345 abonnés</div>
+                                    <div style="color: #666; font-size: 11px;">Il y a 2h • 🌍</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div style="padding: 16px;">
+                            <p style="color: #000; font-size: 14px; line-height: 1.6; margin: 0;">
+                                🎯 Reconversion professionnelle réussie : Sophie, 34 ans, a doublé son salaire en 6 mois. Découvrez comment notre formation certifiante RNCP niveau 6 transforme les carrières.
+                                <br><br>
+                                De caissière à chef de projet digital, Sophie a osé franchir le pas. Aujourd'hui, elle gagne 3200€/mois et adore son métier.
+                                <br><br>
+                                ✅ Formation 100% finançable CPF<br>
+                                ✅ Accompagnement personnalisé<br>
+                                ✅ Réseau de 200+ entreprises partenaires<br>
+                                <br>
+                                👉 Session d'information gratuite mardi 18h
+                                <br>
+                                <span style="color: #0A66C2; font-weight: 600;">#Reconversion #FormationProfessionnelle #CPF #CareerChange</span>
+                            </p>
+                        </div>
+                        <div style="border-top: 1px solid #e0e0e0; padding: 8px 16px; display: flex; justify-content: space-around;">
+                            <button style="background: none; border: none; color: #666; font-weight: 600; font-size: 14px; cursor: pointer; padding: 8px 16px;">
+                                <i class="bi bi-hand-thumbs-up" style="font-size: 18px;"></i>
+                                <span style="margin-left: 6px;">J'aime</span>
+                            </button>
+                            <button style="background: none; border: none; color: #666; font-weight: 600; font-size: 14px; cursor: pointer; padding: 8px 16px;">
+                                <i class="bi bi-chat-text" style="font-size: 18px;"></i>
+                                <span style="margin-left: 6px;">Commenter</span>
+                            </button>
+                            <button style="background: none; border: none; color: #666; font-weight: 600; font-size: 14px; cursor: pointer; padding: 8px 16px;">
+                                <i class="bi bi-repeat" style="font-size: 18px;"></i>
+                                <span style="margin-left: 6px;">Partager</span>
+                            </button>
+                            <button style="background: none; border: none; color: #666; font-weight: 600; font-size: 14px; cursor: pointer; padding: 8px 16px;">
+                                <i class="bi bi-send" style="font-size: 18px;"></i>
+                                <span style="margin-left: 6px;">Envoyer</span>
+                            </button>
+                        </div>
+                    </div>
+                `
+            },
+            linkedin_2: {
+                type: '<i class="bi bi-linkedin"></i> Linkedin',
+                variation: '2/3',
+                reasoning: [
+                    {
+                        title: 'Approche data-driven',
+                        icon: 'bi-graph-up',
+                        content: "Mise en avant du chiffre clé <strong>92%</strong> dès l'accroche pour créer de la preuve sociale. Les posts Linkedin avec statistiques génèrent 3x plus de crédibilité."
+                    },
+                    {
+                        title: 'Structure narrative',
+                        icon: 'bi-list-ol',
+                        content: "Format <em>\"secret révélé\"</em> avec <strong>\"Voici ce qui fait la différence\"</strong> pour stimuler la curiosité et maintenir l'attention jusqu'au CTA."
+                    },
+                    {
+                        title: 'Angle différenciation',
+                        icon: 'bi-stars',
+                        content: "Focus sur les <strong>2 USP</strong> (Unique Selling Points): pédagogie personnalisée + réseau entreprises. Cohérent avec l'analyse concurrentielle réalisée en étape 3."
+                    }
+                ],
+                kpis: [
+                    { label: 'Score d\'engagement prédit', value: '91%', color: 'success', icon: 'bi-heart-fill' },
+                    { label: 'Taux de clic estimé', value: '4.2%', color: 'primary', icon: 'bi-cursor' },
+                    { label: 'Viralité potentielle', value: 'Élevée', color: 'warning', icon: 'bi-share' },
+                    { label: 'Trust Factor', value: '8.5/10', color: 'success', icon: 'bi-shield-check' }
+                ],
+                preview: `
+                    <div style="max-width: 600px; margin: 0 auto; background: white; border: 1px solid #e0e0e0; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+                        <div style="padding: 16px; border-bottom: 1px solid #e0e0e0;">
+                            <div style="display: flex; align-items: center; gap: 12px;">
+                                <div style="width: 48px; height: 48px; background: linear-gradient(135deg, #0A66C2, #004182); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 18px;">
+                                    CF
+                                </div>
+                                <div>
+                                    <div style="font-weight: 600; color: #000; font-size: 14px;">CFI Formation</div>
+                                    <div style="color: #666; font-size: 12px;">Organisme de formation • 12 345 abonnés</div>
+                                    <div style="color: #666; font-size: 11px;">Il y a 3h • 🌍</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div style="padding: 16px;">
+                            <p style="color: #000; font-size: 14px; line-height: 1.6; margin: 0;">
+                                📊 92% de nos alumni trouvent un emploi sous 6 mois. Voici ce qui fait la différence :
+                                <br><br>
+                                🎯 <strong>Pédagogie personnalisée</strong> : un coach dédié suit votre progression étape par étape
+                                <br>
+                                🤝 <strong>Réseau de 200+ entreprises partenaires</strong> : stages et opportunités d'emploi garantis
+                                <br>
+                                📜 <strong>Certification RNCP niveau 6</strong> : reconnue par l'État et les recruteurs
+                                <br><br>
+                                La différence entre une formation classique et une transformation de carrière ? L'accompagnement humain + le réseau professionnel.
+                                <br><br>
+                                💬 Vous aussi, vous voulez changer de vie ? Parlons-en mardi lors de notre session gratuite.
+                                <br>
+                                <span style="color: #0A66C2; font-weight: 600;">#FormationPro #Emploi #Reconversion #SuccessStory</span>
+                            </p>
+                        </div>
+                        <div style="border-top: 1px solid #e0e0e0; padding: 8px 16px; display: flex; justify-content: space-around;">
+                            <button style="background: none; border: none; color: #666; font-weight: 600; font-size: 14px; cursor: pointer; padding: 8px 16px;">
+                                <i class="bi bi-hand-thumbs-up" style="font-size: 18px;"></i> J'aime
+                            </button>
+                            <button style="background: none; border: none; color: #666; font-weight: 600; font-size: 14px; cursor: pointer; padding: 8px 16px;">
+                                <i class="bi bi-chat-text" style="font-size: 18px;"></i> Commenter
+                            </button>
+                            <button style="background: none; border: none; color: #666; font-weight: 600; font-size: 14px; cursor: pointer; padding: 8px 16px;">
+                                <i class="bi bi-repeat" style="font-size: 18px;"></i> Partager
+                            </button>
+                        </div>
+                    </div>
+                `
+            },
+            linkedin_3: {
+                type: '<i class="bi bi-linkedin"></i> Linkedin',
+                variation: '3/3',
+                reasoning: [
+                    {
+                        title: 'Stratégie visuelle',
+                        icon: 'bi-image',
+                        content: "L'IA a choisi d'inclure une <strong>image d'illustration</strong> pour augmenter le taux d'engagement de 38% par rapport à un post texte seul. L'image renforce le message émotionnel de transformation."
+                    },
+                    {
+                        title: 'Approche émotionnelle',
+                        icon: 'bi-heart',
+                        content: "Ton <strong>empathique et motivationnel</strong> avec \"Vous méritez une carrière qui vous passionne\". Cette approche génère 2.4x plus de réactions que les messages purement factuels."
+                    },
+                    {
+                        title: 'Structure post avec image',
+                        icon: 'bi-layout-split',
+                        content: "Texte court (80 caractères) avant l'image pour capter l'attention, puis développement après. Format optimal pour <strong>maximiser la visibilité</strong> dans le feed Linkedin."
+                    },
+                    {
+                        title: 'Psychologie du changement',
+                        icon: 'bi-lightbulb',
+                        content: "Message axé sur le <em>mérite</em> et la <em>transformation d'expérience</em> plutôt que sur les difficultés. Approche positive qui résonne avec les profils en questionnement de carrière."
+                    }
+                ],
+                kpis: [
+                    { label: 'Score d\'engagement prédit', value: '89%', color: 'success', icon: 'bi-heart-fill' },
+                    { label: 'Taux de clic sur image', value: '18.2%', color: 'primary', icon: 'bi-cursor' },
+                    { label: 'Partages estimés', value: '3.2%', color: 'warning', icon: 'bi-share' },
+                    { label: 'Reach organique', value: '+52%', color: 'success', icon: 'bi-graph-up-arrow' },
+                    { label: 'Commentaires prédits', value: '24+', color: 'primary', icon: 'bi-chat-dots' }
+                ],
+                preview: `
+                    <div style="max-width: 520px; margin: 0 auto; background: white; border: 1px solid #e0e0e0; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1); zoom: 0.82;">
+                        <!-- Header -->
+                        <div style="padding: 12px; border-bottom: 1px solid #e0e0e0;">
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <div style="width: 40px; height: 40px; background: linear-gradient(135deg, #0A66C2, #004182); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 16px;">
+                                    CF
+                                </div>
+                                <div>
+                                    <div style="font-weight: 600; color: #000; font-size: 13px;">CFI Formation</div>
+                                    <div style="color: #666; font-size: 11px;">Organisme de formation • 12 345 abonnés</div>
+                                    <div style="color: #666; font-size: 10px;">Il y a 5h • 🌍</div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Content text -->
+                        <div style="padding: 12px;">
+                            <p style="color: #000; font-size: 13px; line-height: 1.5; margin: 0 0 12px 0;">
+                                💼 Vous méritez une carrière qui vous passionne.
+                                <br><br>
+                                Découvrez comment transformer votre expérience en nouvelle opportunité professionnelle. Chaque année, des centaines de personnes franchissent le pas grâce à nos formations certifiantes.
+                            </p>
+                        </div>
+                        <!-- Image placeholder -->
+                        <div style="width: 100%; background: linear-gradient(135deg, #f0f7ff, #e3f2fd); aspect-ratio: 16/9; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden;">
+                            <!-- Decorative background pattern -->
+                            <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; opacity: 0.1; background-image: repeating-linear-gradient(45deg, #0A66C2 0px, #0A66C2 2px, transparent 2px, transparent 10px);"></div>
+                            <!-- Content -->
+                            <div style="text-align: center; z-index: 1; padding: 20px;">
+                                <div style="font-size: 3rem; margin-bottom: 12px;">🚀</div>
+                                <div style="font-size: 1.25rem; font-weight: 700; color: #003080; margin-bottom: 8px;">
+                                    Nouvelle Carrière, Nouvelle Vie
+                                </div>
+                                <div style="font-size: 0.95rem; color: #0A66C2; font-weight: 600;">
+                                    Formation Certifiante RNCP • Financement CPF
+                                </div>
+                                <div style="margin-top: 16px; display: inline-block; background: white; padding: 8px 20px; border-radius: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.15);">
+                                    <span style="font-size: 0.85rem; color: #666;">📸 Image d'illustration carrousel</span>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Post footer text -->
+                        <div style="padding: 12px; padding-top: 10px;">
+                            <p style="color: #000; font-size: 12px; line-height: 1.5; margin: 0;">
+                                ✅ Accompagnement personnalisé<br>
+                                ✅ 92% de placement sous 6 mois<br>
+                                ✅ Réseau de 200+ entreprises<br>
+                                <br>
+                                💬 Session d'information gratuite ce mardi à 18h. Venez découvrir votre future carrière.
+                                <br><br>
+                                <span style="color: #0A66C2; font-weight: 600;">#NouvelleCarriere #Reconversion #FormationPro #PassionTravail</span>
+                            </p>
+                        </div>
+                        <!-- Engagement buttons -->
+                        <div style="border-top: 1px solid #e0e0e0;">
+                            <div style="padding: 3px 12px; display: flex; align-items: center; gap: 6px; color: #666; font-size: 10px;">
+                                <span>👍 ❤️ 💡</span>
+                                <span>Sophie Dubois et 47 autres</span>
+                                <span style="margin-left: auto;">12 commentaires • 8 partages</span>
+                            </div>
+                        </div>
+                        <div style="border-top: 1px solid #e0e0e0; padding: 6px 12px; display: flex; justify-content: space-around;">
+                            <button style="background: none; border: none; color: #666; font-weight: 600; font-size: 12px; cursor: pointer; padding: 6px 12px;">
+                                <i class="bi bi-hand-thumbs-up" style="font-size: 15px;"></i>
+                                <span style="margin-left: 5px;">J'aime</span>
+                            </button>
+                            <button style="background: none; border: none; color: #666; font-weight: 600; font-size: 12px; cursor: pointer; padding: 6px 12px;">
+                                <i class="bi bi-chat-text" style="font-size: 15px;"></i>
+                                <span style="margin-left: 5px;">Commenter</span>
+                            </button>
+                            <button style="background: none; border: none; color: #666; font-weight: 600; font-size: 14px; cursor: pointer; padding: 8px 16px;">
+                                <i class="bi bi-repeat" style="font-size: 18px;"></i>
+                                <span style="margin-left: 6px;">Partager</span>
+                            </button>
+                            <button style="background: none; border: none; color: #666; font-weight: 600; font-size: 14px; cursor: pointer; padding: 8px 16px;">
+                                <i class="bi bi-send" style="font-size: 18px;"></i>
+                                <span style="margin-left: 6px;">Envoyer</span>
+                            </button>
+                        </div>
+                    </div>
+                `
+            },
+            google_1: {
+                type: '<i class="bi bi-google"></i> GoogleAds',
+                variation: '1/2',
+                reasoning: [
+                    {
+                        title: 'Optimisation titre (Headline)',
+                        icon: 'bi-type-h1',
+                        content: "Titre conçu pour maximiser le Quality Score Google : <strong>inclusion des mots-clés primaires</strong> (Formation, CPF, Certifiante) + promesse claire. Limite de 30 caractères respectée."
+                    },
+                    {
+                        title: 'Description persuasive',
+                        icon: 'bi-text-paragraph',
+                        content: "Structure AIDA appliquée : <em>Attention</em> (\"Changez de carrière\"), <em>Intérêt</em> (\"3 mois\"), <em>Désir</em> (\"92% trouvent emploi\"), <em>Action</em> (implicite via bénéfice)."
+                    },
+                    {
+                        title: 'Sitelinks stratégiques',
+                        icon: 'bi-link-45deg',
+                        content: "3 sitelinks choisis pour couvrir les <strong>objections principales</strong> : \"Nos Formations\" (offre), \"Financement CPF\" (prix), \"Témoignages\" (preuve sociale)."
+                    },
+                    {
+                        title: 'Match intent utilisateur',
+                        icon: 'bi-search',
+                        content: "Réponse directe à l'intention de recherche <em>\"formation professionnelle financement\"</em>. Alignement parfait entre requête, annonce et landing page."
+                    }
+                ],
+                kpis: [
+                    { label: 'Quality Score estimé', value: '8/10', color: 'success', icon: 'bi-star-fill' },
+                    { label: 'CTR prédit', value: '5.8%', color: 'primary', icon: 'bi-cursor-fill' },
+                    { label: 'CPC estimé', value: '2.40€', color: 'warning', icon: 'bi-currency-euro' },
+                    { label: 'Ad Rank', value: 'Élevé', color: 'success', icon: 'bi-trophy' },
+                    { label: 'Impression Share', value: '78%', color: 'primary', icon: 'bi-eye' }
+                ],
+                preview: `
+                    <div style="max-width: 650px; margin: 0 auto; background: #fff; border: 1px solid #e0e0e0; border-radius: 8px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                        <div style="margin-bottom: 8px;">
+                            <span style="font-size: 11px; font-weight: 600; color: #5f6368; text-transform: uppercase; border: 1px solid #dadce0; padding: 2px 6px; border-radius: 4px;">Sponsorisé</span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+                            <div style="width: 20px; height: 20px; background: linear-gradient(135deg, #0A66C2, #004182); border-radius: 4px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 10px;">
+                                CF
+                            </div>
+                            <span style="font-size: 14px; color: #202124;">mycfia.fr</span>
+                        </div>
+                        <h3 style="font-size: 20px; color: #1a0dab; margin: 4px 0; font-weight: 400; line-height: 1.3;">
+                            Formation Professionnelle Certifiante | Financement CPF
+                        </h3>
+                        <div style="margin: 2px 0 8px 0;">
+                            <span style="font-size: 14px; color: #006621;">mycfia.fr</span>
+                            <span style="font-size: 14px; color: #5f6368;"> › Formation › Reconversion</span>
+                        </div>
+                        <p style="font-size: 14px; color: #4d5156; margin: 0 0 12px 0; line-height: 1.58;">
+                            Changez de carrière en 3 mois. Formation RNCP niveau 6 avec accompagnement personnalisé. 92% de nos alumni trouvent un emploi sous 6 mois.
+                        </p>
+                        <div style="display: flex; flex-wrap: wrap; gap: 16px; margin-top: 12px;">
+                            <div>
+                                <div style="color: #1a0dab; font-weight: 500; font-size: 14px;">Nos Formations</div>
+                                <div style="color: #5f6368; font-size: 12px;">Catalogue complet</div>
+                            </div>
+                            <div>
+                                <div style="color: #1a0dab; font-weight: 500; font-size: 14px;">Financement CPF</div>
+                                <div style="color: #5f6368; font-size: 12px;">0€ reste à charge</div>
+                            </div>
+                            <div>
+                                <div style="color: #1a0dab; font-weight: 500; font-size: 14px;">Témoignages</div>
+                                <div style="color: #5f6368; font-size: 12px;">Success stories</div>
+                            </div>
+                        </div>
+                    </div>
+                `
+            },
+            google_2: {
+                type: '<i class="bi bi-google"></i> GoogleAds',
+                variation: '2/2',
+                reasoning: [
+                    {
+                        title: 'Angle différenciation urgence',
+                        icon: 'bi-speedometer',
+                        content: "Cette variation met l'accent sur <strong>\"Reconversion Garantie\"</strong> et le <strong>taux de placement 92%</strong> pour créer un sentiment de sécurité et d'urgence. Cible les profils plus réticents au changement."
+                    },
+                    {
+                        title: 'Psychologie de la garantie',
+                        icon: 'bi-shield-check',
+                        content: "Le mot <em>\"Garantie\"</em> réduit le risque perçu de 34%. Associé au chiffre précis (92%), il active le biais cognitif de <strong>preuve sociale</strong> et augmente la confiance."
+                    },
+                    {
+                        title: 'Extension réseau entreprises',
+                        icon: 'bi-building',
+                        content: "Mention du <strong>\"réseau de 200+ entreprises partenaires\"</strong> dans la description pour différencier de la concurrence. Répond à l'objection \"Et après la formation ?\"."
+                    },
+                    {
+                        title: 'Sitelinks orientés action',
+                        icon: 'bi-signpost',
+                        content: "Sitelinks axés sur les <em>étapes concrètes</em> : \"Sessions Info\", \"Mon Compte CPF\", \"Contact\". Facilite le parcours utilisateur et augmente le CTR de 23%."
+                    }
+                ],
+                kpis: [
+                    { label: 'Quality Score estimé', value: '8/10', color: 'success', icon: 'bi-star-fill' },
+                    { label: 'CTR prédit', value: '6.1%', color: 'success', icon: 'bi-cursor-fill' },
+                    { label: 'CPC estimé', value: '2.35€', color: 'success', icon: 'bi-currency-euro' },
+                    { label: 'Taux conversion prédit', value: '11.8%', color: 'primary', icon: 'bi-graph-up' },
+                    { label: 'Position moyenne', value: '1.4', color: 'success', icon: 'bi-trophy' }
+                ],
+                preview: `
+                    <div style="max-width: 650px; margin: 0 auto; background: #fff; border: 1px solid #e0e0e0; border-radius: 8px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                        <div style="margin-bottom: 8px;">
+                            <span style="font-size: 11px; font-weight: 600; color: #5f6368; text-transform: uppercase; border: 1px solid #dadce0; padding: 2px 6px; border-radius: 4px;">Sponsorisé</span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+                            <div style="width: 20px; height: 20px; background: linear-gradient(135deg, #0A66C2, #004182); border-radius: 4px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 10px;">
+                                CF
+                            </div>
+                            <span style="font-size: 14px; color: #202124;">mycfia.fr</span>
+                        </div>
+                        <h3 style="font-size: 20px; color: #1a0dab; margin: 4px 0; font-weight: 400; line-height: 1.3;">
+                            Reconversion Garantie | 92% de Placement
+                        </h3>
+                        <div style="margin: 2px 0 8px 0;">
+                            <span style="font-size: 14px; color: #006621;">mycfia.fr</span>
+                            <span style="font-size: 14px; color: #5f6368;"> › Reconversion › Pro</span>
+                        </div>
+                        <p style="font-size: 14px; color: #4d5156; margin: 0 0 12px 0; line-height: 1.58;">
+                            Obtenez une certification reconnue et trouvez un emploi rapidement. Financement CPF disponible. Formation intensive avec réseau de 200+ entreprises partenaires.
+                        </p>
+                        <div style="display: flex; flex-wrap: wrap; gap: 16px; margin-top: 12px;">
+                            <div>
+                                <div style="color: #1a0dab; font-weight: 500; font-size: 14px;">Sessions Info</div>
+                                <div style="color: #5f6368; font-size: 12px;">Prochaine date</div>
+                            </div>
+                            <div>
+                                <div style="color: #1a0dab; font-weight: 500; font-size: 14px;">Mon Compte CPF</div>
+                                <div style="color: #5f6368; font-size: 12px;">Inscription rapide</div>
+                            </div>
+                            <div>
+                                <div style="color: #1a0dab; font-weight: 500; font-size: 14px;">Contact</div>
+                                <div style="color: #5f6368; font-size: 12px;">01 23 45 67 89</div>
+                            </div>
+                        </div>
+                    </div>
+                `
+            },
+            bing_1: {
+                type: '<i class="bi bi-bing"></i> BingAds',
+                variation: '1/1',
+                reasoning: [
+                    {
+                        title: 'Adaptation audience Bing',
+                        icon: 'bi-people',
+                        content: "L'audience Bing est <strong>plus âgée (35-55 ans)</strong> et plus <em>professionnelle</em> que Google. L'IA a adapté le message avec focus sur la <strong>reconnaissance RNCP</strong> et le financement total CPF pour cette cible."
+                    },
+                    {
+                        title: 'Optimisation Quality Score Bing',
+                        icon: 'bi-award',
+                        content: "Bing privilégie les annonces avec <strong>correspondance exacte des mots-clés</strong>. Titre conçu avec \"Formation Pro Reconnue\" pour matcher les recherches B2B et professionnelles."
+                    },
+                    {
+                        title: 'CPC plus avantageux',
+                        icon: 'bi-piggy-bank',
+                        content: "Sur Bing, le <strong>CPC moyen est 33% moins élevé</strong> qu'avec Google pour des résultats équivalents. Stratégie opportuniste pour maximiser le ROI sur cette plateforme sous-exploitée."
+                    },
+                    {
+                        title: 'Message professionnalisant',
+                        icon: 'bi-briefcase',
+                        content: "Ton plus <em>formel et professionnel</em> adapté à l'audience Bing. Accent sur \"expert certifié\" plutôt que transformation personnelle pour aligner avec le mindset B2B."
+                    }
+                ],
+                kpis: [
+                    { label: 'Quality Score estimé', value: '7/10', color: 'primary', icon: 'bi-star-fill' },
+                    { label: 'CTR prédit', value: '4.8%', color: 'primary', icon: 'bi-cursor-fill' },
+                    { label: 'CPC estimé', value: '1.65€', color: 'success', icon: 'bi-currency-euro' },
+                    { label: 'Impression Share', value: '65%', color: 'warning', icon: 'bi-eye' },
+                    { label: 'ROI prédit', value: '+180%', color: 'success', icon: 'bi-graph-up-arrow' }
+                ],
+                preview: `
+                    <div style="max-width: 650px; margin: 0 auto; background: #fff; border: 1px solid #e0e0e0; border-radius: 6px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                        <!-- Bing Ad Badge -->
+                        <div style="margin-bottom: 8px;">
+                            <span style="font-size: 11px; font-weight: 600; color: #008373; background: #e6f4f1; padding: 2px 8px; border-radius: 3px;">Annonce</span>
+                        </div>
+
+                        <!-- Site Info -->
+                        <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 4px;">
+                            <div style="width: 18px; height: 18px; background: linear-gradient(135deg, #0A66C2, #004182); border-radius: 3px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 9px;">
+                                CF
+                            </div>
+                            <span style="font-size: 13px; color: #008373; font-weight: 600;">mycfia.fr</span>
+                        </div>
+
+                        <!-- Ad Headline -->
+                        <h3 style="font-size: 18px; color: #1a1a6c; margin: 4px 0; font-weight: 600; line-height: 1.3;">
+                            Formation Pro Reconnue | Financement Total CPF
+                        </h3>
+
+                        <!-- Description -->
+                        <p style="font-size: 13px; color: #2d2d2d; margin: 8px 0 12px 0; line-height: 1.5;">
+                            Devenez expert certifié en 3 mois. Certification RNCP niveau 6 reconnue par l'État. Accompagnement personnalisé + accès au réseau professionnel de 200+ entreprises partenaires.
+                        </p>
+
+                        <!-- Display URL -->
+                        <div style="margin: 8px 0;">
+                            <span style="font-size: 13px; color: #008373;">www.mycfia.fr</span>
+                            <span style="font-size: 13px; color: #666;"> › Formation › Professionnelle</span>
+                        </div>
+
+                        <!-- Sitelinks -->
+                        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 12px; padding-top: 12px; border-top: 1px solid #f0f0f0;">
+                            <div>
+                                <div style="color: #1a1a6c; font-weight: 600; font-size: 13px; margin-bottom: 2px;">Catalogue Formations</div>
+                                <div style="color: #666; font-size: 12px;">Tous les parcours disponibles</div>
+                            </div>
+                            <div>
+                                <div style="color: #1a1a6c; font-weight: 600; font-size: 13px; margin-bottom: 2px;">Financement CPF</div>
+                                <div style="color: #666; font-size: 12px;">Prise en charge à 100%</div>
+                            </div>
+                            <div>
+                                <div style="color: #1a1a6c; font-weight: 600; font-size: 13px; margin-bottom: 2px;">Témoignages Alumni</div>
+                                <div style="color: #666; font-size: 12px;">Success stories vérifiées</div>
+                            </div>
+                            <div>
+                                <div style="color: #1a1a6c; font-weight: 600; font-size: 13px; margin-bottom: 2px;">Session Découverte</div>
+                                <div style="color: #666; font-size: 12px;">Gratuite et sans engagement</div>
+                            </div>
+                        </div>
+                    </div>
+                `
+            },
+            facebook_1: {
+                type: '<i class="bi bi-facebook"></i> Facebook',
+                variation: '1/2',
+                reasoning: [
+                    {
+                        title: 'Format texte court optimisé',
+                        icon: 'bi-text-left',
+                        content: "Post Facebook <strong>sans image</strong> pour tester l'engagement pur du message. Format court (120 caractères) optimisé pour <strong>lecture rapide mobile</strong> dans le feed encombré de Facebook."
+                    },
+                    {
+                        title: 'Hook émotionnel interrogatif',
+                        icon: 'bi-question-circle',
+                        content: "Ouverture avec question directe <em>\"Prêt(e) pour une nouvelle carrière ?\"</em> + emoji 🚀 pour <strong>stopper le scroll</strong>. Cette approche génère 2.8x plus d'engagement que les affirmations."
+                    },
+                    {
+                        title: 'Ton conversationnel Facebook',
+                        icon: 'bi-chat-dots',
+                        content: "Langage <strong>accessible et enthousiaste</strong> adapté à Facebook (vs Linkedin professionnel). Utilisation stratégique des emojis et ton inclusif \"Prêt(e)\" pour élargir la cible."
+                    },
+                    {
+                        title: 'CTA implicite doux',
+                        icon: 'bi-hand-index',
+                        content: "Pas de CTA agressif mais invitation à <em>\"Découvrez\"</em> pour respecter le contexte Facebook (réseau social, pas plateforme commerciale). Approche soft qui <strong>préserve l'engagement</strong>."
+                    }
+                ],
+                kpis: [
+                    { label: 'Score d\'engagement prédit', value: '92%', color: 'success', icon: 'bi-heart-fill' },
+                    { label: 'Reach organique estimé', value: '2400', color: 'primary', icon: 'bi-people' },
+                    { label: 'Taux de clic', value: '3.8%', color: 'primary', icon: 'bi-cursor' },
+                    { label: 'Partages estimés', value: '18', color: 'warning', icon: 'bi-share' },
+                    { label: 'Commentaires prédits', value: '32+', color: 'success', icon: 'bi-chat-dots' }
+                ],
+                preview: `
+                    <div style="max-width: 550px; margin: 0 auto; background: white; border: 1px solid #dddfe2; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 2px rgba(0,0,0,0.1); zoom: 0.80;">
+                        <!-- Post Header -->
+                        <div style="padding: 12px 16px; display: flex; align-items: center; gap: 8px;">
+                            <div style="width: 40px; height: 40px; background: linear-gradient(135deg, #0A66C2, #004182); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 16px;">
+                                CF
+                            </div>
+                            <div style="flex: 1;">
+                                <div style="font-weight: 600; color: #050505; font-size: 15px;">CFI Formation</div>
+                                <div style="color: #65676b; font-size: 13px; display: flex; align-items: center; gap: 4px;">
+                                    Il y a 2h • <i class="bi bi-globe" style="font-size: 12px;"></i>
+                                </div>
+                            </div>
+                            <button style="background: none; border: none; color: #65676b; font-size: 20px; cursor: pointer;">•••</button>
+                        </div>
+
+                        <!-- Post Content -->
+                        <div style="padding: 0 16px 16px 16px;">
+                            <p style="color: #050505; font-size: 15px; line-height: 1.4; margin: 0;">
+                                Prêt(e) pour une nouvelle carrière ? 🚀
+                                <br><br>
+                                Découvrez nos formations certifiantes qui transforment des vies. En 3 mois, obtenez une certification RNCP reconnue et accédez à un réseau de 200+ entreprises qui recrutent.
+                                <br><br>
+                                ✅ Financement CPF à 100%<br>
+                                ✅ Accompagnement personnalisé<br>
+                                ✅ 92% de nos alumni en poste sous 6 mois<br>
+                                <br>
+                                💬 Session d'information gratuite ce mardi à 18h. Places limitées !
+                                <br><br>
+                                <span style="color: #1877F2; font-weight: 600;">#Reconversion #Formation #NouvelleCarriere #CPF</span>
+                            </p>
+                        </div>
+
+                        <!-- Engagement Bar -->
+                        <div style="padding: 0 16px; border-top: 1px solid #e4e6eb;">
+                            <div style="padding: 8px 0; display: flex; align-items: center; justify-content: space-between; color: #65676b; font-size: 13px;">
+                                <div style="display: flex; align-items: center; gap: 6px;">
+                                    <div style="display: flex; margin-right: 6px;">
+                                        <span style="background: #1877F2; color: white; border-radius: 50%; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; font-size: 10px; border: 2px solid white; margin-left: -4px;">👍</span>
+                                        <span style="background: #f33e58; color: white; border-radius: 50%; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; font-size: 10px; border: 2px solid white; margin-left: -4px;">❤️</span>
+                                        <span style="background: #f7b125; color: white; border-radius: 50%; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; font-size: 10px; border: 2px solid white; margin-left: -4px;">😊</span>
+                                    </div>
+                                    <span>Sophie Dupont et 184 autres</span>
+                                </div>
+                                <div>
+                                    32 commentaires • 18 partages
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div style="border-top: 1px solid #e4e6eb; padding: 4px 16px; display: flex; justify-content: space-around;">
+                            <button style="background: none; border: none; color: #65676b; font-weight: 600; font-size: 15px; cursor: pointer; padding: 8px; flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px;">
+                                <i class="bi bi-hand-thumbs-up" style="font-size: 18px;"></i>
+                                <span>J'aime</span>
+                            </button>
+                            <button style="background: none; border: none; color: #65676b; font-weight: 600; font-size: 15px; cursor: pointer; padding: 8px; flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px;">
+                                <i class="bi bi-chat" style="font-size: 18px;"></i>
+                                <span>Commenter</span>
+                            </button>
+                            <button style="background: none; border: none; color: #65676b; font-weight: 600; font-size: 15px; cursor: pointer; padding: 8px; flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px;">
+                                <i class="bi bi-share" style="font-size: 18px;"></i>
+                                <span>Partager</span>
+                            </button>
+                        </div>
+                    </div>
+                `
+            },
+            facebook_2: {
+                type: '<i class="bi bi-facebook"></i> Facebook',
+                variation: '2/2',
+                reasoning: [
+                    {
+                        title: 'Stratégie storytelling visuel',
+                        icon: 'bi-camera',
+                        content: "Post Facebook <strong>avec image carrousel</strong> pour illustrer la transformation. Les posts avec visuels génèrent <strong>87% d'engagement en plus</strong> sur Facebook vs texte seul."
+                    },
+                    {
+                        title: 'Narrative transformation',
+                        icon: 'bi-arrow-left-right',
+                        content: "Message basé sur <em>\"De caissière à chef de projet\"</em> pour créer identification et inspiration. L'histoire concrète <strong>humanise la marque</strong> et rend la reconversion tangible."
+                    },
+                    {
+                        title: 'Preuve sociale chiffrée',
+                        icon: 'bi-graph-up',
+                        content: "Mention <strong>\"8 mois\"</strong> pour montrer rapidité + résultats concrets. Durée précise crédibilise le témoignage et active le sentiment d'urgence positive."
+                    },
+                    {
+                        title: 'Image optimisée mobile',
+                        icon: 'bi-phone',
+                        content: "Format carré (1:1) optimisé pour <strong>affichage mobile Facebook</strong>. 94% des utilisateurs FB sont sur mobile, l'image doit être impactante en petit format."
+                    }
+                ],
+                kpis: [
+                    { label: 'Score d\'engagement prédit', value: '90%', color: 'success', icon: 'bi-heart-fill' },
+                    { label: 'Reach organique estimé', value: '3200', color: 'success', icon: 'bi-people' },
+                    { label: 'Taux de clic sur image', value: '12.4%', color: 'primary', icon: 'bi-cursor' },
+                    { label: 'Partages estimés', value: '28', color: 'warning', icon: 'bi-share' },
+                    { label: 'Saves estimés', value: '41', color: 'success', icon: 'bi-bookmark' }
+                ],
+                preview: `
+                    <div style="max-width: 550px; margin: 0 auto; background: white; border: 1px solid #dddfe2; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 2px rgba(0,0,0,0.1); zoom: 0.65;">
+                        <!-- Post Header -->
+                        <div style="padding: 12px 16px; display: flex; align-items: center; gap: 8px;">
+                            <div style="width: 40px; height: 40px; background: linear-gradient(135deg, #0A66C2, #004182); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 16px;">
+                                CF
+                            </div>
+                            <div style="flex: 1;">
+                                <div style="font-weight: 600; color: #050505; font-size: 15px;">CFI Formation</div>
+                                <div style="color: #65676b; font-size: 13px; display: flex; align-items: center; gap: 4px;">
+                                    Il y a 4h • <i class="bi bi-globe" style="font-size: 12px;"></i>
+                                </div>
+                            </div>
+                            <button style="background: none; border: none; color: #65676b; font-size: 20px; cursor: pointer;">•••</button>
+                        </div>
+
+                        <!-- Post Content -->
+                        <div style="padding: 0 16px 12px 16px;">
+                            <p style="color: #050505; font-size: 15px; line-height: 1.4; margin: 0;">
+                                La formation qui change tout 💼
+                                <br><br>
+                                De caissière à chef de projet en 8 mois : découvrez le parcours inspirant de Sophie qui a osé franchir le pas avec notre formation certifiante.
+                            </p>
+                        </div>
+
+                        <!-- Image Placeholder -->
+                        <div style="width: 100%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); aspect-ratio: 1/1; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden;">
+                            <!-- Decorative elements -->
+                            <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; opacity: 0.15; background-image: repeating-linear-gradient(45deg, white 0px, white 2px, transparent 2px, transparent 12px);"></div>
+
+                            <!-- Content -->
+                            <div style="text-align: center; z-index: 1; padding: 40px; color: white;">
+                                <div style="font-size: 4rem; margin-bottom: 20px;">📊 → 💼</div>
+                                <div style="font-size: 1.75rem; font-weight: 700; margin-bottom: 16px; text-shadow: 0 2px 8px rgba(0,0,0,0.3);">
+                                    De Caissière à Chef de Projet
+                                </div>
+                                <div style="font-size: 1.1rem; font-weight: 600; margin-bottom: 12px; text-shadow: 0 2px 4px rgba(0,0,0,0.2);">
+                                    Sophie, 34 ans
+                                </div>
+                                <div style="background: rgba(255,255,255,0.25); backdrop-filter: blur(10px); padding: 12px 24px; border-radius: 24px; display: inline-block; margin-top: 16px;">
+                                    <span style="font-size: 0.95rem; font-weight: 600;">✨ 8 mois de transformation</span>
+                                </div>
+                                <div style="margin-top: 20px; display: inline-block; background: white; padding: 10px 24px; border-radius: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
+                                    <span style="font-size: 0.85rem; color: #667eea; font-weight: 600;">📸 Image success story</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Post Footer -->
+                        <div style="padding: 12px 16px;">
+                            <p style="color: #050505; font-size: 15px; line-height: 1.4; margin: 0;">
+                                Aujourd'hui, Sophie manage une équipe de 5 personnes et gagne 3200€/mois. Son secret ? Une formation RNCP certifiante + un accompagnement sur-mesure.
+                                <br><br>
+                                ✨ Vous aussi, écrivez votre success story<br>
+                                💬 Session info gratuite mardi 18h
+                                <br><br>
+                                <span style="color: #1877F2; font-weight: 600;">#SuccessStory #Reconversion #TransformationPro #CFIFormation</span>
+                            </p>
+                        </div>
+
+                        <!-- Engagement Bar -->
+                        <div style="padding: 0 16px; border-top: 1px solid #e4e6eb;">
+                            <div style="padding: 8px 0; display: flex; align-items: center; justify-content: space-between; color: #65676b; font-size: 13px;">
+                                <div style="display: flex; align-items: center; gap: 6px;">
+                                    <div style="display: flex; margin-right: 6px;">
+                                        <span style="background: #1877F2; color: white; border-radius: 50%; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; font-size: 10px; border: 2px solid white; margin-left: -4px;">👍</span>
+                                        <span style="background: #f33e58; color: white; border-radius: 50%; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; font-size: 10px; border: 2px solid white; margin-left: -4px;">❤️</span>
+                                        <span style="background: #f7b125; color: white; border-radius: 50%; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; font-size: 10px; border: 2px solid white; margin-left: -4px;">😮</span>
+                                    </div>
+                                    <span>Marie Dubois et 267 autres</span>
+                                </div>
+                                <div>
+                                    45 commentaires • 28 partages
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div style="border-top: 1px solid #e4e6eb; padding: 4px 16px; display: flex; justify-content: space-around;">
+                            <button style="background: none; border: none; color: #65676b; font-weight: 600; font-size: 15px; cursor: pointer; padding: 8px; flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px;">
+                                <i class="bi bi-hand-thumbs-up" style="font-size: 18px;"></i>
+                                <span>J'aime</span>
+                            </button>
+                            <button style="background: none; border: none; color: #65676b; font-weight: 600; font-size: 15px; cursor: pointer; padding: 8px; flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px;">
+                                <i class="bi bi-chat" style="font-size: 18px;"></i>
+                                <span>Commenter</span>
+                            </button>
+                            <button style="background: none; border: none; color: #65676b; font-weight: 600; font-size: 15px; cursor: pointer; padding: 8px; flex: 1; display: flex; align-items: center; justify-content: center; gap: 6px;">
+                                <i class="bi bi-share" style="font-size: 18px;"></i>
+                                <span>Partager</span>
+                            </button>
+                        </div>
+                    </div>
+                `
+            },
+            instagram_1: {
+                type: '<i class="bi bi-instagram"></i> Instagram',
+                variation: '1/1',
+                reasoning: [
+                    {
+                        title: 'Format visuel storytelling',
+                        icon: 'bi-image',
+                        content: "Post Instagram <strong>centré sur l'image inspirante</strong> avec témoignage authentique. Les posts visuels avec histoire personnelle génèrent <strong>3.2x plus d'engagement</strong> qu'un message promotionnel classique sur Instagram."
+                    },
+                    {
+                        title: 'Caption émotionnel optimisé',
+                        icon: 'bi-text-paragraph',
+                        content: "Ouverture avec emojis stratégiques (✨💼) pour <strong>capter l'attention</strong> dans le feed. Histoire de Marie crée identification et aspiration. Format <strong>moyen (150 mots)</strong> optimisé pour lecture mobile sans perte d'engagement."
+                    },
+                    {
+                        title: 'Hashtags ciblés Instagram',
+                        icon: 'bi-hash',
+                        content: "Mix de <strong>8 hashtags</strong> : populaires (#Reconversion 2.4M posts), de niche (#FormationPro 180K), et branded (#CFIFormation). Cette combinaison maximise découvrabilité sans diluer le reach organique."
+                    },
+                    {
+                        title: 'CTA engagement communautaire',
+                        icon: 'bi-chat-quote',
+                        content: "Question finale <em>\"Et vous, prêt(e) ?\"</em> pour <strong>stimuler les commentaires</strong>. Les posts avec question directe génèrent 89% de commentaires en plus, boostant l'algorithme Instagram."
+                    }
+                ],
+                kpis: [
+                    { label: 'Score d\'engagement prédit', value: '93%', color: 'success', icon: 'bi-heart-fill' },
+                    { label: 'Reach estimé (7 jours)', value: '4800', color: 'success', icon: 'bi-people' },
+                    { label: 'Taux d\'interaction', value: '8.2%', color: 'primary', icon: 'bi-cursor' },
+                    { label: 'Saves estimés', value: '156', color: 'warning', icon: 'bi-bookmark' },
+                    { label: 'Partages Stories', value: '42', color: 'success', icon: 'bi-share' }
+                ],
+                preview: `
+                    <div style="max-width: 470px; margin: 0 auto; background: white; border: 1px solid #dbdbdb; border-radius: 8px; overflow: hidden; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; zoom: 0.60;">
+                        <!-- Post Header -->
+                        <div style="padding: 14px 16px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid #efefef;">
+                            <div style="width: 32px; height: 32px; background: linear-gradient(135deg, #E1306C, #F77737); border-radius: 50%; padding: 2px;">
+                                <div style="width: 100%; height: 100%; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                                    <div style="width: 26px; height: 26px; background: linear-gradient(135deg, #0A66C2, #004182); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 11px;">
+                                        CF
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="flex: 1;">
+                                <div style="font-weight: 600; color: #262626; font-size: 14px;">cfi.formation</div>
+                            </div>
+                            <button style="background: none; border: none; color: #262626; font-size: 24px; cursor: pointer; line-height: 1;">•••</button>
+                        </div>
+
+                        <!-- Post Image -->
+                        <div style="position: relative; width: 100%; padding-bottom: 100%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); overflow: hidden;">
+                            <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: flex; align-items: center; justify-content: center; padding: 40px; text-align: center;">
+                                <div>
+                                    <div style="color: white; font-size: 48px; margin-bottom: 20px;">✨</div>
+                                    <div style="color: white; font-size: 32px; font-weight: 800; line-height: 1.2; margin-bottom: 16px; text-shadow: 0 2px 10px rgba(0,0,0,0.3);">
+                                        De la caisse<br>au bureau
+                                    </div>
+                                    <div style="color: rgba(255,255,255,0.95); font-size: 18px; font-weight: 500; margin-top: 12px;">
+                                        Marie, 29 ans<br>Chef de projet digital
+                                    </div>
+                                    <div style="margin-top: 30px; background: rgba(255,255,255,0.2); backdrop-filter: blur(10px); padding: 12px 24px; border-radius: 24px; display: inline-block; color: white; font-weight: 600; font-size: 14px;">
+                                        8 mois de formation
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Action Bar -->
+                        <div style="padding: 12px 16px;">
+                            <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 12px;">
+                                <button style="background: none; border: none; cursor: pointer; padding: 0;">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#262626" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                                    </svg>
+                                </button>
+                                <button style="background: none; border: none; cursor: pointer; padding: 0;">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#262626" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                                    </svg>
+                                </button>
+                                <button style="background: none; border: none; cursor: pointer; padding: 0;">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#262626" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <line x1="22" y1="2" x2="11" y2="13"></line>
+                                        <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                                    </svg>
+                                </button>
+                                <div style="flex: 1;"></div>
+                                <button style="background: none; border: none; cursor: pointer; padding: 0;">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#262626" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
+                                    </svg>
+                                </button>
+                            </div>
+
+                            <!-- Likes -->
+                            <div style="font-weight: 600; font-size: 14px; color: #262626; margin-bottom: 8px;">
+                                2 847 mentions J'aime
+                            </div>
+
+                            <!-- Caption -->
+                            <div style="font-size: 14px; color: #262626; line-height: 1.4;">
+                                <span style="font-weight: 600;">cfi.formation</span> ✨ Nouvelle vie, nouvelle carrière 💼
+                                <br><br>
+                                Marie avait 29 ans quand elle a décidé de tout changer. Aujourd'hui chef de projet digital dans une startup, elle nous raconte sa transformation :
+                                <br><br>
+                                <em>"J'étais caissière depuis 7 ans. Un jour, j'ai réalisé que je méritais mieux. En 8 mois avec CFI, j'ai obtenu ma certification RNCP et triplé mon salaire."</em>
+                                <br><br>
+                                💪 Formation intensive 3 mois<br>
+                                ✅ Certification reconnue par l'État<br>
+                                🎯 Accompagnement personnalisé<br>
+                                💰 Financement CPF 100%<br>
+                                <br>
+                                Et vous, prêt(e) pour votre nouvelle vie ? 🚀
+                                <br><br>
+                                <span style="color: #00376b;">
+                                    #Reconversion #FormationProfessionnelle #NouvelleCarriere #CFIFormation #Success #Motivation #CPF #CareerChange
+                                </span>
+                            </div>
+
+                            <!-- Comments preview -->
+                            <div style="margin-top: 12px; font-size: 14px; color: #8e8e8e;">
+                                Afficher les 156 commentaires
+                            </div>
+
+                            <!-- Time -->
+                            <div style="margin-top: 8px; font-size: 10px; color: #8e8e8e; text-transform: uppercase; letter-spacing: 0.2px;">
+                                Il y a 3 heures
+                            </div>
+                        </div>
+                    </div>
+                `
+            },
+            iab_1: {
+                type: '<i class="bi bi-badge-ad"></i> Iab',
+                variation: '1/1',
+                reasoning: [
+                    {
+                        title: 'Format Leaderboard 728x90',
+                        icon: 'bi-display',
+                        content: "Bannière au <strong>format IAB standard 728x90</strong> (Leaderboard) pour compatibilité maximale sur les sites premium. Ce format offre le <strong>meilleur ROI</strong> avec un CTR moyen de 0.35% vs 0.15% pour les autres formats."
+                    },
+                    {
+                        title: 'Design attention-grabbing',
+                        icon: 'bi-eye-fill',
+                        content: "Utilisation d'un <strong>gradient dynamique</strong> + contraste fort texte blanc/fond coloré pour <strong>capter l'attention</strong> dans un environnement surchargé. Les bannières avec gradients performent 42% mieux."
+                    },
+                    {
+                        title: 'Message ultra-concis',
+                        icon: 'bi-lightning',
+                        content: "Seulement <strong>6 mots clés</strong> : \"Nouvelle carrière en 3 mois • Certification RNCP\". En display, la lisibilité instantanée (<1 seconde) est critique pour générer du clic."
+                    },
+                    {
+                        title: 'CTA visuel fort',
+                        icon: 'bi-cursor-fill',
+                        content: "Bouton CTA <em>\"Découvrir\"</em> avec couleur contrastante (jaune/orange) et flèche directionnelle pour <strong>guider le clic</strong>. Position à droite pour respecter le sens de lecture occidental."
+                    }
+                ],
+                kpis: [
+                    { label: 'CTR prédit', value: '0.38%', color: 'success', icon: 'bi-cursor-fill' },
+                    { label: 'Impressions estimées', value: '450K', color: 'primary', icon: 'bi-eye' },
+                    { label: 'Clics estimés', value: '1710', color: 'primary', icon: 'bi-hand-index' },
+                    { label: 'CPC moyen', value: '0.85€', color: 'success', icon: 'bi-currency-euro' },
+                    { label: 'Viewability rate', value: '68%', color: 'warning', icon: 'bi-check-circle' }
+                ],
+                preview: `
+                    <div style="max-width: 800px; margin: 0 auto;">
+                        <!-- Banner Container -->
+                        <div style="width: 728px; height: 90px; background: linear-gradient(135deg, #0A66C2 0%, #003080 50%, #39BFEF 100%); border-radius: 4px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.15); position: relative; display: flex; align-items: center; padding: 0 20px; gap: 20px;">
+
+                            <!-- Left Section: Logo + Brand -->
+                            <div style="display: flex; align-items: center; gap: 12px;">
+                                <div style="width: 50px; height: 50px; background: white; border-radius: 8px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(0,0,0,0.2);">
+                                    <div style="font-weight: 900; font-size: 24px; background: linear-gradient(135deg, #0A66C2, #003080); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+                                        CF
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Center Section: Message -->
+                            <div style="flex: 1; color: white;">
+                                <div style="font-size: 22px; font-weight: 800; line-height: 1.2; margin-bottom: 4px; text-shadow: 0 2px 4px rgba(0,0,0,0.3);">
+                                    Nouvelle carrière en 3 mois
+                                </div>
+                                <div style="font-size: 14px; font-weight: 600; opacity: 0.95;">
+                                    ✓ Certification RNCP • 100% Financement CPF
+                                </div>
+                            </div>
+
+                            <!-- Right Section: CTA -->
+                            <div>
+                                <div style="background: linear-gradient(135deg, #FFB800, #FF8C00); color: #1a1a1a; padding: 12px 28px; border-radius: 25px; font-weight: 700; font-size: 15px; cursor: pointer; box-shadow: 0 4px 12px rgba(255, 184, 0, 0.4); display: flex; align-items: center; gap: 8px; transition: transform 0.2s;">
+                                    Découvrir
+                                    <i class="bi bi-arrow-right" style="font-size: 16px;"></i>
+                                </div>
+                            </div>
+
+                            <!-- Decorative Elements -->
+                            <div style="position: absolute; top: -20px; right: -20px; width: 100px; height: 100px; background: rgba(255,255,255,0.1); border-radius: 50%; filter: blur(30px);"></div>
+                            <div style="position: absolute; bottom: -30px; left: 100px; width: 120px; height: 120px; background: rgba(57, 191, 239, 0.2); border-radius: 50%; filter: blur(40px);"></div>
+                        </div>
+
+                        <!-- Info Banner Specs -->
+                        <div style="margin-top: 16px; text-align: center; color: #666; font-size: 12px;">
+                            <span style="background: #f0f0f0; padding: 6px 12px; border-radius: 12px; display: inline-block;">
+                                <i class="bi bi-info-circle"></i> Format IAB Leaderboard • 728 × 90 pixels • Display Banner
+                            </span>
+                        </div>
+                    </div>
+                `
+            },
+            email_1: {
+                type: '<i class="bi bi-envelope"></i> Email',
+                variation: '1/2',
+                reasoning: [
+                    {
+                        title: 'Objet percutant storytelling',
+                        icon: 'bi-envelope-open',
+                        content: "Ligne d'objet basée sur le <strong>storytelling</strong> (Sophie) et la <strong>promesse concrète</strong> (doublé son salaire). Taux d'ouverture prédit: 34% vs 21% moyenne secteur."
+                    },
+                    {
+                        title: 'Structure narrative',
+                        icon: 'bi-layout-text-window',
+                        content: "Pattern <em>\"Story → Problème → Solution → CTA\"</em>. Paragraphes courts (3-4 lignes max) pour faciliter la lecture sur mobile (68% des ouvertures)."
+                    },
+                    {
+                        title: 'Personnalisation',
+                        icon: 'bi-person-badge',
+                        content: "Variables de personnalisation prêtes : {prenom}, {situation_actuelle}. L'IA a prévu un <strong>fallback générique</strong> si données manquantes."
+                    },
+                    {
+                        title: 'CTA principal storytelling',
+                        icon: 'bi-hand-index-thumb',
+                        content: "Bouton CTA unique et clair : <em>\"Réserver ma place gratuite\"</em>. Couleur optimisée (vert CFI) pour 18% de clics supplémentaires vs bouton bleu."
+                    }
+                ],
+                kpis: [
+                    { label: 'Taux d\'ouverture prédit', value: '34%', color: 'success', icon: 'bi-envelope-open' },
+                    { label: 'Taux de clic estimé', value: '6.2%', color: 'primary', icon: 'bi-cursor' },
+                    { label: 'Spam Score', value: '2/10', color: 'success', icon: 'bi-shield-check' },
+                    { label: 'Mobile-friendly', value: 'Oui', color: 'success', icon: 'bi-phone' },
+                    { label: 'Readability (Mobile)', value: '72/100', color: 'primary', icon: 'bi-book' }
+                ],
+                preview: `
+                    <div style="max-width: 600px; margin: 0 auto; background: #f8f9fa; padding: 20px; zoom: 0.78;">
+                        <div style="background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                            <div style="background: linear-gradient(135deg, #003080, #39BFEF); padding: 24px; text-align: center;">
+                                <div style="font-size: 24px; font-weight: 700; color: white; margin-bottom: 8px;">CFI Formation</div>
+                                <div style="color: rgba(255,255,255,0.9); font-size: 14px;">Votre partenaire reconversion professionnelle</div>
+                            </div>
+                            <div style="padding: 32px 24px;">
+                                <h2 style="color: #003080; font-size: 20px; margin-bottom: 16px;">Bonjour [Prénom],</h2>
+                                <p style="color: #333; line-height: 1.6; margin-bottom: 16px;">
+                                    Il y a 6 mois, Sophie était caissière et se demandait si changer de carrière était vraiment possible à 34 ans.
+                                </p>
+                                <p style="color: #333; line-height: 1.6; margin-bottom: 16px;">
+                                    Aujourd'hui, elle est <strong>chef de projet digital</strong> dans une startup et gagne <strong>3200€/mois</strong>. Son salaire a doublé, et surtout : elle adore son nouveau métier.
+                                </p>
+                                <p style="color: #333; line-height: 1.6; margin-bottom: 24px;">
+                                    Comment a-t-elle fait ? Grâce à notre formation certifiante RNCP niveau 6, 100% finançable par le CPF.
+                                </p>
+                                <div style="background: #f0f7ff; border-left: 4px solid #0A66C2; padding: 16px; margin-bottom: 24px;">
+                                    <div style="font-weight: 600; color: #003080; margin-bottom: 8px;">Ce qui fait la différence :</div>
+                                    <ul style="margin: 0; padding-left: 20px; color: #333;">
+                                        <li>Accompagnement personnalisé avec coach dédié</li>
+                                        <li>Réseau de 200+ entreprises partenaires</li>
+                                        <li>92% de nos alumni trouvent un emploi sous 6 mois</li>
+                                    </ul>
+                                </div>
+                                <p style="color: #333; line-height: 1.6; margin-bottom: 24px;">
+                                    Vous aussi, vous méritez une carrière qui vous passionne. Venez découvrir comment lors de notre <strong>session d'information gratuite</strong> ce mardi à 18h.
+                                </p>
+                                <div style="text-align: center; margin-bottom: 24px;">
+                                    <a href="#" style="display: inline-block; background: #34A853; color: white; padding: 14px 32px; border-radius: 6px; text-decoration: none; font-weight: 600; font-size: 16px;">
+                                        Réserver ma place gratuite
+                                    </a>
+                                </div>
+                                <p style="color: #666; font-size: 13px; line-height: 1.5; margin-bottom: 0;">
+                                    Places limitées à 30 personnes. La session dure 90 minutes et vous découvrirez concrètement notre méthode, nos formations et vos possibilités de financement.
+                                </p>
+                            </div>
+                            <div style="background: #f8f9fa; padding: 20px 24px; border-top: 1px solid #e0e0e0; text-align: center;">
+                                <div style="color: #666; font-size: 12px; margin-bottom: 8px;">
+                                    CFI Formation | Centre de Formation Professionnelle
+                                </div>
+                                <div style="color: #999; font-size: 11px;">
+                                    01 23 45 67 89 | contact@mycfia.fr
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `
+            },
+            email_2: {
+                type: '<i class="bi bi-envelope"></i> Email',
+                variation: '2/2',
+                reasoning: [
+                    {
+                        title: 'Objet urgence/rareté',
+                        icon: 'bi-clock-history',
+                        content: "Ligne d'objet axée sur <strong>l'urgence</strong> (\"3 mois\") et le <strong>financement CPF 100%</strong>. Cette approche directe génère 28% d'ouverture avec audience plus pragmatique que le storytelling."
+                    },
+                    {
+                        title: 'Structure bénéfices-action',
+                        icon: 'bi-list-check',
+                        content: "Pattern <em>\"Problème → Bénéfices → Urgence → CTA\"</em> avec liste à puces pour <strong>scanabilité maximale</strong>. 73% des lecteurs scannent plutôt que lisent l'email complet."
+                    },
+                    {
+                        title: 'Preuve sociale chiffrée',
+                        icon: 'bi-graph-up',
+                        content: "Focus sur les <strong>chiffres concrets</strong> : 92%, 6 mois, 200+ entreprises. Les emails data-driven ont un <strong>taux de conversion 34% supérieur</strong> aux approches narratives."
+                    },
+                    {
+                        title: 'Double CTA stratégique',
+                        icon: 'bi-signpost-2',
+                        content: "CTA principal <em>\"Je m'inscris\"</em> + CTA secondaire <em>\"En savoir plus\"</em> pour offrir deux niveaux d'engagement et <strong>réduire la friction</strong> de 22%."
+                    }
+                ],
+                kpis: [
+                    { label: 'Taux d\'ouverture prédit', value: '28%', color: 'primary', icon: 'bi-envelope-open' },
+                    { label: 'Taux de clic estimé', value: '8.4%', color: 'success', icon: 'bi-cursor' },
+                    { label: 'Taux conversion', value: '4.2%', color: 'success', icon: 'bi-check-circle' },
+                    { label: 'Spam Score', value: '3/10', color: 'success', icon: 'bi-shield-check' },
+                    { label: 'Mobile-friendly', value: 'Oui', color: 'success', icon: 'bi-phone' }
+                ],
+                preview: `
+                    <div style="max-width: 600px; margin: 0 auto; background: #f8f9fa; padding: 20px; zoom: 0.65;">
+                        <div style="background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                            <div style="background: linear-gradient(135deg, #003080, #39BFEF); padding: 24px; text-align: center;">
+                                <div style="font-size: 24px; font-weight: 700; color: white; margin-bottom: 8px;">CFI Formation</div>
+                                <div style="color: rgba(255,255,255,0.9); font-size: 14px;">Votre partenaire reconversion professionnelle</div>
+                            </div>
+                            <div style="padding: 32px 24px;">
+                                <h2 style="color: #003080; font-size: 20px; margin-bottom: 16px;">Bonjour [Prénom],</h2>
+
+                                <div style="background: linear-gradient(135deg, rgba(255,184,0,0.1), rgba(255,140,0,0.1)); border-left: 4px solid #FFB800; padding: 16px; margin-bottom: 24px; border-radius: 4px;">
+                                    <div style="font-size: 18px; font-weight: 700; color: #FF8C00; margin-bottom: 8px;">
+                                        ⏰ 3 mois pour changer de vie
+                                    </div>
+                                    <div style="color: #333; font-weight: 600;">
+                                        Financement CPF à 100% • 0€ reste à charge
+                                    </div>
+                                </div>
+
+                                <p style="color: #333; line-height: 1.6; margin-bottom: 20px;">
+                                    Vous pensez à une reconversion mais le coût vous freine ? Bonne nouvelle : votre CPF peut financer <strong>l'intégralité</strong> de votre formation.
+                                </p>
+
+                                <div style="background: #f0f7ff; padding: 20px; border-radius: 8px; margin-bottom: 24px;">
+                                    <div style="font-weight: 700; color: #003080; margin-bottom: 12px; font-size: 16px;">
+                                        ✓ Ce que vous obtenez :
+                                    </div>
+                                    <ul style="margin: 0; padding-left: 20px; color: #333; line-height: 1.8;">
+                                        <li><strong>Certification RNCP niveau 6</strong> reconnue par l'État</li>
+                                        <li><strong>92% de nos alumni</strong> trouvent un emploi sous 6 mois</li>
+                                        <li><strong>Coach dédié</strong> qui suit votre progression personnellement</li>
+                                        <li><strong>Accès au réseau</strong> de 200+ entreprises partenaires</li>
+                                        <li><strong>Formation intensive</strong> : 3 mois pour une nouvelle carrière</li>
+                                    </ul>
+                                </div>
+
+                                <div style="background: rgba(255,59,48,0.08); border-left: 3px solid #FF3B30; padding: 14px; margin-bottom: 24px; border-radius: 4px;">
+                                    <div style="color: #FF3B30; font-weight: 600; font-size: 14px;">
+                                        ⚡ Session d'information ce mardi à 18h • Places limitées (30 max)
+                                    </div>
+                                </div>
+
+                                <div style="text-align: center; margin-bottom: 24px;">
+                                    <a href="#" style="display: inline-block; background: #34A853; color: white; padding: 16px 36px; border-radius: 6px; text-decoration: none; font-weight: 700; font-size: 17px; box-shadow: 0 4px 12px rgba(52,168,83,0.3);">
+                                        Je m'inscris à la session gratuite
+                                    </a>
+                                </div>
+
+                                <div style="text-align: center; margin-bottom: 16px;">
+                                    <a href="#" style="color: #0A66C2; text-decoration: none; font-weight: 600; font-size: 14px;">
+                                        En savoir plus sur nos formations →
+                                    </a>
+                                </div>
+
+                                <p style="color: #666; font-size: 13px; line-height: 1.5; margin-bottom: 0; padding-top: 20px; border-top: 1px solid #e0e0e0;">
+                                    Pendant cette session de 90 minutes, vous découvrirez concrètement notre méthode, les formations disponibles et comment maximiser votre financement CPF.
+                                </p>
+                            </div>
+                            <div style="background: #f8f9fa; padding: 20px 24px; border-top: 1px solid #e0e0e0; text-align: center;">
+                                <div style="color: #666; font-size: 12px; margin-bottom: 8px;">
+                                    CFI Formation | Centre de Formation Professionnelle
+                                </div>
+                                <div style="color: #999; font-size: 11px;">
+                                    01 23 45 67 89 | contact@mycfia.fr
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `
+            },
+            sms_1: {
+                type: '<i class="bi bi-phone"></i> SMS',
+                variation: '1/2',
+                reasoning: [
+                    {
+                        title: 'Contrainte de longueur',
+                        icon: 'bi-text-left',
+                        content: "Message optimisé pour <strong>160 caractères max</strong> (1 SMS) afin de réduire les coûts d'envoi. Chaque mot compte pour maximiser l'impact."
+                    },
+                    {
+                        title: 'Identifier l\'expéditeur',
+                        icon: 'bi-building',
+                        content: "Mention <strong>\"CFI:\"</strong> en début de message pour identification immédiate. Évite le spam et augmente le taux de lecture de 34%."
+                    },
+                    {
+                        title: 'Urgence et rareté',
+                        icon: 'bi-clock-history',
+                        content: "Utilisation de <em>\"Places limitées\"</em> pour créer un sentiment d'urgence. Technique FOMO (Fear Of Missing Out) adaptée au canal SMS."
+                    },
+                    {
+                        title: 'Simplicité du CTA',
+                        icon: 'bi-hand-index',
+                        content: "CTA implicite via <strong>date précise</strong> (\"mardi 18h\"). Pas de lien (moins de clics sur SMS), focus sur mémorisation pour visite web ultérieure."
+                    }
+                ],
+                kpis: [
+                    { label: 'Taux de lecture prédit', value: '98%', color: 'success', icon: 'bi-eye' },
+                    { label: 'Taux de réponse estimé', value: '8.5%', color: 'primary', icon: 'bi-reply' },
+                    { label: 'Longueur (caractères)', value: '82/160', color: 'success', icon: 'bi-text-left' },
+                    { label: 'Opt-out risk', value: 'Faible', color: 'success', icon: 'bi-shield-check' },
+                    { label: 'Mémorabilité', value: 'Élevée', color: 'success', icon: 'bi-lightbulb' }
+                ],
+                preview: `
+                    <!-- iPhone Mockup Container -->
+                    <div style="position: relative; width: 300px; height: 600px; margin: 0 auto; background: linear-gradient(145deg, #3a3a3c, #1c1c1e); border-radius: 42px; padding: 10px; box-shadow: 0 20px 60px rgba(0,0,0,0.4), 0 0 0 2px #2c2c2e, inset 0 0 0 1px rgba(255,255,255,0.1);">
+
+                        <!-- Power button -->
+                        <div style="position: absolute; right: -3px; top: 120px; width: 3px; height: 70px; background: linear-gradient(90deg, #3a3a3c, #2c2c2e); border-radius: 0 2px 2px 0;"></div>
+
+                        <!-- Volume buttons -->
+                        <div style="position: absolute; left: -3px; top: 100px; width: 3px; height: 35px; background: linear-gradient(-90deg, #3a3a3c, #2c2c2e); border-radius: 2px 0 0 2px;"></div>
+                        <div style="position: absolute; left: -3px; top: 145px; width: 3px; height: 35px; background: linear-gradient(-90deg, #3a3a3c, #2c2c2e); border-radius: 2px 0 0 2px;"></div>
+
+                        <!-- Screen -->
+                        <div style="position: relative; width: 100%; height: 100%; background: #000; border-radius: 35px; overflow: hidden; box-shadow: inset 0 0 20px rgba(0,0,0,0.5);">
+
+                            <!-- Notch -->
+                            <div style="position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 150px; height: 28px; background: #000; border-radius: 0 0 18px 18px; z-index: 10;">
+                                <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 50px; height: 5px; background: #1a1a1a; border-radius: 3px;"></div>
+                                <div style="position: absolute; top: 50%; right: 10px; transform: translateY(-50%); width: 10px; height: 10px; background: #0a2540; border-radius: 50%; box-shadow: 0 0 3px rgba(10,37,64,0.6);"></div>
+                            </div>
+
+                            <!-- Status Bar -->
+                            <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 24px; color: white; font-size: 15px; font-weight: 600; position: relative; z-index: 5;">
+                                <div style="font-variant-numeric: tabular-nums;">9:41</div>
+                                <div style="display: flex; gap: 6px; align-items: center; font-size: 14px;">
+                                    <i class="bi bi-reception-4"></i>
+                                    <i class="bi bi-wifi" style="font-size: 16px;"></i>
+                                    <div style="display: flex; align-items: center;">
+                                        <i class="bi bi-battery-full" style="font-size: 20px;"></i>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Messages Screen -->
+                            <div style="height: calc(100% - 40px); background: #000; padding: 0; display: flex; flex-direction: column;">
+
+                                <!-- Messages Header -->
+                                <div style="background: rgba(28, 28, 30, 0.95); backdrop-filter: blur(20px); padding: 12px 16px; border-bottom: 1px solid rgba(60, 60, 67, 0.3);">
+                                    <div style="display: flex; align-items: center; gap: 12px;">
+                                        <div style="width: 42px; height: 42px; background: linear-gradient(135deg, #0A66C2 0%, #004182 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 16px; box-shadow: 0 2px 8px rgba(10,102,194,0.3);">
+                                            CF
+                                        </div>
+                                        <div style="flex: 1;">
+                                            <div style="color: white; font-weight: 600; font-size: 17px; margin-bottom: 2px;">CFI Formation</div>
+                                            <div style="color: #86868B; font-size: 13px;">iMessage • Aujourd'hui 11:23</div>
+                                        </div>
+                                        <i class="bi bi-info-circle" style="color: #0A84FF; font-size: 22px;"></i>
+                                    </div>
+                                </div>
+
+                                <!-- Messages Content -->
+                                <div style="flex: 1; padding: 16px; overflow-y: auto;">
+                                    <div style="display: flex; flex-direction: column; align-items: flex-start;">
+                                        <!-- Message bubble -->
+                                        <div style="background: #2C2C2E; color: white; padding: 12px 14px; border-radius: 20px; border-top-left-radius: 5px; max-width: 75%; font-size: 16px; line-height: 1.4; margin-bottom: 6px; box-shadow: 0 2px 8px rgba(0,0,0,0.2);">
+                                            CFI: Session info GRATUITE mardi 18h. Reconversion + CPF. Places limitées. Répondez OUI pour réserver
+                                        </div>
+                                        <div style="color: #86868B; font-size: 12px; padding-left: 12px; font-weight: 500;">
+                                            Livré • Lu
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Input Area -->
+                                <div style="background: rgba(28, 28, 30, 0.95); backdrop-filter: blur(20px); padding: 10px 12px 10px 12px; border-top: 1px solid rgba(60, 60, 67, 0.3);">
+                                    <div style="display: flex; align-items: center; gap: 8px;">
+                                        <i class="bi bi-camera-fill" style="color: #86868B; font-size: 24px;"></i>
+                                        <div style="flex: 1; background: #1C1C1E; border: 1px solid #3A3A3C; border-radius: 20px; padding: 8px 14px; display: flex; align-items: center; gap: 8px;">
+                                            <div style="flex: 1; color: #86868B; font-size: 16px;">iMessage</div>
+                                            <i class="bi bi-mic-fill" style="color: #86868B; font-size: 18px;"></i>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Home Indicator -->
+                                <div style="padding: 8px 0; display: flex; justify-content: center;">
+                                    <div style="width: 120px; height: 5px; background: rgba(255,255,255,0.3); border-radius: 3px;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `
+            },
+            article_1: {
+                type: '<i class="bi bi-file-text"></i> Article',
+                variation: '1/1',
+                reasoning: [
+                    {
+                        title: 'Format long éducatif SEO',
+                        icon: 'bi-search',
+                        content: "Article de <strong>1200 mots optimisé SEO</strong> pour cibler des requêtes informationnelles (\"comment se reconvertir\", \"financement formation\"). Format long pour établir <em>autorité et crédibilité</em>."
+                    },
+                    {
+                        title: 'Structure pyramide inversée',
+                        icon: 'bi-diagram-3',
+                        content: "Organisation <strong>info principale → détails → approfondissement</strong> pour retenir le lecteur. Les 3 premiers paragraphes contiennent l'essentiel pour les lecteurs pressés (78%)."
+                    },
+                    {
+                        title: 'Tone of voice expert accessible',
+                        icon: 'bi-megaphone',
+                        content: "Equilibre entre <em>expertise crédible</em> et <strong>accessibilité</strong>. Utilisation de termes techniques expliqués + exemples concrets pour rassurer sans intimider."
+                    },
+                    {
+                        title: 'CTA progressif multitouch',
+                        icon: 'bi-signpost-split',
+                        content: "3 niveaux de CTA : <strong>newsletter</strong> (faible engagement), <strong>guide gratuit</strong> (moyen), <strong>session info</strong> (fort). Stratégie pour capter différents niveaux de maturité prospect."
+                    }
+                ],
+                kpis: [
+                    { label: 'Temps de lecture moyen', value: '4min 20s', color: 'success', icon: 'bi-clock' },
+                    { label: 'Taux de complétion', value: '67%', color: 'success', icon: 'bi-check-circle' },
+                    { label: 'Partages sociaux estimés', value: '89', color: 'primary', icon: 'bi-share' },
+                    { label: 'Backlinks potentiels', value: '12+', color: 'success', icon: 'bi-link-45deg' },
+                    { label: 'SEO Score', value: '91/100', color: 'success', icon: 'bi-graph-up-arrow' }
+                ],
+                preview: `
+                    <div style="max-width: 800px; margin: 0 auto; background: white; padding: 40px 32px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; zoom: 0.70;">
+                        <!-- Article Header -->
+                        <div style="margin-bottom: 32px;">
+                            <div style="color: #0A66C2; font-size: 12px; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 16px;">
+                                Guide reconversion • 8 min de lecture
+                            </div>
+                            <h1 style="font-size: 36px; font-weight: 800; color: #1a1a1a; line-height: 1.2; margin-bottom: 20px;">
+                                Reconversion Professionnelle : Le Guide Complet pour Réussir en 2024
+                            </h1>
+                            <div style="color: #666; font-size: 18px; line-height: 1.5; margin-bottom: 24px;">
+                                Vous envisagez une reconversion professionnelle mais ne savez pas par où commencer ? Découvrez les 5 étapes essentielles, les financements disponibles et les erreurs à éviter absolument.
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 12px; padding-bottom: 24px; border-bottom: 2px solid #e0e0e0;">
+                                <div style="width: 48px; height: 48px; background: linear-gradient(135deg, #0A66C2, #004182); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">
+                                    CF
+                                </div>
+                                <div>
+                                    <div style="font-weight: 600; color: #1a1a1a; font-size: 14px;">Équipe CFI Formation</div>
+                                    <div style="color: #666; font-size: 13px;">Publié le 15 janvier 2024 • Mis à jour le 20 janvier 2024</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Article Content -->
+                        <div style="color: #333; line-height: 1.8; font-size: 17px;">
+                            <p style="margin-bottom: 20px;">
+                                <strong>La reconversion professionnelle n'est plus une exception</strong> : selon une étude Pôle Emploi 2023, 58% des Français envisagent de changer de métier dans les 5 prochaines années. Mais entre l'envie et la réalité, il y a souvent un gouffre d'incertitudes : financement, choix de formation, peur de l'échec...
+                            </p>
+
+                            <div style="background: linear-gradient(135deg, rgba(10,102,194,0.05), rgba(57,191,239,0.05)); border-left: 4px solid #0A66C2; padding: 20px; margin: 24px 0; border-radius: 4px;">
+                                <div style="font-weight: 700; color: #003080; margin-bottom: 8px;">
+                                    💡 Le saviez-vous ?
+                                </div>
+                                <div style="font-size: 16px; color: #333;">
+                                    92% de nos anciens stagiaires trouvent un emploi dans les 6 mois suivant leur certification. La clé ? Un accompagnement structuré et un financement sécurisé via le CPF.
+                                </div>
+                            </div>
+
+                            <h2 style="font-size: 28px; font-weight: 700; color: #1a1a1a; margin-top: 40px; margin-bottom: 20px;">
+                                1. Pourquoi se reconvertir en 2024 ?
+                            </h2>
+                            <p style="margin-bottom: 20px;">
+                                Les raisons sont multiples : quête de sens (67% des reconversions), évolution du marché du travail avec la digitalisation, burn-out professionnel, ou simplement l'envie d'un nouveau défi. Ce qui a changé en 2024, c'est l'accessibilité : le CPF permet de financer jusqu'à 100% d'une formation certifiante RNCP.
+                            </p>
+
+                            <h2 style="font-size: 28px; font-weight: 700; color: #1a1a1a; margin-top: 40px; margin-bottom: 20px;">
+                                2. Les 5 étapes clés d'une reconversion réussie
+                            </h2>
+                            <div style="background: #f8f9fa; padding: 24px; border-radius: 8px; margin-bottom: 24px;">
+                                <ul style="margin: 0; padding-left: 24px; line-height: 1.9;">
+                                    <li><strong style="color: #0A66C2;">Bilan de compétences</strong> : Identifier vos forces transférables (durée : 2-4 semaines)</li>
+                                    <li><strong style="color: #0A66C2;">Étude de marché</strong> : Valider la viabilité du métier visé (salaire, demande, perspectives)</li>
+                                    <li><strong style="color: #0A66C2;">Choix de formation</strong> : Privilégier les certifications RNCP reconnues par l'État</li>
+                                    <li><strong style="color: #0A66C2;">Financement sécurisé</strong> : Mobiliser CPF, Pôle Emploi, OPCO selon votre situation</li>
+                                    <li><strong style="color: #0A66C2;">Réseau et stage</strong> : Construire votre réseau professionnel dès la formation</li>
+                                </ul>
+                            </div>
+
+                            <h2 style="font-size: 28px; font-weight: 700; color: #1a1a1a; margin-top: 40px; margin-bottom: 20px;">
+                                3. Financement CPF : Mode d'emploi 2024
+                            </h2>
+                            <p style="margin-bottom: 20px;">
+                                Votre CPF accumule 500€/an (800€ pour les non-diplômés) avec un plafond de 5000€. Pour une formation certifiante à 4200€, votre CPF peut couvrir l'intégralité des frais. Les démarches se font en 48h via Mon Compte Formation.
+                            </p>
+
+                            <div style="background: rgba(52,168,83,0.08); border-left: 3px solid #34A853; padding: 18px; margin: 24px 0; border-radius: 4px;">
+                                <div style="font-weight: 600; color: #1a7f3e; font-size: 15px;">
+                                    ✓ Vous avez droit au CPF si vous êtes salarié, demandeur d'emploi ou indépendant depuis + de 2 ans
+                                </div>
+                            </div>
+
+                            <h2 style="font-size: 28px; font-weight: 700; color: #1a1a1a; margin-top: 40px; margin-bottom: 20px;">
+                                Conclusion : Passez à l'action
+                            </h2>
+                            <p style="margin-bottom: 32px;">
+                                La reconversion n'est pas un saut dans le vide, c'est une <strong>transition structurée</strong>. Avec les bons outils (bilan de compétences, formation certifiante, accompagnement dédié), 9 reconversions sur 10 aboutissent à un emploi stable et épanouissant.
+                            </p>
+
+                            <!-- Multi-level CTAs -->
+                            <div style="background: linear-gradient(135deg, #f0f7ff, #e3f2fd); padding: 32px; border-radius: 12px; text-align: center; margin-top: 40px;">
+                                <div style="font-size: 22px; font-weight: 700; color: #003080; margin-bottom: 16px;">
+                                    Prêt(e) à franchir le cap ?
+                                </div>
+                                <div style="margin-bottom: 24px;">
+                                    <a href="#" style="display: inline-block; background: #0A66C2; color: white; padding: 14px 32px; border-radius: 6px; text-decoration: none; font-weight: 600; font-size: 16px; margin: 0 8px 12px 8px;">
+                                        📅 Participer à la session info gratuite
+                                    </a>
+                                    <a href="#" style="display: inline-block; background: #34A853; color: white; padding: 14px 32px; border-radius: 6px; text-decoration: none; font-weight: 600; font-size: 16px; margin: 0 8px 12px 8px;">
+                                        📥 Télécharger le guide complet (PDF)
+                                    </a>
+                                </div>
+                                <div>
+                                    <a href="#" style="color: #0A66C2; text-decoration: none; font-weight: 600; font-size: 14px;">
+                                        S'abonner à notre newsletter reconversion →
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Social Share -->
+                        <div style="margin-top: 48px; padding-top: 24px; border-top: 1px solid #e0e0e0; text-align: center;">
+                            <div style="color: #666; font-size: 14px; margin-bottom: 12px;">Cet article vous a aidé ? Partagez-le :</div>
+                            <div style="display: flex; gap: 12px; justify-content: center;">
+                                <button style="background: #0A66C2; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 13px;">
+                                    <i class="bi bi-linkedin"></i> LinkedIn
+                                </button>
+                                <button style="background: #1877F2; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 13px;">
+                                    <i class="bi bi-facebook"></i> Facebook
+                                </button>
+                                <button style="background: #25D366; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 13px;">
+                                    <i class="bi bi-whatsapp"></i> WhatsApp
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `
+            },
+            article_2: {
+                type: '<i class="bi bi-file-text"></i> Article',
+                variation: '2/2',
+                reasoning: [
+                    {
+                        title: 'Stratégie storytelling visuel',
+                        icon: 'bi-camera',
+                        content: "Article avec <strong>hero image + photo témoignage</strong> pour humaniser le message. Les articles avec visuels génèrent <strong>94% plus d'engagement</strong> et augmentent le temps de lecture de 4min 20s à 6min 15s."
+                    },
+                    {
+                        title: 'Format success story documentée',
+                        icon: 'bi-person-check',
+                        content: "Récit de transformation réelle <em>\"De caissière à développeuse web\"</em> avec timeline visuelle. Le storytelling concret <strong>augmente la conversion de 47%</strong> vs article informatif générique."
+                    },
+                    {
+                        title: 'Images optimisées SEO et social',
+                        icon: 'bi-image-alt',
+                        content: "Hero image 16:9 (1200x675px) avec texte incrusté pour <strong>partages sociaux optimaux</strong>. Photo portrait témoignage authentique (non stock) pour crédibilité maximale. Alt tags et schema markup Person intégrés."
+                    },
+                    {
+                        title: 'Structure narrative immersive',
+                        icon: 'bi-book',
+                        content: "Pattern <em>\"Avant → Pendant → Après\"</em> avec chiffres concrets (salaire, durée). Intégration de <strong>3 points de preuve visuelle</strong> : photo avant/après, capture certification, screenshot LinkedIn nouveau poste."
+                    }
+                ],
+                kpis: [
+                    { label: 'Temps de lecture moyen', value: '6min 15s', color: 'success', icon: 'bi-clock' },
+                    { label: 'Taux de complétion', value: '74%', color: 'success', icon: 'bi-check-circle' },
+                    { label: 'Partages sociaux estimés', value: '142', color: 'success', icon: 'bi-share' },
+                    { label: 'Conversion landing page', value: '8.2%', color: 'success', icon: 'bi-arrow-right-circle' },
+                    { label: 'SEO Score', value: '95/100', color: 'success', icon: 'bi-graph-up-arrow' }
+                ],
+                preview: `
+                    <div style="max-width: 800px; margin: 0 auto; background: white; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;">
+                        <!-- Hero Image -->
+                        <div style="width: 100%; background: linear-gradient(135deg, rgba(52,168,83,0.9), rgba(10,102,194,0.85)), url('data:image/svg+xml,...'); aspect-ratio: 16/9; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; margin-bottom: 40px;">
+                            <!-- Decorative pattern -->
+                            <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; opacity: 0.1; background-image: repeating-linear-gradient(45deg, white 0px, white 2px, transparent 2px, transparent 12px);"></div>
+
+                            <!-- Hero content -->
+                            <div style="text-align: center; z-index: 1; padding: 60px 40px; color: white;">
+                                <div style="background: rgba(255,255,255,0.25); backdrop-filter: blur(10px); padding: 8px 20px; border-radius: 20px; display: inline-block; margin-bottom: 20px;">
+                                    <span style="font-size: 0.9rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;">Success Story</span>
+                                </div>
+                                <h1 style="font-size: 42px; font-weight: 800; line-height: 1.15; margin: 0 0 16px 0; text-shadow: 0 2px 12px rgba(0,0,0,0.3);">
+                                    De Caissière à Développeuse Web<br>en 6 Mois
+                                </h1>
+                                <div style="font-size: 20px; font-weight: 600; opacity: 0.95; text-shadow: 0 2px 8px rgba(0,0,0,0.2);">
+                                    L'histoire inspirante de Sophie, 32 ans, qui a osé changer de vie
+                                </div>
+                                <div style="margin-top: 24px; display: inline-block; background: white; color: #34A853; padding: 10px 28px; border-radius: 20px; box-shadow: 0 4px 16px rgba(0,0,0,0.2);">
+                                    <span style="font-size: 0.85rem; font-weight: 700;">📸 Image hero témoignage</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Article Content -->
+                        <div style="padding: 0 32px 40px 32px;">
+                            <!-- Article meta -->
+                            <div style="margin-bottom: 32px;">
+                                <div style="color: #34A853; font-size: 12px; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 12px;">
+                                    Témoignage reconversion • 8 min de lecture
+                                </div>
+                                <div style="display: flex; align-items: center; gap: 12px; padding-bottom: 24px; border-bottom: 2px solid #e0e0e0;">
+                                    <div style="width: 48px; height: 48px; background: linear-gradient(135deg, #0A66C2, #004182); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">
+                                        CF
+                                    </div>
+                                    <div>
+                                        <div style="font-weight: 600; color: #1a1a1a; font-size: 14px;">Équipe CFI Formation</div>
+                                        <div style="color: #666; font-size: 13px;">Publié le 18 janvier 2024</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Article intro -->
+                            <div style="color: #333; line-height: 1.8; font-size: 17px;">
+                                <p style="font-size: 19px; font-weight: 600; color: #1a1a1a; margin-bottom: 24px; line-height: 1.6;">
+                                    Il y a un an, Sophie travaillait 35h/semaine comme caissière pour 1450€ net. Aujourd'hui, elle code pour une startup parisienne et gagne 2800€. Voici comment elle a réussi sa reconversion en seulement 6 mois.
+                                </p>
+
+                                <!-- Photo + quote testimonial -->
+                                <div style="background: linear-gradient(135deg, #f0f7ff, #e3f2fd); border-left: 4px solid #0A66C2; padding: 28px; margin: 32px 0; border-radius: 8px; display: flex; gap: 24px; align-items: center;">
+                                    <!-- Photo placeholder -->
+                                    <div style="min-width: 120px; width: 120px; height: 120px; background: linear-gradient(135deg, #667eea, #764ba2); border-radius: 50%; display: flex; align-items: center; justify-content: center; position: relative; box-shadow: 0 4px 16px rgba(0,0,0,0.15);">
+                                        <div style="text-align: center;">
+                                            <div style="font-size: 3rem; margin-bottom: -8px;">👩‍💻</div>
+                                        </div>
+                                        <div style="position: absolute; bottom: -8px; right: -8px; background: white; padding: 6px 12px; border-radius: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.15);">
+                                            <span style="font-size: 0.7rem; font-weight: 700; color: #34A853;">📸 Photo</span>
+                                        </div>
+                                    </div>
+                                    <!-- Quote -->
+                                    <div style="flex: 1;">
+                                        <div style="font-size: 18px; font-style: italic; color: #003080; margin-bottom: 12px; line-height: 1.5;">
+                                            "J'avais peur de tout perdre en quittant mon CDI. Mais aujourd'hui, je gagne 93% de plus et je suis enfin épanouie professionnellement."
+                                        </div>
+                                        <div style="font-weight: 700; color: #1a1a1a; font-size: 15px;">
+                                            Sophie Dupont, 32 ans
+                                        </div>
+                                        <div style="color: #666; font-size: 14px;">
+                                            Développeuse Full-Stack chez TechStart Paris
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <h2 style="font-size: 28px; font-weight: 700; color: #1a1a1a; margin-top: 48px; margin-bottom: 20px;">
+                                    📅 Le parcours en timeline
+                                </h2>
+
+                                <!-- Timeline -->
+                                <div style="background: #f8f9fa; padding: 28px; border-radius: 8px; margin-bottom: 32px;">
+                                    <div style="display: flex; gap: 16px; margin-bottom: 20px;">
+                                        <div style="min-width: 100px; background: #34A853; color: white; padding: 8px 16px; border-radius: 20px; text-align: center; font-weight: 700; font-size: 14px;">
+                                            Janvier 2023
+                                        </div>
+                                        <div>
+                                            <div style="font-weight: 600; color: #1a1a1a; margin-bottom: 6px;">Décision et bilan de compétences</div>
+                                            <div style="color: #666; font-size: 15px; line-height: 1.6;">
+                                                Après 8 ans dans la grande distribution, Sophie réalise son bilan. Objectif : développement web.
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div style="border-left: 3px dashed #ccc; height: 24px; margin-left: 50px;"></div>
+                                    <div style="display: flex; gap: 16px; margin-bottom: 20px;">
+                                        <div style="min-width: 100px; background: #0A66C2; color: white; padding: 8px 16px; border-radius: 20px; text-align: center; font-weight: 700; font-size: 14px;">
+                                            Février 2023
+                                        </div>
+                                        <div>
+                                            <div style="font-weight: 600; color: #1a1a1a; margin-bottom: 6px;">Inscription formation intensive CFI</div>
+                                            <div style="color: #666; font-size: 15px; line-height: 1.6;">
+                                                Formation développeur web Full-Stack (JavaScript, React, Node.js). Financement CPF 100% (4200€).
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div style="border-left: 3px dashed #ccc; height: 24px; margin-left: 50px;"></div>
+                                    <div style="display: flex; gap: 16px; margin-bottom: 20px;">
+                                        <div style="min-width: 100px; background: #9C27B0; color: white; padding: 8px 16px; border-radius: 20px; text-align: center; font-weight: 700; font-size: 14px;">
+                                            Mars-Juin
+                                        </div>
+                                        <div>
+                                            <div style="font-weight: 600; color: #1a1a1a; margin-bottom: 6px;">Formation intensive + portfolio</div>
+                                            <div style="color: #666; font-size: 15px; line-height: 1.6;">
+                                                4 mois d'apprentissage intensif (35h/semaine). Création de 3 projets portfolio professionnels.
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div style="border-left: 3px dashed #ccc; height: 24px; margin-left: 50px;"></div>
+                                    <div style="display: flex; gap: 16px;">
+                                        <div style="min-width: 100px; background: #FF9800; color: white; padding: 8px 16px; border-radius: 20px; text-align: center; font-weight: 700; font-size: 14px;">
+                                            Juillet 2023
+                                        </div>
+                                        <div>
+                                            <div style="font-weight: 600; color: #1a1a1a; margin-bottom: 6px;">Premier CDI développeuse</div>
+                                            <div style="color: #666; font-size: 15px; line-height: 1.6;">
+                                                5 entretiens, 3 offres. Sophie choisit TechStart Paris : 2800€ net/mois + télétravail 3j/semaine.
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <h2 style="font-size: 28px; font-weight: 700; color: #1a1a1a; margin-top: 40px; margin-bottom: 20px;">
+                                    💰 Les chiffres de sa reconversion
+                                </h2>
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 32px;">
+                                    <div style="background: linear-gradient(135deg, rgba(52,168,83,0.1), rgba(52,168,83,0.05)); border: 2px solid #34A853; padding: 20px; border-radius: 8px; text-align: center;">
+                                        <div style="font-size: 32px; font-weight: 800; color: #34A853; margin-bottom: 8px;">+93%</div>
+                                        <div style="color: #666; font-weight: 600;">Augmentation salaire</div>
+                                        <div style="color: #999; font-size: 13px; margin-top: 4px;">1450€ → 2800€ net/mois</div>
+                                    </div>
+                                    <div style="background: linear-gradient(135deg, rgba(10,102,194,0.1), rgba(10,102,194,0.05)); border: 2px solid #0A66C2; padding: 20px; border-radius: 8px; text-align: center;">
+                                        <div style="font-size: 32px; font-weight: 800; color: #0A66C2; margin-bottom: 8px;">6 mois</div>
+                                        <div style="color: #666; font-weight: 600;">Durée totale</div>
+                                        <div style="color: #999; font-size: 13px; margin-top: 4px;">Bilan → Premier CDI</div>
+                                    </div>
+                                    <div style="background: linear-gradient(135deg, rgba(255,152,0,0.1), rgba(255,152,0,0.05)); border: 2px solid #FF9800; padding: 20px; border-radius: 8px; text-align: center;">
+                                        <div style="font-size: 32px; font-weight: 800; color: #FF9800; margin-bottom: 8px;">0€</div>
+                                        <div style="color: #666; font-weight: 600;">Reste à charge</div>
+                                        <div style="color: #999; font-size: 13px; margin-top: 4px;">CPF 100% (4200€)</div>
+                                    </div>
+                                    <div style="background: linear-gradient(135deg, rgba(156,39,176,0.1), rgba(156,39,176,0.05)); border: 2px solid #9C27B0; padding: 20px; border-radius: 8px; text-align: center;">
+                                        <div style="font-size: 32px; font-weight: 800; color: #9C27B0; margin-bottom: 8px;">3/3</div>
+                                        <div style="color: #666; font-weight: 600;">Offres d'emploi</div>
+                                        <div style="color: #999; font-size: 13px; margin-top: 4px;">Après 5 entretiens</div>
+                                    </div>
+                                </div>
+
+                                <h2 style="font-size: 28px; font-weight: 700; color: #1a1a1a; margin-top: 40px; margin-bottom: 20px;">
+                                    🎯 Ses 3 conseils pour réussir
+                                </h2>
+                                <div style="background: #f8f9fa; padding: 24px; border-radius: 8px; margin-bottom: 32px;">
+                                    <ul style="margin: 0; padding-left: 24px; line-height: 2;">
+                                        <li style="margin-bottom: 12px;"><strong style="color: #34A853;">Ne pas attendre le "bon moment"</strong> : "Il n'y en a jamais. J'ai démissionné avec seulement 2 mois d'économies, mais mon CPF a tout financé."</li>
+                                        <li style="margin-bottom: 12px;"><strong style="color: #0A66C2;">Choisir une formation certifiante RNCP</strong> : "Seules ces formations sont reconnues par les recruteurs et éligibles CPF à 100%."</li>
+                                        <li style="margin-bottom: 12px;"><strong style="color: #FF9800;">Construire son réseau dès la formation</strong> : "Mon premier CDI vient d'une recommandation d'un intervenant CFI."</li>
+                                    </ul>
+                                </div>
+
+                                <!-- Proof screenshot placeholder -->
+                                <div style="background: linear-gradient(135deg, #f0f0f0, #e8e8e8); border: 2px solid #ccc; border-radius: 8px; padding: 32px; text-align: center; margin: 32px 0;">
+                                    <div style="font-size: 3rem; margin-bottom: 16px;">💼</div>
+                                    <div style="font-weight: 700; color: #1a1a1a; font-size: 18px; margin-bottom: 8px;">
+                                        Capture LinkedIn de Sophie
+                                    </div>
+                                    <div style="color: #666; font-size: 15px; margin-bottom: 16px;">
+                                        Poste actuel : Développeuse Full-Stack @ TechStart Paris
+                                    </div>
+                                    <div style="background: white; padding: 10px 24px; border-radius: 20px; display: inline-block;">
+                                        <span style="font-size: 0.85rem; font-weight: 700; color: #0A66C2;">📸 Screenshot preuve sociale</span>
+                                    </div>
+                                </div>
+
+                                <p style="margin-top: 40px; font-size: 17px; line-height: 1.7; color: #333;">
+                                    Aujourd'hui, Sophie ne regrette rien. Elle travaille sur des projets qui la passionnent, télétravaille 3 jours par semaine, et a presque doublé son salaire. Sa seule regret ? <strong>"Ne pas l'avoir fait plus tôt"</strong>.
+                                </p>
+
+                                <!-- CTA Section -->
+                                <div style="background: linear-gradient(135deg, #34A853, #0A66C2); padding: 40px 32px; border-radius: 12px; text-align: center; margin-top: 48px; color: white;">
+                                    <div style="font-size: 26px; font-weight: 800; margin-bottom: 16px;">
+                                        Et vous, prêt(e) à écrire votre success story ?
+                                    </div>
+                                    <div style="font-size: 17px; margin-bottom: 28px; opacity: 0.95;">
+                                        Comme Sophie, profitez du financement CPF 100% pour votre reconversion
+                                    </div>
+                                    <div style="margin-bottom: 20px;">
+                                        <a href="#" style="display: inline-block; background: white; color: #34A853; padding: 16px 40px; border-radius: 8px; text-decoration: none; font-weight: 700; font-size: 17px; box-shadow: 0 4px 16px rgba(0,0,0,0.2); margin: 0 8px 12px 8px;">
+                                            📅 Participer à la session info gratuite
+                                        </a>
+                                        <a href="#" style="display: inline-block; background: rgba(255,255,255,0.2); backdrop-filter: blur(10px); color: white; padding: 16px 40px; border-radius: 8px; text-decoration: none; font-weight: 700; font-size: 17px; border: 2px solid white; margin: 0 8px 12px 8px;">
+                                            💬 Discuter avec un conseiller
+                                        </a>
+                                    </div>
+                                    <div style="font-size: 13px; opacity: 0.85;">
+                                        ✓ Bilan gratuit de votre CPF • ✓ Sans engagement • ✓ Réponse sous 24h
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Social Share -->
+                            <div style="margin-top: 48px; padding-top: 24px; border-top: 1px solid #e0e0e0; text-align: center;">
+                                <div style="color: #666; font-size: 14px; margin-bottom: 12px;">Cette success story vous inspire ? Partagez-la :</div>
+                                <div style="display: flex; gap: 12px; justify-content: center;">
+                                    <button style="background: #0A66C2; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 13px;">
+                                        <i class="bi bi-linkedin"></i> LinkedIn
+                                    </button>
+                                    <button style="background: #1877F2; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 13px;">
+                                        <i class="bi bi-facebook"></i> Facebook
+                                    </button>
+                                    <button style="background: #25D366; color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 13px;">
+                                        <i class="bi bi-whatsapp"></i> WhatsApp
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `
+            },
+            sms_2: {
+                type: '<i class="bi bi-phone"></i> SMS',
+                variation: '2/2',
+                reasoning: [
+                    {
+                        title: 'Approche personnalisée prénom',
+                        icon: 'bi-person',
+                        content: "Inclusion du <strong>[Prénom]</strong> pour humaniser le message et augmenter le taux de lecture de 26%. La personnalisation crée une connexion immédiate."
+                    },
+                    {
+                        title: 'Angle testimonial',
+                        icon: 'bi-chat-quote',
+                        content: "Utilisation de <em>preuve sociale</em> (\"92% trouvent un emploi\") plutôt que promesse vague. Les chiffres concrets génèrent <strong>41% plus de confiance</strong> que les affirmations générales."
+                    },
+                    {
+                        title: 'CTA lien court trackable',
+                        icon: 'bi-link-45deg',
+                        content: "Lien raccourci <strong>cfi.fr/info</strong> facile à mémoriser et à saisir manuellement. Format court optimisé pour mobile (94% des SMS lus sur smartphone)."
+                    },
+                    {
+                        title: 'Timing optimal envoi',
+                        icon: 'bi-clock',
+                        content: "SMS programmé pour <strong>mardi 10h-11h</strong> (meilleur taux d'ouverture 87%). Évite les créneaux rush (matin/soir) où le message risque d'être ignoré."
+                    }
+                ],
+                kpis: [
+                    { label: 'Taux d\'ouverture prédit', value: '94%', color: 'success', icon: 'bi-envelope-open' },
+                    { label: 'Taux de clic estimé', value: '18.6%', color: 'success', icon: 'bi-cursor' },
+                    { label: 'Coût par SMS', value: '0.045€', color: 'success', icon: 'bi-currency-euro' },
+                    { label: 'Taux de désabonnement', value: '1.2%', color: 'success', icon: 'bi-x-circle' },
+                    { label: 'Longueur', value: '157 car.', color: 'success', icon: 'bi-text-left' }
+                ],
+                preview: `
+                    <!-- iPhone Mockup Container -->
+                    <div style="position: relative; width: 300px; height: 600px; margin: 0 auto; background: linear-gradient(145deg, #3a3a3c, #1c1c1e); border-radius: 42px; padding: 10px; box-shadow: 0 20px 60px rgba(0,0,0,0.4), 0 0 0 2px #2c2c2e, inset 0 0 0 1px rgba(255,255,255,0.1);">
+
+                        <!-- Power button -->
+                        <div style="position: absolute; right: -3px; top: 120px; width: 3px; height: 70px; background: linear-gradient(90deg, #3a3a3c, #2c2c2e); border-radius: 0 2px 2px 0;"></div>
+
+                        <!-- Volume buttons -->
+                        <div style="position: absolute; left: -3px; top: 100px; width: 3px; height: 35px; background: linear-gradient(-90deg, #3a3a3c, #2c2c2e); border-radius: 2px 0 0 2px;"></div>
+                        <div style="position: absolute; left: -3px; top: 145px; width: 3px; height: 35px; background: linear-gradient(-90deg, #3a3a3c, #2c2c2e); border-radius: 2px 0 0 2px;"></div>
+
+                        <!-- Screen -->
+                        <div style="position: relative; width: 100%; height: 100%; background: #000; border-radius: 35px; overflow: hidden; box-shadow: inset 0 0 20px rgba(0,0,0,0.5);">
+
+                            <!-- Notch -->
+                            <div style="position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 150px; height: 28px; background: #000; border-radius: 0 0 18px 18px; z-index: 10;">
+                                <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 50px; height: 5px; background: #1a1a1a; border-radius: 3px;"></div>
+                                <div style="position: absolute; top: 50%; right: 10px; transform: translateY(-50%); width: 10px; height: 10px; background: #0a2540; border-radius: 50%; box-shadow: 0 0 3px rgba(10,37,64,0.6);"></div>
+                            </div>
+
+                            <!-- Status Bar -->
+                            <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 24px; color: white; font-size: 15px; font-weight: 600; position: relative; z-index: 5;">
+                                <div style="font-variant-numeric: tabular-nums;">9:41</div>
+                                <div style="display: flex; gap: 6px; align-items: center; font-size: 14px;">
+                                    <i class="bi bi-reception-4"></i>
+                                    <i class="bi bi-wifi" style="font-size: 16px;"></i>
+                                    <div style="display: flex; align-items: center;">
+                                        <i class="bi bi-battery-full" style="font-size: 20px;"></i>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Messages Screen -->
+                            <div style="height: calc(100% - 40px); background: #000; padding: 0; display: flex; flex-direction: column;">
+
+                                <!-- Messages Header -->
+                                <div style="background: rgba(28, 28, 30, 0.95); backdrop-filter: blur(20px); padding: 12px 16px; border-bottom: 1px solid rgba(60, 60, 67, 0.3);">
+                                    <div style="display: flex; align-items: center; gap: 12px;">
+                                        <div style="width: 42px; height: 42px; background: linear-gradient(135deg, #0A66C2 0%, #004182 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 16px; box-shadow: 0 2px 8px rgba(10,102,194,0.3);">
+                                            CF
+                                        </div>
+                                        <div style="flex: 1;">
+                                            <div style="color: white; font-weight: 600; font-size: 17px; margin-bottom: 2px;">CFI Formation</div>
+                                            <div style="color: #86868B; font-size: 13px;">iMessage • Mardi 10:23</div>
+                                        </div>
+                                        <i class="bi bi-info-circle" style="color: #0A84FF; font-size: 22px;"></i>
+                                    </div>
+                                </div>
+
+                                <!-- Messages Content -->
+                                <div style="flex: 1; padding: 16px; overflow-y: auto;">
+                                    <div style="display: flex; flex-direction: column; align-items: flex-start;">
+                                        <!-- Message bubble -->
+                                        <div style="background: #2C2C2E; color: white; padding: 12px 14px; border-radius: 20px; border-top-left-radius: 5px; max-width: 85%; font-size: 16px; line-height: 1.4; margin-bottom: 6px; box-shadow: 0 2px 8px rgba(0,0,0,0.2);">
+                                            Bonjour [Prénom] 👋 92% de nos alumni trouvent un emploi sous 6 mois. Formez-vous en 3 mois, financé à 100% par CPF. Session info gratuite ce mardi 18h → cfi.fr/info
+                                        </div>
+                                        <div style="color: #86868B; font-size: 12px; padding-left: 12px; font-weight: 500;">
+                                            Livré • Lu
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Input Area -->
+                                <div style="background: rgba(28, 28, 30, 0.95); backdrop-filter: blur(20px); padding: 10px 12px 10px 12px; border-top: 1px solid rgba(60, 60, 67, 0.3);">
+                                    <div style="display: flex; align-items: center; gap: 8px;">
+                                        <i class="bi bi-camera-fill" style="color: #86868B; font-size: 24px;"></i>
+                                        <div style="flex: 1; background: #1C1C1E; border: 1px solid #3A3A3C; border-radius: 20px; padding: 8px 14px; display: flex; align-items: center; gap: 8px;">
+                                            <div style="flex: 1; color: #86868B; font-size: 16px;">iMessage</div>
+                                            <i class="bi bi-mic-fill" style="color: #86868B; font-size: 18px;"></i>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Home Indicator -->
+                                <div style="padding: 8px 0; display: flex; justify-content: center;">
+                                    <div style="width: 120px; height: 5px; background: rgba(255,255,255,0.3); border-radius: 3px;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `
+            },
+            courrier_1: {
+                type: '<i class="bi bi-mailbox"></i> Courrier',
+                variation: '1/1',
+                reasoning: [
+                    {
+                        title: 'Canal premium exclusif',
+                        icon: 'bi-award',
+                        content: "Le courrier papier génère un <strong>taux d'attention 3x supérieur</strong> au digital pour les 45-65 ans. Signal de sérieux et d'investissement qui <em>valorise le destinataire</em>."
+                    },
+                    {
+                        title: 'Format lettre personnalisée',
+                        icon: 'bi-envelope-paper',
+                        content: "Structure <strong>lettre nominative</strong> avec en-tête professionnel. Le courrier signé par un responsable formation crée une <em>relation de confiance immédiate</em> (vs email anonyme)."
+                    },
+                    {
+                        title: 'Offre VIP limitée temporellement',
+                        icon: 'bi-hourglass-split',
+                        content: "Proposition <strong>\"audit personnalisé gratuit\"</strong> valable 15 jours pour créer urgence. Le courrier arrive après ciblage précis des profils qualifiés (bac+2, 5-15 ans XP)."
+                    },
+                    {
+                        title: 'Double CTA physique-digital',
+                        icon: 'bi-signpost-2',
+                        content: "Coupon détachable (réponse T) + QR code pour hybrider les canaux. 68% des 45+ préfèrent le téléphone, 32% le web : <strong>stratégie multicanale</strong>."
+                    }
+                ],
+                kpis: [
+                    { label: 'Taux de lecture estimé', value: '78%', color: 'success', icon: 'bi-eye' },
+                    { label: 'Taux de réponse prédit', value: '4.8%', color: 'success', icon: 'bi-reply' },
+                    { label: 'Coût par envoi', value: '2.85€', color: 'warning', icon: 'bi-currency-euro' },
+                    { label: 'ROI estimé', value: '+420%', color: 'success', icon: 'bi-graph-up-arrow' },
+                    { label: 'Qualité prospects', value: 'Premium', color: 'success', icon: 'bi-star-fill' }
+                ],
+                preview: `
+                    <div style="max-width: 580px; margin: 0 auto; background: white; padding: 28px; font-family: 'Times New Roman', serif; box-shadow: 0 4px 16px rgba(0,0,0,0.15); zoom: 0.75;">
+                        <!-- Letterhead -->
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 3px solid #003080;">
+                            <div>
+                                <div style="width: 64px; height: 64px; background: linear-gradient(135deg, #0A66C2, #004182); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 22px; font-family: sans-serif; margin-bottom: 8px;">
+                                    CF
+                                </div>
+                                <div style="font-weight: 700; font-size: 15px; color: #003080; font-family: sans-serif;">CFI Formation</div>
+                                <div style="font-size: 11px; color: #666; line-height: 1.4; font-family: sans-serif;">
+                                    Centre de Formation Professionnelle<br>
+                                    Certifié Qualiopi • RNCP
+                                </div>
+                            </div>
+                            <div style="text-align: right; font-size: 10px; color: #666; font-family: sans-serif; line-height: 1.5;">
+                                42 Avenue des Formations<br>
+                                75015 Paris<br>
+                                Tel: 01 23 45 67 89<br>
+                                contact@mycfia.fr
+                            </div>
+                        </div>
+
+                        <!-- Recipient -->
+                        <div style="margin-bottom: 20px; font-size: 12px; line-height: 1.5;">
+                            <div style="font-weight: 600;">[Madame/Monsieur] [Prénom] [Nom]</div>
+                            <div>[Adresse ligne 1]</div>
+                            <div>[Code postal] [Ville]</div>
+                        </div>
+
+                        <!-- Date and ref -->
+                        <div style="text-align: right; font-size: 11px; color: #666; margin-bottom: 20px;">
+                            Paris, le [Date]<br>
+                            Réf: AUDIT-2024-[ID]
+                        </div>
+
+                        <!-- Subject -->
+                        <div style="font-weight: 700; font-size: 13px; margin-bottom: 16px; text-decoration: underline;">
+                            Objet : Invitation exclusive – Audit personnalisé de reconversion (valeur 350€)
+                        </div>
+
+                        <!-- Letter body -->
+                        <div style="font-size: 13px; line-height: 1.6; color: #1a1a1a;">
+                            <p style="margin-bottom: 14px;">
+                                <span style="font-weight: 600;">[Madame/Monsieur] [Nom]</span>,
+                            </p>
+
+                            <p style="margin-bottom: 14px;">
+                                Dans le cadre de notre programme <strong>« Reconversion Premium 2024 »</strong>, nous avons identifié votre profil comme particulièrement adapté à nos formations certifiantes de niveau Bac+3/+5.
+                            </p>
+
+                            <p style="margin-bottom: 14px;">
+                                Avec <strong>plus de 15 ans d'expérience</strong> dans l'accompagnement de reconversions professionnelles, CFI Formation affiche un taux de réussite exceptionnel : <span style="background: #fff3cd; padding: 2px 4px; font-weight: 600;">92% de nos stagiaires trouvent un emploi sous 6 mois</span>.
+                            </p>
+
+                            <div style="background: linear-gradient(135deg, rgba(10,102,194,0.08), rgba(57,191,239,0.08)); border-left: 3px solid #0A66C2; padding: 14px; margin: 18px 0; border-radius: 4px;">
+                                <div style="font-weight: 700; color: #003080; margin-bottom: 8px; font-size: 13px; font-family: sans-serif;">
+                                    🎁 Offre réservée valable jusqu'au [Date + 15 jours] :
+                                </div>
+                                <ul style="margin: 0; padding-left: 18px; line-height: 1.6;">
+                                    <li><strong>Audit personnalisé gratuit</strong> (d'une valeur de 350€)</li>
+                                    <li><strong>Bilan de compétences express</strong> avec notre expert (30 min)</li>
+                                    <li><strong>Étude de financement CPF</strong> sur-mesure</li>
+                                    <li><strong>Accès prioritaire</strong> aux sessions de mars 2024</li>
+                                </ul>
+                            </div>
+
+                            <p style="margin-bottom: 14px;">
+                                Votre CPF peut financer <strong>jusqu'à 100% de la formation</strong> (certification RNCP niveau 6). Aucun reste à charge dans 89% des cas pour les profils comme le vôtre.
+                            </p>
+
+                            <p style="margin-bottom: 18px;">
+                                Je vous invite à me contacter pour échanger sur votre projet professionnel dans un cadre confidentiel et sans engagement.
+                            </p>
+
+                            <p style="margin-bottom: 6px;">
+                                Cordialement,
+                            </p>
+
+                            <div style="margin-top: 16px; margin-bottom: 20px;">
+                                <div style="font-style: italic; color: #003080; font-size: 18px; margin-bottom: 3px;">Marie Durand</div>
+                                <div style="font-weight: 600; font-size: 11px; color: #666;">
+                                    Responsable Relations Candidats<br>
+                                    CFI Formation
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Response coupon (detachable) -->
+                        <div style="border: 2px dashed #ccc; padding: 14px; margin-top: 24px; background: #fafafa; border-radius: 6px;">
+                            <div style="font-weight: 700; font-size: 12px; margin-bottom: 12px; text-align: center; color: #003080; font-family: sans-serif;">
+                                ✂️ BON DE RÉPONSE À RETOURNER OU RÉPONSE EN LIGNE
+                            </div>
+                            <div style="display: flex; gap: 20px; align-items: center;">
+                                <div style="flex: 1; font-size: 11px; line-height: 1.5;">
+                                    <div style="margin-bottom: 8px;">
+                                        ☐ Oui, je souhaite bénéficier de l'audit gratuit<br>
+                                        ☐ Appelez-moi au : __ __ __ __ __ __ __ __ __ __<br>
+                                        ☐ Envoyez-moi la documentation complète
+                                    </div>
+                                    <div style="font-weight: 600; color: #0A66C2; font-size: 10px;">
+                                        📞 01 23 45 67 89 • 📧 audit@mycfia.fr
+                                    </div>
+                                </div>
+                                <div style="text-align: center;">
+                                    <div style="width: 90px; height: 90px; background: white; border: 2px solid #003080; display: flex; align-items: center; justify-content: center; border-radius: 6px; font-family: sans-serif;">
+                                        <div>
+                                            <div style="font-size: 45px; margin-bottom: 4px;">▦</div>
+                                            <div style="font-size: 9px; font-weight: 600; color: #003080;">QR Code<br>Réponse rapide</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Footer -->
+                        <div style="margin-top: 20px; padding-top: 12px; border-top: 1px solid #e0e0e0; font-size: 8px; color: #999; text-align: center; line-height: 1.4; font-family: sans-serif;">
+                            CFI Formation - SAS au capital de 100 000€ - SIRET 123 456 789 00012 - RCS Paris<br>
+                            Organisme de formation enregistré sous le n° 11 75 12345 75 - Certification Qualiopi n° 2023/12345<br>
+                            Conformément au RGPD, vos données sont utilisées uniquement pour cette proposition. Droit d'accès et de rectification : contact@mycfia.fr
+                        </div>
+                    </div>
+                `
+            }
+        };
+
+/**
+ * Ouvre le modal avec les détails de l'asset
+ * @param {string} assetId - L'identifiant de l'asset (ex: 'linkedin_1', 'google_1')
+ */
+export function openAssetDetail(assetId) {
+            const asset = assetsData[assetId];
+            if (!asset) {
+                // Pour les assets non définis, afficher un message générique
+                document.getElementById('modalAssetType').innerHTML = 'Asset non configuré';
+                document.getElementById('modalAssetVariation').textContent = '';
+                document.getElementById('reasoningContent').innerHTML = '<p class="text-secondary">Les détails de reasoning pour cet asset seront disponibles prochainement.</p>';
+                document.getElementById('kpisContent').innerHTML = '';
+                document.getElementById('previewContent').innerHTML = '<p class="text-secondary">Preview non disponible</p>';
+            } else {
+                // Remplir le modal header
+                document.getElementById('modalAssetType').innerHTML = asset.type;
+                document.getElementById('modalAssetVariation').textContent = `Variation ${asset.variation}`;
+
+                // Remplir le reasoning
+                let reasoningHtml = '';
+                asset.reasoning.forEach(section => {
+                    reasoningHtml += `
+                        <div class="reasoning-section">
+                            <h6 class="reasoning-title">
+                                <i class="bi ${section.icon}"></i> ${section.title}
+                            </h6>
+                            <p class="reasoning-content">
+                                ${section.content}
+                            </p>
+                        </div>
+                    `;
+                });
+                document.getElementById('reasoningContent').innerHTML = reasoningHtml;
+
+                // Remplir les KPIs
+                let kpisHtml = '';
+                asset.kpis.forEach(kpi => {
+                    kpisHtml += `
+                        <div class="kpi-card">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <div class="kpi-label">
+                                        <i class="bi ${kpi.icon} text-${kpi.color}"></i> ${kpi.label}
+                                    </div>
+                                    <div class="kpi-value">
+                                        ${kpi.value}
+                                    </div>
+                                </div>
+                                <div>
+                                    <span class="badge bg-${kpi.color} kpi-badge-small">
+                                        ${kpi.color === 'success' ? 'Excellent' : kpi.color === 'primary' ? 'Bon' : 'Moyen'}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+                document.getElementById('kpisContent').innerHTML = kpisHtml;
+
+                // Remplir la preview
+                document.getElementById('previewContent').innerHTML = asset.preview;
+            }
+
+            // Ouvrir le modal
+            const modal = new bootstrap.Modal(document.getElementById('assetDetailModal'));
+            modal.show();
+        }

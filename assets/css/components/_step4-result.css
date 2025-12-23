@@ -1,0 +1,138 @@
+/**
+ * Step 4 Result - Strategy Result Page Styles
+ * Styles spécifiques pour la page de résultat stratégie (étape 4)
+ */
+
+/* ==========================================================================
+   Header Styles
+   ========================================================================== */
+.step4-result-header-logo-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+}
+
+.step4-result-header-buttons {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+}
+
+.step4-result-header-btn-primary {
+    color: var(--color-primary);
+}
+
+.step4-result-header-link {
+    color: var(--color-primary);
+    text-decoration: none;
+}
+
+/* ==========================================================================
+   Breadcrumb
+   ========================================================================== */
+.step4-result-breadcrumb {
+    margin-bottom: var(--spacing-3xl);
+}
+
+.step4-result-breadcrumb-link {
+    color: var(--color-primary);
+    text-decoration: none;
+}
+
+/* ==========================================================================
+   Stepper Progress
+   ========================================================================== */
+.step4-result-stepper-progress {
+    width: 75%;
+}
+
+/* ==========================================================================
+   Strategic Positioning
+   ========================================================================== */
+.strategic-strengths-box {
+    background: rgba(0, 48, 128, 0.03);
+    border-radius: var(--border-radius-md);
+}
+
+.strategic-differentiation-box {
+    background: rgba(57, 191, 239, 0.05);
+    border-radius: var(--border-radius-md);
+}
+
+/* ==========================================================================
+   Tactics Cards
+   ========================================================================== */
+.tactics-card {
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-md);
+}
+
+/* ==========================================================================
+   KPI Cards
+   ========================================================================== */
+.kpi-card-primary {
+    background: rgba(0, 48, 128, 0.03);
+    border-radius: var(--border-radius-md);
+}
+
+.kpi-card-secondary {
+    background: rgba(57, 191, 239, 0.05);
+    border-radius: var(--border-radius-md);
+}
+
+.kpi-icon {
+    font-size: 2rem;
+}
+
+.kpi-value {
+    color: var(--color-primary);
+}
+
+/* ==========================================================================
+   Budget Progress Bars
+   ========================================================================== */
+.budget-progress {
+    height: 24px;
+}
+
+.budget-progress-primary {
+    background: var(--color-primary);
+}
+
+.budget-progress-secondary {
+    background: var(--color-secondary);
+}
+
+/* ==========================================================================
+   Budget Total Card
+   ========================================================================== */
+.budget-total-card {
+    background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+    border-radius: var(--border-radius-md);
+    color: white;
+}
+
+.budget-total-icon {
+    font-size: 3rem;
+    opacity: 0.9;
+}
+
+.budget-total-divider {
+    border-color: rgba(255, 255, 255, 0.2);
+    margin: 1rem 0;
+}
+
+/* ==========================================================================
+   Success Alert
+   ========================================================================== */
+.strategy-success-alert {
+    margin-top: var(--spacing-2xl);
+    display: flex;
+    align-items: center;
+    gap: var(--gap-md);
+}
+
+.strategy-success-alert-icon {
+    font-size: var(--font-size-2xl);
+}

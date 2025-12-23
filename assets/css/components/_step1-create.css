@@ -1,0 +1,178 @@
+/**
+ * Step 1 Create - Campaign Creation Page Styles
+ * Styles spécifiques pour la page de création de campagne (étape 1)
+ */
+
+/* ==========================================================================
+   Page Layout
+   ========================================================================== */
+.step1-content {
+    padding-bottom: 80px;
+}
+
+/* ==========================================================================
+   Breadcrumb
+   ========================================================================== */
+.step1-breadcrumb {
+    margin-bottom: var(--spacing-3xl);
+}
+
+.step1-breadcrumb-link {
+    color: var(--color-primary);
+    text-decoration: none;
+}
+
+/* ==========================================================================
+   Stepper Progress
+   ========================================================================== */
+.step1-stepper-progress {
+    width: 0%;
+}
+
+/* ==========================================================================
+   Form Sections - Animation Delays
+   ========================================================================== */
+.form-section-delay-1 {
+    animation-delay: 0.1s;
+}
+
+.form-section-delay-2 {
+    animation-delay: 0.2s;
+    height: 100%;
+}
+
+.form-section-delay-3 {
+    animation-delay: 0.3s;
+    height: 100%;
+}
+
+.form-section-delay-4 {
+    animation-delay: 0.4s;
+}
+
+/* ==========================================================================
+   Assets Section
+   ========================================================================== */
+.assets-intro-text {
+    color: var(--text-secondary);
+    margin-bottom: var(--spacing-xl);
+}
+
+/* ==========================================================================
+   Header Styles (réutilisables)
+   ========================================================================== */
+.step1-header-logo-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+}
+
+.step1-header-buttons {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+}
+
+.step1-header-btn-primary {
+    color: var(--color-primary);
+}
+
+.step1-header-link {
+    color: var(--color-primary);
+    text-decoration: none;
+}
+
+/* ==========================================================================
+   Speed Dial FAB - Boîte à outils
+   ========================================================================== */
+.speed-dial-container {
+    position: fixed;
+    bottom: 100px;
+    right: 24px;
+    z-index: 90;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 12px;
+}
+
+.speed-dial-action {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    opacity: 0;
+    transform: translateY(20px) scale(0.8);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    pointer-events: none;
+}
+
+.speed-dial-container:hover .speed-dial-action {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    pointer-events: all;
+}
+
+.speed-dial-action:nth-child(1) {
+    transition-delay: 0.05s;
+}
+
+.speed-dial-action:nth-child(2) {
+    transition-delay: 0.1s;
+}
+
+.speed-dial-label {
+    background: rgba(0, 0, 0, 0.87);
+    color: white;
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 500;
+    white-space: nowrap;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.speed-dial-btn {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+    transition: all 0.3s ease;
+    border: none;
+}
+
+.speed-dial-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+}
+
+.speed-dial-btn i {
+    font-size: 20px;
+}
+
+.speed-dial-main {
+    width: 64px;
+    height: 64px;
+    background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+    color: white;
+    font-size: 24px;
+}
+
+.speed-dial-container:hover .speed-dial-main {
+    transform: rotate(45deg);
+}
+
+.speed-dial-cancel {
+    background: white;
+    color: #6c757d;
+    border: 2px solid #dee2e6;
+}
+
+.speed-dial-primary {
+    background: var(--color-primary);
+    color: white;
+}

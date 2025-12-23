@@ -103,13 +103,13 @@
         <main class="main">
             <header class="header">
                 <div class="header-content">
-                    <a href="../index.html" style="display: flex; align-items: center; gap: 12px; text-decoration: none;">
+                    <a href="../index.html" class="step2-select-header-logo-link">
                         <img src="../images/logo_picto.svg" alt="CFI" class="header-logo-picto">
                         <img src="../images/logo.svg" alt="myCFiA" class="header-logo">
                     </a>
 
-                    <div style="display: flex; gap: 16px; align-items: center;">
-                        <button class="btn btn-glass header-btn" style="color: var(--color-primary);">
+                    <div class="step2-select-header-buttons">
+                        <button class="btn btn-glass header-btn step2-select-header-btn-primary">
                             <i class="bi bi-building"></i>
                             <span class="header-btn-text">Ma Division</span>
                         </button>
@@ -117,7 +117,7 @@
                             <i class="bi bi-sun-fill"></i>
                             <span class="header-btn-text">Clair</span>
                         </button>
-                        <a href="#" class="btn btn-glass header-btn" style="color: var(--color-primary); text-decoration: none;">
+                        <a href="#" class="btn btn-glass header-btn step2-select-header-link">
                             <i class="bi bi-arrow-left-circle"></i>
                             <span class="header-btn-text">Retour CFI</span>
                         </a>
@@ -127,10 +127,10 @@
 
             <div class="content">
                 <!-- Breadcrumb -->
-                <nav aria-label="breadcrumb" style="margin-bottom: var(--spacing-3xl);">
+                <nav aria-label="breadcrumb" class="step2-select-breadcrumb">
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="dashboard.html" style="color: var(--color-primary); text-decoration: none;">Campagnes Marketing</a></li>
-                        <li class="breadcrumb-item"><a href="step1_create.html" style="color: var(--color-primary); text-decoration: none;">Nouvelle campagne</a></li>
+                        <li class="breadcrumb-item"><a href="dashboard.html" class="step2-select-breadcrumb-link">Campagnes Marketing</a></li>
+                        <li class="breadcrumb-item"><a href="step1_create.html" class="step2-select-breadcrumb-link">Nouvelle campagne</a></li>
                         <li class="breadcrumb-item active" aria-current="page">Sélection Personas</li>
                     </ol>
                 </nav>
@@ -139,7 +139,7 @@
                 <div class="campaign-stepper">
                     <div class="stepper-container">
                         <div class="stepper-line">
-                            <div class="stepper-progress" style="width: 25%;"></div>
+                            <div class="stepper-progress step2-select-stepper-progress"></div>
                         </div>
 
                         <div class="stepper-step completed">
@@ -170,8 +170,8 @@
                 </div>
 
                 <!-- Success Alert -->
-                <div class="alert alert-success alert-dismissible fade show" style="display: flex; align-items: center; gap: var(--gap-md); margin-bottom: var(--spacing-3xl);">
-                    <i class="bi bi-check-circle-fill" style="font-size: var(--font-size-3xl);"></i>
+                <div class="alert alert-success alert-dismissible fade show personas-generated-alert">
+                    <i class="bi bi-check-circle-fill personas-generated-alert-icon"></i>
                     <div>
                         <strong>5 personas générés avec succès!</strong><br>
                         Sélectionnez les personas les plus pertinents pour votre campagne. La détection de concurrents se lancera automatiquement.
@@ -191,34 +191,34 @@
                     <div class="row g-4">
                         <!-- Persona 1 -->
                         <div class="col-12">
-                            <div class="asset-card" onclick="togglePersonaCard(this)" style="text-align: left; padding: var(--spacing-lg); cursor: pointer;">
+                            <div class="asset-card persona-card">
                                 <div class="asset-card-check">
                                     <i class="bi bi-check-lg"></i>
                                 </div>
                                 <div class="row align-items-center">
                                     <div class="col-md-2 text-center">
-                                        <div style="width: 60px; height: 60px; border-radius: 50%; background: linear-gradient(135deg, var(--color-primary), var(--color-secondary)); display: flex; align-items: center; justify-content: center; margin: 0 auto; color: white; font-size: 1.5rem;">
+                                        <div class="persona-avatar">
                                             <i class="bi bi-person-fill"></i>
                                         </div>
                                         <div class="mt-2">
-                                            <span class="badge badge-sm" style="background: #28a745; font-size: 0.7rem;">Score: 92%</span>
+                                            <span class="badge badge-sm persona-score-badge">Score: 92%</span>
                                         </div>
                                     </div>
                                     <div class="col-md-10">
-                                        <h5 style="color: var(--text-primary); font-weight: var(--font-weight-bold); margin-bottom: var(--spacing-xs);">
+                                        <h5 class="persona-title">
                                             Sophie Martin
-                                            <span class="badge bg-primary ms-2" style="font-size: 0.75rem;">Jeune Professionnelle</span>
+                                            <span class="badge bg-primary ms-2 persona-category-badge">Jeune Professionnelle</span>
                                         </h5>
-                                        <p class="small mb-2" style="color: var(--text-secondary);">
+                                        <p class="small mb-2 persona-subtitle">
                                             <strong>28 ans • Contrôleuse de gestion junior • Paris</strong>
                                         </p>
-                                        <p class="small mb-2" style="color: var(--text-secondary); line-height: 1.5;">
+                                        <p class="small mb-2 persona-description">
                                             Jeune diplômée ambitieuse cherchant à monter en compétences rapidement. Intéressée par les certifications reconnues pour booster sa carrière. Privilégie le e-learning pour flexibilité.
                                         </p>
                                         <div class="d-flex flex-wrap gap-2">
-                                            <span class="badge bg-secondary" style="font-size: 0.7rem;"><i class="bi bi-briefcase"></i> Évolution carrière</span>
-                                            <span class="badge bg-secondary" style="font-size: 0.7rem;"><i class="bi bi-laptop"></i> Formation digitale</span>
-                                            <span class="badge bg-secondary" style="font-size: 0.7rem;"><i class="bi bi-award"></i> Certifications</span>
+                                            <span class="badge bg-secondary persona-tag"><i class="bi bi-briefcase"></i> Évolution carrière</span>
+                                            <span class="badge bg-secondary persona-tag"><i class="bi bi-laptop"></i> Formation digitale</span>
+                                            <span class="badge bg-secondary persona-tag"><i class="bi bi-award"></i> Certifications</span>
                                         </div>
                                     </div>
                                 </div>
@@ -227,34 +227,34 @@
 
                         <!-- Persona 2 -->
                         <div class="col-12">
-                            <div class="asset-card" onclick="togglePersonaCard(this)" style="text-align: left; padding: var(--spacing-lg); cursor: pointer;">
+                            <div class="asset-card persona-card">
                                 <div class="asset-card-check">
                                     <i class="bi bi-check-lg"></i>
                                 </div>
                                 <div class="row align-items-center">
                                     <div class="col-md-2 text-center">
-                                        <div style="width: 60px; height: 60px; border-radius: 50%; background: linear-gradient(135deg, var(--color-primary), var(--color-secondary)); display: flex; align-items: center; justify-content: center; margin: 0 auto; color: white; font-size: 1.5rem;">
+                                        <div class="persona-avatar">
                                             <i class="bi bi-person-fill"></i>
                                         </div>
                                         <div class="mt-2">
-                                            <span class="badge badge-sm" style="background: #28a745; font-size: 0.7rem;">Score: 89%</span>
+                                            <span class="badge badge-sm persona-score-badge">Score: 89%</span>
                                         </div>
                                     </div>
                                     <div class="col-md-10">
-                                        <h5 style="color: var(--text-primary); font-weight: var(--font-weight-bold); margin-bottom: var(--spacing-xs);">
+                                        <h5 class="persona-title">
                                             Marc Dubois
-                                            <span class="badge bg-warning text-dark ms-2" style="font-size: 0.75rem;">Cadre Confirmé</span>
+                                            <span class="badge bg-warning text-dark ms-2 persona-category-badge">Cadre Confirmé</span>
                                         </h5>
-                                        <p class="small mb-2" style="color: var(--text-secondary);">
+                                        <p class="small mb-2 persona-subtitle">
                                             <strong>45 ans • Directeur financier • Lyon</strong>
                                         </p>
-                                        <p class="small mb-2" style="color: var(--text-secondary); line-height: 1.5;">
+                                        <p class="small mb-2 persona-description">
                                             Manager expérimenté souhaitant actualiser ses compétences en finance moderne. Recherche formations courtes et intensives. Budget formation entreprise disponible.
                                         </p>
                                         <div class="d-flex flex-wrap gap-2">
-                                            <span class="badge bg-secondary" style="font-size: 0.7rem;"><i class="bi bi-arrow-repeat"></i> Mise à jour compétences</span>
-                                            <span class="badge bg-secondary" style="font-size: 0.7rem;"><i class="bi bi-clock"></i> Formation intensive</span>
-                                            <span class="badge bg-secondary" style="font-size: 0.7rem;"><i class="bi bi-building"></i> Budget entreprise</span>
+                                            <span class="badge bg-secondary persona-tag"><i class="bi bi-arrow-repeat"></i> Mise à jour compétences</span>
+                                            <span class="badge bg-secondary persona-tag"><i class="bi bi-clock"></i> Formation intensive</span>
+                                            <span class="badge bg-secondary persona-tag"><i class="bi bi-building"></i> Budget entreprise</span>
                                         </div>
                                     </div>
                                 </div>
@@ -263,34 +263,34 @@
 
                         <!-- Persona 3 -->
                         <div class="col-12">
-                            <div class="asset-card" onclick="togglePersonaCard(this)" style="text-align: left; padding: var(--spacing-lg); cursor: pointer;">
+                            <div class="asset-card persona-card">
                                 <div class="asset-card-check">
                                     <i class="bi bi-check-lg"></i>
                                 </div>
                                 <div class="row align-items-center">
                                     <div class="col-md-2 text-center">
-                                        <div style="width: 60px; height: 60px; border-radius: 50%; background: linear-gradient(135deg, var(--color-primary), var(--color-secondary)); display: flex; align-items: center; justify-content: center; margin: 0 auto; color: white; font-size: 1.5rem;">
+                                        <div class="persona-avatar">
                                             <i class="bi bi-person-fill"></i>
                                         </div>
                                         <div class="mt-2">
-                                            <span class="badge badge-sm" style="background: #28a745; font-size: 0.7rem;">Score: 85%</span>
+                                            <span class="badge badge-sm persona-score-badge">Score: 85%</span>
                                         </div>
                                     </div>
                                     <div class="col-md-10">
-                                        <h5 style="color: var(--text-primary); font-weight: var(--font-weight-bold); margin-bottom: var(--spacing-xs);">
+                                        <h5 class="persona-title">
                                             Claire Rousseau
-                                            <span class="badge bg-info ms-2" style="font-size: 0.75rem;">Reconversion Pro</span>
+                                            <span class="badge bg-info ms-2 persona-category-badge">Reconversion Pro</span>
                                         </h5>
-                                        <p class="small mb-2" style="color: var(--text-secondary);">
+                                        <p class="small mb-2 persona-subtitle">
                                             <strong>35 ans • En reconversion • Bordeaux</strong>
                                         </p>
-                                        <p class="small mb-2" style="color: var(--text-secondary); line-height: 1.5;">
+                                        <p class="small mb-2 persona-description">
                                             Professionnelle en transition vers la comptabilité. Cherche formation complète et diplômante. Sensible au financement CPF et accompagnement personnalisé.
                                         </p>
                                         <div class="d-flex flex-wrap gap-2">
-                                            <span class="badge bg-secondary" style="font-size: 0.7rem;"><i class="bi bi-arrow-left-right"></i> Reconversion</span>
-                                            <span class="badge bg-secondary" style="font-size: 0.7rem;"><i class="bi bi-mortarboard"></i> Formation diplômante</span>
-                                            <span class="badge bg-secondary" style="font-size: 0.7rem;"><i class="bi bi-wallet2"></i> Financement CPF</span>
+                                            <span class="badge bg-secondary persona-tag"><i class="bi bi-arrow-left-right"></i> Reconversion</span>
+                                            <span class="badge bg-secondary persona-tag"><i class="bi bi-mortarboard"></i> Formation diplômante</span>
+                                            <span class="badge bg-secondary persona-tag"><i class="bi bi-wallet2"></i> Financement CPF</span>
                                         </div>
                                     </div>
                                 </div>
@@ -299,34 +299,34 @@
 
                         <!-- Persona 4 -->
                         <div class="col-12">
-                            <div class="asset-card" onclick="togglePersonaCard(this)" style="text-align: left; padding: var(--spacing-lg); cursor: pointer;">
+                            <div class="asset-card persona-card">
                                 <div class="asset-card-check">
                                     <i class="bi bi-check-lg"></i>
                                 </div>
                                 <div class="row align-items-center">
                                     <div class="col-md-2 text-center">
-                                        <div style="width: 60px; height: 60px; border-radius: 50%; background: linear-gradient(135deg, var(--color-primary), var(--color-secondary)); display: flex; align-items: center; justify-content: center; margin: 0 auto; color: white; font-size: 1.5rem;">
+                                        <div class="persona-avatar">
                                             <i class="bi bi-person-fill"></i>
                                         </div>
                                         <div class="mt-2">
-                                            <span class="badge badge-sm" style="background: #ffc107; color: #000; font-size: 0.7rem;">Score: 78%</span>
+                                            <span class="badge badge-sm persona-score-badge-warning">Score: 78%</span>
                                         </div>
                                     </div>
                                     <div class="col-md-10">
-                                        <h5 style="color: var(--text-primary); font-weight: var(--font-weight-bold); margin-bottom: var(--spacing-xs);">
+                                        <h5 class="persona-title">
                                             Thomas Bernard
-                                            <span class="badge bg-success ms-2" style="font-size: 0.75rem;">Chef d'Entreprise</span>
+                                            <span class="badge bg-success ms-2 persona-category-badge">Chef d'Entreprise</span>
                                         </h5>
-                                        <p class="small mb-2" style="color: var(--text-secondary);">
+                                        <p class="small mb-2 persona-subtitle">
                                             <strong>52 ans • Dirigeant PME • Nantes</strong>
                                         </p>
-                                        <p class="small mb-2" style="color: var(--text-secondary); line-height: 1.5;">
+                                        <p class="small mb-2 persona-description">
                                             Entrepreneur cherchant à former ses équipes finance/compta. Intéressé par formations inter-entreprises et sur-mesure. Budget conséquent disponible.
                                         </p>
                                         <div class="d-flex flex-wrap gap-2">
-                                            <span class="badge bg-secondary" style="font-size: 0.7rem;"><i class="bi bi-people"></i> Formation équipes</span>
-                                            <span class="badge bg-secondary" style="font-size: 0.7rem;"><i class="bi bi-gear"></i> Sur-mesure</span>
-                                            <span class="badge bg-secondary" style="font-size: 0.7rem;"><i class="bi bi-cash-stack"></i> Budget élevé</span>
+                                            <span class="badge bg-secondary persona-tag"><i class="bi bi-people"></i> Formation équipes</span>
+                                            <span class="badge bg-secondary persona-tag"><i class="bi bi-gear"></i> Sur-mesure</span>
+                                            <span class="badge bg-secondary persona-tag"><i class="bi bi-cash-stack"></i> Budget élevé</span>
                                         </div>
                                     </div>
                                 </div>
@@ -335,34 +335,34 @@
 
                         <!-- Persona 5 -->
                         <div class="col-12">
-                            <div class="asset-card" onclick="togglePersonaCard(this)" style="text-align: left; padding: var(--spacing-lg); cursor: pointer;">
+                            <div class="asset-card persona-card">
                                 <div class="asset-card-check">
                                     <i class="bi bi-check-lg"></i>
                                 </div>
                                 <div class="row align-items-center">
                                     <div class="col-md-2 text-center">
-                                        <div style="width: 60px; height: 60px; border-radius: 50%; background: linear-gradient(135deg, var(--color-primary), var(--color-secondary)); display: flex; align-items: center; justify-content: center; margin: 0 auto; color: white; font-size: 1.5rem;">
+                                        <div class="persona-avatar">
                                             <i class="bi bi-person-fill"></i>
                                         </div>
                                         <div class="mt-2">
-                                            <span class="badge badge-sm" style="background: #ffc107; color: #000; font-size: 0.7rem;">Score: 74%</span>
+                                            <span class="badge badge-sm persona-score-badge-warning">Score: 74%</span>
                                         </div>
                                     </div>
                                     <div class="col-md-10">
-                                        <h5 style="color: var(--text-primary); font-weight: var(--font-weight-bold); margin-bottom: var(--spacing-xs);">
+                                        <h5 class="persona-title">
                                             Julie Leroy
-                                            <span class="badge bg-danger ms-2" style="font-size: 0.75rem;">RH / Formation</span>
+                                            <span class="badge bg-danger ms-2 persona-category-badge">RH / Formation</span>
                                         </h5>
-                                        <p class="small mb-2" style="color: var(--text-secondary);">
+                                        <p class="small mb-2 persona-subtitle">
                                             <strong>38 ans • Responsable RH • Paris</strong>
                                         </p>
-                                        <p class="small mb-2" style="color: var(--text-secondary); line-height: 1.5;">
+                                        <p class="small mb-2 persona-description">
                                             Responsable formation cherchant à développer les compétences de son service financier. Compare plusieurs organismes. Décision basée sur ROI et taux de réussite.
                                         </p>
                                         <div class="d-flex flex-wrap gap-2">
-                                            <span class="badge bg-secondary" style="font-size: 0.7rem;"><i class="bi bi-graph-up"></i> ROI important</span>
-                                            <span class="badge bg-secondary" style="font-size: 0.7rem;"><i class="bi bi-trophy"></i> Taux de réussite</span>
-                                            <span class="badge bg-secondary" style="font-size: 0.7rem;"><i class="bi bi-clipboard-data"></i> Reporting détaillé</span>
+                                            <span class="badge bg-secondary persona-tag"><i class="bi bi-graph-up"></i> ROI important</span>
+                                            <span class="badge bg-secondary persona-tag"><i class="bi bi-trophy"></i> Taux de réussite</span>
+                                            <span class="badge bg-secondary persona-tag"><i class="bi bi-clipboard-data"></i> Reporting détaillé</span>
                                         </div>
                                     </div>
                                 </div>
@@ -376,106 +376,6 @@
     </div>
 
     <!-- Speed Dial FAB - Boîte à outils -->
-    <style>
-        .speed-dial-container {
-            position: fixed;
-            bottom: 100px;
-            right: 24px;
-            z-index: 90;
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
-            gap: 12px;
-        }
-
-        .speed-dial-action {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            opacity: 0;
-            transform: translateY(20px) scale(0.8);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            pointer-events: none;
-        }
-
-        .speed-dial-container:hover .speed-dial-action {
-            opacity: 1;
-            transform: translateY(0) scale(1);
-            pointer-events: all;
-        }
-
-        .speed-dial-action:nth-child(1) {
-            transition-delay: 0.05s;
-        }
-
-        .speed-dial-action:nth-child(2) {
-            transition-delay: 0.1s;
-        }
-
-        .speed-dial-label {
-            background: white;
-            color: var(--color-text);
-            padding: 8px 16px;
-            border-radius: var(--border-radius-lg);
-            font-weight: var(--font-weight-semibold);
-            font-size: var(--font-size-sm);
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-            white-space: nowrap;
-        }
-
-        .speed-dial-btn {
-            width: 56px;
-            height: 56px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            border: none;
-            cursor: pointer;
-            text-decoration: none;
-        }
-
-        .speed-dial-btn:hover {
-            transform: scale(1.1);
-            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
-        }
-
-        .speed-dial-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        .speed-dial-btn:disabled:hover {
-            transform: none;
-        }
-
-        .speed-dial-cancel {
-            background: #6c757d;
-            color: white;
-        }
-
-        .speed-dial-primary {
-            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
-            color: white;
-        }
-
-        .speed-dial-main {
-            width: 64px;
-            height: 64px;
-            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
-            color: white;
-            font-size: 24px;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .speed-dial-container:hover .speed-dial-main {
-            transform: rotate(45deg);
-        }
-    </style>
-
     <div class="speed-dial-container">
         <!-- Action 1: Régénérer -->
         <div class="speed-dial-action">
@@ -488,7 +388,7 @@
         <!-- Action 2: Valider et continuer -->
         <div class="speed-dial-action">
             <span class="speed-dial-label">Valider et continuer</span>
-            <button type="button" class="speed-dial-btn speed-dial-primary" id="validateBtn" onclick="validatePersonas()" disabled>
+            <button type="button" class="speed-dial-btn speed-dial-primary" id="validateBtn" disabled>
                 <i class="bi bi-check-lg"></i>
             </button>
         </div>
@@ -510,35 +410,5 @@
 
     <!-- Design System JS -->
     <script src="../assets/js/main.js" type="module"></script>
-
-    <script>
-        function togglePersonaCard(card) {
-            card.classList.toggle('selected');
-            updateSelectedCount();
-        }
-
-        function updateSelectedCount() {
-            const selected = document.querySelectorAll('.asset-card.selected').length;
-            document.getElementById('selectedCount').textContent = selected;
-
-            const validateBtn = document.getElementById('validateBtn');
-            if (selected > 0) {
-                validateBtn.disabled = false;
-            } else {
-                validateBtn.disabled = true;
-            }
-        }
-
-        function validatePersonas() {
-            const selected = document.querySelectorAll('.asset-card.selected').length;
-            if (selected === 0) {
-                alert('Veuillez sélectionner au moins un persona.');
-                return;
-            }
-
-            // Redirect to competitor detection
-            window.location.href = 'step3_loading.html';
-        }
-    </script>
 </body>
 </html>

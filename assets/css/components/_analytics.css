@@ -1,0 +1,122 @@
+/**
+ * Analytics Page Styles
+ * Styles spécifiques pour la page analytics
+ */
+
+/* ==========================================================================
+   Metric Cards (KPI cards)
+   ========================================================================== */
+.metric-card {
+    transition: all 0.3s ease;
+}
+
+.metric-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0, 48, 128, 0.15);
+}
+
+/* ==========================================================================
+   Charts
+   ========================================================================== */
+.chart-container {
+    position: relative;
+    height: 350px;
+}
+
+/* ==========================================================================
+   Analytics Page Header
+   ========================================================================== */
+.analytics-page-title {
+    font-size: var(--font-size-3xl);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-text-primary);
+    margin-bottom: var(--spacing-xs);
+}
+
+.analytics-period-select {
+    width: auto;
+}
+
+/* ==========================================================================
+   KPI Icons & Badges
+   ========================================================================== */
+.kpi-icon-wrapper {
+    padding: 12px;
+    border-radius: var(--border-radius-md);
+}
+
+.kpi-icon-wrapper i {
+    font-size: 1.75rem;
+}
+
+/* Icon backgrounds for different metrics */
+.kpi-icon-campaigns {
+    background: rgba(0, 48, 128, 0.1);
+    color: var(--color-primary);
+}
+
+.kpi-icon-budget {
+    background: rgba(57, 191, 239, 0.1);
+    color: var(--color-secondary);
+}
+
+.kpi-icon-roi {
+    background: rgba(40, 167, 69, 0.1);
+    color: #28a745;
+}
+
+.kpi-icon-leads {
+    background: rgba(255, 193, 7, 0.1);
+    color: #ffc107;
+}
+
+/* ==========================================================================
+   KPI Values
+   ========================================================================== */
+.kpi-value {
+    color: var(--color-primary);
+    font-weight: 800;
+}
+
+/* ==========================================================================
+   Status Indicators
+   ========================================================================== */
+.status-bullet {
+    font-size: 0.5rem;
+}
+
+/* ==========================================================================
+   Progress Bars
+   ========================================================================== */
+.analytics-progress {
+    height: 6px;
+}
+
+.analytics-progress-bar {
+    width: 65%;
+}
+
+/* ==========================================================================
+   Header Utils
+   ========================================================================== */
+.analytics-header-logo-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+}
+
+.analytics-header-buttons {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+}
+
+.analytics-header-btn-primary {
+    color: var(--color-primary);
+}
+
+.analytics-header-link {
+    color: var(--color-primary);
+    text-decoration: none;
+}

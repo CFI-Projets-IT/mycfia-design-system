@@ -1,0 +1,124 @@
+/**
+ * Step 2 Select - Persona Selection Page Styles
+ * Styles spécifiques pour la page de sélection de personas (étape 2)
+ */
+
+/* ==========================================================================
+   Header Styles (réutilisables)
+   ========================================================================== */
+.step2-select-header-logo-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+}
+
+.step2-select-header-buttons {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+}
+
+.step2-select-header-btn-primary {
+    color: var(--color-primary);
+}
+
+.step2-select-header-link {
+    color: var(--color-primary);
+    text-decoration: none;
+}
+
+/* ==========================================================================
+   Breadcrumb
+   ========================================================================== */
+.step2-select-breadcrumb {
+    margin-bottom: var(--spacing-3xl);
+}
+
+.step2-select-breadcrumb-link {
+    color: var(--color-primary);
+    text-decoration: none;
+}
+
+/* ==========================================================================
+   Stepper Progress
+   ========================================================================== */
+.step2-select-stepper-progress {
+    width: 25%;
+}
+
+/* ==========================================================================
+   Success Alert
+   ========================================================================== */
+.personas-generated-alert {
+    display: flex;
+    align-items: center;
+    gap: var(--gap-md);
+    margin-bottom: var(--spacing-3xl);
+}
+
+.personas-generated-alert-icon {
+    font-size: var(--font-size-3xl);
+}
+
+/* ==========================================================================
+   Persona Cards
+   ========================================================================== */
+/* Les styles de base (.selected, .active, hover, etc.) sont hérités de .asset-card dans _campaign-forms.css */
+.persona-card {
+    text-align: left;
+}
+
+/* Persona Avatar */
+.persona-avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    color: white;
+    font-size: 1.5rem;
+}
+
+/* Persona Score Badge */
+.persona-score-badge {
+    background: #28a745;
+    font-size: 0.7rem;
+}
+
+.persona-score-badge-warning {
+    background: #ffc107;
+    color: #000;
+    font-size: 0.7rem;
+}
+
+/* Persona Title */
+.persona-title {
+    color: var(--text-primary);
+    font-weight: var(--font-weight-bold);
+    margin-bottom: var(--spacing-xs);
+}
+
+/* Persona Category Badge */
+.persona-category-badge {
+    font-size: 0.75rem;
+}
+
+/* Persona Subtitle (age, role, location) */
+.persona-subtitle {
+    color: var(--text-secondary);
+}
+
+/* Persona Description */
+.persona-description {
+    color: var(--text-secondary);
+    line-height: 1.5;
+}
+
+/* Persona Tags */
+.persona-tag {
+    font-size: 0.7rem;
+}

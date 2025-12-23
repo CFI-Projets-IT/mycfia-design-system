@@ -98,13 +98,13 @@
         <main class="main">
             <header class="header">
                 <div class="header-content">
-                    <a href="../index.html" style="display: flex; align-items: center; gap: 12px; text-decoration: none;">
+                    <a href="../index.html" class="step5-config-header-logo-link">
                         <img src="../images/logo_picto.svg" alt="CFI" class="header-logo-picto">
                         <img src="../images/logo.svg" alt="myCFiA" class="header-logo">
                     </a>
                     <!-- Actions -->
-                    <div style="display: flex; gap: 16px; align-items: center;">
-                        <button class="btn btn-glass header-btn" style="color: var(--color-primary);">
+                    <div class="step5-config-header-buttons">
+                        <button class="btn btn-glass header-btn step5-config-header-btn-primary">
                             <i class="bi bi-building"></i>
                             <span class="header-btn-text">Ma Division</span>
                         </button>
@@ -112,7 +112,7 @@
                             <i class="bi bi-sun-fill"></i>
                             <span class="header-btn-text">Clair</span>
                         </button>
-                        <a href="#" class="btn btn-glass header-btn" style="color: var(--color-primary); text-decoration: none;">
+                        <a href="#" class="btn btn-glass header-btn step5-config-header-link">
                             <i class="bi bi-arrow-left-circle"></i>
                             <span class="header-btn-text">Retour CFI</span>
                         </a>
@@ -121,9 +121,9 @@
             </header>
 
             <div class="content">
-                <nav aria-label="breadcrumb" style="margin-bottom: var(--spacing-3xl);">
+                <nav aria-label="breadcrumb" class="step5-config-breadcrumb">
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="dashboard.html" style="color: var(--color-primary); text-decoration: none;">Campagnes</a></li>
+                        <li class="breadcrumb-item"><a href="dashboard.html" class="step5-config-breadcrumb-link">Campagnes</a></li>
                         <li class="breadcrumb-item active">Génération Assets</li>
                     </ol>
                 </nav>
@@ -131,7 +131,7 @@
                 <div class="campaign-stepper">
                     <div class="stepper-container">
                         <div class="stepper-line">
-                            <div class="stepper-progress" style="width: 100%;"></div>
+                            <div class="stepper-progress step5-config-stepper-progress"></div>
                         </div>
                         <div class="stepper-step completed">
                             <div class="stepper-circle"><i class="bi bi-check-lg"></i></div>
@@ -165,8 +165,8 @@
                         <p class="form-section-subtitle">Paramétrez la génération automatique d'assets marketing par l'IA</p>
                     </div>
 
-                    <div class="alert alert-info alert-dismissible fade show mb-4" style="display: flex; align-items: center; gap: var(--gap-md);">
-                        <i class="bi bi-info-circle-fill" style="font-size: var(--font-size-xl);"></i>
+                    <div class="alert alert-info alert-dismissible fade show mb-4 step5-config-alert">
+                        <i class="bi bi-info-circle-fill step5-config-alert-icon"></i>
                         <div>
                             <strong>Génération intelligente</strong><br>
                             L'IA créera des assets optimisés selon votre identité de marque et votre stratégie marketing.
@@ -174,101 +174,8 @@
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
 
-                    <!-- Asset Cards Grid -->
-                    <style>
-                        .asset-card-modern {
-                            position: relative;
-                            background: white;
-                            border: 2px solid var(--border-color);
-                            border-radius: var(--border-radius-lg);
-                            padding: 1.5rem;
-                            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-                            cursor: pointer;
-                            height: 100%;
-                        }
-                        .asset-card-modern:hover {
-                            transform: translateY(-4px);
-                            box-shadow: 0 12px 24px rgba(0,48,128,0.15);
-                            border-color: var(--color-primary);
-                        }
-                        .asset-card-modern.active {
-                            background: linear-gradient(135deg, rgba(0,48,128,0.03), rgba(57,191,239,0.03));
-                            border-color: var(--color-primary);
-                            border-width: 2px;
-                        }
-                        .asset-icon-wrapper {
-                            width: 64px;
-                            height: 64px;
-                            border-radius: var(--border-radius-md);
-                            display: flex;
-                            align-items: center;
-                            justify-content: center;
-                            font-size: 2rem;
-                            color: white;
-                            margin-bottom: 1rem;
-                        }
-                        .toggle-switch {
-                            position: relative;
-                            width: 48px;
-                            height: 24px;
-                            background: #e0e0e0;
-                            border-radius: 12px;
-                            transition: background 0.3s;
-                            cursor: pointer;
-                        }
-                        .toggle-switch.active {
-                            background: var(--color-primary);
-                        }
-                        .toggle-switch::after {
-                            content: '';
-                            position: absolute;
-                            top: 2px;
-                            left: 2px;
-                            width: 20px;
-                            height: 20px;
-                            background: white;
-                            border-radius: 50%;
-                            transition: transform 0.3s;
-                            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-                        }
-                        .toggle-switch.active::after {
-                            transform: translateX(24px);
-                        }
-                        .stepper-control {
-                            display: flex;
-                            align-items: center;
-                            gap: 0.5rem;
-                            justify-content: center;
-                            margin-top: 1rem;
-                        }
-                        .stepper-btn {
-                            width: 32px;
-                            height: 32px;
-                            border: 1px solid var(--border-color);
-                            background: white;
-                            border-radius: 50%;
-                            display: flex;
-                            align-items: center;
-                            justify-content: center;
-                            cursor: pointer;
-                            transition: all 0.2s;
-                        }
-                        .stepper-btn:hover {
-                            background: var(--color-primary);
-                            color: white;
-                            border-color: var(--color-primary);
-                        }
-                        .stepper-value {
-                            font-size: 1.25rem;
-                            font-weight: 700;
-                            min-width: 32px;
-                            text-align: center;
-                            color: var(--color-primary);
-                        }
-                    </style>
-
                     <div class="mb-4">
-                        <h4 style="color: var(--text-primary); font-weight: var(--font-weight-bold); margin-bottom: var(--spacing-md);">
+                        <h4 class="step5-config-section-title">
                             <i class="bi bi-collection text-primary"></i> Sélectionnez vos assets marketing
                         </h4>
                         <p class="text-secondary">Cliquez sur une carte pour l'activer, puis définissez le nombre de variations (1-3)</p>
@@ -277,59 +184,59 @@
                     <div class="row g-4 mb-5">
                         <!-- Linkedin -->
                         <div class="col-lg-3 col-md-4 col-sm-6">
-                            <div class="asset-card-modern active" data-asset="linkedin" onclick="toggleAssetCard(this)">
-                                <span class="badge bg-success position-absolute top-0 end-0 m-2" style="font-size: 0.65rem;">Recommandé</span>
-                                <div class="asset-icon-wrapper" style="background: linear-gradient(135deg, #0077B5, #00A0DC);">
+                            <div class="asset-card-modern active" data-asset="linkedin">
+                                <span class="badge bg-success position-absolute top-0 end-0 m-2 asset-card-badge">Recommandé</span>
+                                <div class="asset-icon-wrapper asset-icon-linkedin">
                                     <i class="bi bi-linkedin"></i>
                                 </div>
-                                <h6 style="font-weight: 700; margin-bottom: 0.25rem;">Linkedin</h6>
+                                <h6 class="asset-card-title">Linkedin</h6>
                                 <p class="text-secondary small mb-3">Réseau professionnel</p>
                                 <div class="d-flex align-items-center justify-content-between">
                                     <span class="small text-secondary">Activer</span>
                                     <div class="toggle-switch active"></div>
                                 </div>
                                 <div class="stepper-control">
-                                    <div class="stepper-btn" onclick="event.stopPropagation(); decreaseVariation(this)"><i class="bi bi-dash"></i></div>
+                                    <div class="stepper-btn"><i class="bi bi-dash"></i></div>
                                     <div class="stepper-value">3</div>
-                                    <div class="stepper-btn" onclick="event.stopPropagation(); increaseVariation(this)"><i class="bi bi-plus"></i></div>
+                                    <div class="stepper-btn"><i class="bi bi-plus"></i></div>
                                 </div>
                             </div>
                         </div>
 
                         <!-- GoogleAds -->
                         <div class="col-lg-3 col-md-4 col-sm-6">
-                            <div class="asset-card-modern active" data-asset="googleads" onclick="toggleAssetCard(this)">
-                                <span class="badge bg-warning text-dark position-absolute top-0 end-0 m-2" style="font-size: 0.65rem;">Populaire</span>
-                                <div class="asset-icon-wrapper" style="background: linear-gradient(135deg, #4285F4, #34A853);">
+                            <div class="asset-card-modern active" data-asset="googleads">
+                                <span class="badge bg-warning text-dark position-absolute top-0 end-0 m-2 asset-card-badge">Populaire</span>
+                                <div class="asset-icon-wrapper asset-icon-google">
                                     <i class="bi bi-google"></i>
                                 </div>
-                                <h6 style="font-weight: 700; margin-bottom: 0.25rem;">GoogleAds</h6>
+                                <h6 class="asset-card-title">GoogleAds</h6>
                                 <p class="text-secondary small mb-3">Publicité search Google</p>
                                 <div class="d-flex align-items-center justify-content-between">
                                     <span class="small text-secondary">Activer</span>
                                     <div class="toggle-switch active"></div>
                                 </div>
                                 <div class="stepper-control">
-                                    <div class="stepper-btn" onclick="event.stopPropagation(); decreaseVariation(this)"><i class="bi bi-dash"></i></div>
+                                    <div class="stepper-btn"><i class="bi bi-dash"></i></div>
                                     <div class="stepper-value">2</div>
-                                    <div class="stepper-btn" onclick="event.stopPropagation(); increaseVariation(this)"><i class="bi bi-plus"></i></div>
+                                    <div class="stepper-btn"><i class="bi bi-plus"></i></div>
                                 </div>
                             </div>
                         </div>
 
                         <!-- BingAds -->
                         <div class="col-lg-3 col-md-4 col-sm-6">
-                            <div class="asset-card-modern" data-asset="bingads" onclick="toggleAssetCard(this)">
-                                <div class="asset-icon-wrapper" style="background: linear-gradient(135deg, #008373, #00A884);">
+                            <div class="asset-card-modern" data-asset="bingads">
+                                <div class="asset-icon-wrapper asset-icon-bing">
                                     <i class="bi bi-bing"></i>
                                 </div>
-                                <h6 style="font-weight: 700; margin-bottom: 0.25rem;">BingAds</h6>
+                                <h6 class="asset-card-title">BingAds</h6>
                                 <p class="text-secondary small mb-3">Publicité search Bing</p>
                                 <div class="d-flex align-items-center justify-content-between">
                                     <span class="small text-secondary">Activer</span>
                                     <div class="toggle-switch"></div>
                                 </div>
-                                <div class="stepper-control" style="opacity: 0.3;">
+                                <div class="stepper-control stepper-control-inactive">
                                     <div class="stepper-btn"><i class="bi bi-dash"></i></div>
                                     <div class="stepper-value">1</div>
                                     <div class="stepper-btn"><i class="bi bi-plus"></i></div>
@@ -339,38 +246,38 @@
 
                         <!-- Facebook -->
                         <div class="col-lg-3 col-md-4 col-sm-6">
-                            <div class="asset-card-modern active" data-asset="facebook" onclick="toggleAssetCard(this)">
-                                <span class="badge bg-success position-absolute top-0 end-0 m-2" style="font-size: 0.65rem;">Recommandé</span>
-                                <div class="asset-icon-wrapper" style="background: linear-gradient(135deg, #1877F2, #4267B2);">
+                            <div class="asset-card-modern active" data-asset="facebook">
+                                <span class="badge bg-success position-absolute top-0 end-0 m-2 asset-card-badge">Recommandé</span>
+                                <div class="asset-icon-wrapper asset-icon-facebook">
                                     <i class="bi bi-facebook"></i>
                                 </div>
-                                <h6 style="font-weight: 700; margin-bottom: 0.25rem;">Facebook</h6>
+                                <h6 class="asset-card-title">Facebook</h6>
                                 <p class="text-secondary small mb-3">Réseau social</p>
                                 <div class="d-flex align-items-center justify-content-between">
                                     <span class="small text-secondary">Activer</span>
                                     <div class="toggle-switch active"></div>
                                 </div>
                                 <div class="stepper-control">
-                                    <div class="stepper-btn" onclick="event.stopPropagation(); decreaseVariation(this)"><i class="bi bi-dash"></i></div>
+                                    <div class="stepper-btn"><i class="bi bi-dash"></i></div>
                                     <div class="stepper-value">2</div>
-                                    <div class="stepper-btn" onclick="event.stopPropagation(); increaseVariation(this)"><i class="bi bi-plus"></i></div>
+                                    <div class="stepper-btn"><i class="bi bi-plus"></i></div>
                                 </div>
                             </div>
                         </div>
 
                         <!-- Instagram -->
                         <div class="col-lg-3 col-md-4 col-sm-6">
-                            <div class="asset-card-modern" data-asset="instagram" onclick="toggleAssetCard(this)">
-                                <div class="asset-icon-wrapper" style="background: linear-gradient(135deg, #E1306C, #FD1D1D, #F77737);">
+                            <div class="asset-card-modern" data-asset="instagram">
+                                <div class="asset-icon-wrapper asset-icon-instagram">
                                     <i class="bi bi-instagram"></i>
                                 </div>
-                                <h6 style="font-weight: 700; margin-bottom: 0.25rem;">Instagram</h6>
+                                <h6 class="asset-card-title">Instagram</h6>
                                 <p class="text-secondary small mb-3">Réseau social visuel</p>
                                 <div class="d-flex align-items-center justify-content-between">
                                     <span class="small text-secondary">Activer</span>
                                     <div class="toggle-switch"></div>
                                 </div>
-                                <div class="stepper-control" style="opacity: 0.3;">
+                                <div class="stepper-control stepper-control-inactive">
                                     <div class="stepper-btn"><i class="bi bi-dash"></i></div>
                                     <div class="stepper-value">1</div>
                                     <div class="stepper-btn"><i class="bi bi-plus"></i></div>
@@ -380,17 +287,17 @@
 
                         <!-- Iab -->
                         <div class="col-lg-3 col-md-4 col-sm-6">
-                            <div class="asset-card-modern" data-asset="iab" onclick="toggleAssetCard(this)">
-                                <div class="asset-icon-wrapper" style="background: linear-gradient(135deg, #6C63FF, #4A90E2);">
+                            <div class="asset-card-modern" data-asset="iab">
+                                <div class="asset-icon-wrapper asset-icon-iab">
                                     <i class="bi bi-badge-ad"></i>
                                 </div>
-                                <h6 style="font-weight: 700; margin-bottom: 0.25rem;">Iab</h6>
+                                <h6 class="asset-card-title">Iab</h6>
                                 <p class="text-secondary small mb-3">Bannière publicitaire</p>
                                 <div class="d-flex align-items-center justify-content-between">
                                     <span class="small text-secondary">Activer</span>
                                     <div class="toggle-switch"></div>
                                 </div>
-                                <div class="stepper-control" style="opacity: 0.3;">
+                                <div class="stepper-control stepper-control-inactive">
                                     <div class="stepper-btn"><i class="bi bi-dash"></i></div>
                                     <div class="stepper-value">1</div>
                                     <div class="stepper-btn"><i class="bi bi-plus"></i></div>
@@ -400,80 +307,80 @@
 
                         <!-- Mail -->
                         <div class="col-lg-3 col-md-4 col-sm-6">
-                            <div class="asset-card-modern active" data-asset="mail" onclick="toggleAssetCard(this)">
-                                <span class="badge bg-warning text-dark position-absolute top-0 end-0 m-2" style="font-size: 0.65rem;">Populaire</span>
-                                <div class="asset-icon-wrapper" style="background: linear-gradient(135deg, #EA4335, #FBBC04);">
+                            <div class="asset-card-modern active" data-asset="mail">
+                                <span class="badge bg-warning text-dark position-absolute top-0 end-0 m-2 asset-card-badge">Populaire</span>
+                                <div class="asset-icon-wrapper asset-icon-mail">
                                     <i class="bi bi-envelope-fill"></i>
                                 </div>
-                                <h6 style="font-weight: 700; margin-bottom: 0.25rem;">Mail</h6>
+                                <h6 class="asset-card-title">Mail</h6>
                                 <p class="text-secondary small mb-3">Campagnes emailing</p>
                                 <div class="d-flex align-items-center justify-content-between">
                                     <span class="small text-secondary">Activer</span>
                                     <div class="toggle-switch active"></div>
                                 </div>
                                 <div class="stepper-control">
-                                    <div class="stepper-btn" onclick="event.stopPropagation(); decreaseVariation(this)"><i class="bi bi-dash"></i></div>
+                                    <div class="stepper-btn"><i class="bi bi-dash"></i></div>
                                     <div class="stepper-value">2</div>
-                                    <div class="stepper-btn" onclick="event.stopPropagation(); increaseVariation(this)"><i class="bi bi-plus"></i></div>
+                                    <div class="stepper-btn"><i class="bi bi-plus"></i></div>
                                 </div>
                             </div>
                         </div>
 
                         <!-- Sms -->
                         <div class="col-lg-3 col-md-4 col-sm-6">
-                            <div class="asset-card-modern active" data-asset="sms" onclick="toggleAssetCard(this)">
-                                <div class="asset-icon-wrapper" style="background: linear-gradient(135deg, #25D366, #128C7E);">
+                            <div class="asset-card-modern active" data-asset="sms">
+                                <div class="asset-icon-wrapper asset-icon-sms">
                                     <i class="bi bi-phone"></i>
                                 </div>
-                                <h6 style="font-weight: 700; margin-bottom: 0.25rem;">Sms</h6>
+                                <h6 class="asset-card-title">Sms</h6>
                                 <p class="text-secondary small mb-3">Messages courts</p>
                                 <div class="d-flex align-items-center justify-content-between">
                                     <span class="small text-secondary">Activer</span>
                                     <div class="toggle-switch active"></div>
                                 </div>
                                 <div class="stepper-control">
-                                    <div class="stepper-btn" onclick="event.stopPropagation(); decreaseVariation(this)"><i class="bi bi-dash"></i></div>
+                                    <div class="stepper-btn"><i class="bi bi-dash"></i></div>
                                     <div class="stepper-value">2</div>
-                                    <div class="stepper-btn" onclick="event.stopPropagation(); increaseVariation(this)"><i class="bi bi-plus"></i></div>
+                                    <div class="stepper-btn"><i class="bi bi-plus"></i></div>
                                 </div>
                             </div>
                         </div>
 
                         <!-- Article -->
                         <div class="col-lg-3 col-md-4 col-sm-6">
-                            <div class="asset-card-modern active" data-asset="article" onclick="toggleAssetCard(this)">
-                                <span class="badge bg-success position-absolute top-0 end-0 m-2" style="font-size: 0.65rem;">Recommandé</span>
-                                <div class="asset-icon-wrapper" style="background: linear-gradient(135deg, #FF6B6B, #FFE66D);">
+                            <div class="asset-card-modern active" data-asset="article">
+                                <span class="badge bg-success position-absolute top-0 end-0 m-2 asset-card-badge">Recommandé</span>
+                                <div class="asset-icon-wrapper asset-icon-article">
                                     <i class="bi bi-file-text"></i>
                                 </div>
-                                <h6 style="font-weight: 700; margin-bottom: 0.25rem;">Article</h6>
+                                <h6 class="asset-card-title">Article</h6>
                                 <p class="text-secondary small mb-3">Contenu blog SEO</p>
                                 <div class="d-flex align-items-center justify-content-between">
                                     <span class="small text-secondary">Activer</span>
                                     <div class="toggle-switch active"></div>
                                 </div>
                                 <div class="stepper-control">
-                                    <div class="stepper-btn" onclick="event.stopPropagation(); decreaseVariation(this)"><i class="bi bi-dash"></i></div>
+                                    <div class="stepper-btn"><i class="bi bi-dash"></i></div>
                                     <div class="stepper-value">1</div>
-                                    <div class="stepper-btn" onclick="event.stopPropagation(); increaseVariation(this)"><i class="bi bi-plus"></i></div>
+                                    <div class="stepper-btn"><i class="bi bi-plus"></i></div>
                                 </div>
                             </div>
                         </div>
 
                         <!-- Courrier (A4) -->
                         <div class="col-lg-3 col-md-4 col-sm-6">
-                            <div class="asset-card-modern" data-asset="courrier" onclick="toggleAssetCard(this)">
-                                <span class="badge bg-info position-absolute top-0 end-0 m-2" style="font-size: 0.65rem;">Nouveau</span>
-                                <div class="asset-icon-wrapper" style="background: linear-gradient(135deg, #8E44AD, #9B59B6);">
+                            <div class="asset-card-modern" data-asset="courrier">
+                                <span class="badge bg-info position-absolute top-0 end-0 m-2 asset-card-badge">Nouveau</span>
+                                <div class="asset-icon-wrapper asset-icon-courrier">
                                     <i class="bi bi-mailbox"></i>
                                 </div>
-                                <h6 style="font-weight: 700; margin-bottom: 0.25rem;">Courrier (A4)</h6>
+                                <h6 class="asset-card-title">Courrier (A4)</h6>
                                 <p class="text-secondary small mb-3">Courrier postal</p>
                                 <div class="d-flex align-items-center justify-content-between">
                                     <span class="small text-secondary">Activer</span>
                                     <div class="toggle-switch"></div>
                                 </div>
-                                <div class="stepper-control" style="opacity: 0.3;">
+                                <div class="stepper-control stepper-control-inactive">
                                     <div class="stepper-btn"><i class="bi bi-dash"></i></div>
                                     <div class="stepper-value">1</div>
                                     <div class="stepper-btn"><i class="bi bi-plus"></i></div>
@@ -484,9 +391,9 @@
 
                     <!-- Instructions optionnelles (collapsible) -->
                     <div class="mb-5">
-                        <div class="d-flex align-items-center gap-2 mb-3" style="cursor: pointer;" onclick="document.getElementById('instructionsArea').classList.toggle('d-none')">
+                        <div class="d-flex align-items-center gap-2 mb-3 instructions-toggle">
                             <i class="bi bi-chevron-right" id="instructionsChevron"></i>
-                            <h6 class="mb-0" style="color: var(--text-secondary);">
+                            <h6 class="mb-0 instructions-title">
                                 <i class="bi bi-pencil-square text-primary"></i>
                                 Instructions spécifiques (optionnel)
                             </h6>
@@ -503,11 +410,11 @@
                     </div>
 
                     <!-- Estimation Card -->
-                    <div class="card mb-4" style="background: linear-gradient(135deg, rgba(0, 48, 128, 0.05), rgba(57, 191, 239, 0.05)); border: 2px solid var(--color-primary);">
+                    <div class="card mb-4 estimation-card">
                         <div class="card-body">
                             <div class="row align-items-center">
                                 <div class="col-md-auto">
-                                    <div style="width: 64px; height: 64px; background: var(--color-primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 2rem;">
+                                    <div class="estimation-icon-circle">
                                         <i class="bi bi-lightning-charge-fill"></i>
                                     </div>
                                 </div>
@@ -524,10 +431,10 @@
                                 </div>
                                 <div class="col-md-auto">
                                     <div class="d-flex gap-2">
-                                        <span class="badge bg-success" style="font-size: 0.75rem;">Linkedin (3)</span>
-                                        <span class="badge bg-success" style="font-size: 0.75rem;">GoogleAds (2)</span>
-                                        <span class="badge bg-success" style="font-size: 0.75rem;">Facebook (2)</span>
-                                        <span class="badge bg-secondary" style="font-size: 0.75rem;">+3 autres</span>
+                                        <span class="badge bg-success estimation-badge">Linkedin (3)</span>
+                                        <span class="badge bg-success estimation-badge">GoogleAds (2)</span>
+                                        <span class="badge bg-success estimation-badge">Facebook (2)</span>
+                                        <span class="badge bg-secondary estimation-badge">+3 autres</span>
                                     </div>
                                 </div>
                             </div>
@@ -540,88 +447,6 @@
     </div>
 
     <!-- Speed Dial FAB - Boîte à outils -->
-    <style>
-        .speed-dial-container {
-            position: fixed;
-            bottom: 100px;
-            right: 24px;
-            z-index: 90;
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
-            gap: 12px;
-        }
-
-        .speed-dial-action {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            opacity: 0;
-            transform: translateY(20px) scale(0.8);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            pointer-events: none;
-        }
-
-        .speed-dial-container:hover .speed-dial-action {
-            opacity: 1;
-            transform: translateY(0) scale(1);
-            pointer-events: all;
-        }
-
-        .speed-dial-action:nth-child(1) {
-            transition-delay: 0.05s;
-        }
-
-        .speed-dial-label {
-            background: white;
-            color: var(--color-text);
-            padding: 8px 16px;
-            border-radius: var(--border-radius-lg);
-            font-weight: var(--font-weight-semibold);
-            font-size: var(--font-size-sm);
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-            white-space: nowrap;
-        }
-
-        .speed-dial-btn {
-            width: 56px;
-            height: 56px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            border: none;
-            cursor: pointer;
-            text-decoration: none;
-        }
-
-        .speed-dial-btn:hover {
-            transform: scale(1.1);
-            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
-        }
-
-        .speed-dial-primary {
-            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
-            color: white;
-        }
-
-        .speed-dial-main {
-            width: 64px;
-            height: 64px;
-            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
-            color: white;
-            font-size: 24px;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .speed-dial-container:hover .speed-dial-main {
-            transform: rotate(45deg);
-        }
-    </style>
-
     <div class="speed-dial-container">
         <!-- Action : Générer les assets marketing -->
         <div class="speed-dial-action">
@@ -644,77 +469,5 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
     <script src="../assets/js/main.js" type="module"></script>
-
-    <script>
-        function toggleAssetCard(card) {
-            const toggle = card.querySelector('.toggle-switch');
-            const stepper = card.querySelector('.stepper-control');
-
-            card.classList.toggle('active');
-            toggle.classList.toggle('active');
-
-            if (card.classList.contains('active')) {
-                stepper.style.opacity = '1';
-            } else {
-                stepper.style.opacity = '0.3';
-            }
-
-            updateEstimation();
-        }
-
-        function increaseVariation(btn) {
-            const stepper = btn.closest('.stepper-control');
-            const valueElement = stepper.querySelector('.stepper-value');
-            let value = parseInt(valueElement.textContent);
-
-            if (value < 3) {
-                value++;
-                valueElement.textContent = value;
-                updateEstimation();
-            }
-        }
-
-        function decreaseVariation(btn) {
-            const stepper = btn.closest('.stepper-control');
-            const valueElement = stepper.querySelector('.stepper-value');
-            let value = parseInt(valueElement.textContent);
-
-            if (value > 1) {
-                value--;
-                valueElement.textContent = value;
-                updateEstimation();
-            }
-        }
-
-        function updateEstimation() {
-            const activeCards = document.querySelectorAll('.asset-card-modern.active');
-            let totalVariations = 0;
-
-            activeCards.forEach(card => {
-                const valueElement = card.querySelector('.stepper-value');
-                totalVariations += parseInt(valueElement.textContent);
-            });
-
-            document.getElementById('selectedAssetsCount').textContent = activeCards.length + ' types d\'assets';
-            document.getElementById('totalVariations').textContent = totalVariations + ' variations';
-        }
-
-        // Toggle instructions area chevron
-        document.getElementById('instructionsArea').addEventListener('transitionend', function() {
-            const chevron = document.getElementById('instructionsChevron');
-            if (this.classList.contains('d-none')) {
-                chevron.classList.remove('bi-chevron-down');
-                chevron.classList.add('bi-chevron-right');
-            } else {
-                chevron.classList.remove('bi-chevron-right');
-                chevron.classList.add('bi-chevron-down');
-            }
-        });
-
-        // Update on page load
-        document.addEventListener('DOMContentLoaded', function() {
-            updateEstimation();
-        });
-    </script>
 </body>
 </html>
