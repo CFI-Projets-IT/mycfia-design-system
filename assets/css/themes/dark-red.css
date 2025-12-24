@@ -16,6 +16,7 @@
 :root {
     /* Apply dark red theme colors */
     --color-primary: var(--theme-dark-red-primary);
+    --color-primary-hover: var(--theme-dark-red-primary-hover);
     --color-secondary: var(--theme-dark-red-secondary);
     --bg-primary: var(--theme-dark-red-bg-primary);
     --bg-card: var(--theme-dark-red-bg-card);

@@ -16,6 +16,7 @@
 :root {
     /* Apply dark blue theme colors */
     --color-primary: var(--theme-dark-blue-primary);
+    --color-primary-hover: var(--theme-dark-blue-primary-hover);
     --color-secondary: var(--theme-dark-blue-secondary);
     --bg-primary: var(--theme-dark-blue-bg-primary);
     --bg-card: var(--theme-dark-blue-bg-card);

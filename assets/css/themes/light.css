@@ -16,6 +16,7 @@
 :root {
     /* Apply light theme colors */
     --color-primary: var(--theme-light-primary);
+    --color-primary-hover: var(--theme-light-primary-hover);
     --color-secondary: var(--theme-light-secondary);
     --bg-primary: var(--theme-light-bg-primary);
     --bg-card: var(--theme-light-bg-card);
