@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Validation Enrichissement - Étape 1 | myCFiA</title>
+
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Design System myCFiA -->
+    <link rel="stylesheet" href="../assets/css/main.css">
+    <link rel="stylesheet" href="../assets/css/themes/light.css" id="theme-stylesheet">
+</head>
+<body>
+    <div class="app">
+        <!-- Sidebar -->
+        <aside class="sidebar d-flex flex-column">
+            <div class="sidebar-header">
+                <button class="btn btn-link text-white-50 p-0" data-sidebar-toggle>
+                    <i class="bi bi-list fs-4"></i>
+                </button>
+                <button class="btn btn-link text-white-50 p-0" data-sidebar-toggle>
+                    <i class="bi bi-arrow-left-circle fs-5"></i>
+                </button>
+            </div>
+
+            <nav class="flex-grow-1 overflow-auto px-3">
+                <!-- Marketing -->
+                <div class="nav-section mb-4">
+                    <div class="nav-section-title-pill mb-3">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-megaphone"></i>
+                            <span>Marketing</span>
+                        </div>
+                        <i class="bi bi-chevron-down"></i>
+                    </div>
+                    <div class="nav-section-content">
+                        <a href="step1_create_light.html" class="sidebar-link active">
+                            <i class="bi bi-plus-circle"></i>
+                            <span>Nouvelle campagne</span>
+                        </a>
+                        <a href="dashboard_light.html" class="sidebar-link">
+                            <i class="bi bi-grid"></i>
+                            <span>Mes campagnes</span>
+                        </a>
+                        <a href="analytics_light.html" class="sidebar-link">
+                            <i class="bi bi-bar-chart-line"></i>
+                            <span>Analytics</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Favoris -->
+                <div class="nav-section mb-4">
+                    <div class="nav-section-title-pill mb-3">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-star"></i>
+                            <span>Favoris</span>
+                        </div>
+                        <i class="bi bi-chevron-down"></i>
+                    </div>
+                    <div class="px-3 py-2 text-white-50 small">
+                        <span>Aucune campagne favorite</span>
+                    </div>
+                </div>
+
+                <!-- Historique -->
+                <div class="nav-section mb-4">
+                    <div class="nav-section-title-pill mb-3">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-clock-history"></i>
+                            <span>Historique</span>
+                        </div>
+                        <i class="bi bi-chevron-down"></i>
+                    </div>
+                </div>
+            </nav>
+
+            <div class="sidebar-footer">
+                <a href="../settings_index/settings_index_light.html" class="sidebar-link">
+                    <i class="bi bi-gear"></i>
+                    <span>Paramètres</span>
+                </a>
+                <a href="../profile/profile_light.html" class="sidebar-link">
+                    <i class="bi bi-person-circle"></i>
+                    <span>Mon compte</span>
+                </a>
+                <a href="#" class="sidebar-link">
+                    <i class="bi bi-box-arrow-right"></i>
+                    <span>Quitter</span>
+                </a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main">
+            <header class="header">
+                <div class="header-content">
+                    <a href="../index.html" class="step1-review-header-logo-link">
+                        <img src="../images/logo_picto.svg" alt="CFI" class="header-logo-picto">
+                        <img src="../images/logo.svg" alt="myCFiA" class="header-logo">
+                    </a>
+
+                    <div class="step1-review-header-buttons">
+                        <button class="btn btn-glass header-btn step1-review-header-btn-primary">
+                            <i class="bi bi-building"></i>
+                            <span class="header-btn-text">Ma Division</span>
+                        </button>
+                        <button class="btn btn-glass-primary header-btn">
+                            <i class="bi bi-sun-fill"></i>
+                            <span class="header-btn-text">Clair</span>
+                        </button>
+                        <a href="#" class="btn btn-glass header-btn step1-review-header-link">
+                            <i class="bi bi-arrow-left-circle"></i>
+                            <span class="header-btn-text">Retour CFI</span>
+                        </a>
+                    </div>
+                </div>
+            </header>
+
+            <div class="content">
+                <!-- Breadcrumb -->
+                <nav aria-label="breadcrumb" class="step1-review-breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="dashboard_light.html" class="step1-review-breadcrumb-link">Campagnes Marketing</a></li>
+                        <li class="breadcrumb-item"><a href="step1_create_light.html" class="step1-review-breadcrumb-link">Nouvelle campagne</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Validation enrichissement</li>
+                    </ol>
+                </nav>
+
+                <!-- Stepper -->
+                <div class="campaign-stepper">
+                    <div class="stepper-container">
+                        <div class="stepper-line">
+                            <div class="stepper-progress step1-review-stepper-progress"></div>
+                        </div>
+
+                        <div class="stepper-step active">
+                            <div class="stepper-circle">1</div>
+                            <div class="stepper-label">Projet</div>
+                        </div>
+
+                        <div class="stepper-step">
+                            <div class="stepper-circle">2</div>
+                            <div class="stepper-label">Personas</div>
+                        </div>
+
+                        <div class="stepper-step">
+                            <div class="stepper-circle">3</div>
+                            <div class="stepper-label">Concurrents</div>
+                        </div>
+
+                        <div class="stepper-step">
+                            <div class="stepper-circle">4</div>
+                            <div class="stepper-label">Stratégie</div>
+                        </div>
+
+                        <div class="stepper-step">
+                            <div class="stepper-circle">5</div>
+                            <div class="stepper-label">Assets</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Success Alert -->
+                <div class="alert alert-success alert-dismissible fade show ai-enrichment-alert">
+                    <i class="bi bi-check-circle-fill ai-enrichment-alert-icon"></i>
+                    <div>
+                        <strong>Enrichissement terminé avec succès!</strong><br>
+                        L'IA a analysé vos informations et généré des données enrichies. Vérifiez et validez les informations ci-dessous.
+                    </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+
+                <!-- Campaign Name Selection -->
+                <div class="form-section">
+                    <div class="form-section-header">
+                        <div class="form-section-icon">
+                            <i class="bi bi-pencil-square"></i>
+                        </div>
+                        <h2 class="form-section-title">Nom de votre campagne</h2>
+                        <p class="form-section-subtitle">L'IA a généré 3 propositions de noms. Sélectionnez celui qui vous convient le mieux.</p>
+                    </div>
+
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <input type="radio" class="btn-check" name="campaignName" id="name1" autocomplete="off" checked>
+                            <label class="btn btn-outline-primary w-100 text-start p-3 name-proposal-label" for="name1">
+                                <div class="d-flex align-items-start gap-2">
+                                    <i class="bi bi-check-circle-fill name-proposal-icon"></i>
+                                    <div>
+                                        <strong class="d-block mb-1">Lancement Produit Q1 2025</strong>
+                                        <small class="text-secondary">Nom direct et temporel</small>
+                                    </div>
+                                </div>
+                            </label>
+                        </div>
+                        <div class="col-md-4">
+                            <input type="radio" class="btn-check" name="campaignName" id="name2" autocomplete="off">
+                            <label class="btn btn-outline-primary w-100 text-start p-3 name-proposal-label" for="name2">
+                                <div class="d-flex align-items-start gap-2">
+                                    <i class="bi bi-circle name-proposal-icon"></i>
+                                    <div>
+                                        <strong class="d-block mb-1">Formation Pro Connect 2025</strong>
+                                        <small class="text-secondary">Nom évocateur et moderne</small>
+                                    </div>
+                                </div>
+                            </label>
+                        </div>
+                        <div class="col-md-4">
+                            <input type="radio" class="btn-check" name="campaignName" id="name3" autocomplete="off">
+                            <label class="btn btn-outline-primary w-100 text-start p-3 name-proposal-label" for="name3">
+                                <div class="d-flex align-items-start gap-2">
+                                    <i class="bi bi-circle name-proposal-icon"></i>
+                                    <div>
+                                        <strong class="d-block mb-1">Révolution Compétences Q1</strong>
+                                        <small class="text-secondary">Nom impactant et engageant</small>
+                                    </div>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="mt-3">
+                        <small class="text-secondary">
+                            <i class="bi bi-info-circle"></i>
+                            Vous pourrez modifier ce nom à tout moment dans les paramètres de la campagne
+                        </small>
+                    </div>
+                </div>
+
+                <!-- Data Grid -->
+                <div class="form-section">
+                    <div class="form-section-header">
+                        <div class="form-section-icon">
+                            <i class="bi bi-stars"></i>
+                        </div>
+                        <h2 class="form-section-title">Données enrichies par l'IA</h2>
+                        <p class="form-section-subtitle">Validation des informations analysées automatiquement</p>
+                    </div>
+
+                    <!-- Row 1: Branding + Business -->
+                    <div class="row g-4 mb-4">
+                        <!-- Branding Column -->
+                        <div class="col-md-6">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h5 class="mb-4">
+                                        <i class="bi bi-palette text-primary"></i>
+                                        Identité de marque
+                                    </h5>
+                                    <div class="mb-3">
+                                        <label class="form-label small">Nom de marque détecté</label>
+                                        <input type="text" class="form-control form-control-sm" value="CFI Entreprise" readonly>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label small">Site web analysé</label>
+                                        <input type="url" class="form-control form-control-sm" value="https://www.cfi-groupe.fr" readonly>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label small">Style de design</label>
+                                        <textarea class="form-control form-control-sm" rows="2" readonly>Professionnel, moderne avec une palette de couleurs bleue dominante. Design épuré mettant en avant la confiance et l'expertise.</textarea>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label small">Palette de couleurs</label>
+                                        <div class="d-flex gap-2 mt-2">
+                                            <div class="color-swatch color-swatch-primary"></div>
+                                            <div class="color-swatch color-swatch-secondary"></div>
+                                            <div class="color-swatch color-swatch-white"></div>
+                                            <div class="color-swatch color-swatch-light"></div>
+                                        </div>
+                                    </div>
+                                    <div class="mb-0">
+                                        <label class="form-label small">Typographie principale</label>
+                                        <input type="text" class="form-control form-control-sm" value="Poppins, Arial, sans-serif" readonly>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Business Column -->
+                        <div class="col-md-6">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h5 class="mb-4">
+                                        <i class="bi bi-briefcase text-primary"></i>
+                                        Intelligence business
+                                    </h5>
+                                    <div class="mb-3">
+                                        <label class="form-label small">Proposition de valeur</label>
+                                        <textarea class="form-control form-control-sm" rows="3" readonly>Leader européen des formations professionnelles certifiantes dans les domaines de la finance, du contrôle de gestion et de la comptabilité. Expertise reconnue depuis plus de 30 ans.</textarea>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label small">Marché géographique</label>
+                                        <input type="text" class="form-control form-control-sm" value="France, Europe (primaire), International (secondaire)" readonly>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label small">Audience cible principale</label>
+                                        <input type="text" class="form-control form-control-sm" value="Professionnels finance/comptabilité, Entreprises (formation continue)" readonly>
+                                    </div>
+                                    <div class="mb-0">
+                                        <label class="form-label small">Offre principale</label>
+                                        <textarea class="form-control form-control-sm" rows="2" readonly>Formations certifiantes, Parcours diplômants, Formation continue professionnelle, E-learning et présentiel</textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Row 2: Keywords + Recommendations -->
+                    <div class="row g-4">
+                        <!-- Keywords Column -->
+                        <div class="col-md-6">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h5 class="mb-4">
+                                        <i class="bi bi-search text-primary"></i>
+                                        Mots-clés Google Ads
+                                    </h5>
+
+                                    <div class="row g-2 mb-3">
+                                        <div class="col-6">
+                                            <div class="text-center p-2 asset-preview-item">
+                                                <h6 class="text-primary mb-0">42</h6>
+                                                <small class="text-secondary">Mots-clés</small>
+                                            </div>
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="text-center p-2 asset-preview-item">
+                                                <h6 class="text-primary mb-0">18 500</h6>
+                                                <small class="text-secondary">Vol. moy/mois</small>
+                                            </div>
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="text-center p-2 asset-preview-item">
+                                                <h6 class="text-primary mb-0">2.45€</h6>
+                                                <small class="text-secondary">CPC moyen</small>
+                                            </div>
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="text-center p-2 asset-preview-item">
+                                                <h6 class="text-primary mb-0">Moyenne</h6>
+                                                <small class="text-secondary">Concurrence</small>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="table-responsive">
+                                        <table class="table table-sm table-hover mb-0">
+                                            <thead>
+                                                <tr>
+                                                    <th class="small">Mot-clé</th>
+                                                    <th class="small">Vol/mois</th>
+                                                    <th class="small">CPC</th>
+                                                    <th class="small">Concurrence</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td class="small"><strong>formation finance</strong></td>
+                                                    <td class="small">8 100</td>
+                                                    <td class="small">3.20€</td>
+                                                    <td><span class="badge bg-warning competitor-priority-badge">Élevée</span></td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="small"><strong>formation comptabilité</strong></td>
+                                                    <td class="small">6 600</td>
+                                                    <td class="small">2.85€</td>
+                                                    <td><span class="badge bg-info competitor-priority-badge">Moyenne</span></td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="small"><strong>contrôle de gestion</strong></td>
+                                                    <td class="small">2 400</td>
+                                                    <td class="small">3.50€</td>
+                                                    <td><span class="badge bg-warning competitor-priority-badge">Élevée</span></td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="small"><strong>formation pro finance</strong></td>
+                                                    <td class="small">1 900</td>
+                                                    <td class="small">2.90€</td>
+                                                    <td><span class="badge bg-info competitor-priority-badge">Moyenne</span></td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="small"><strong>certification comptable</strong></td>
+                                                    <td class="small">1 300</td>
+                                                    <td class="small">2.15€</td>
+                                                    <td><span class="badge bg-success competitor-priority-badge">Faible</span></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Recommendations Column -->
+                        <div class="col-md-6">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <h5 class="mb-4">
+                                        <i class="bi bi-robot text-primary"></i>
+                                        Recommandations IA
+                                    </h5>
+
+                                    <div class="alert alert-info alert-dismissible fade show mb-3 alert-compact">
+                                        <small>
+                                            <i class="bi bi-lightbulb"></i>
+                                            <strong>Suggestions générées automatiquement</strong>
+                                        </small>
+                                        <button type="button" class="btn-close btn-close-sm" data-bs-dismiss="alert" aria-label="Close"></button>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <h6 class="small"><i class="bi bi-1-circle-fill text-primary"></i> Ciblage multi-générationnel</h6>
+                                        <p class="small text-secondary mb-0">Créer des personas distincts pour les jeunes professionnels (25-35 ans) en reconversion et les cadres expérimentés (45-55 ans) en montée en compétences.</p>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <h6 class="small"><i class="bi bi-2-circle-fill text-primary"></i> Canaux prioritaires</h6>
+                                        <p class="small text-secondary mb-0">Privilégier LinkedIn (70% du budget) pour atteindre les professionnels qualifiés, complété par Google Ads (20%) et l'emailing ciblé (10%).</p>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <h6 class="small"><i class="bi bi-3-circle-fill text-primary"></i> Contenus différenciés</h6>
+                                        <p class="small text-secondary mb-0">Développer du contenu axé sur le ROI et la certification pour les entreprises, et sur l'évolution de carrière pour les particuliers.</p>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <h6 class="small"><i class="bi bi-4-circle-fill text-primary"></i> Stratégie saisonnière</h6>
+                                        <p class="small text-secondary mb-0">Intensifier les campagnes en septembre (rentrée professionnelle) et janvier (nouvelles résolutions/budget formation).</p>
+                                    </div>
+
+                                    <div class="mb-0">
+                                        <h6 class="small"><i class="bi bi-5-circle-fill text-primary"></i> Différenciation concurrentielle</h6>
+                                        <p class="small text-secondary mb-0">Mettre en avant l'expertise de 30+ ans, les certifications reconnues et les taux de réussite supérieurs à la moyenne du secteur.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- Speed Dial FAB - Boîte à outils -->
+    <div class="speed-dial-container">
+        <!-- Action 1: Régénérer -->
+        <div class="speed-dial-action">
+            <span class="speed-dial-label">Régénérer l'analyse</span>
+            <a href="step1_loading_light.html" class="speed-dial-btn speed-dial-cancel">
+                <i class="bi bi-arrow-clockwise"></i>
+            </a>
+        </div>
+
+        <!-- Action 2: Valider et continuer -->
+        <div class="speed-dial-action">
+            <span class="speed-dial-label">Valider et continuer</span>
+            <a href="step2_loading_light.html" class="speed-dial-btn speed-dial-primary">
+                <i class="bi bi-check-lg"></i>
+            </a>
+        </div>
+
+        <!-- Bouton principal -->
+        <div class="speed-dial-btn speed-dial-main">
+            <i class="bi bi-three-dots-vertical"></i>
+        </div>
+    </div>
+
+    <!-- FAB Retour -->
+    <a href="step1_create_light.html" class="fab-back">
+        <i class="bi bi-arrow-left"></i>
+        <span class="fab-tooltip">Retour au formulaire</span>
+    </a>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Design System JS -->
+    <script src="../assets/js/main.js" type="module"></script>
+</body>
+</html>

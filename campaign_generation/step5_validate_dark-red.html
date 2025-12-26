@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Validation Assets - Étape 5 | myCFiA (Thème Sombre Rouge)</title>
+
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Design System myCFiA -->
+    <link rel="stylesheet" href="../assets/css/main.css">
+    <link rel="stylesheet" href="../assets/css/themes/dark-red.css" id="theme-stylesheet">
+</head>
+<body>
+    <div class="app">
+        <aside class="sidebar d-flex flex-column">
+            <div class="sidebar-header">
+                <button class="btn btn-link text-white-50 p-0" data-sidebar-toggle>
+                    <i class="bi bi-list fs-4"></i>
+                </button>
+            </div>
+            <nav class="flex-grow-1 overflow-auto px-3">
+                <!-- Marketing -->
+                <div class="nav-section mb-4">
+                    <div class="nav-section-title-pill mb-3">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-megaphone"></i>
+                            <span>Marketing</span>
+                        </div>
+                        <i class="bi bi-chevron-down"></i>
+                    </div>
+                    <div class="nav-section-content">
+                        <a href="step1_create_dark-red.html" class="sidebar-link active">
+                            <i class="bi bi-plus-circle"></i>
+                            <span>Nouvelle campagne</span>
+                        </a>
+                        <a href="dashboard_dark-red.html" class="sidebar-link">
+                            <i class="bi bi-grid"></i>
+                            <span>Mes campagnes</span>
+                        </a>
+                        <a href="analytics_dark-red.html" class="sidebar-link">
+                            <i class="bi bi-bar-chart-line"></i>
+                            <span>Analytics</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Favoris -->
+                <div class="nav-section mb-4">
+                    <div class="nav-section-title-pill mb-3">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-star"></i>
+                            <span>Favoris</span>
+                        </div>
+                        <i class="bi bi-chevron-down"></i>
+                    </div>
+                    <div class="px-3 py-2 text-white-50 small">
+                        <span>Aucune campagne favorite</span>
+                    </div>
+                </div>
+
+                <!-- Historique -->
+                <div class="nav-section mb-4">
+                    <div class="nav-section-title-pill mb-3">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-clock-history"></i>
+                            <span>Historique</span>
+                        </div>
+                        <i class="bi bi-chevron-down"></i>
+                    </div>
+                </div>
+            </nav>
+
+            <!-- Footer -->
+            <div class="sidebar-footer">
+                <a href="../settings_index/settings_index_light.html" class="sidebar-link">
+                    <i class="bi bi-gear"></i>
+                    <span>Paramètres</span>
+                </a>
+                <a href="../profile/profile_light.html" class="sidebar-link">
+                    <i class="bi bi-person-circle"></i>
+                    <span>Mon compte</span>
+                </a>
+                <a href="#" class="sidebar-link">
+                    <i class="bi bi-box-arrow-right"></i>
+                    <span>Quitter</span>
+                </a>
+            </div>
+        </aside>
+
+        <main class="main">
+            <header class="header">
+                <div class="header-content">
+                    <!-- Logo -->
+                    <a href="../index.html" class="step5-validate-header-logo-link">
+                        <img src="../images/logo_picto.svg" alt="CFI" class="header-logo-picto">
+                        <img src="../images/logo.svg" alt="myCFiA" class="header-logo">
+                    </a>
+
+                    <!-- Actions -->
+                    <div class="step5-validate-header-buttons">
+                        <button class="btn btn-glass header-btn step5-validate-header-btn-primary">
+                            <i class="bi bi-building"></i>
+                            <span class="header-btn-text">Ma Division</span>
+                        </button>
+                        <button class="btn btn-glass-primary header-btn">
+                            <i class="bi bi-sun-fill"></i>
+                            <span class="header-btn-text">Clair</span>
+                        </button>
+                        <a href="#" class="btn btn-glass header-btn step5-validate-header-link">
+                            <i class="bi bi-arrow-left-circle"></i>
+                            <span class="header-btn-text">Retour CFI</span>
+                        </a>
+                    </div>
+                </div>
+            </header>
+
+            <div class="content">
+                <nav aria-label="breadcrumb" class="step5-validate-breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="dashboard_dark-red.html" class="step5-validate-breadcrumb-link">Campagnes</a></li>
+                        <li class="breadcrumb-item active">Validation Assets</li>
+                    </ol>
+                </nav>
+
+                <div class="campaign-stepper">
+                    <div class="stepper-container">
+                        <div class="stepper-line">
+                            <div class="stepper-progress step5-validate-stepper-progress"></div>
+                        </div>
+                        <div class="stepper-step completed">
+                            <div class="stepper-circle"><i class="bi bi-check-lg"></i></div>
+                            <div class="stepper-label">Projet</div>
+                        </div>
+                        <div class="stepper-step completed">
+                            <div class="stepper-circle"><i class="bi bi-check-lg"></i></div>
+                            <div class="stepper-label">Personas</div>
+                        </div>
+                        <div class="stepper-step completed">
+                            <div class="stepper-circle"><i class="bi bi-check-lg"></i></div>
+                            <div class="stepper-label">Concurrents</div>
+                        </div>
+                        <div class="stepper-step completed">
+                            <div class="stepper-circle"><i class="bi bi-check-lg"></i></div>
+                            <div class="stepper-label">Stratégie</div>
+                        </div>
+                        <div class="stepper-step active">
+                            <div class="stepper-circle"><i class="bi bi-check-lg"></i></div>
+                            <div class="stepper-label">Assets</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <div class="form-section-header">
+                        <div class="form-section-icon">
+                            <i class="bi bi-check-circle"></i>
+                        </div>
+                        <h2 class="form-section-title">Validation des assets marketing</h2>
+                        <p class="form-section-subtitle">15 assets générés avec succès • Cliquez sur un asset pour voir le détail</p>
+                    </div>
+
+                    <div class="alert alert-success alert-dismissible fade show mb-4 step5-validate-alert">
+                        <i class="bi bi-check-circle-fill step5-validate-alert-icon"></i>
+                        <div>
+                            <strong>Génération terminée avec succès</strong><br>
+                            Tous vos assets sont prêts. Cliquez sur une ligne pour voir le reasoning IA et la preview.
+                        </div>
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+
+                    <!-- Table principale -->
+                    <div class="mb-4">
+                        <table class="table table-hover asset-table">
+                            <thead>
+                                <tr>
+                                    <th class="asset-table-col-type">Type d'asset</th>
+                                    <th class="asset-table-col-variation">Variation</th>
+                                    <th>Aperçu du contenu</th>
+                                    <th class="asset-table-col-score">Score IA</th>
+                                    <th class="asset-table-col-actions text-center">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Linkedin Assets -->
+                                <tr class="asset-row" data-asset-id="linkedin_1">
+                                    <td>
+                                        <span class="asset-type-badge asset-type-linkedin">
+                                            <i class="bi bi-linkedin"></i> Linkedin
+                                        </span>
+                                    </td>
+                                    <td><span class="badge bg-info">1/3</span></td>
+                                    <td>
+                                        <p class="small mb-0 asset-content-italic">
+                                            "🎯 Reconversion professionnelle réussie : Sophie, 34 ans, a doublé son salaire..."
+                                        </p>
+                                    </td>
+                                    <td><span class="badge bg-success">94%</span></td>
+                                    <td class="text-center">
+                                        <input class="form-check-input" type="checkbox" checked>
+                                    </td>
+                                </tr>
+                                <tr class="asset-row" data-asset-id="linkedin_2">
+                                    <td>
+                                        <span class="asset-type-badge asset-type-linkedin">
+                                            <i class="bi bi-linkedin"></i> Linkedin
+                                        </span>
+                                    </td>
+                                    <td><span class="badge bg-info">2/3</span></td>
+                                    <td>
+                                        <p class="small mb-0 asset-content-italic">
+                                            "📊 92% de nos alumni trouvent un emploi sous 6 mois. Voici ce qui fait la différence..."
+                                        </p>
+                                    </td>
+                                    <td><span class="badge bg-success">91%</span></td>
+                                    <td class="text-center">
+                                        <input class="form-check-input" type="checkbox" checked>
+                                    </td>
+                                </tr>
+                                <tr class="asset-row" data-asset-id="linkedin_3">
+                                    <td>
+                                        <span class="asset-type-badge asset-type-linkedin">
+                                            <i class="bi bi-linkedin"></i> Linkedin
+                                        </span>
+                                    </td>
+                                    <td><span class="badge bg-info">3/3</span></td>
+                                    <td>
+                                        <div class="d-flex align-items-center gap-2 mb-1">
+                                            <span class="badge bg-warning text-dark asset-badge-small">
+                                                <i class="bi bi-image"></i> Avec image
+                                            </span>
+                                        </div>
+                                        <p class="small mb-0 asset-content-italic">
+                                            "💼 Vous méritez une carrière qui vous passionne. Découvrez comment transformer votre expérience..."
+                                        </p>
+                                    </td>
+                                    <td><span class="badge bg-success">89%</span></td>
+                                    <td class="text-center">
+                                        <input class="form-check-input" type="checkbox" checked>
+                                    </td>
+                                </tr>
+
+                                <!-- GoogleAds Assets -->
+                                <tr class="asset-row" data-asset-id="google_1">
+                                    <td>
+                                        <span class="asset-type-badge asset-type-google">
+                                            <i class="bi bi-google"></i> GoogleAds
+                                        </span>
+                                    </td>
+                                    <td><span class="badge bg-warning text-dark">1/2</span></td>
+                                    <td>
+                                        <p class="small mb-0">
+                                            <strong>Formation Professionnelle Certifiante | Financement CPF</strong> - Changez de carrière en 3 mois...
+                                        </p>
+                                    </td>
+                                    <td><span class="badge bg-success">8/10</span></td>
+                                    <td class="text-center">
+                                        <input class="form-check-input" type="checkbox" checked>
+                                    </td>
+                                </tr>
+                                <tr class="asset-row" data-asset-id="google_2">
+                                    <td>
+                                        <span class="asset-type-badge asset-type-google">
+                                            <i class="bi bi-google"></i> GoogleAds
+                                        </span>
+                                    </td>
+                                    <td><span class="badge bg-warning text-dark">2/2</span></td>
+                                    <td>
+                                        <p class="small mb-0">
+                                            <strong>Reconversion Garantie | 92% de Placement</strong> - Obtenez une certification reconnue...
+                                        </p>
+                                    </td>
+                                    <td><span class="badge bg-success">8/10</span></td>
+                                    <td class="text-center">
+                                        <input class="form-check-input" type="checkbox" checked>
+                                    </td>
+                                </tr>
+
+                                <!-- BingAds Asset -->
+                                <tr class="asset-row" data-asset-id="bing_1">
+                                    <td>
+                                        <span class="asset-type-badge" style="background: #008373; color: white;">
+                                            <i class="bi bi-bing"></i> BingAds
+                                        </span>
+                                    </td>
+                                    <td><span class="badge bg-secondary">1/1</span></td>
+                                    <td>
+                                        <p class="small mb-0">
+                                            <strong>Formation Pro Reconnue | Financement Total CPF</strong> - Devenez expert certifié en 3 mois...
+                                        </p>
+                                    </td>
+                                    <td><span class="badge bg-success">7/10</span></td>
+                                    <td class="text-center">
+                                        <input class="form-check-input" type="checkbox" checked>
+                                    </td>
+                                </tr>
+
+                                <!-- Facebook Assets -->
+                                <tr class="asset-row" data-asset-id="facebook_1">
+                                    <td>
+                                        <span class="asset-type-badge asset-type-facebook">
+                                            <i class="bi bi-facebook"></i> Facebook
+                                        </span>
+                                    </td>
+                                    <td><span class="badge bg-primary">1/2</span></td>
+                                    <td>
+                                        <p class="small mb-0 asset-content-italic">
+                                            "Prêt(e) pour une nouvelle carrière ? 🚀 Découvrez nos formations certifiantes..."
+                                        </p>
+                                    </td>
+                                    <td><span class="badge bg-success">92%</span></td>
+                                    <td class="text-center">
+                                        <input class="form-check-input" type="checkbox" checked>
+                                    </td>
+                                </tr>
+                                <tr class="asset-row" data-asset-id="facebook_2">
+                                    <td>
+                                        <span class="asset-type-badge asset-type-facebook">
+                                            <i class="bi bi-facebook"></i> Facebook
+                                        </span>
+                                    </td>
+                                    <td><span class="badge bg-primary">2/2</span></td>
+                                    <td>
+                                        <div class="d-flex align-items-center gap-2 mb-1">
+                                            <span class="badge bg-warning text-dark asset-badge-small">
+                                                <i class="bi bi-image"></i> Avec image
+                                            </span>
+                                        </div>
+                                        <p class="small mb-0 asset-content-italic">
+                                            "La formation qui change tout 💼 De caissière à chef de projet en 8 mois..."
+                                        </p>
+                                    </td>
+                                    <td><span class="badge bg-success">90%</span></td>
+                                    <td class="text-center">
+                                        <input class="form-check-input" type="checkbox" checked>
+                                    </td>
+                                </tr>
+
+                                <!-- Instagram Asset -->
+                                <tr class="asset-row" data-asset-id="instagram_1">
+                                    <td>
+                                        <span class="asset-type-badge" style="background: linear-gradient(135deg, #E1306C, #FD1D1D, #F77737); color: white;">
+                                            <i class="bi bi-instagram"></i> Instagram
+                                        </span>
+                                    </td>
+                                    <td><span class="badge bg-secondary">1/1</span></td>
+                                    <td>
+                                        <div class="d-flex align-items-center gap-2 mb-1">
+                                            <span class="badge bg-warning text-dark asset-badge-small">
+                                                <i class="bi bi-image"></i> Avec image
+                                            </span>
+                                        </div>
+                                        <p class="small mb-0 asset-content-italic">
+                                            "✨ Nouvelle vie, nouvelle carrière 💼 Marie partage son parcours inspirant..."
+                                        </p>
+                                    </td>
+                                    <td><span class="badge bg-success">93%</span></td>
+                                    <td class="text-center">
+                                        <input class="form-check-input" type="checkbox" checked>
+                                    </td>
+                                </tr>
+
+                                <!-- Iab Asset -->
+                                <tr class="asset-row" data-asset-id="iab_1">
+                                    <td>
+                                        <span class="asset-type-badge" style="background: #FF6B35; color: white;">
+                                            <i class="bi bi-badge-ad"></i> Iab
+                                        </span>
+                                    </td>
+                                    <td><span class="badge bg-danger">1/1</span></td>
+                                    <td>
+                                        <div class="d-flex align-items-center gap-2 mb-1">
+                                            <span class="badge bg-warning text-dark asset-badge-small">
+                                                <i class="bi bi-image"></i> Avec image
+                                            </span>
+                                        </div>
+                                        <p class="small mb-0">
+                                            Display 728x90 - "Nouvelle carrière en 3 mois • Certification RNCP"
+                                        </p>
+                                    </td>
+                                    <td><span class="badge bg-success">85%</span></td>
+                                    <td class="text-center">
+                                        <input class="form-check-input" type="checkbox" checked>
+                                    </td>
+                                </tr>
+
+                                <!-- Email Assets -->
+                                <tr class="asset-row" data-asset-id="email_1">
+                                    <td>
+                                        <span class="asset-type-badge asset-type-email">
+                                            <i class="bi bi-envelope"></i> Email
+                                        </span>
+                                    </td>
+                                    <td><span class="badge bg-danger">1/2</span></td>
+                                    <td>
+                                        <p class="small mb-0">
+                                            <strong>Objet:</strong> Sophie a doublé son salaire en 6 mois. Voici comment...
+                                        </p>
+                                    </td>
+                                    <td><span class="badge bg-success">88%</span></td>
+                                    <td class="text-center">
+                                        <input class="form-check-input" type="checkbox" checked>
+                                    </td>
+                                </tr>
+                                <tr class="asset-row" data-asset-id="email_2">
+                                    <td>
+                                        <span class="asset-type-badge asset-type-email">
+                                            <i class="bi bi-envelope"></i> Email
+                                        </span>
+                                    </td>
+                                    <td><span class="badge bg-danger">2/2</span></td>
+                                    <td>
+                                        <p class="small mb-0">
+                                            <strong>Objet:</strong> 3 mois pour changer de vie (financement CPF 100%)
+                                        </p>
+                                    </td>
+                                    <td><span class="badge bg-success">86%</span></td>
+                                    <td class="text-center">
+                                        <input class="form-check-input" type="checkbox" checked>
+                                    </td>
+                                </tr>
+
+                                <!-- Article Assets -->
+                                <tr class="asset-row" data-asset-id="article_1">
+                                    <td>
+                                        <span class="asset-type-badge asset-type-article">
+                                            <i class="bi bi-file-text"></i> Article
+                                        </span>
+                                    </td>
+                                    <td><span class="badge bg-secondary">1/2</span></td>
+                                    <td>
+                                        <p class="small mb-0">
+                                            <strong>Titre:</strong> "Les 5 étapes clés pour réussir sa reconversion professionnelle en 2025"
+                                        </p>
+                                    </td>
+                                    <td><span class="badge bg-success">93%</span></td>
+                                    <td class="text-center">
+                                        <input class="form-check-input" type="checkbox" checked>
+                                    </td>
+                                </tr>
+                                <tr class="asset-row" data-asset-id="article_2">
+                                    <td>
+                                        <span class="asset-type-badge asset-type-article">
+                                            <i class="bi bi-file-text"></i> Article
+                                        </span>
+                                    </td>
+                                    <td><span class="badge bg-success">2/2</span></td>
+                                    <td>
+                                        <div class="d-flex align-items-center gap-2 mb-1">
+                                            <span class="badge bg-warning text-dark asset-badge-small">
+                                                <i class="bi bi-image"></i> Avec image
+                                            </span>
+                                        </div>
+                                        <p class="small mb-0">
+                                            <strong>Titre:</strong> "Témoignage reconversion : De caissière à développeuse web en 6 mois"
+                                        </p>
+                                    </td>
+                                    <td><span class="badge bg-success">95%</span></td>
+                                    <td class="text-center">
+                                        <input class="form-check-input" type="checkbox" checked>
+                                    </td>
+                                </tr>
+
+                                <!-- SMS Assets -->
+                                <tr class="asset-row" data-asset-id="sms_1">
+                                    <td>
+                                        <span class="asset-type-badge" style="background: #9C27B0; color: white;">
+                                            <i class="bi bi-phone"></i> SMS
+                                        </span>
+                                    </td>
+                                    <td><span class="badge bg-secondary">1/2</span></td>
+                                    <td>
+                                        <p class="small mb-0">
+                                            "CFI: Session info GRATUITE mardi 18h. Reconversion + CPF. Places limitées..."
+                                        </p>
+                                    </td>
+                                    <td><span class="badge bg-success">78%</span></td>
+                                    <td class="text-center">
+                                        <input class="form-check-input" type="checkbox" checked>
+                                    </td>
+                                </tr>
+                                <tr class="asset-row" data-asset-id="sms_2">
+                                    <td>
+                                        <span class="asset-type-badge" style="background: #9C27B0; color: white;">
+                                            <i class="bi bi-phone"></i> SMS
+                                        </span>
+                                    </td>
+                                    <td><span class="badge bg-secondary">2/2</span></td>
+                                    <td>
+                                        <p class="small mb-0">
+                                            "Nouvelle carrière en 3 mois? CFI Formation vous rappelle gratuitement..."
+                                        </p>
+                                    </td>
+                                    <td><span class="badge bg-success">76%</span></td>
+                                    <td class="text-center">
+                                        <input class="form-check-input" type="checkbox" checked>
+                                    </td>
+                                </tr>
+
+                                <!-- Courrier Asset -->
+                                <tr class="asset-row" data-asset-id="courrier_1">
+                                    <td>
+                                        <span class="asset-type-badge" style="background: #FF9800; color: white;">
+                                            <i class="bi bi-mailbox"></i> Courrier
+                                        </span>
+                                    </td>
+                                    <td><span class="badge bg-warning text-dark">1/1</span></td>
+                                    <td>
+                                        <p class="small mb-0">
+                                            <strong>Format A4 -</strong> Invitation personnelle à la session découverte du 15 janvier
+                                        </p>
+                                    </td>
+                                    <td><span class="badge bg-success">82%</span></td>
+                                    <td class="text-center">
+                                        <input class="form-check-input" type="checkbox" checked>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="card" style="margin-top: var(--spacing-2xl); background: linear-gradient(135deg, rgba(0, 48, 128, 0.03), rgba(57, 191, 239, 0.03)); border: 1px solid var(--color-primary);">
+                        <div class="card-body">
+                            <div class="row align-items-center">
+                                <div class="col-md-8">
+                                    <h5 class="mb-2"><i class="bi bi-check-circle-fill text-success"></i> Validation en cours</h5>
+                                    <p class="mb-0">
+                                        <strong>15 assets validés sur 15</strong> •
+                                        Prêt à finaliser la campagne et lancer la diffusion
+                                    </p>
+                                </div>
+                                <div class="col-md-4 text-end">
+                                    <button class="btn btn-outline-secondary me-2">
+                                        <i class="bi bi-arrow-clockwise"></i>
+                                        Tout régénérer
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Speed Dial FAB - Boîte à outils -->
+    <div class="speed-dial-container">
+        <!-- Action 1: Régénérer -->
+        <div class="speed-dial-action">
+            <span class="speed-dial-label">Régénérer les assets</span>
+            <a href="step5_loading_dark-red.html" class="speed-dial-btn speed-dial-cancel">
+                <i class="bi bi-arrow-clockwise"></i>
+            </a>
+        </div>
+
+        <!-- Action 2: Valider et finaliser -->
+        <div class="speed-dial-action">
+            <span class="speed-dial-label">Valider et finaliser la campagne</span>
+            <button type="button" class="speed-dial-btn speed-dial-primary">
+                <i class="bi bi-check-circle-fill"></i>
+            </button>
+        </div>
+
+        <!-- Bouton principal -->
+        <div class="speed-dial-btn speed-dial-main">
+            <i class="bi bi-three-dots-vertical"></i>
+        </div>
+    </div>
+
+    <!-- Modal Detail Asset -->
+    <div class="modal fade" id="assetDetailModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-fullscreen-custom">
+            <div class="modal-content">
+                <div class="modal-header" style="border-bottom: 2px solid var(--border-color);">
+                    <h5 class="modal-title">
+                        <span id="modalAssetType"></span>
+                        <span id="modalAssetVariation" class="badge bg-secondary ms-2"></span>
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-0" style="height: calc(95vh - 140px); overflow: hidden;">
+                    <div class="row g-0" style="height: 100%;">
+                        <!-- Colonne gauche: Reasoning + KPIs -->
+                        <div class="col-md-5" style="background: #fff; border-right: 2px solid var(--border-color); height: 100%; display: flex; flex-direction: column;">
+                            <div style="padding: var(--spacing-2xl); padding-bottom: 0;">
+                                <h4 style="color: var(--text-primary); margin-bottom: var(--spacing-xl);">
+                                    <i class="bi bi-robot text-primary"></i> Analyse IA
+                                </h4>
+                            </div>
+                            <div style="flex: 1; overflow-y: auto; padding: 0 var(--spacing-2xl) var(--spacing-2xl) var(--spacing-2xl);">
+                                <!-- Reasoning Section -->
+                                <div id="reasoningContent">
+                                    <!-- Sera rempli dynamiquement -->
+                                </div>
+
+                                <!-- KPIs Section -->
+                                <h5 style="color: var(--text-primary); margin-top: var(--spacing-2xl); margin-bottom: var(--spacing-lg);">
+                                    <i class="bi bi-graph-up-arrow text-success"></i> Métriques & KPIs
+                                </h5>
+                                <div id="kpisContent">
+                                    <!-- Sera rempli dynamiquement -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Colonne droite: Preview -->
+                        <div class="col-md-7" style="height: 100%; display: flex; flex-direction: column;">
+                            <div style="padding: var(--spacing-2xl); padding-bottom: 0;">
+                                <h4 style="color: var(--text-primary); margin-bottom: var(--spacing-xl);">
+                                    <i class="bi bi-eye text-primary"></i> Aperçu visuel
+                                </h4>
+                            </div>
+                            <div style="flex: 1; overflow-y: auto; padding: var(--spacing-2xl); background: #f8f9fa; display: flex; align-items: flex-start; justify-content: center;">
+                                <div id="previewContent" style="width: 100%;">
+                                    <!-- Sera rempli dynamiquement -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer" style="border-top: 2px solid var(--border-color); justify-content: space-between;">
+                    <div>
+                        <button type="button" class="btn btn-outline-danger">
+                            <i class="bi bi-trash"></i> Rejeter cet asset
+                        </button>
+                        <button type="button" class="btn btn-outline-secondary ms-2">
+                            <i class="bi bi-arrow-clockwise"></i> Régénérer
+                        </button>
+                    </div>
+                    <div>
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Fermer</button>
+                        <button type="button" class="btn btn-primary">
+                            <i class="bi bi-check-lg"></i> Valider cet asset
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <a href="step5_config_dark-red.html" class="fab-back">
+        <i class="bi bi-arrow-left"></i>
+        <span class="fab-tooltip">Retour à la configuration</span>
+    </a>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../assets/js/main.js" type="module"></script>
+
+</body>
+</html>

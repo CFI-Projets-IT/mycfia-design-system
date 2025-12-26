@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Détection Concurrents - Étape 3 | myCFiA</title>
+    <title>Génération Personas - Étape 2 | myCFiA</title>
 
     <!-- Bootstrap 5 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -42,15 +42,15 @@
                         <i class="bi bi-chevron-down"></i>
                     </div>
                     <div class="nav-section-content">
-                        <a href="step1_create.html" class="sidebar-link active">
+                        <a href="step1_create_light.html" class="sidebar-link active">
                             <i class="bi bi-plus-circle"></i>
                             <span>Nouvelle campagne</span>
                         </a>
-                        <a href="dashboard.html" class="sidebar-link">
+                        <a href="dashboard_light.html" class="sidebar-link">
                             <i class="bi bi-grid"></i>
                             <span>Mes campagnes</span>
                         </a>
-                        <a href="analytics.html" class="sidebar-link">
+                        <a href="analytics_light.html" class="sidebar-link">
                             <i class="bi bi-bar-chart-line"></i>
                             <span>Analytics</span>
                         </a>
@@ -129,9 +129,9 @@
                 <!-- Breadcrumb -->
                 <nav aria-label="breadcrumb" style="margin-bottom: var(--spacing-3xl);">
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="dashboard.html" style="color: var(--color-primary); text-decoration: none;">Campagnes Marketing</a></li>
-                        <li class="breadcrumb-item"><a href="step1_create.html" style="color: var(--color-primary); text-decoration: none;">Nouvelle campagne</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">Détection Concurrents</li>
+                        <li class="breadcrumb-item"><a href="dashboard_light.html" style="color: var(--color-primary); text-decoration: none;">Campagnes Marketing</a></li>
+                        <li class="breadcrumb-item"><a href="step1_create_light.html" style="color: var(--color-primary); text-decoration: none;">Nouvelle campagne</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Génération Personas</li>
                     </ol>
                 </nav>
 
@@ -139,7 +139,7 @@
                 <div class="campaign-stepper">
                     <div class="stepper-container">
                         <div class="stepper-line">
-                            <div class="stepper-progress" style="width: 50%;"></div>
+                            <div class="stepper-progress" style="width: 25%;"></div>
                         </div>
 
                         <div class="stepper-step completed">
@@ -147,12 +147,12 @@
                             <div class="stepper-label">Projet</div>
                         </div>
 
-                        <div class="stepper-step completed">
-                            <div class="stepper-circle"><i class="bi bi-check-lg"></i></div>
+                        <div class="stepper-step active">
+                            <div class="stepper-circle">2</div>
                             <div class="stepper-label">Personas</div>
                         </div>
 
-                        <div class="stepper-step active">
+                        <div class="stepper-step">
                             <div class="stepper-circle">3</div>
                             <div class="stepper-label">Concurrents</div>
                         </div>
@@ -177,7 +177,7 @@
                             <div class="card-body">
                                 <h5 class="mb-4">
                                     <i class="bi bi-briefcase text-primary"></i>
-                                    Contexte de la campagne
+                                    Campagne en cours d'analyse
                                 </h5>
 
                                 <div class="mb-3">
@@ -191,11 +191,31 @@
                                 </div>
 
                                 <div class="mb-3">
+                                    <label class="form-label small text-secondary">Objectif marketing</label>
+                                    <p class="mb-0">Générer des leads qualifiés pour formations finance/comptabilité</p>
+                                </div>
+
+                                <div class="mb-3">
                                     <label class="form-label small text-secondary">Budget total</label>
                                     <p class="mb-0"><strong>50 000€</strong></p>
                                 </div>
 
-                                <div class="mb-4 pb-3" style="border-bottom: 1px solid var(--border);">
+                                <div class="mb-3">
+                                    <label class="form-label small text-secondary">Durée de la campagne</label>
+                                    <p class="mb-0">3 mois (Q1 2025)</p>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label small text-secondary">Canaux marketing</label>
+                                    <div class="d-flex flex-wrap gap-2 mt-2">
+                                        <span class="badge bg-primary">Linkedin</span>
+                                        <span class="badge bg-primary">GoogleAds</span>
+                                        <span class="badge bg-primary">Facebook</span>
+                                        <span class="badge bg-primary">Mail</span>
+                                    </div>
+                                </div>
+
+                                <div class="mb-0">
                                     <label class="form-label small text-secondary">URL analysée</label>
                                     <p class="mb-0">
                                         <a href="https://www.cfi-groupe.fr" target="_blank" style="color: var(--color-primary);">
@@ -204,53 +224,11 @@
                                     </p>
                                 </div>
 
-                                <div class="mb-0">
-                                    <label class="form-label small text-secondary mb-2">
-                                        <i class="bi bi-people-fill text-primary"></i>
-                                        Personas sélectionnés (3)
-                                    </label>
-                                    <div class="d-flex flex-column gap-2">
-                                        <div class="p-2" style="background: var(--background-secondary); border-radius: var(--border-radius-md); border-left: 3px solid var(--color-primary);">
-                                            <div class="d-flex align-items-center gap-2">
-                                                <div style="width: 32px; height: 32px; border-radius: 50%; background: linear-gradient(135deg, var(--color-primary), var(--color-secondary)); display: flex; align-items: center; justify-content: center; color: white; font-size: 0.875rem;">
-                                                    <i class="bi bi-person-fill"></i>
-                                                </div>
-                                                <div>
-                                                    <small class="d-block" style="font-weight: 600;">Sophie Martin</small>
-                                                    <small class="text-secondary" style="font-size: 0.7rem;">Jeune Professionnelle</small>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="p-2" style="background: var(--background-secondary); border-radius: var(--border-radius-md); border-left: 3px solid var(--color-primary);">
-                                            <div class="d-flex align-items-center gap-2">
-                                                <div style="width: 32px; height: 32px; border-radius: 50%; background: linear-gradient(135deg, var(--color-primary), var(--color-secondary)); display: flex; align-items: center; justify-content: center; color: white; font-size: 0.875rem;">
-                                                    <i class="bi bi-person-fill"></i>
-                                                </div>
-                                                <div>
-                                                    <small class="d-block" style="font-weight: 600;">Marc Dubois</small>
-                                                    <small class="text-secondary" style="font-size: 0.7rem;">Cadre Confirmé</small>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="p-2" style="background: var(--background-secondary); border-radius: var(--border-radius-md); border-left: 3px solid var(--color-primary);">
-                                            <div class="d-flex align-items-center gap-2">
-                                                <div style="width: 32px; height: 32px; border-radius: 50%; background: linear-gradient(135deg, var(--color-primary), var(--color-secondary)); display: flex; align-items: center; justify-content: center; color: white; font-size: 0.875rem;">
-                                                    <i class="bi bi-person-fill"></i>
-                                                </div>
-                                                <div>
-                                                    <small class="d-block" style="font-weight: 600;">Claire Rousseau</small>
-                                                    <small class="text-secondary" style="font-size: 0.7rem;">Reconversion Pro</small>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
                                 <div class="alert alert-info mt-4 mb-0" style="padding: 0.75rem;">
                                     <small>
                                         <i class="bi bi-info-circle"></i>
-                                        <strong>Analyse concurrentielle intelligente</strong><br>
-                                        L'IA recherche et analyse vos concurrents avec des scores d'alignement et des données stratégiques.
+                                        <strong>Génération intelligente</strong><br>
+                                        L'IA analyse vos données enrichies pour créer des personas précis et actionnables.
                                     </small>
                                 </div>
                             </div>
@@ -265,13 +243,13 @@
                                 <div class="ai-icon-ring"></div>
                                 <div class="ai-icon-ring"></div>
                                 <div class="ai-icon-main">
-                                    <i class="bi bi-search"></i>
+                                    <i class="bi bi-people-fill"></i>
                                 </div>
                             </div>
 
                             <!-- Title -->
-                            <h1 class="loader-title">Détection des concurrents en cours</h1>
-                            <p class="loader-subtitle">L'IA analyse votre marché pour identifier vos concurrents directs...</p>
+                            <h1 class="loader-title">Génération des personas en cours</h1>
+                            <p class="loader-subtitle">L'IA crée des profils détaillés de votre audience cible...</p>
 
                             <!-- Phase Indicators -->
                             <div class="phase-indicators">
@@ -284,7 +262,7 @@
 
                             <!-- Status Message -->
                             <div class="status-message" style="transition: opacity 0.3s ease;">
-                                Recherche de concurrents dans votre secteur...
+                                Analyse de votre audience cible...
                             </div>
 
                             <!-- Progress Bar -->
@@ -311,12 +289,12 @@
                                     <span>Modèle: Mistral Large</span>
                                 </div>
                                 <div class="metadata-item">
-                                    <i class="bi bi-globe"></i>
-                                    <span>Secteur: Formation professionnelle</span>
+                                    <i class="bi bi-people"></i>
+                                    <span>5 personas en génération</span>
                                 </div>
                                 <div class="metadata-item">
                                     <i class="bi bi-clock-history"></i>
-                                    <span>Durée estimée: ~10 secondes</span>
+                                    <span>Durée estimée: ~12 secondes</span>
                                 </div>
                             </div>
                         </div>
@@ -327,9 +305,9 @@
     </div>
 
     <!-- FAB Retour -->
-    <a href="step2_select.html" class="fab-back">
+    <a href="step1_review_light.html" class="fab-back">
         <i class="bi bi-arrow-left"></i>
-        <span class="fab-tooltip">Retour aux personas</span>
+        <span class="fab-tooltip">Retour à la configuration</span>
     </a>
 
     <!-- Bootstrap JS -->

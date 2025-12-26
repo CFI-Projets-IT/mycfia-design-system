@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Validation Concurrents - Étape 3 | myCFiA (Thème Sombre Rouge)</title>
+
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Design System myCFiA -->
+    <link rel="stylesheet" href="../assets/css/main.css">
+    <link rel="stylesheet" href="../assets/css/themes/dark-red.css" id="theme-stylesheet">
+</head>
+<body>
+    <div class="app">
+        <!-- Sidebar -->
+        <aside class="sidebar d-flex flex-column">
+            <div class="sidebar-header">
+                <button class="btn btn-link text-white-50 p-0" data-sidebar-toggle>
+                    <i class="bi bi-list fs-4"></i>
+                </button>
+                <button class="btn btn-link text-white-50 p-0" data-sidebar-toggle>
+                    <i class="bi bi-arrow-left-circle fs-5"></i>
+                </button>
+            </div>
+
+            <nav class="flex-grow-1 overflow-auto px-3">
+                <!-- Marketing -->
+                <div class="nav-section mb-4">
+                    <div class="nav-section-title-pill mb-3">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-megaphone"></i>
+                            <span>Marketing</span>
+                        </div>
+                        <i class="bi bi-chevron-down"></i>
+                    </div>
+                    <div class="nav-section-content">
+                        <a href="step1_create_dark-red.html" class="sidebar-link active">
+                            <i class="bi bi-plus-circle"></i>
+                            <span>Nouvelle campagne</span>
+                        </a>
+                        <a href="dashboard_dark-red.html" class="sidebar-link">
+                            <i class="bi bi-grid"></i>
+                            <span>Mes campagnes</span>
+                        </a>
+                        <a href="analytics_dark-red.html" class="sidebar-link">
+                            <i class="bi bi-bar-chart-line"></i>
+                            <span>Analytics</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Favoris -->
+                <div class="nav-section mb-4">
+                    <div class="nav-section-title-pill mb-3">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-star"></i>
+                            <span>Favoris</span>
+                        </div>
+                        <i class="bi bi-chevron-down"></i>
+                    </div>
+                    <div class="px-3 py-2 text-white-50 small">
+                        <span>Aucune campagne favorite</span>
+                    </div>
+                </div>
+
+                <!-- Historique -->
+                <div class="nav-section mb-4">
+                    <div class="nav-section-title-pill mb-3">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-clock-history"></i>
+                            <span>Historique</span>
+                        </div>
+                        <i class="bi bi-chevron-down"></i>
+                    </div>
+                </div>
+            </nav>
+
+            <div class="sidebar-footer">
+                <a href="../settings_index/settings_index_light.html" class="sidebar-link">
+                    <i class="bi bi-gear"></i>
+                    <span>Paramètres</span>
+                </a>
+                <a href="../profile/profile_light.html" class="sidebar-link">
+                    <i class="bi bi-person-circle"></i>
+                    <span>Mon compte</span>
+                </a>
+                <a href="#" class="sidebar-link">
+                    <i class="bi bi-box-arrow-right"></i>
+                    <span>Quitter</span>
+                </a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main">
+            <header class="header">
+                <div class="header-content">
+                    <a href="../index.html" class="step3-validate-header-logo-link">
+                        <img src="../images/logo_picto.svg" alt="CFI" class="header-logo-picto">
+                        <img src="../images/logo.svg" alt="myCFiA" class="header-logo">
+                    </a>
+
+                    <div class="step3-validate-header-buttons">
+                        <button class="btn btn-glass header-btn step3-validate-header-btn-primary">
+                            <i class="bi bi-building"></i>
+                            <span class="header-btn-text">Ma Division</span>
+                        </button>
+                        <button class="btn btn-glass-primary header-btn">
+                            <i class="bi bi-sun-fill"></i>
+                            <span class="header-btn-text">Clair</span>
+                        </button>
+                        <a href="#" class="btn btn-glass header-btn step3-validate-header-link">
+                            <i class="bi bi-arrow-left-circle"></i>
+                            <span class="header-btn-text">Retour CFI</span>
+                        </a>
+                    </div>
+                </div>
+            </header>
+
+            <div class="content">
+                <!-- Breadcrumb -->
+                <nav aria-label="breadcrumb" class="step3-validate-breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="dashboard_dark-red.html" class="step3-validate-breadcrumb-link">Campagnes Marketing</a></li>
+                        <li class="breadcrumb-item"><a href="step1_create_dark-red.html" class="step3-validate-breadcrumb-link">Nouvelle campagne</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Validation Concurrents</li>
+                    </ol>
+                </nav>
+
+                <!-- Stepper -->
+                <div class="campaign-stepper">
+                    <div class="stepper-container">
+                        <div class="stepper-line">
+                            <div class="stepper-progress step3-validate-stepper-progress"></div>
+                        </div>
+
+                        <div class="stepper-step completed">
+                            <div class="stepper-circle"><i class="bi bi-check-lg"></i></div>
+                            <div class="stepper-label">Projet</div>
+                        </div>
+
+                        <div class="stepper-step completed">
+                            <div class="stepper-circle"><i class="bi bi-check-lg"></i></div>
+                            <div class="stepper-label">Personas</div>
+                        </div>
+
+                        <div class="stepper-step active">
+                            <div class="stepper-circle">3</div>
+                            <div class="stepper-label">Concurrents</div>
+                        </div>
+
+                        <div class="stepper-step">
+                            <div class="stepper-circle">4</div>
+                            <div class="stepper-label">Stratégie</div>
+                        </div>
+
+                        <div class="stepper-step">
+                            <div class="stepper-circle">5</div>
+                            <div class="stepper-label">Assets</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Success Alert -->
+                <div class="alert alert-success alert-dismissible fade show competitors-detected-alert">
+                    <i class="bi bi-check-circle-fill competitors-detected-alert-icon"></i>
+                    <div>
+                        <strong>7 concurrents détectés!</strong><br>
+                        Sélectionnez les concurrents les plus pertinents pour affiner votre stratégie marketing.
+                    </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+
+                <!-- Competitor Cards -->
+                <div class="form-section">
+                    <div class="form-section-header">
+                        <div class="form-section-icon">
+                            <i class="bi bi-building"></i>
+                        </div>
+                        <h2 class="form-section-title">Concurrents détectés (<span id="selectedCount">0</span>/7 sélectionnés)</h2>
+                    </div>
+
+                    <!-- Section: Concurrents directs et importants -->
+                    <div class="mb-4">
+                        <h4 class="competitor-section-header">
+                            <i class="bi bi-exclamation-triangle-fill text-danger"></i> Concurrents directs et importants
+                            <span class="badge bg-secondary ms-2">4 détectés</span>
+                        </h4>
+                    </div>
+
+                    <div class="row g-4">
+                        <!-- Competitor 1 -->
+                        <div class="col-12">
+                            <div class="asset-card selected competitor-card">
+                                <div class="asset-card-check">
+                                    <i class="bi bi-check-lg"></i>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <h5 class="competitor-name">
+                                            AFPA
+                                            <span class="badge bg-danger ms-2 competitor-badge">Concurrent Direct</span>
+                                        </h5>
+                                        <p class="small mb-2 competitor-url">
+                                            <i class="bi bi-globe"></i> <strong>www.afpa.fr</strong>
+                                        </p>
+                                        <p class="small mb-2 competitor-description">
+                                            Leader national de la formation professionnelle, reconnu pour ses certifications et diplômes. Présence sur tout le territoire français avec un réseau de centres.
+                                        </p>
+                                        <div class="d-flex flex-wrap gap-2">
+                                            <span class="badge bg-secondary competitor-tag"><i class="bi bi-geo-alt"></i> National</span>
+                                            <span class="badge bg-secondary competitor-tag"><i class="bi bi-award"></i> Certifications reconnues</span>
+                                            <span class="badge bg-success competitor-tag"><i class="bi bi-search"></i> Google Ads actif</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="text-center">
+                                            <div class="competitor-score competitor-score-danger">94%</div>
+                                            <small class="text-secondary d-block mb-2 competitor-metric-label">Score d'alignement</small>
+                                        </div>
+                                        <div class="mb-2">
+                                            <small class="text-secondary competitor-metric-label">Overlap offre</small>
+                                            <div class="progress competitor-progress">
+                                                <div class="progress-bar bg-danger" style="width: 88%"></div>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <small class="text-secondary competitor-metric-label">Overlap marché</small>
+                                            <div class="progress competitor-progress">
+                                                <div class="progress-bar bg-danger" style="width: 92%"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Competitor 2 -->
+                        <div class="col-12">
+                            <div class="asset-card selected competitor-card">
+                                <div class="asset-card-check">
+                                    <i class="bi bi-check-lg"></i>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <h5 class="competitor-name">
+                                            CEGOS
+                                            <span class="badge bg-warning text-dark ms-2 competitor-badge">Concurrent Important</span>
+                                        </h5>
+                                        <p class="small mb-2 competitor-url">
+                                            <i class="bi bi-globe"></i> <strong>www.cegos.fr</strong>
+                                        </p>
+                                        <p class="small mb-2 competitor-description">
+                                            Spécialiste de la formation continue pour entreprises. Fort positionnement sur le digital learning et les formations management/RH.
+                                        </p>
+                                        <div class="d-flex flex-wrap gap-2">
+                                            <span class="badge bg-secondary competitor-tag"><i class="bi bi-building"></i> B2B dominant</span>
+                                            <span class="badge bg-secondary competitor-tag"><i class="bi bi-laptop"></i> E-learning</span>
+                                            <span class="badge bg-success competitor-tag"><i class="bi bi-search"></i> Google Ads actif</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="text-center">
+                                            <div class="competitor-score competitor-score-warning">82%</div>
+                                            <small class="text-secondary d-block mb-2 competitor-metric-label">Score d'alignement</small>
+                                        </div>
+                                        <div class="mb-2">
+                                            <small class="text-secondary competitor-metric-label">Overlap offre</small>
+                                            <div class="progress competitor-progress">
+                                                <div class="progress-bar bg-warning" style="width: 75%"></div>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <small class="text-secondary competitor-metric-label">Overlap marché</small>
+                                            <div class="progress competitor-progress">
+                                                <div class="progress-bar bg-warning" style="width: 80%"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Competitor 3 -->
+                        <div class="col-12">
+                            <div class="asset-card selected competitor-card">
+                                <div class="asset-card-check">
+                                    <i class="bi bi-check-lg"></i>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <h5 class="competitor-name">
+                                            EFE Formation
+                                            <span class="badge bg-warning text-dark ms-2 competitor-badge">Concurrent Important</span>
+                                        </h5>
+                                        <p class="small mb-2 competitor-url">
+                                            <i class="bi bi-globe"></i> <strong>www.efe.fr</strong>
+                                        </p>
+                                        <p class="small mb-2 competitor-description">
+                                            Expert des formations courtes inter-entreprises. Spécialisation finance, comptabilité, droit et RH. Catalogue très large.
+                                        </p>
+                                        <div class="d-flex flex-wrap gap-2">
+                                            <span class="badge bg-secondary competitor-tag"><i class="bi bi-clock"></i> Formations courtes</span>
+                                            <span class="badge bg-secondary competitor-tag"><i class="bi bi-calculator"></i> Finance/Compta</span>
+                                            <span class="badge bg-success competitor-tag"><i class="bi bi-search"></i> Google Ads actif</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="text-center">
+                                            <div class="competitor-score competitor-score-warning">79%</div>
+                                            <small class="text-secondary d-block mb-2 competitor-metric-label">Score d'alignement</small>
+                                        </div>
+                                        <div class="mb-2">
+                                            <small class="text-secondary competitor-metric-label">Overlap offre</small>
+                                            <div class="progress competitor-progress">
+                                                <div class="progress-bar bg-warning" style="width: 82%"></div>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <small class="text-secondary competitor-metric-label">Overlap marché</small>
+                                            <div class="progress competitor-progress">
+                                                <div class="progress-bar bg-warning" style="width: 70%"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Competitor 4 -->
+                        <div class="col-12">
+                            <div class="asset-card competitor-card">
+                                <div class="asset-card-check">
+                                    <i class="bi bi-check-lg"></i>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <h5 class="competitor-name">
+                                            COMPTALIA
+                                            <span class="badge bg-info ms-2">Concurrent Indirect</span>
+                                        </h5>
+                                        <p class="small mb-2 competitor-url">
+                                            <i class="bi bi-globe"></i> <strong>www.comptalia.com</strong>
+                                        </p>
+                                        <p class="small mb-2 competitor-description">
+                                            Spécialiste de la formation à distance en comptabilité. 100% e-learning avec accompagnement personnalisé. Public cible : reconversion professionnelle.
+                                        </p>
+                                        <div class="d-flex flex-wrap gap-2">
+                                            <span class="badge bg-secondary competitor-tag"><i class="bi bi-laptop"></i> 100% distanciel</span>
+                                            <span class="badge bg-secondary competitor-tag"><i class="bi bi-calculator"></i> Comptabilité pure</span>
+                                            <span class="badge bg-danger"><i class="bi bi-x-circle"></i> Pas de Google Ads</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="text-center">
+                                            <div class="competitor-score competitor-score-info">68%</div>
+                                            <small class="text-secondary d-block mb-2 competitor-metric-label">Score d'alignement</small>
+                                        </div>
+                                        <div class="mb-2">
+                                            <small class="text-secondary competitor-metric-label">Overlap offre</small>
+                                            <div class="progress competitor-progress">
+                                                <div class="progress-bar bg-info" style="width: 58%"></div>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <small class="text-secondary competitor-metric-label">Overlap marché</small>
+                                            <div class="progress competitor-progress">
+                                                <div class="progress-bar bg-info" style="width: 64%"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Section: Concurrents indirects -->
+                    <div class="mt-5 mb-4">
+                        <h4 class="competitor-section-header">
+                            <i class="bi bi-info-circle-fill text-info"></i> Concurrents indirects
+                            <span class="badge bg-secondary ms-2">3 détectés</span>
+                        </h4>
+                    </div>
+
+                    <div class="row g-4">
+                        <!-- Competitor 5 (Compact style for remaining) -->
+                        <div class="col-md-6">
+                            <div class="asset-card competitor-card-compact">
+                                <div class="asset-card-check">
+                                    <i class="bi bi-check-lg"></i>
+                                </div>
+                                <div class="d-flex justify-content-between align-items-start mb-3">
+                                    <div>
+                                        <h5 class="competitor-card-compact-name">Francis Lefebvre Formation</h5>
+                                        <small class="text-secondary d-block mb-2"><i class="bi bi-globe"></i> www.flf.fr</small>
+                                        <span class="badge bg-secondary competitor-tag">Fiscalité/Droit</span>
+                                    </div>
+                                    <div class="text-center competitor-card-compact-score">
+                                        <div class="competitor-card-compact-score-value competitor-card-compact-score-value-info">64%</div>
+                                        <small class="text-secondary competitor-card-compact-score-label">Score</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="asset-card competitor-card-compact">
+                                <div class="asset-card-check">
+                                    <i class="bi bi-check-lg"></i>
+                                </div>
+                                <div class="d-flex justify-content-between align-items-start mb-3">
+                                    <div>
+                                        <h5 class="competitor-card-compact-name">GRETA</h5>
+                                        <small class="text-secondary d-block mb-2"><i class="bi bi-globe"></i> www.greta.fr</small>
+                                        <span class="badge bg-secondary competitor-tag">Public</span>
+                                    </div>
+                                    <div class="text-center competitor-card-compact-score">
+                                        <div class="competitor-card-compact-score-value competitor-card-compact-score-value-info">61%</div>
+                                        <small class="text-secondary competitor-card-compact-score-label">Score</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="asset-card competitor-card-compact">
+                                <div class="asset-card-check">
+                                    <i class="bi bi-check-lg"></i>
+                                </div>
+                                <div class="d-flex justify-content-between align-items-start mb-3">
+                                    <div>
+                                        <h5 class="competitor-card-compact-name">ESIC Business School</h5>
+                                        <small class="text-secondary d-block mb-2"><i class="bi bi-globe"></i> www.esic.fr</small>
+                                        <span class="badge bg-secondary competitor-tag">Business School</span>
+                                    </div>
+                                    <div class="text-center competitor-card-compact-score">
+                                        <div class="competitor-card-compact-score-value competitor-card-compact-score-value-secondary">58%</div>
+                                        <small class="text-secondary competitor-card-compact-score-label">Score</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- Speed Dial FAB - Boîte à outils -->
+    <div class="speed-dial-container">
+        <!-- Action 1: Régénérer -->
+        <div class="speed-dial-action">
+            <span class="speed-dial-label">Régénérer les concurrents</span>
+            <a href="step3_loading_dark-red.html" class="speed-dial-btn speed-dial-cancel">
+                <i class="bi bi-arrow-clockwise"></i>
+            </a>
+        </div>
+
+        <!-- Action 2: Valider et continuer -->
+        <div class="speed-dial-action">
+            <span class="speed-dial-label">Valider et continuer</span>
+            <button type="button" class="speed-dial-btn speed-dial-primary" id="validateBtn">
+                <i class="bi bi-check-lg"></i>
+            </button>
+        </div>
+
+        <!-- Bouton principal -->
+        <div class="speed-dial-btn speed-dial-main">
+            <i class="bi bi-three-dots-vertical"></i>
+        </div>
+    </div>
+
+    <!-- FAB Retour -->
+    <a href="step2_select_dark-red.html" class="fab-back">
+        <i class="bi bi-arrow-left"></i>
+        <span class="fab-tooltip">Retour aux personas</span>
+    </a>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Design System JS -->
+    <script src="../assets/js/main.js" type="module"></script>
+</body>
+</html>

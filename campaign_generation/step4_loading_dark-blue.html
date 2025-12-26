@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Génération Stratégie - Étape 4 | myCFiA (Thème Sombre Bleu)</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/main.css">
+    <link rel="stylesheet" href="../assets/css/themes/dark-blue.css" id="theme-stylesheet">
+</head>
+<body>
+    <div class="app">
+        <aside class="sidebar d-flex flex-column">
+            <div class="sidebar-header">
+                <button class="btn btn-link text-white-50 p-0" data-sidebar-toggle>
+                    <i class="bi bi-list fs-4"></i>
+                </button>
+            </div>
+            <nav class="flex-grow-1 overflow-auto px-3">
+                <!-- Marketing -->
+                <div class="nav-section mb-4">
+                    <div class="nav-section-title-pill mb-3">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-megaphone"></i>
+                            <span>Marketing</span>
+                        </div>
+                        <i class="bi bi-chevron-down"></i>
+                    </div>
+                    <div class="nav-section-content">
+                        <a href="step1_create_dark-blue.html" class="sidebar-link active">
+                            <i class="bi bi-plus-circle"></i>
+                            <span>Nouvelle campagne</span>
+                        </a>
+                        <a href="dashboard_dark-blue.html" class="sidebar-link">
+                            <i class="bi bi-grid"></i>
+                            <span>Mes campagnes</span>
+                        </a>
+                        <a href="analytics_dark-blue.html" class="sidebar-link">
+                            <i class="bi bi-bar-chart-line"></i>
+                            <span>Analytics</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Favoris -->
+                <div class="nav-section mb-4">
+                    <div class="nav-section-title-pill mb-3">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-star"></i>
+                            <span>Favoris</span>
+                        </div>
+                        <i class="bi bi-chevron-down"></i>
+                    </div>
+                    <div class="px-3 py-2 text-white-50 small">
+                        <span>Aucune campagne favorite</span>
+                    </div>
+                </div>
+
+                <!-- Historique -->
+                <div class="nav-section mb-4">
+                    <div class="nav-section-title-pill mb-3">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-clock-history"></i>
+                            <span>Historique</span>
+                        </div>
+                        <i class="bi bi-chevron-down"></i>
+                    </div>
+                </div>
+            </nav>
+
+            <!-- Footer -->
+            <div class="sidebar-footer">
+                <a href="../settings_index/settings_index_light.html" class="sidebar-link">
+                    <i class="bi bi-gear"></i>
+                    <span>Paramètres</span>
+                </a>
+                <a href="../profile/profile_light.html" class="sidebar-link">
+                    <i class="bi bi-person-circle"></i>
+                    <span>Mon compte</span>
+                </a>
+                <a href="#" class="sidebar-link">
+                    <i class="bi bi-box-arrow-right"></i>
+                    <span>Quitter</span>
+                </a>
+            </div>
+        </aside>
+
+        <main class="main">
+            <header class="header">
+                <div class="header-content">
+                    <!-- Logo -->
+                    <a href="../index.html" style="display: flex; align-items: center; gap: 12px; text-decoration: none;">
+                        <img src="../images/logo_picto.svg" alt="CFI" class="header-logo-picto">
+                        <img src="../images/logo.svg" alt="myCFiA" class="header-logo">
+                    </a>
+
+                    <!-- Actions -->
+                    <div style="display: flex; gap: 16px; align-items: center;">
+                        <button class="btn btn-glass header-btn" style="color: var(--color-primary);">
+                            <i class="bi bi-building"></i>
+                            <span class="header-btn-text">Ma Division</span>
+                        </button>
+                        <button class="btn btn-glass-primary header-btn">
+                            <i class="bi bi-sun-fill"></i>
+                            <span class="header-btn-text">Clair</span>
+                        </button>
+                        <a href="#" class="btn btn-glass header-btn" style="color: var(--color-primary); text-decoration: none;">
+                            <i class="bi bi-arrow-left-circle"></i>
+                            <span class="header-btn-text">Retour CFI</span>
+                        </a>
+                    </div>
+                </div>
+            </header>
+
+            <div class="content">
+                <!-- Stepper -->
+                <div class="campaign-stepper">
+                    <div class="stepper-container">
+                        <div class="stepper-line"><div class="stepper-progress" style="width: 75%;"></div></div>
+                        <div class="stepper-step completed"><div class="stepper-circle"><i class="bi bi-check-lg"></i></div><div class="stepper-label">Projet</div></div>
+                        <div class="stepper-step completed"><div class="stepper-circle"><i class="bi bi-check-lg"></i></div><div class="stepper-label">Personas</div></div>
+                        <div class="stepper-step completed"><div class="stepper-circle"><i class="bi bi-check-lg"></i></div><div class="stepper-label">Concurrents</div></div>
+                        <div class="stepper-step active"><div class="stepper-circle">4</div><div class="stepper-label">Stratégie</div></div>
+                        <div class="stepper-step"><div class="stepper-circle">5</div><div class="stepper-label">Assets</div></div>
+                    </div>
+                </div>
+
+                <!-- 2-Column Layout -->
+                <div class="row g-4">
+                    <!-- Left Column: Campaign Context (40%) -->
+                    <div class="col-md-5">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h5 class="mb-4">
+                                    <i class="bi bi-briefcase text-primary"></i>
+                                    Contexte stratégique
+                                </h5>
+
+                                <!-- Campaign Info -->
+                                <div class="mb-3">
+                                    <label class="form-label small text-secondary">Nom de la campagne</label>
+                                    <p class="mb-0"><strong>Lancement Produit Q1 2025</strong></p>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label small text-secondary">Secteur d'activité</label>
+                                    <p class="mb-0">Formation professionnelle</p>
+                                </div>
+
+                                <div class="mb-3 pb-3" style="border-bottom: 1px solid var(--border);">
+                                    <label class="form-label small text-secondary">Budget total</label>
+                                    <p class="mb-0"><strong>50 000€</strong> sur 3 mois</p>
+                                </div>
+
+                                <!-- Personas -->
+                                <div class="mb-3">
+                                    <label class="form-label small text-secondary mb-2">
+                                        <i class="bi bi-people-fill text-primary"></i>
+                                        Personas ciblés (3)
+                                    </label>
+                                    <div class="d-flex flex-wrap gap-2">
+                                        <span class="badge bg-primary" style="font-size: 0.75rem;">Sophie Martin</span>
+                                        <span class="badge bg-primary" style="font-size: 0.75rem;">Marc Dubois</span>
+                                        <span class="badge bg-primary" style="font-size: 0.75rem;">Claire Rousseau</span>
+                                    </div>
+                                </div>
+
+                                <!-- Competitors -->
+                                <div class="mb-0 pb-3" style="border-bottom: 1px solid var(--border);">
+                                    <label class="form-label small text-secondary mb-2">
+                                        <i class="bi bi-building text-danger"></i>
+                                        Concurrents analysés (3)
+                                    </label>
+                                    <div class="d-flex flex-wrap gap-2">
+                                        <span class="badge bg-danger" style="font-size: 0.75rem;">AFPA</span>
+                                        <span class="badge bg-warning text-dark" style="font-size: 0.75rem;">CEGOS</span>
+                                        <span class="badge bg-warning text-dark" style="font-size: 0.75rem;">EFE Formation</span>
+                                    </div>
+                                </div>
+
+                                <!-- Strategy Elements -->
+                                <div class="mt-3 mb-0">
+                                    <label class="form-label small text-secondary mb-2">
+                                        <i class="bi bi-graph-up-arrow text-success"></i>
+                                        Éléments de stratégie en cours
+                                    </label>
+                                    <div class="d-flex flex-column gap-1">
+                                        <div class="d-flex align-items-center gap-2">
+                                            <div class="spinner-border spinner-border-sm text-primary" role="status" style="width: 12px; height: 12px;">
+                                                <span class="visually-hidden">Loading...</span>
+                                            </div>
+                                            <small class="text-secondary" style="font-size: 0.75rem;">Positionnement stratégique</small>
+                                        </div>
+                                        <div class="d-flex align-items-center gap-2">
+                                            <i class="bi bi-circle text-secondary" style="font-size: 0.5rem;"></i>
+                                            <small class="text-secondary" style="font-size: 0.75rem;">Tactiques par canal</small>
+                                        </div>
+                                        <div class="d-flex align-items-center gap-2">
+                                            <i class="bi bi-circle text-secondary" style="font-size: 0.5rem;"></i>
+                                            <small class="text-secondary" style="font-size: 0.75rem;">KPIs et objectifs</small>
+                                        </div>
+                                        <div class="d-flex align-items-center gap-2">
+                                            <i class="bi bi-circle text-secondary" style="font-size: 0.5rem;"></i>
+                                            <small class="text-secondary" style="font-size: 0.75rem;">Allocation budgétaire</small>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="alert alert-info mt-4 mb-0" style="padding: 0.75rem;">
+                                    <small>
+                                        <i class="bi bi-info-circle"></i>
+                                        <strong>Stratégie optimisée</strong><br>
+                                        L'IA génère une stratégie marketing complète basée sur vos personas et l'analyse concurrentielle.
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Column: Loader (60%) -->
+                    <div class="col-md-7">
+                        <div class="loader-container">
+                            <div class="ai-animation">
+                                <div class="ai-icon-ring"></div>
+                                <div class="ai-icon-ring"></div>
+                                <div class="ai-icon-main"><i class="bi bi-graph-up-arrow"></i></div>
+                            </div>
+                            <h1 class="loader-title">Génération de la stratégie marketing</h1>
+                            <p class="loader-subtitle">L'IA optimise votre stratégie basée sur vos personas et concurrents...</p>
+
+                            <div class="phase-indicators">
+                                <div class="phase-dot active"></div>
+                                <div class="phase-dot"></div>
+                                <div class="phase-dot"></div>
+                                <div class="phase-dot"></div>
+                                <div class="phase-dot"></div>
+                            </div>
+
+                            <div class="status-message">Analyse de votre positionnement...</div>
+
+                            <div class="progress-wrapper">
+                                <div class="progress"><div class="progress-bar" style="width: 0%;"></div></div>
+                                <div class="progress-text">0% complété</div>
+                            </div>
+
+                            <div class="tips-section">
+                                <div class="tips-icon"><i class="bi bi-lightbulb-fill"></i></div>
+                                <h3 class="tips-title">Le saviez-vous ?</h3>
+                                <p class="tips-text">...</p>
+                            </div>
+
+                            <div class="loader-metadata">
+                                <div class="metadata-item"><i class="bi bi-cpu"></i><span>Modèle: Mistral Large</span></div>
+                                <div class="metadata-item"><i class="bi bi-cash"></i><span>Budget: 50 000€</span></div>
+                                <div class="metadata-item"><i class="bi bi-clock-history"></i><span>Durée estimée: ~13 secondes</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../assets/js/main.js" type="module"></script>
+</body>
+</html>

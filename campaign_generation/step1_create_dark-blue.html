@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nouvelle Campagne - Étape 1 | myCFiA (Thème Sombre Bleu)</title>
+
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Design System myCFiA -->
+    <link rel="stylesheet" href="../assets/css/main.css">
+    <link rel="stylesheet" href="../assets/css/themes/dark-blue.css" id="theme-stylesheet">
+</head>
+<body>
+    <div class="app">
+        <!-- Sidebar -->
+        <aside class="sidebar d-flex flex-column">
+            <!-- Header -->
+            <div class="sidebar-header">
+                <button class="btn btn-link text-white-50 p-0" data-sidebar-toggle>
+                    <i class="bi bi-list fs-4"></i>
+                </button>
+                <button class="btn btn-link text-white-50 p-0" data-sidebar-toggle>
+                    <i class="bi bi-arrow-left-circle fs-5"></i>
+                </button>
+            </div>
+
+            <!-- Navigation -->
+            <nav class="flex-grow-1 overflow-auto px-3">
+                <!-- Marketing -->
+                <div class="nav-section mb-4">
+                    <div class="nav-section-title-pill mb-3">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-megaphone"></i>
+                            <span>Marketing</span>
+                        </div>
+                        <i class="bi bi-chevron-down"></i>
+                    </div>
+                    <div class="nav-section-content">
+                        <a href="step1_create_dark-blue.html" class="sidebar-link active">
+                            <i class="bi bi-plus-circle"></i>
+                            <span>Nouvelle campagne</span>
+                        </a>
+                        <a href="dashboard_dark-blue.html" class="sidebar-link">
+                            <i class="bi bi-grid"></i>
+                            <span>Mes campagnes</span>
+                        </a>
+                        <a href="analytics_dark-blue.html" class="sidebar-link">
+                            <i class="bi bi-bar-chart-line"></i>
+                            <span>Analytics</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Favoris -->
+                <div class="nav-section mb-4">
+                    <div class="nav-section-title-pill mb-3">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-star"></i>
+                            <span>Favoris</span>
+                        </div>
+                        <i class="bi bi-chevron-down"></i>
+                    </div>
+                    <div class="px-3 py-2 text-white-50 small">
+                        <span>Aucune campagne favorite</span>
+                    </div>
+                </div>
+
+                <!-- Historique -->
+                <div class="nav-section mb-4">
+                    <div class="nav-section-title-pill mb-3">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-clock-history"></i>
+                            <span>Historique</span>
+                        </div>
+                        <i class="bi bi-chevron-down"></i>
+                    </div>
+                </div>
+            </nav>
+
+            <!-- Footer -->
+            <div class="sidebar-footer">
+                <a href="../settings_index/settings_index_light.html" class="sidebar-link">
+                    <i class="bi bi-gear"></i>
+                    <span>Paramètres</span>
+                </a>
+                <a href="../profile/profile_light.html" class="sidebar-link">
+                    <i class="bi bi-person-circle"></i>
+                    <span>Mon compte</span>
+                </a>
+                <a href="#" class="sidebar-link">
+                    <i class="bi bi-box-arrow-right"></i>
+                    <span>Quitter</span>
+                </a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main">
+            <!-- Header -->
+            <header class="header">
+                <div class="header-content">
+                    <!-- Logo -->
+                    <a href="../index.html" class="step1-header-logo-link">
+                        <img src="../images/logo_picto.svg" alt="CFI" class="header-logo-picto">
+                        <img src="../images/logo.svg" alt="myCFiA" class="header-logo">
+                    </a>
+
+                    <!-- Actions -->
+                    <div class="step1-header-buttons">
+                        <button class="btn btn-glass header-btn step1-header-btn-primary">
+                            <i class="bi bi-building"></i>
+                            <span class="header-btn-text">Ma Division</span>
+                        </button>
+                        <button class="btn btn-glass-primary header-btn">
+                            <i class="bi bi-sun-fill"></i>
+                            <span class="header-btn-text">Clair</span>
+                        </button>
+                        <a href="#" class="btn btn-glass header-btn step1-header-link">
+                            <i class="bi bi-arrow-left-circle"></i>
+                            <span class="header-btn-text">Retour CFI</span>
+                        </a>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Content -->
+            <div class="content step1-content">
+                <!-- Breadcrumb -->
+                <nav aria-label="breadcrumb" class="step1-breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="dashboard_dark-blue.html" class="step1-breadcrumb-link">Campagnes Marketing</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Nouvelle campagne</li>
+                    </ol>
+                </nav>
+
+                <!-- Stepper -->
+                <div class="campaign-stepper">
+                    <div class="stepper-container">
+                        <div class="stepper-line">
+                            <div class="stepper-progress step1-stepper-progress"></div>
+                        </div>
+
+                        <div class="stepper-step active">
+                            <div class="stepper-circle">1</div>
+                            <div class="stepper-label">Projet</div>
+                        </div>
+
+                        <div class="stepper-step">
+                            <div class="stepper-circle">2</div>
+                            <div class="stepper-label">Personas</div>
+                        </div>
+
+                        <div class="stepper-step">
+                            <div class="stepper-circle">3</div>
+                            <div class="stepper-label">Concurrents</div>
+                        </div>
+
+                        <div class="stepper-step">
+                            <div class="stepper-circle">4</div>
+                            <div class="stepper-label">Stratégie</div>
+                        </div>
+
+                        <div class="stepper-step">
+                            <div class="stepper-circle">5</div>
+                            <div class="stepper-label">Assets</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Form -->
+                <form id="campaignForm">
+                    <!-- Section 1: Informations de base -->
+                    <div class="form-section form-section-delay-1">
+                        <div class="form-section-header">
+                            <div class="form-section-icon">
+                                <i class="bi bi-info-circle-fill"></i>
+                            </div>
+                            <h2 class="form-section-title">Informations de base</h2>
+                        </div>
+
+                        <div class="row g-4">
+                            <div class="col-md-6">
+                                <label class="form-label">
+                                    Nom du projet <span class="required">*</span>
+                                </label>
+                                <input type="text" class="form-control" placeholder="Ex: Lancement Produit Q1 2025" required>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">
+                                    Nom de l'entreprise <span class="required">*</span>
+                                </label>
+                                <input type="text" class="form-control" placeholder="Ex: Entreprise CFI" required>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">
+                                    Secteur d'activité <span class="required">*</span>
+                                </label>
+                                <select class="form-select" required>
+                                    <option value="">Sélectionner un secteur</option>
+                                    <option>Technologie et IT</option>
+                                    <option>Finance et Banque</option>
+                                    <option>Santé et Pharmaceutique</option>
+                                    <option>Commerce et Distribution</option>
+                                    <option>Industrie et Manufacturing</option>
+                                    <option>Services professionnels</option>
+                                    <option>Éducation et Formation</option>
+                                    <option>Tourisme et Hôtellerie</option>
+                                    <option>Autre</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">
+                                    Site web (optionnel)
+                                    <i class="bi bi-info-circle text-secondary" title="L'IA analysera votre site pour enrichir le projet"></i>
+                                </label>
+                                <input type="url" class="form-control" placeholder="https://www.exemple.com">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Sections 2 & 3: Two Columns Layout -->
+                    <div class="row g-4">
+                        <!-- Section 2: Objectifs marketing -->
+                        <div class="col-md-6">
+                            <div class="form-section form-section-delay-2">
+                                <div class="form-section-header">
+                                    <div class="form-section-icon">
+                                        <i class="bi bi-bullseye"></i>
+                                    </div>
+                                    <h2 class="form-section-title">Objectifs marketing</h2>
+                                </div>
+
+                                <div class="row g-4">
+                                    <div class="col-12">
+                                        <label class="form-label">
+                                            Objectif principal <span class="required">*</span>
+                                        </label>
+                                        <select class="form-select" required>
+                                            <option value="">Sélectionner un objectif</option>
+                                            <option>Notoriété de la marque (Awareness)</option>
+                                            <option>Génération de leads (Consideration)</option>
+                                            <option>Conversion et ventes (Conversion)</option>
+                                            <option>Fidélisation client (Loyalty)</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="col-12">
+                                        <label class="form-label">
+                                            Objectifs détaillés (SMART)
+                                            <i class="bi bi-info-circle text-secondary" title="Spécifiques, Mesurables, Atteignables, Réalistes, Temporels"></i>
+                                        </label>
+                                        <textarea class="form-control" rows="6" placeholder="Exemple: Générer 500 leads qualifiés par mois avec un taux de conversion de 15% d'ici 6 mois..."></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Section 3: Budget et Timeline -->
+                        <div class="col-md-6">
+                            <div class="form-section form-section-delay-3">
+                                <div class="form-section-header">
+                                    <div class="form-section-icon">
+                                        <i class="bi bi-cash-stack"></i>
+                                    </div>
+                                    <h2 class="form-section-title">Budget et Timeline</h2>
+                                </div>
+
+                                <div class="row g-4">
+                                    <div class="col-12">
+                                        <label class="form-label">
+                                            Budget total (€) <span class="required">*</span>
+                                        </label>
+                                        <input type="number" class="form-control" placeholder="Ex: 50000" min="100" step="100" required>
+                                    </div>
+
+                                    <div class="col-12">
+                                        <label class="form-label">
+                                            Date de début <span class="required">*</span>
+                                        </label>
+                                        <input type="date" class="form-control" required>
+                                    </div>
+
+                                    <div class="col-12">
+                                        <label class="form-label">
+                                            Date de fin <span class="required">*</span>
+                                        </label>
+                                        <input type="date" class="form-control" required>
+                                    </div>
+
+                                    <div class="col-12">
+                                        <label class="form-label">
+                                            Description du projet (optionnel)
+                                        </label>
+                                        <textarea class="form-control" rows="3" placeholder="Décrivez brièvement votre projet marketing..."></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Section 4: Types d'assets -->
+                    <div class="form-section form-section-delay-4">
+                        <div class="form-section-header">
+                            <div class="form-section-icon">
+                                <i class="bi bi-collection"></i>
+                            </div>
+                            <h2 class="form-section-title">Canaux de diffusion souhaités</h2>
+                        </div>
+
+                        <p class="assets-intro-text">
+                            <i class="bi bi-lightbulb"></i>
+                            Sélectionnez les canaux sur lesquels vous souhaitez diffuser votre campagne. L'IA générera les contenus adaptés à chaque canal.
+                        </p>
+
+                        <div class="asset-grid">
+                            <div class="asset-card" data-asset="linkedin">
+                                <div class="asset-card-check">
+                                    <i class="bi bi-check-lg"></i>
+                                </div>
+                                <div class="asset-card-icon">
+                                    <i class="bi bi-linkedin"></i>
+                                </div>
+                                <h3 class="asset-card-title">Linkedin</h3>
+                            </div>
+
+                            <div class="asset-card" data-asset="googleads">
+                                <div class="asset-card-check">
+                                    <i class="bi bi-check-lg"></i>
+                                </div>
+                                <div class="asset-card-icon">
+                                    <i class="bi bi-google"></i>
+                                </div>
+                                <h3 class="asset-card-title">GoogleAds</h3>
+                            </div>
+
+                            <div class="asset-card" data-asset="bingads">
+                                <div class="asset-card-check">
+                                    <i class="bi bi-check-lg"></i>
+                                </div>
+                                <div class="asset-card-icon">
+                                    <i class="bi bi-bing"></i>
+                                </div>
+                                <h3 class="asset-card-title">BingAds</h3>
+                            </div>
+
+                            <div class="asset-card" data-asset="facebook">
+                                <div class="asset-card-check">
+                                    <i class="bi bi-check-lg"></i>
+                                </div>
+                                <div class="asset-card-icon">
+                                    <i class="bi bi-facebook"></i>
+                                </div>
+                                <h3 class="asset-card-title">Facebook</h3>
+                            </div>
+
+                            <div class="asset-card" data-asset="instagram">
+                                <div class="asset-card-check">
+                                    <i class="bi bi-check-lg"></i>
+                                </div>
+                                <div class="asset-card-icon">
+                                    <i class="bi bi-instagram"></i>
+                                </div>
+                                <h3 class="asset-card-title">Instagram</h3>
+                            </div>
+
+                            <div class="asset-card" data-asset="iab">
+                                <div class="asset-card-check">
+                                    <i class="bi bi-check-lg"></i>
+                                </div>
+                                <div class="asset-card-icon">
+                                    <i class="bi bi-badge-ad"></i>
+                                </div>
+                                <h3 class="asset-card-title">Iab</h3>
+                            </div>
+
+                            <div class="asset-card" data-asset="mail">
+                                <div class="asset-card-check">
+                                    <i class="bi bi-check-lg"></i>
+                                </div>
+                                <div class="asset-card-icon">
+                                    <i class="bi bi-envelope-fill"></i>
+                                </div>
+                                <h3 class="asset-card-title">Mail</h3>
+                            </div>
+
+                            <div class="asset-card" data-asset="sms">
+                                <div class="asset-card-check">
+                                    <i class="bi bi-check-lg"></i>
+                                </div>
+                                <div class="asset-card-icon">
+                                    <i class="bi bi-phone"></i>
+                                </div>
+                                <h3 class="asset-card-title">Sms</h3>
+                            </div>
+
+                            <div class="asset-card" data-asset="article">
+                                <div class="asset-card-check">
+                                    <i class="bi bi-check-lg"></i>
+                                </div>
+                                <div class="asset-card-icon">
+                                    <i class="bi bi-file-text"></i>
+                                </div>
+                                <h3 class="asset-card-title">Article</h3>
+                            </div>
+
+                            <div class="asset-card" data-asset="courrier">
+                                <div class="asset-card-check">
+                                    <i class="bi bi-check-lg"></i>
+                                </div>
+                                <div class="asset-card-icon">
+                                    <i class="bi bi-mailbox"></i>
+                                </div>
+                                <h3 class="asset-card-title">Courrier (A4)</h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Speed Dial FAB - Boîte à outils -->
+                    <div class="speed-dial-container">
+                        <!-- Action 1: Annuler -->
+                        <div class="speed-dial-action">
+                            <span class="speed-dial-label">Annuler</span>
+                            <a href="dashboard_dark-blue.html" class="speed-dial-btn speed-dial-cancel">
+                                <i class="bi bi-x-lg"></i>
+                            </a>
+                        </div>
+
+                        <!-- Action 2: Analyser avec l'IA -->
+                        <div class="speed-dial-action">
+                            <span class="speed-dial-label">Analyser et enrichir avec l'IA</span>
+                            <a href="step1_loading_dark-blue.html" class="speed-dial-btn speed-dial-primary">
+                                <i class="bi bi-lightning-charge-fill"></i>
+                            </a>
+                        </div>
+
+                        <!-- Bouton principal -->
+                        <div class="speed-dial-btn speed-dial-main">
+                            <i class="bi bi-three-dots-vertical"></i>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </main>
+    </div>
+
+    <!-- FAB Retour -->
+    <a href="../index.html" class="fab-back">
+        <i class="bi bi-arrow-left"></i>
+        <span class="fab-tooltip">Retour à l'index</span>
+    </a>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Design System JS -->
+    <script src="../assets/js/main.js" type="module"></script>
+</body>
+</html>
