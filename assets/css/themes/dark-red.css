@@ -88,3 +88,49 @@ body::after {
 .fab-back:hover {
     box-shadow: 0 6px 20px rgba(227, 135, 171, 0.5);
 }
+
+/* Bootstrap card override for dark theme */
+.card {
+    background-color: var(--bg-card);
+    color: var(--text-primary);
+    border-color: var(--border);
+}
+
+.card-body {
+    color: var(--text-primary);
+}
+
+/* Bootstrap form controls override for dark theme */
+.form-select {
+    background-color: var(--bg-card) !important;
+    color: var(--text-primary) !important;
+    border-color: var(--border) !important;
+}
+
+.form-select:focus {
+    background-color: var(--bg-card) !important;
+    color: var(--text-primary) !important;
+}
+
+.form-select option {
+    background-color: var(--sidebar-bg) !important;
+    color: var(--text-primary) !important;
+}
+
+.form-select option:hover,
+.form-select option:focus,
+.form-select option:checked {
+    background-color: var(--color-primary) !important;
+    color: white !important;
+}
+
+.form-control {
+    background-color: var(--bg-card);
+    color: var(--text-primary);
+    border-color: var(--border);
+}
+
+.form-control:focus {
+    background-color: var(--bg-card);
+    color: var(--text-primary);
+}
