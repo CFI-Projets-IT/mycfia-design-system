@@ -101,6 +101,28 @@ export function toggleInstructions() {
 }
 
 /**
+ * Gère le toggle de génération d'image pour un asset
+ * @param {HTMLElement} toggle - Le toggle image cliqué
+ */
+export function toggleImageGeneration(toggle) {
+    const card = toggle.closest('.asset-card-modern');
+    const selectContainer = card.querySelector('.image-style-select');
+
+    toggle.classList.toggle('active');
+
+    if (toggle.classList.contains('active')) {
+        selectContainer.classList.remove('d-none');
+    } else {
+        selectContainer.classList.add('d-none');
+        // Réinitialiser la sélection
+        const select = selectContainer.querySelector('select');
+        if (select) {
+            select.value = '';
+        }
+    }
+}
+
+/**
  * Initialise les event listeners pour les asset cards
  */
 export function initAssetSelector() {
@@ -133,6 +155,14 @@ export function initAssetSelector() {
     if (instructionsToggle) {
         instructionsToggle.addEventListener('click', toggleInstructions);
     }
+
+    // Event delegation pour les toggles de génération d'image
+    document.querySelectorAll('.image-generation-toggle').forEach(toggle => {
+        toggle.addEventListener('click', (e) => {
+            e.stopPropagation();
+            toggleImageGeneration(toggle);
+        });
+    });
 
     // Mise à jour initiale de l'estimation
     updateEstimation();
