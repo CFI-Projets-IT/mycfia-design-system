@@ -24,7 +24,8 @@ namespace App\Message;
 final readonly class GenerateAssetsMessage
 {
     /**
-     * @param array<int,string> $assetTypes Types d'assets à générer (google_ads, linkedin_post, etc.)
+     * @param array<int,string>                                   $assetTypes   Types d'assets à générer (google_ads, linkedin_post, etc.)
+     * @param array<string,array{generate?:string,style?:string}> $imageOptions Options de génération d'images par type d'asset
      */
     public function __construct(
         public int $projectId,
@@ -34,6 +35,7 @@ final readonly class GenerateAssetsMessage
         public int $numberOfVariations,
         public ?string $toneOfVoice,
         public string $additionalContext,
+        public array $imageOptions = [],
     ) {
     }
 }

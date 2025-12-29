@@ -1,0 +1,8 @@
+# Ignorer tous les fichiers d'images générées
+*.png
+*.jpg
+*.jpeg
+*.webp
+
+# Sauf le .gitkeep
+!.gitkeep

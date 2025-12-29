@@ -193,6 +193,11 @@ services:
         arguments:
             $publicDir: '%kernel.project_dir%/public'
 
+    # Service de stockage des images d'assets marketing
+    App\Service\Marketing\AssetImageStorageService:
+        arguments:
+            $publicDir: '%kernel.project_dir%/public'
+
     # ========================================================================
     # Asset Presenter Services - Pattern Strategy pour affichage assets
     # ========================================================================

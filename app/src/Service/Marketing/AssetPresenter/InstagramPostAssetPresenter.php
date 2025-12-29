@@ -108,6 +108,19 @@ final readonly class InstagramPostAssetPresenter implements AssetPresenterInterf
             $content['image_description'] = $data['image_description'];
         }
 
+        // Image générée par IA (optionnel) - Nouveau format avec stockage filesystem
+        // L'image est stockée sur /public/uploads/ et on récupère juste l'URL
+        if (isset($data['image_path']) && is_string($data['image_path'])) {
+            $content['image_path'] = $data['image_path'];
+            $content['image_url'] = $data['image_path']; // Alias pour compatibilité
+        }
+
+        // Metadata de l'image (format, taille, etc.) si disponibles
+        if (isset($data['image']) && is_array($data['image'])) {
+            // Garder les metadata mais sans le base64 (qui a été retiré)
+            $content['image_metadata'] = $data['image'];
+        }
+
         return $content;
     }
 }

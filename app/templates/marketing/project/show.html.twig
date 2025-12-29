@@ -1373,3 +1373,8 @@
 {# Modals pour afficher le contenu des assets formatés via AssetPresenters #}
 {% include 'marketing/project/_asset_modals.html.twig' %}
 {% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('styles/marketing/asset-new.css') }}">
+{% endblock %}

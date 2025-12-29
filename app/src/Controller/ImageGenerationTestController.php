@@ -206,7 +206,7 @@ final class ImageGenerationTestController extends AbstractController
 
                 $data = json_decode($content, true);
 
-                if (!is_array($data)) {
+                if (! is_array($data)) {
                     throw new \RuntimeException('Failed to decode JSON response');
                 }
 
