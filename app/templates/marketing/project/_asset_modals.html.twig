@@ -156,6 +156,40 @@
                             {% endfor %}
                         {% endif %}
 
+                        {# Affichage de l'image générée par IA (nouveau format filesystem) #}
+                        {% if formatted.main_content.image_path is defined and formatted.main_content.image_path %}
+                            <hr class="my-4">
+                            <div class="mb-3">
+                                <h6 class="text-primary mb-3">
+                                    <i class="bi bi-image-fill"></i> Image générée par IA
+                                </h6>
+                                <div class="border rounded p-3 bg-light text-center">
+                                    <img src="{{ formatted.main_content.image_path }}"
+                                         alt="{{ formatted.main_content.image_description|default('Image marketing générée par IA') }}"
+                                         class="img-fluid rounded shadow-sm asset-generated-image">
+                                    {% if formatted.main_content.image_metadata is defined %}
+                                        <div class="mt-3 d-flex justify-content-center gap-2 flex-wrap">
+                                            {% if formatted.main_content.image_metadata.duration_ms is defined %}
+                                                <span class="badge bg-secondary">
+                                                    <i class="bi bi-clock"></i> {{ (formatted.main_content.image_metadata.duration_ms / 1000)|number_format(1) }}s
+                                                </span>
+                                            {% endif %}
+                                            {% if formatted.main_content.image_metadata.size_bytes is defined %}
+                                                <span class="badge bg-info">
+                                                    <i class="bi bi-file-earmark"></i> {{ (formatted.main_content.image_metadata.size_bytes / 1024)|number_format(0) }} KB
+                                                </span>
+                                            {% endif %}
+                                            {% if formatted.main_content.image_metadata.format is defined %}
+                                                <span class="badge bg-primary">
+                                                    <i class="bi bi-palette"></i> {{ formatted.main_content.image_metadata.format|upper }}
+                                                </span>
+                                            {% endif %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        {% endif %}
+
                         {# Barre progression caractères SMS #}
                         {% if formatted.main_content.character_count is defined and formatted.main_content.character_budget is defined %}
                             <div class="mt-3">

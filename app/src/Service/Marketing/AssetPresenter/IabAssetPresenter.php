@@ -138,6 +138,22 @@ final readonly class IabAssetPresenter implements AssetPresenterInterface
             $content['targeting'] = $data['targeting'];
         }
 
+        // Image générée par IA (optionnel) - Nouveau format avec stockage filesystem
+        if (isset($data['image_path']) && is_string($data['image_path'])) {
+            $content['image_path'] = $data['image_path'];
+            $content['image_url'] = $data['image_path'];
+        }
+
+        // Description de l'image
+        if (isset($data['image_description']) && is_string($data['image_description'])) {
+            $content['image_description'] = $data['image_description'];
+        }
+
+        // Metadata de l'image
+        if (isset($data['image']) && is_array($data['image'])) {
+            $content['image_metadata'] = $data['image'];
+        }
+
         return $content;
     }
 }

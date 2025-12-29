@@ -103,6 +103,22 @@ final class AssetController extends AbstractController
         ]);
         $form->handleRequest($request);
 
+        // Debug: Logger la soumission du formulaire
+        if ($form->isSubmitted()) {
+            $this->logger->info('Form submitted', [
+                'method' => $request->getMethod(),
+                'is_valid' => $form->isValid(),
+                'data' => $request->request->all(),
+            ]);
+
+            if (! $form->isValid()) {
+                $this->logger->error('Form validation failed', [
+                    'errors' => (string) $form->getErrors(true),
+                    'form_data' => $form->getData(),
+                ]);
+            }
+        }
+
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
 
@@ -122,6 +138,9 @@ final class AssetController extends AbstractController
             $projectId = $project->getId();
             assert(null !== $projectId);
 
+            // Récupérer les options d'images par asset depuis la requête
+            $imageOptions = $request->request->all('image_options');
+
             // Dispatcher le message de génération d'assets via AssetBuilders
             $message = new GenerateAssetsMessage(
                 projectId: $projectId,
@@ -130,7 +149,8 @@ final class AssetController extends AbstractController
                 userId: (int) $user->getId(),
                 tenantId: $project->getTenant()->getId(),
                 toneOfVoice: $data['toneOfVoice'] ?? '',
-                additionalContext: $data['additionalContext'] ?? ''
+                additionalContext: $data['additionalContext'] ?? '',
+                imageOptions: $imageOptions
             );
 
             $this->messageBus->dispatch($message);

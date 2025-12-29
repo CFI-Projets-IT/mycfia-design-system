@@ -189,3 +189,12 @@ marketing:
                 enabled: true               # Activer Firecrawl si disponible
                 timeout: 30                 # Timeout scraping (5-120 secondes)
                 fallback_enabled: true      # Fallback SerpAPI-only si Firecrawl down
+
+    # ========================================================================
+    # IMAGE GENERATION - Configuration génération d'images IA (v3.40.0)
+    # ========================================================================
+    # Génération d'images via Mistral Agents API
+    # Délais observés : 8-16s selon style (flat_illustration vs realistic)
+    # ========================================================================
+    image_generation:
+        timeout: 90                         # Timeout HTTP génération images (10-300s, défaut: 60s)

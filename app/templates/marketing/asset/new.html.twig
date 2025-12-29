@@ -5,7 +5,7 @@
 {% block content_classes %} marketing-page{% endblock %}
 
 {% block content %}
-<div class="container" style="max-width: 900px;">
+<div class="container marketing-asset-new-container">
     {# Breadcrumb #}
     <div class="mb-4">
         <nav aria-label="breadcrumb">
@@ -94,20 +94,49 @@
 
                         <div class="col-md-6 col-lg-4">
                             <div class="card h-100 border asset-type-card">
-                                <label class="card-body p-3 cursor-pointer" for="{{ child.vars.id }}">
-                                    <div class="d-flex align-items-start justify-content-between mb-2">
-                                        <div class="d-flex align-items-center gap-2">
-                                            <i class="{{ assetIcon }} text-primary fs-4"></i>
-                                            <strong class="fw-semibold">{{ child.vars.label|split(' (')[0] }}</strong>
+                                <div class="card-body p-3">
+                                    <label class="cursor-pointer d-block" for="{{ child.vars.id }}">
+                                        <div class="d-flex align-items-start justify-content-between mb-2">
+                                            <div class="d-flex align-items-center gap-2">
+                                                <i class="{{ assetIcon }} text-primary fs-4"></i>
+                                                <strong class="fw-semibold">{{ child.vars.label|split(' (')[0] }}</strong>
+                                            </div>
+                                            {{ form_widget(child, {
+                                                attr: {class: 'form-check-input asset-checkbox'}
+                                            }) }}
                                         </div>
-                                        {{ form_widget(child, {
-                                            attr: {class: 'form-check-input asset-checkbox'}
-                                        }) }}
-                                    </div>
-                                    <div class="small text-muted">
-                                        <span class="badge bg-secondary">{{ assetChannel }}</span>
-                                    </div>
-                                </label>
+                                        <div class="small text-muted">
+                                            <span class="badge bg-secondary">{{ assetChannel }}</span>
+                                        </div>
+                                    </label>
+
+                                    {# Options de génération d'images (seulement pour assets compatibles) #}
+                                    {% set supportsImages = child.vars.value in ['instagram_post', 'facebook_post', 'linkedin_post', 'article', 'iab'] %}
+                                    {% if supportsImages %}
+                                        <div class="mt-3 pt-3 border-top image-options-container">
+                                            <div class="form-check form-switch mb-2">
+                                                <input type="checkbox"
+                                                       class="form-check-input image-toggle-{{ child.vars.value }}"
+                                                       id="generate_image_{{ child.vars.value }}"
+                                                       name="image_options[{{ child.vars.value }}][generate]"
+                                                       value="1">
+                                                <label class="form-check-label small fw-semibold" for="generate_image_{{ child.vars.value }}">
+                                                    <i class="bi bi-image-fill text-primary"></i> Générer image IA
+                                                </label>
+                                            </div>
+                                            <div class="d-none image-style-{{ child.vars.value }}">
+                                                <select class="form-select form-select-sm"
+                                                        name="image_options[{{ child.vars.value }}][style]">
+                                                    <option value="flat_illustration">Illustration plate</option>
+                                                    <option value="realistic">Photoréaliste</option>
+                                                    <option value="minimalist">Minimaliste</option>
+                                                    <option value="corporate">Corporate</option>
+                                                    <option value="abstract">Abstrait</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                </div>
                             </div>
                         </div>
                     {% endfor %}
@@ -225,38 +254,5 @@
 
 {% block stylesheets %}
     {{ parent() }}
-    <style>
-        /* Style des cartes assets */
-        .asset-type-card {
-            transition: all 0.2s ease-in-out;
-            cursor: pointer;
-        }
-
-        .asset-type-card:hover {
-            border-color: var(--bs-primary) !important;
-            box-shadow: 0 0.125rem 0.5rem rgba(0, 123, 255, 0.25);
-            transform: translateY(-2px);
-        }
-
-        .asset-type-card label {
-            margin-bottom: 0;
-            user-select: none;
-        }
-
-        .asset-checkbox {
-            cursor: pointer;
-            width: 1.25rem;
-            height: 1.25rem;
-        }
-
-        .asset-type-card:has(.asset-checkbox:checked) {
-            border-color: var(--bs-primary) !important;
-            background-color: rgba(13, 110, 253, 0.05);
-            box-shadow: 0 0.25rem 0.75rem rgba(13, 110, 253, 0.3);
-        }
-
-        .cursor-pointer {
-            cursor: pointer;
-        }
-    </style>
+    <link rel="stylesheet" href="{{ asset('styles/marketing/asset-new.scss') }}">
 {% endblock %}

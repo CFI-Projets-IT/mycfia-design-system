@@ -1,0 +1,169 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Test - Génération d'Images Marketing IA{% endblock %}
+
+{% block body %}
+<div class="container mt-5" {{ stimulus_controller('image-generation-test') }}>
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1 class="mb-3">Test - Génération d'Images Marketing IA</h1>
+            <p class="text-muted">
+                Testez la nouvelle fonctionnalité de génération automatique d'images via Mistral Agents API.
+                Sélectionnez un AssetBuilder et un style pour générer une image optimisée.
+            </p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Configuration</h5>
+                </div>
+                <div class="card-body">
+                    <form {{ stimulus_action('image-generation-test', 'generate', 'submit') }}>
+                        <div class="mb-3">
+                            <label for="builder-select" class="form-label fw-bold">AssetBuilder</label>
+                            <select
+                                class="form-select"
+                                id="builder-select"
+                                {{ stimulus_target('image-generation-test', 'builderSelect') }}
+                                required
+                            >
+                                <option value="">-- Sélectionner --</option>
+                                {% for key, label in builders %}
+                                    <option value="{{ key }}">{{ label }}</option>
+                                {% endfor %}
+                            </select>
+                            <div class="form-text">Format de l'image généré selon le builder</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="style-select" class="form-label fw-bold">Style</label>
+                            <select
+                                class="form-select"
+                                id="style-select"
+                                {{ stimulus_target('image-generation-test', 'styleSelect') }}
+                                required
+                            >
+                                <option value="">-- Sélectionner --</option>
+                                {% for style in styles %}
+                                    <option value="{{ style }}">{{ style|replace({'_': ' '})|title }}</option>
+                                {% endfor %}
+                            </select>
+                            <div class="form-text">Style visuel de l'image</div>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button
+                                type="submit"
+                                class="btn btn-primary"
+                                {{ stimulus_target('image-generation-test', 'submitButton') }}
+                            >
+                                <i class="bi bi-image"></i> Générer l'image
+                            </button>
+
+                            <button
+                                type="button"
+                                class="btn btn-outline-secondary"
+                                {{ stimulus_action('image-generation-test', 'generateAllStyles') }}
+                            >
+                                <i class="bi bi-palette"></i> Tester tous les styles
+                            </button>
+                        </div>
+                    </form>
+
+                    <hr class="my-3">
+
+                    <div class="alert alert-info mb-0">
+                        <small>
+                            <strong>Temps génération :</strong> 5-10 secondes<br>
+                            <strong>Formats supportés :</strong> PNG base64<br>
+                            <strong>Builders compatibles :</strong> 5/12
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">Résultats</h5>
+                </div>
+                <div class="card-body">
+                    <div
+                        {{ stimulus_target('image-generation-test', 'loadingContainer') }}
+                        class="text-center d-none"
+                    >
+                        <div class="spinner-border text-primary mb-3" role="status">
+                            <span class="visually-hidden">Chargement...</span>
+                        </div>
+                        <p class="text-muted">
+                            <strong>Génération en cours...</strong><br>
+                            <small>Veuillez patienter (5-10 secondes)</small>
+                        </p>
+                    </div>
+
+                    <div
+                        {{ stimulus_target('image-generation-test', 'errorContainer') }}
+                        class="d-none"
+                    >
+                        <div class="alert alert-danger" role="alert">
+                            <h5 class="alert-heading">
+                                <i class="bi bi-exclamation-triangle"></i> Erreur
+                            </h5>
+                            <p {{ stimulus_target('image-generation-test', 'errorMessage') }} class="mb-0"></p>
+                        </div>
+                    </div>
+
+                    <div
+                        {{ stimulus_target('image-generation-test', 'resultContainer') }}
+                        class="d-none"
+                    >
+                        <div class="mb-3">
+                            <img
+                                {{ stimulus_target('image-generation-test', 'generatedImage') }}
+                                class="img-fluid rounded shadow-sm"
+                                alt="Image générée"
+                            >
+                        </div>
+
+                        <div class="card">
+                            <div class="card-header">
+                                <h6 class="mb-0">Métadonnées</h6>
+                            </div>
+                            <div class="card-body">
+                                <table class="table table-sm mb-0">
+                                    <tbody {{ stimulus_target('image-generation-test', 'metadataTable') }}>
+                                        <tr><td colspan="2" class="text-center text-muted">Aucune donnée</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div
+                        {{ stimulus_target('image-generation-test', 'multipleResultsContainer') }}
+                        class="d-none"
+                    >
+                        <h6 class="mb-3">Résultats par style</h6>
+                        <div
+                            {{ stimulus_target('image-generation-test', 'multipleResults') }}
+                            class="row g-3"
+                        ></div>
+                    </div>
+
+                    <div
+                        {{ stimulus_target('image-generation-test', 'emptyState') }}
+                        class="text-center text-muted py-5"
+                    >
+                        <i class="bi bi-image fs-1 opacity-25"></i>
+                        <p class="mt-3">Sélectionnez un builder et un style, puis cliquez sur "Générer l'image"</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

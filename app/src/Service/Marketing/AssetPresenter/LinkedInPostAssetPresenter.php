@@ -53,6 +53,7 @@ final readonly class LinkedInPostAssetPresenter implements AssetPresenterInterfa
         }
 
         $formatted = [];
+        /** @var string|array<string, mixed> $variation */
         foreach ($variations as $variation) {
             // Les variations peuvent être des strings (texte brut) ou des arrays (structure complète)
             if (is_string($variation)) {
@@ -126,6 +127,24 @@ final readonly class LinkedInPostAssetPresenter implements AssetPresenterInterfa
         } elseif (isset($data['key_insights']) && is_array($data['key_insights']) && ! empty($data['key_insights'])) {
             // Fallback vers key_insights[0] si main_insight absent
             $content['main_insight'] = $data['key_insights'][0];
+        }
+
+        // Image générée par IA (optionnel) - Nouveau format avec stockage filesystem
+        // L'image est stockée sur /public/uploads/ et on récupère juste l'URL
+        if (isset($data['image_path']) && is_string($data['image_path'])) {
+            $content['image_path'] = $data['image_path'];
+            $content['image_url'] = $data['image_path']; // Alias pour compatibilité
+        }
+
+        // Description de l'image (optionnel)
+        if (isset($data['image_description']) && is_string($data['image_description'])) {
+            $content['image_description'] = $data['image_description'];
+        }
+
+        // Metadata de l'image (format, taille, etc.) si disponibles
+        if (isset($data['image']) && is_array($data['image'])) {
+            // Garder les metadata mais sans le base64 (qui a été retiré)
+            $content['image_metadata'] = $data['image'];
         }
 
         return $content;

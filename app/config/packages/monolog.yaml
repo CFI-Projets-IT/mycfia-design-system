@@ -40,6 +40,7 @@ monolog:
         - marketing.client.serpapi      # Client HTTP SerpApi (Google Search)
         - marketing.client.firecrawl    # Client HTTP Firecrawl (Web scraping)
         - marketing.client.tavily       # Client HTTP Tavily (Recherche web IA)
+        - marketing.service.image_generation  # Service génération d'images IA (Mistral Agents)
 
 when@dev:
     monolog:
@@ -50,7 +51,7 @@ when@dev:
                 path: "%kernel.logs_dir%/%kernel.environment%.log"
                 level: debug
                 max_files: 7
-                channels: ["!event", "!auth", "!chat", "!streaming", "!cfi_api", "!messenger", "!api_services", "!tools", "!permissions", "!llm", "!marketing", "!marketing.asset.google_ads", "!marketing.asset.bing_ads", "!marketing.asset.linkedin_post", "!marketing.asset.facebook_post", "!marketing.asset.instagram_post", "!marketing.asset.email", "!marketing.asset.sms", "!marketing.asset.iab", "!marketing.asset.article", "!marketing.agent.persona", "!marketing.agent.strategy", "!marketing.agent.competitor", "!marketing.agent.content", "!marketing.agent.project_enrichment", "!marketing.agent.competitor_intelligence", "!marketing.store.persona", "!marketing.store.competitor", "!marketing.store.brand", "!marketing.tool.budget", "!marketing.tool.competitor_intel", "!marketing.tool.brand_style", "!marketing.tool.project_context", "!marketing.prompt_builder", "!marketing.general", "!marketing.task", "!marketing.client.serpapi", "!marketing.client.firecrawl", "!marketing.client.tavily"]
+                channels: ["!event", "!auth", "!chat", "!streaming", "!cfi_api", "!messenger", "!api_services", "!tools", "!permissions", "!llm", "!marketing", "!marketing.asset.google_ads", "!marketing.asset.bing_ads", "!marketing.asset.linkedin_post", "!marketing.asset.facebook_post", "!marketing.asset.instagram_post", "!marketing.asset.email", "!marketing.asset.sms", "!marketing.asset.iab", "!marketing.asset.article", "!marketing.agent.persona", "!marketing.agent.strategy", "!marketing.agent.competitor", "!marketing.agent.content", "!marketing.agent.project_enrichment", "!marketing.agent.competitor_intelligence", "!marketing.store.persona", "!marketing.store.competitor", "!marketing.store.brand", "!marketing.tool.budget", "!marketing.tool.competitor_intel", "!marketing.tool.brand_style", "!marketing.tool.project_context", "!marketing.prompt_builder", "!marketing.general", "!marketing.task", "!marketing.client.serpapi", "!marketing.client.firecrawl", "!marketing.client.tavily", "!marketing.service.image_generation"]
 
             # Logs d'authentification CFI
             auth:
@@ -334,6 +335,14 @@ when@dev:
                 level: debug
                 max_files: 7
                 channels: ['marketing.client.tavily']
+
+            # === Marketing Bundle - Image Generation Service (v3.40.0+) ===
+            marketing_service_image_generation:
+                type: rotating_file
+                path: '%kernel.logs_dir%/marketing/services/image_generation.log'
+                level: debug
+                max_files: 7
+                channels: ['marketing.service.image_generation']
 
             # uncomment to get logging in your browser
             # you may have to allow bigger header sizes in your Web server configuration

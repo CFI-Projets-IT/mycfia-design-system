@@ -1,0 +1,19 @@
+// Styles spécifiques pour la page d'affichage des assets marketing
+// Remplace les styles inline du template show.html.twig
+
+.marketing-asset-container {
+    max-width: 1400px;
+}
+
+.asset-content-text {
+    white-space: pre-wrap;
+}
+
+.quality-progress {
+    height: 25px;
+}
+
+.border-success,
+.border-danger {
+    border-width: 2px;
+}

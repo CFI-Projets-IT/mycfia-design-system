@@ -36,6 +36,7 @@ import './js/ui/division-selector.js';
 import './js/marketing/enrichment-review.js';
 import './js/marketing/persona-selection.js';
 import './js/marketing/persona-configure.js';
+import './js/asset-image-options.js';
 
 // Initialiser automatiquement les tooltips et popovers
 document.addEventListener('DOMContentLoaded', () => {

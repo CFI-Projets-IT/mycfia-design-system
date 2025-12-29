@@ -9,6 +9,7 @@ use App\Entity\Project;
 use App\Enum\AssetStatus;
 use App\Enum\ProjectStatus;
 use App\Message\GenerateAssetsMessage;
+use App\Service\Marketing\AssetImageStorageService;
 use App\Service\MarketingGenerationPublisher;
 use Doctrine\ORM\EntityManagerInterface;
 use Gorillias\MarketingBundle\AssetBuilder\AbstractAssetBuilder;
@@ -58,6 +59,7 @@ final class GenerateAssetsMessageHandler
         iterable $assetBuilders,
         private readonly MarketingGenerationPublisher $publisher,
         private readonly EntityManagerInterface $entityManager,
+        private readonly AssetImageStorageService $imageStorage,
         MarketingLoggerFactory $loggerFactory,
         #[Autowire(service: 'monolog.logger.llm')]
         LoggerInterface $llmLogger,
@@ -214,8 +216,18 @@ final class GenerateAssetsMessageHandler
                         ];
                     }
 
+                    // Options de génération d'images spécifiques à cet asset
+                    $assetImageConfig = $message->imageOptions[$assetType] ?? [];
+                    $generateImage = isset($assetImageConfig['generate']) && '1' === $assetImageConfig['generate'];
+                    $imageStyle = $assetImageConfig['style'] ?? 'flat_illustration';
+
+                    $options = [
+                        'generate_images' => $generateImage,
+                        'image_style' => $imageStyle,
+                    ];
+
                     // Appel du builder qui retourne la structure spécialisée
-                    $assetData = $builder->build($strategyData, $projectData, $customAgent);
+                    $assetData = $builder->build($strategyData, $projectData, $customAgent, $options);
 
                     // Log centralisé LLM pour Grafana (génération asset)
                     $this->llmLogger->info('Campaign LLM Call', [
@@ -232,14 +244,63 @@ final class GenerateAssetsMessageHandler
                         'model' => $assetData['model_used'] ?? 'unknown',
                     ]);
 
-                    // Persister l'asset généré (mapper vers vrais champs TEXT)
-                    $asset = new Asset();
-                    $asset->setProject($project);
+                    // Traiter l'image générée : stocker sur filesystem au lieu de base64 en BDD
+                    if (isset($assetData['image']) && is_array($assetData['image']) && isset($assetData['image']['image_data'])) {
+                        try {
+                            // Persister d'abord l'asset pour obtenir son ID
+                            $asset = new Asset();
+                            $asset->setProject($project);
+                            $asset->setAssetType($assetType);
+                            $asset->setChannel($assetType);
+                            $asset->setStatus(AssetStatus::DRAFT);
+                            $asset->setQualityScore((string) ($assetData['quality_score'] ?? 0.5));
+                            $asset->setContent('{}'); // Temporaire
+                            $this->entityManager->persist($asset);
+                            $this->entityManager->flush(); // Obtenir l'ID
 
-                    // Champs de l'entité Asset
-                    $asset->setAssetType($assetType);
-                    $asset->setChannel($assetType);  // Même valeur pour assetType et channel
-                    $asset->setContent(json_encode($assetData, JSON_THROW_ON_ERROR));  // Tout le contenu en JSON
+                            // Stocker l'image sur filesystem
+                            $imageFormat = $assetData['image']['format'] ?? 'png';
+                            $imageDescription = $assetData['image_description'] ?? '';
+                            $storageResult = $this->imageStorage->store(
+                                $assetData['image']['image_data'],
+                                (int) $asset->getId(),
+                                $imageFormat,
+                                $imageDescription
+                            );
+
+                            // Remplacer les données base64 par l'URL publique
+                            $assetData['image_url'] = $storageResult['url'];
+                            $assetData['image_path'] = $storageResult['url']; // Alias pour compatibilité
+                            $assetData['image_size_bytes'] = $storageResult['size_bytes'];
+                            unset($assetData['image']['image_data']); // Supprimer le base64 lourd
+
+                            $this->logger->info('Image asset sauvegardée', [
+                                'asset_id' => $asset->getId(),
+                                'url' => $storageResult['url'],
+                                'size_bytes' => $storageResult['size_bytes'],
+                            ]);
+                        } catch (\Throwable $e) {
+                            $this->logger->error('Échec stockage image asset', [
+                                'asset_type' => $assetType,
+                                'error' => $e->getMessage(),
+                            ]);
+                            // Continuer sans image plutôt que de faire échouer toute la génération
+                            unset($assetData['image']);
+                        }
+                    }
+
+                    // Si l'asset n'a pas encore été persisté (pas d'image), le créer maintenant
+                    if (! isset($asset)) {
+                        $asset = new Asset();
+                        $asset->setProject($project);
+                        $asset->setAssetType($assetType);
+                        $asset->setChannel($assetType);
+                        $asset->setStatus(AssetStatus::DRAFT);
+                        $asset->setQualityScore((string) ($assetData['quality_score'] ?? 0.5));
+                    }
+
+                    // Mettre à jour le contenu avec les données finales (sans base64 si image)
+                    $asset->setContent(json_encode($assetData, JSON_THROW_ON_ERROR));
 
                     // Extraire et encoder les variations si présentes
                     $variations = null;
@@ -248,15 +309,12 @@ final class GenerateAssetsMessageHandler
                     }
                     $asset->setVariations($variations);
 
-                    $asset->setStatus(AssetStatus::DRAFT);
-
-                    // Le quality_score est déjà calculé par le builder
-                    $qualityScore = $assetData['quality_score'] ?? 0.5;
-                    $asset->setQualityScore((string) $qualityScore);
+                    // Si l'asset n'était pas encore persisté (cas sans image), le persist maintenant
+                    if (! $this->entityManager->contains($asset)) {
+                        $this->entityManager->persist($asset);
+                    }
 
                     // createdAt/updatedAt gérés automatiquement par Gedmo (#[Gedmo\Timestampable])
-
-                    $this->entityManager->persist($asset);
 
                     ++$generatedCount;
                 }
