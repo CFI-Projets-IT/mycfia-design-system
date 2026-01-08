@@ -1,0 +1,472 @@
+/**
+ * Campaign Schedule - Planification Publication
+ * Styles pour le calendrier FullCalendar et les assets draggables
+ */
+
+/* ==========================================================================
+   Page Layout
+   ========================================================================== */
+
+.page-title {
+    font-size: var(--font-size-2xl);
+    font-weight: var(--font-weight-bold);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+/* ==========================================================================
+   Calendar Container
+   ========================================================================== */
+
+#calendar {
+    min-height: 500px;
+}
+
+/* FullCalendar Customization */
+.fc {
+    font-family: var(--font-family);
+}
+
+.fc .fc-toolbar-title {
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-semibold);
+    color: var(--text-primary);
+}
+
+.fc .fc-button {
+    background-color: var(--color-primary);
+    border-color: var(--color-primary);
+    font-weight: var(--font-weight-semibold);
+}
+
+.fc .fc-button:hover {
+    background-color: var(--color-primary-dark, #002060);
+    border-color: var(--color-primary-dark, #002060);
+}
+
+.fc .fc-button-primary:not(:disabled).fc-button-active,
+.fc .fc-button-primary:not(:disabled):active {
+    background-color: var(--color-primary-dark, #002060);
+    border-color: var(--color-primary-dark, #002060);
+}
+
+.fc .fc-daygrid-day {
+    transition: background-color 0.2s ease;
+}
+
+.fc .fc-daygrid-day:hover {
+    background-color: var(--bg-hover);
+}
+
+.fc .fc-daygrid-day.fc-day-today {
+    background-color: rgba(var(--color-primary-rgb, 0, 48, 128), 0.05);
+}
+
+.fc .fc-daygrid-day-number {
+    color: var(--text-primary);
+    font-weight: var(--font-weight-semibold);
+}
+
+.fc .fc-col-header-cell-cushion {
+    color: var(--text-secondary);
+    font-weight: var(--font-weight-semibold);
+    text-transform: uppercase;
+    font-size: var(--font-size-sm);
+}
+
+/* Calendar Events (Scheduled Assets) */
+.fc .fc-daygrid-event {
+    border: none;
+    border-radius: var(--border-radius-sm);
+    padding: 1px 4px;
+    margin: 1px 2px;
+    font-size: 0.75rem;
+    cursor: pointer;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.fc .fc-daygrid-event:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.fc .fc-daygrid-event-harness {
+    margin: 0 !important;
+}
+
+.fc .fc-event-main {
+    padding: 1px 2px;
+}
+
+/* Reduce day cell padding */
+.fc .fc-daygrid-day-frame {
+    min-height: auto;
+}
+
+.fc .fc-daygrid-day-top {
+    flex-direction: row;
+    padding: 2px 4px;
+}
+
+.fc .fc-daygrid-day-events {
+    margin-top: 0;
+    min-height: 1em;
+}
+
+.fc .fc-daygrid-event-harness-abs {
+    visibility: visible;
+}
+
+.fc .fc-daygrid-body-unbalanced .fc-daygrid-day-events {
+    min-height: auto;
+}
+
+/* Hide event dot and remove its margin */
+.fc .fc-daygrid-event-dot {
+    display: none;
+}
+
+/* Event colors by platform */
+.fc-event[data-asset-type="linkedin"] {
+    background-color: #0077B5;
+    color: white;
+}
+
+.fc-event[data-asset-type="facebook"] {
+    background-color: #1877F2;
+    color: white;
+}
+
+.fc-event[data-asset-type="instagram"] {
+    background: linear-gradient(45deg, #F58529, #DD2A7B, #8134AF);
+    color: white;
+}
+
+.fc-event[data-asset-type="google"] {
+    background-color: #4285F4;
+    color: white;
+}
+
+.fc-event[data-asset-type="bing"] {
+    background-color: #00A4EF;
+    color: white;
+}
+
+.fc-event[data-asset-type="iab"] {
+    background-color: #6c757d;
+    color: white;
+}
+
+/* ==========================================================================
+   External Events (Asset List)
+   ========================================================================== */
+
+.external-events-container {
+    max-height: 600px;
+    overflow-y: auto;
+    padding: var(--spacing-sm);
+}
+
+/* Asset Group */
+.asset-group {
+    margin-bottom: var(--spacing-md);
+}
+
+.asset-group:last-child {
+    margin-bottom: 0;
+}
+
+.asset-group-header {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    padding: 4px 8px;
+    background-color: transparent;
+    border-bottom: 1px solid var(--border-color);
+    margin-bottom: var(--spacing-xs);
+    font-weight: var(--font-weight-semibold);
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.asset-group-header i {
+    font-size: 0.9rem;
+}
+
+.asset-group-header .badge {
+    margin-left: auto;
+}
+
+/* Platform icon colors in headers */
+.asset-group-header .bi-linkedin {
+    color: #0077B5;
+}
+
+.asset-group-header .bi-facebook {
+    color: #1877F2;
+}
+
+.asset-group-header .bi-instagram {
+    color: #E4405F;
+}
+
+.asset-group-header .bi-google {
+    color: #4285F4;
+}
+
+.asset-group-header .bi-microsoft {
+    color: #00A4EF;
+}
+
+.asset-group-header .bi-badge-ad {
+    color: #6c757d;
+}
+
+.asset-group-items {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+/* Asset Card (Draggable) - Compact Style */
+.asset-card {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    padding: 6px 10px;
+    background-color: #6c757d;
+    border: none;
+    border-radius: var(--border-radius-sm);
+    cursor: grab;
+    transition: all 0.15s ease;
+}
+
+.asset-card:hover {
+    background-color: var(--bg-card);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+    transform: translateX(2px);
+}
+
+.asset-card:active {
+    cursor: grabbing;
+}
+
+.asset-card.fc-event-dragging {
+    opacity: 0.8;
+    transform: rotate(1deg);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Background colors by platform */
+.asset-card[data-asset-type="linkedin"] {
+    background-color: #0077B5;
+}
+.asset-card[data-asset-type="facebook"] {
+    background-color: #1877F2;
+}
+.asset-card[data-asset-type="instagram"] {
+    background: linear-gradient(135deg, #F58529, #DD2A7B, #8134AF);
+}
+.asset-card[data-asset-type="google"] {
+    background-color: #4285F4;
+}
+.asset-card[data-asset-type="bing"] {
+    background-color: #00A4EF;
+}
+.asset-card[data-asset-type="iab"] {
+    background-color: #6c757d;
+}
+
+/* Hover resets background to white */
+.asset-card:hover {
+    background: var(--bg-card) !important;
+}
+
+.asset-card-icon {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--border-radius-sm);
+    font-size: 0.85rem;
+    flex-shrink: 0;
+}
+
+/* Icon backgrounds by platform */
+.asset-card[data-asset-type="linkedin"] .asset-card-icon {
+    background-color: #0077B5;
+    color: white;
+}
+
+.asset-card[data-asset-type="facebook"] .asset-card-icon {
+    background-color: #1877F2;
+    color: white;
+}
+
+.asset-card[data-asset-type="instagram"] .asset-card-icon {
+    background: linear-gradient(135deg, #F58529, #DD2A7B, #8134AF);
+    color: white;
+}
+
+.asset-card[data-asset-type="google"] .asset-card-icon {
+    background-color: #4285F4;
+    color: white;
+}
+
+.asset-card[data-asset-type="bing"] .asset-card-icon {
+    background-color: #00A4EF;
+    color: white;
+}
+
+.asset-card[data-asset-type="iab"] .asset-card-icon {
+    background-color: #6c757d;
+    color: white;
+}
+
+.asset-card-content {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    min-width: 0;
+    flex: 1;
+}
+
+.asset-card-title {
+    font-weight: var(--font-weight-medium, 500);
+    font-size: 0.8rem;
+    color: white;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: color 0.15s ease;
+}
+
+.asset-card-meta {
+    font-size: 0.7rem;
+    color: rgba(255, 255, 255, 0.8);
+    white-space: nowrap;
+    transition: color 0.15s ease;
+}
+
+.asset-card:hover .asset-card-title {
+    color: var(--text-primary);
+}
+
+.asset-card:hover .asset-card-meta {
+    color: var(--text-secondary);
+}
+
+/* Asset card scheduled state */
+.asset-card.scheduled {
+    opacity: 0.5;
+    pointer-events: none;
+    background-color: var(--bg-secondary);
+}
+
+.asset-card.scheduled::after {
+    content: "\f26b"; /* bi-check-circle-fill */
+    font-family: "bootstrap-icons";
+    position: absolute;
+    right: var(--spacing-sm);
+    color: var(--color-success, #28a745);
+}
+
+/* ==========================================================================
+   Drop Zone Highlight
+   ========================================================================== */
+
+.fc-daygrid-day.drop-highlight {
+    background-color: rgba(var(--color-success-rgb, 40, 167, 69), 0.15) !important;
+}
+
+.fc-daygrid-day.drop-highlight .fc-daygrid-day-frame {
+    border: 2px dashed var(--color-success, #28a745);
+    border-radius: var(--border-radius-sm);
+}
+
+/* ==========================================================================
+   Summary Card
+   ========================================================================== */
+
+#scheduled-count,
+#total-count {
+    font-weight: var(--font-weight-bold);
+}
+
+/* ==========================================================================
+   Event Popover
+   ========================================================================== */
+
+.event-popover {
+    min-width: 180px;
+}
+
+.event-popover p {
+    font-size: var(--font-size-sm);
+}
+
+.popover {
+    --bs-popover-max-width: 280px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+}
+
+.popover-header {
+    background-color: var(--bg-secondary);
+    font-weight: var(--font-weight-semibold);
+}
+
+/* ==========================================================================
+   Modal Customization
+   ========================================================================== */
+
+#timeModal .modal-header {
+    border-bottom-color: var(--border-color);
+}
+
+#timeModal .modal-footer {
+    border-top-color: var(--border-color);
+}
+
+#selected-asset-info {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    margin-bottom: 0;
+}
+
+#selected-asset-info i {
+    font-size: 1.25rem;
+}
+
+/* ==========================================================================
+   Responsive
+   ========================================================================== */
+
+@media (max-width: 991.98px) {
+    .external-events-container {
+        max-height: 400px;
+    }
+
+    #calendar {
+        min-height: 400px;
+    }
+}
+
+@media (max-width: 767.98px) {
+    .page-title {
+        font-size: var(--font-size-xl);
+    }
+
+    .asset-card {
+        padding: var(--spacing-xs) var(--spacing-sm);
+    }
+
+    .asset-card-icon {
+        width: 28px;
+        height: 28px;
+    }
+}
