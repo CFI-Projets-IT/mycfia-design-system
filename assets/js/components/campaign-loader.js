@@ -4,6 +4,30 @@
  */
 
 /**
+ * Detecte le suffixe de theme depuis l'URL actuelle
+ * @returns {string} Le suffixe de theme (_light, _dark-blue, _dark-red)
+ */
+function getThemeSuffix() {
+    const path = window.location.pathname;
+    if (path.includes('_dark-blue')) {
+        return '_dark-blue';
+    } else if (path.includes('_dark-red')) {
+        return '_dark-red';
+    }
+    return '_light';
+}
+
+/**
+ * Adapte une URL de base au theme actuel
+ * @param {string} baseUrl - URL avec suffixe _light par defaut
+ * @returns {string} URL adaptee au theme actuel
+ */
+function adaptUrlToTheme(baseUrl) {
+    const themeSuffix = getThemeSuffix();
+    return baseUrl.replace('_light.html', `${themeSuffix}.html`);
+}
+
+/**
  * Messages de progression pour enrichissement IA
  */
 const ENRICHMENT_MESSAGES = [
@@ -51,7 +75,7 @@ const MARKETING_TIPS = [
 export function simulateLoading(options = {}) {
     const {
         duration = 15000,
-        redirectUrl = 'step1_review.html',
+        redirectUrl = 'step1_review_light.html',
         messages = ENRICHMENT_MESSAGES
     } = options;
 
@@ -164,7 +188,7 @@ function initEnrichmentLoader() {
     // Start loading simulation
     simulateLoading({
         duration: 15000,
-        redirectUrl: 'step1_review.html',
+        redirectUrl: adaptUrlToTheme('step1_review_light.html'),
         messages: ENRICHMENT_MESSAGES
     });
 }
@@ -186,7 +210,7 @@ function initPersonaLoader() {
 
     simulateLoading({
         duration: 12000,
-        redirectUrl: 'step2_select.html',
+        redirectUrl: adaptUrlToTheme('step2_select_light.html'),
         messages: personaMessages
     });
 }
@@ -208,7 +232,7 @@ function initCompetitorLoader() {
 
     simulateLoading({
         duration: 10000,
-        redirectUrl: 'step3_validate.html',
+        redirectUrl: adaptUrlToTheme('step3_validate_light.html'),
         messages: competitorMessages
     });
 }
@@ -230,7 +254,7 @@ function initStrategyLoader() {
 
     simulateLoading({
         duration: 13000,
-        redirectUrl: 'step4_result.html',
+        redirectUrl: adaptUrlToTheme('step4_result_light.html'),
         messages: strategyMessages
     });
 }
@@ -253,8 +277,46 @@ function initAssetLoader() {
 
     simulateLoading({
         duration: 18000,
-        redirectUrl: 'step5_validate.html',
+        redirectUrl: adaptUrlToTheme('step5_validate_light.html'),
         messages: assetMessages
+    });
+}
+
+/**
+ * Initialise le loader validation upload contacts
+ */
+function initContactValidationLoader() {
+    const validationMessages = [
+        "Validation du format de fichier...",
+        "Vérification des formats d'emails...",
+        "Contrôle des champs requis...",
+        "Validation des formats de données...",
+        "Finalisation de la validation..."
+    ];
+
+    simulateLoading({
+        duration: 8000,
+        redirectUrl: adaptUrlToTheme('contact_upload_analyzing_light.html'),
+        messages: validationMessages
+    });
+}
+
+/**
+ * Initialise le loader analyse upload contacts
+ */
+function initContactAnalysisLoader() {
+    const analysisMessages = [
+        "Validation du fichier...",
+        "Détection des colonnes...",
+        "Analyse des données...",
+        "Génération suggestions IA...",
+        "Finalisation de l'analyse..."
+    ];
+
+    simulateLoading({
+        duration: 10000,
+        redirectUrl: adaptUrlToTheme('contact_upload_suggestions_light.html'),
+        messages: analysisMessages
     });
 }
 
@@ -278,6 +340,10 @@ function initLoader() {
         initStrategyLoader();
     } else if (path.includes('step5_loading')) {
         initAssetLoader();
+    } else if (path.includes('contact_upload_validating')) {
+        initContactValidationLoader();
+    } else if (path.includes('contact_upload_analyzing')) {
+        initContactAnalysisLoader();
     }
 }
 

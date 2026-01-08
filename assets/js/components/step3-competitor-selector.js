@@ -4,6 +4,30 @@
  */
 
 /**
+ * Detecte le suffixe de theme depuis l'URL actuelle
+ * @returns {string} Le suffixe de theme (_light, _dark-blue, _dark-red)
+ */
+function getThemeSuffix() {
+    const path = window.location.pathname;
+    if (path.includes('_dark-blue')) {
+        return '_dark-blue';
+    } else if (path.includes('_dark-red')) {
+        return '_dark-red';
+    }
+    return '_light';
+}
+
+/**
+ * Adapte une URL de base au theme actuel
+ * @param {string} baseUrl - URL avec suffixe _light par defaut
+ * @returns {string} URL adaptee au theme actuel
+ */
+function adaptUrlToTheme(baseUrl) {
+    const themeSuffix = getThemeSuffix();
+    return baseUrl.replace('_light.html', `${themeSuffix}.html`);
+}
+
+/**
  * Toggle la sélection d'une competitor card
  * @param {HTMLElement} card - L'élément competitor-card cliqué
  */
@@ -45,8 +69,8 @@ function validateCompetitors() {
 
     console.log(`[competitor-selector] Validation de ${selectedCompetitors.length} concurrent(s)`);
 
-    // Redirection vers l'étape suivante (récapitulatif stratégie)
-    window.location.href = 'step4_recap.html';
+    // Redirection vers l'étape suivante (loading stratégie)
+    window.location.href = adaptUrlToTheme('step4_loading_light.html');
 }
 
 /**

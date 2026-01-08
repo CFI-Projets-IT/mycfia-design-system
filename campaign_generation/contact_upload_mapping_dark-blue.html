@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mapping Manuel - Upload de Contacts | myCFiA (Thème Sombre Bleu)</title>
+
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Design System myCFiA -->
+    <link rel="stylesheet" href="../assets/css/main.css">
+    <link rel="stylesheet" href="../assets/css/themes/dark-blue.css" id="theme-stylesheet">
+</head>
+<body>
+    <div class="app">
+        <!-- Sidebar -->
+        <aside class="sidebar d-flex flex-column">
+            <!-- Header -->
+            <div class="sidebar-header">
+                <button class="btn btn-link text-white-50 p-0" data-sidebar-toggle>
+                    <i class="bi bi-list fs-4"></i>
+                </button>
+                <button class="btn btn-link text-white-50 p-0" data-sidebar-toggle>
+                    <i class="bi bi-arrow-left-circle fs-5"></i>
+                </button>
+            </div>
+
+            <!-- Navigation -->
+            <nav class="flex-grow-1 overflow-auto px-3">
+                <!-- Marketing -->
+                <div class="nav-section mb-4">
+                    <div class="nav-section-title-pill mb-3">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-megaphone"></i>
+                            <span>Marketing</span>
+                        </div>
+                        <i class="bi bi-chevron-down"></i>
+                    </div>
+                    <div class="nav-section-content">
+                        <a href="step1_create_dark-blue.html" class="sidebar-link active">
+                            <i class="bi bi-plus-circle"></i>
+                            <span>Nouvelle campagne</span>
+                        </a>
+                        <a href="dashboard_dark-blue.html" class="sidebar-link">
+                            <i class="bi bi-grid"></i>
+                            <span>Mes campagnes</span>
+                        </a>
+                        <a href="analytics_dark-blue.html" class="sidebar-link">
+                            <i class="bi bi-bar-chart-line"></i>
+                            <span>Analytics</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Favoris -->
+                <div class="nav-section mb-4">
+                    <div class="nav-section-title-pill mb-3">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-star"></i>
+                            <span>Favoris</span>
+                        </div>
+                        <i class="bi bi-chevron-down"></i>
+                    </div>
+                    <div class="px-3 py-2 text-white-50 small">
+                        <span>Aucune campagne favorite</span>
+                    </div>
+                </div>
+
+                <!-- Historique -->
+                <div class="nav-section mb-4">
+                    <div class="nav-section-title-pill mb-3">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-clock-history"></i>
+                            <span>Historique</span>
+                        </div>
+                        <i class="bi bi-chevron-down"></i>
+                    </div>
+                </div>
+            </nav>
+
+            <!-- Footer -->
+            <div class="sidebar-footer">
+                <a href="../settings_index/settings_index_dark-blue.html" class="sidebar-link">
+                    <i class="bi bi-gear"></i>
+                    <span>Paramètres</span>
+                </a>
+                <a href="../profile/profile_dark-blue.html" class="sidebar-link">
+                    <i class="bi bi-person-circle"></i>
+                    <span>Mon compte</span>
+                </a>
+                <a href="#" class="sidebar-link">
+                    <i class="bi bi-box-arrow-right"></i>
+                    <span>Quitter</span>
+                </a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main">
+            <!-- Header -->
+            <header class="header">
+                <div class="header-content">
+                    <!-- Logo -->
+                    <a href="../index.html" class="step1-header-logo-link">
+                        <img src="../images/logo_picto.svg" alt="CFI" class="header-logo-picto">
+                        <img src="../images/logo.svg" alt="myCFiA" class="header-logo">
+                    </a>
+
+                    <!-- Actions -->
+                    <div class="step1-header-buttons">
+                        <button class="btn btn-glass header-btn step1-header-btn-primary">
+                            <i class="bi bi-building"></i>
+                            <span class="header-btn-text">Ma Division</span>
+                        </button>
+                        <button class="btn btn-glass-primary header-btn">
+                            <i class="bi bi-moon-stars-fill"></i>
+                            <span class="header-btn-text">Sombre Bleu</span>
+                        </button>
+                        <a href="#" class="btn btn-glass header-btn step1-header-link">
+                            <i class="bi bi-arrow-left-circle"></i>
+                            <span class="header-btn-text">Retour CFI</span>
+                        </a>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Content -->
+            <div class="content step1-content">
+                <!-- Breadcrumb -->
+                <nav aria-label="breadcrumb" class="step1-breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="dashboard_dark-blue.html" class="step1-breadcrumb-link">Campagnes Marketing</a></li>
+                        <li class="breadcrumb-item"><a href="step1_create_dark-blue.html" class="step1-breadcrumb-link">Nouvelle campagne</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Upload de contacts</li>
+                    </ol>
+                </nav>
+
+                <!-- Stepper -->
+                <div class="campaign-stepper">
+                    <div class="stepper-container">
+                        <div class="stepper-line">
+                            <div class="stepper-progress contact-upload-stepper-progress"></div>
+                        </div>
+
+                        <div class="stepper-step completed">
+                            <div class="stepper-circle">
+                                <i class="bi bi-check-lg"></i>
+                            </div>
+                            <div class="stepper-label">Projet</div>
+                        </div>
+
+                        <div class="stepper-step active">
+                            <div class="stepper-circle">2</div>
+                            <div class="stepper-label">Upload Contacts</div>
+                        </div>
+
+                        <div class="stepper-step">
+                            <div class="stepper-circle">3</div>
+                            <div class="stepper-label">Personas</div>
+                        </div>
+
+                        <div class="stepper-step">
+                            <div class="stepper-circle">4</div>
+                            <div class="stepper-label">Concurrents</div>
+                        </div>
+
+                        <div class="stepper-step">
+                            <div class="stepper-circle">5</div>
+                            <div class="stepper-label">Stratégie</div>
+                        </div>
+
+                        <div class="stepper-step">
+                            <div class="stepper-circle">6</div>
+                            <div class="stepper-label">Assets</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Preview Mode Banner -->
+                <div class="alert alert-warning border-start border-warning border-4 mb-4">
+                    <div class="d-flex align-items-center mb-3">
+                        <i class="bi bi-eye-fill fs-4 me-2 text-warning"></i>
+                        <h5 class="mb-0">MODE PREVIEW - Workflow Upload &amp; Mapping Contacts</h5>
+                    </div>
+
+                    <div class="mb-3">
+                        <p class="mb-2">
+                            <i class="bi bi-envelope-fill text-primary me-1"></i>
+                            <strong>Cette étape OPTIONNELLE concerne uniquement les campagnes avec assets SMS, Email ou Courrier.</strong>
+                        </p>
+                    </div>
+
+                    <div class="mb-3">
+                        <h6 class="mb-2">
+                            <i class="bi bi-bullseye text-primary me-1"></i>
+                            Pourquoi uploader vos contacts ?
+                        </h6>
+                        <ul class="small mb-0">
+                            <li>Personnaliser les messages SMS/Email/Courrier avec vos données clients réelles (noms, préférences, historique)</li>
+                            <li>Segmenter vos envois selon vos personas enrichis</li>
+                            <li>Générer des campagnes ultra-ciblées</li>
+                        </ul>
+                    </div>
+
+                    <div class="mb-3">
+                        <h6 class="mb-2">
+                            <i class="bi bi-diagram-3 text-primary me-1"></i>
+                            Workflow complet (7 états) :
+                        </h6>
+                        <div class="d-flex flex-wrap gap-2 align-items-center">
+                            <a href="contact_upload_empty_dark-blue.html" class="badge bg-secondary text-decoration-none fs-6 py-2 px-3">1. Upload</a>
+                            <i class="bi bi-arrow-right text-secondary"></i>
+                            <a href="contact_upload_validating_dark-blue.html" class="badge bg-secondary text-decoration-none fs-6 py-2 px-3">2. Validation</a>
+                            <i class="bi bi-arrow-right text-secondary"></i>
+                            <a href="contact_upload_errors_dark-blue.html" class="badge bg-warning text-dark text-decoration-none fs-6 py-2 px-3 opacity-75">[Erreurs]</a>
+                            <i class="bi bi-arrow-right text-secondary"></i>
+                            <a href="contact_upload_analyzing_dark-blue.html" class="badge bg-secondary text-decoration-none fs-6 py-2 px-3">3. Analyse</a>
+                            <i class="bi bi-arrow-right text-secondary"></i>
+                            <a href="contact_upload_suggestions_dark-blue.html" class="badge bg-secondary text-decoration-none fs-6 py-2 px-3">4. Suggestions</a>
+                            <i class="bi bi-arrow-right text-secondary"></i>
+                            <a href="contact_upload_mapping_dark-blue.html" class="badge bg-primary text-decoration-none fs-6 py-2 px-3">5. Mapping</a>
+                            <i class="bi bi-arrow-right text-secondary"></i>
+                            <a href="contact_upload_preview_dark-blue.html" class="badge bg-secondary text-decoration-none fs-6 py-2 px-3">6. Preview</a>
+                        </div>
+                    </div>
+
+                    <div class="mb-0">
+                        <p class="small text-secondary mb-0">
+                            <i class="bi bi-gear me-1"></i>
+                            <strong>En production :</strong> ce workflow se déclenche automatiquement lors de l'upload d'un fichier CSV/Excel.
+                        </p>
+                    </div>
+                </div>
+                <!-- Section titre + compteur -->
+                <div class="mb-4">
+                    <div class="d-flex align-items-center justify-content-between mb-2">
+                        <h1 class="h3 mb-0">
+                            <i class="bi bi-arrow-left-right text-primary me-2"></i>
+                            Mapping des colonnes
+                        </h1>
+                        <div class="d-flex gap-3">
+                            <span class="badge bg-success fs-6 px-3 py-2">
+                                <i class="bi bi-check-circle me-1"></i>
+                                8 mappées
+                            </span>
+                            <span class="badge bg-warning text-dark fs-6 px-3 py-2">
+                                <i class="bi bi-exclamation-circle me-1"></i>
+                                2 requises manquantes
+                            </span>
+                        </div>
+                    </div>
+                    <p class="text-secondary">
+                        Associez chaque colonne de votre fichier aux champs du template CFI
+                    </p>
+                </div>
+
+                <!-- Aide/légende -->
+                <div class="alert alert-light border" role="alert">
+                    <div class="row g-3 small">
+                        <div class="col-md-3">
+                            <i class="bi bi-exclamation-triangle text-danger me-2"></i>
+                            <strong>Requis</strong> - Champs obligatoires
+                        </div>
+                        <div class="col-md-3">
+                            <i class="bi bi-info-circle text-secondary me-2"></i>
+                            <strong>Optionnel</strong> - Champs facultatifs
+                        </div>
+                        <div class="col-md-3">
+                            <i class="bi bi-check-circle text-success me-2"></i>
+                            <strong>Mappé</strong> - Correspondance établie
+                        </div>
+                        <div class="col-md-3">
+                            <i class="bi bi-x-circle text-secondary me-2"></i>
+                            <strong>Ignoré</strong> - Colonne non utilisée
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card mapping (table avec dropdowns) -->
+                <div class="card shadow-sm">
+                    <div class="card-header">
+                        <div class="d-flex align-items-center justify-content-between">
+                            <h5 class="mb-0">
+                                <i class="bi bi-grid me-2"></i>
+                                Correspondances colonnes
+                            </h5>
+                            <button class="btn btn-sm btn-outline-primary">
+                                <i class="bi bi-arrow-clockwise me-1"></i>
+                                Réinitialiser
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle mb-0">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Colonne de votre fichier</th>
+                                        <th scope="col">Champ CFI</th>
+                                        <th scope="col" class="text-center">Statut</th>
+                                        <th scope="col" class="text-center">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Ligne 1: Email - Mappé requis OK -->
+                                    <tr class="mapping-row-success">
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <i class="bi bi-grip-vertical text-secondary me-2"></i>
+                                                <div>
+                                                    <strong>E-mail</strong>
+                                                    <p class="small text-secondary mb-0">1,523 valeurs</p>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <select class="form-select" aria-label="Mapping pour E-mail">
+                                                <option value="">-- Sélectionner un champ --</option>
+                                                <option value="mail" selected>mail (requis)</option>
+                                                <option value="nom">nom (requis)</option>
+                                                <option value="prenom">prénom (requis)</option>
+                                                <option value="telephone">téléphone</option>
+                                                <option value="adresse">adresse</option>
+                                                <option value="code_postal">code_postal</option>
+                                                <option value="ville">ville</option>
+                                                <option value="pays">pays</option>
+                                            </select>
+                                        </td>
+                                        <td class="text-center">
+                                            <i class="bi bi-check-circle-fill text-success mapping-status-icon"></i>
+                                        </td>
+                                        <td class="text-center">
+                                            <button class="btn btn-sm btn-outline-secondary" title="Ignorer cette colonne">
+                                                <i class="bi bi-x-lg"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+
+                                    <!-- Ligne 2: Nom complet - Non mappé requis MANQUANT -->
+                                    <tr class="mapping-row-error">
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <i class="bi bi-grip-vertical text-secondary me-2"></i>
+                                                <div>
+                                                    <strong>Nom complet</strong>
+                                                    <p class="small text-secondary mb-0">1,520 valeurs</p>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <select class="form-select is-invalid" aria-label="Mapping pour Nom complet">
+                                                <option value="" selected>-- Sélectionner un champ --</option>
+                                                <option value="mail">mail (requis)</option>
+                                                <option value="nom">nom (requis)</option>
+                                                <option value="prenom">prénom (requis)</option>
+                                                <option value="telephone">téléphone</option>
+                                                <option value="adresse">adresse</option>
+                                                <option value="code_postal">code_postal</option>
+                                                <option value="ville">ville</option>
+                                                <option value="pays">pays</option>
+                                            </select>
+                                            <div class="invalid-feedback">
+                                                Les champs "nom" et "prénom" sont requis et non mappés
+                                            </div>
+                                        </td>
+                                        <td class="text-center">
+                                            <i class="bi bi-exclamation-triangle-fill text-danger mapping-status-icon"></i>
+                                        </td>
+                                        <td class="text-center">
+                                            <button class="btn btn-sm btn-outline-secondary" title="Ignorer cette colonne">
+                                                <i class="bi bi-x-lg"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+
+                                    <!-- Ligne 3: Téléphone - Mappé optionnel OK -->
+                                    <tr class="mapping-row-success">
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <i class="bi bi-grip-vertical text-secondary me-2"></i>
+                                                <div>
+                                                    <strong>Tél</strong>
+                                                    <p class="small text-secondary mb-0">1,489 valeurs, 34 vides</p>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <select class="form-select" aria-label="Mapping pour Tél">
+                                                <option value="">-- Sélectionner un champ --</option>
+                                                <option value="mail">mail (requis)</option>
+                                                <option value="nom">nom (requis)</option>
+                                                <option value="prenom">prénom (requis)</option>
+                                                <option value="telephone" selected>téléphone</option>
+                                                <option value="adresse">adresse</option>
+                                                <option value="code_postal">code_postal</option>
+                                                <option value="ville">ville</option>
+                                                <option value="pays">pays</option>
+                                            </select>
+                                        </td>
+                                        <td class="text-center">
+                                            <i class="bi bi-check-circle-fill text-success mapping-status-icon"></i>
+                                        </td>
+                                        <td class="text-center">
+                                            <button class="btn btn-sm btn-outline-secondary" title="Ignorer cette colonne">
+                                                <i class="bi bi-x-lg"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+
+                                    <!-- Ligne 4: Notes - Ignoré -->
+                                    <tr class="mapping-row-ignored">
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <i class="bi bi-grip-vertical text-secondary me-2"></i>
+                                                <div>
+                                                    <strong>Notes</strong>
+                                                    <p class="small text-secondary mb-0">842 valeurs</p>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <select class="form-select" disabled aria-label="Mapping pour Notes">
+                                                <option value="" selected>-- Ignoré --</option>
+                                            </select>
+                                        </td>
+                                        <td class="text-center">
+                                            <i class="bi bi-dash-circle text-secondary mapping-status-icon"></i>
+                                        </td>
+                                        <td class="text-center">
+                                            <button class="btn btn-sm btn-outline-primary" title="Mapper cette colonne">
+                                                <i class="bi bi-plus-lg"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+
+                                    <!-- Ligne 5: Adresse - Mappé optionnel OK -->
+                                    <tr class="mapping-row-success">
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <i class="bi bi-grip-vertical text-secondary me-2"></i>
+                                                <div>
+                                                    <strong>Adresse postale</strong>
+                                                    <p class="small text-secondary mb-0">1,456 valeurs, 67 vides</p>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <select class="form-select" aria-label="Mapping pour Adresse postale">
+                                                <option value="">-- Sélectionner un champ --</option>
+                                                <option value="mail">mail (requis)</option>
+                                                <option value="nom">nom (requis)</option>
+                                                <option value="prenom">prénom (requis)</option>
+                                                <option value="telephone">téléphone</option>
+                                                <option value="adresse" selected>adresse</option>
+                                                <option value="code_postal">code_postal</option>
+                                                <option value="ville">ville</option>
+                                                <option value="pays">pays</option>
+                                            </select>
+                                        </td>
+                                        <td class="text-center">
+                                            <i class="bi bi-check-circle-fill text-success mapping-status-icon"></i>
+                                        </td>
+                                        <td class="text-center">
+                                            <button class="btn btn-sm btn-outline-secondary" title="Ignorer cette colonne">
+                                                <i class="bi bi-x-lg"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+
+                                    <!-- Ligne 6: Code postal - Mappé optionnel OK -->
+                                    <tr class="mapping-row-success">
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <i class="bi bi-grip-vertical text-secondary me-2"></i>
+                                                <div>
+                                                    <strong>CP</strong>
+                                                    <p class="small text-secondary mb-0">1,502 valeurs, 21 vides</p>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <select class="form-select" aria-label="Mapping pour CP">
+                                                <option value="">-- Sélectionner un champ --</option>
+                                                <option value="mail">mail (requis)</option>
+                                                <option value="nom">nom (requis)</option>
+                                                <option value="prenom">prénom (requis)</option>
+                                                <option value="telephone">téléphone</option>
+                                                <option value="adresse">adresse</option>
+                                                <option value="code_postal" selected>code_postal</option>
+                                                <option value="ville">ville</option>
+                                                <option value="pays">pays</option>
+                                            </select>
+                                        </td>
+                                        <td class="text-center">
+                                            <i class="bi bi-check-circle-fill text-success mapping-status-icon"></i>
+                                        </td>
+                                        <td class="text-center">
+                                            <button class="btn btn-sm btn-outline-secondary" title="Ignorer cette colonne">
+                                                <i class="bi bi-x-lg"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+
+                                    <!-- Ligne 7: Ville - Mappé optionnel OK -->
+                                    <tr class="mapping-row-success">
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <i class="bi bi-grip-vertical text-secondary me-2"></i>
+                                                <div>
+                                                    <strong>Ville</strong>
+                                                    <p class="small text-secondary mb-0">1,498 valeurs, 25 vides</p>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <select class="form-select" aria-label="Mapping pour Ville">
+                                                <option value="">-- Sélectionner un champ --</option>
+                                                <option value="mail">mail (requis)</option>
+                                                <option value="nom">nom (requis)</option>
+                                                <option value="prenom">prénom (requis)</option>
+                                                <option value="telephone">téléphone</option>
+                                                <option value="adresse">adresse</option>
+                                                <option value="code_postal">code_postal</option>
+                                                <option value="ville" selected>ville</option>
+                                                <option value="pays">pays</option>
+                                            </select>
+                                        </td>
+                                        <td class="text-center">
+                                            <i class="bi bi-check-circle-fill text-success mapping-status-icon"></i>
+                                        </td>
+                                        <td class="text-center">
+                                            <button class="btn btn-sm btn-outline-secondary" title="Ignorer cette colonne">
+                                                <i class="bi bi-x-lg"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+
+                                    <!-- Ligne 8: Pays - Mappé optionnel OK -->
+                                    <tr class="mapping-row-success">
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <i class="bi bi-grip-vertical text-secondary me-2"></i>
+                                                <div>
+                                                    <strong>Pays</strong>
+                                                    <p class="small text-secondary mb-0">1,523 valeurs</p>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <select class="form-select" aria-label="Mapping pour Pays">
+                                                <option value="">-- Sélectionner un champ --</option>
+                                                <option value="mail">mail (requis)</option>
+                                                <option value="nom">nom (requis)</option>
+                                                <option value="prenom">prénom (requis)</option>
+                                                <option value="telephone">téléphone</option>
+                                                <option value="adresse">adresse</option>
+                                                <option value="code_postal">code_postal</option>
+                                                <option value="ville">ville</option>
+                                                <option value="pays" selected>pays</option>
+                                            </select>
+                                        </td>
+                                        <td class="text-center">
+                                            <i class="bi bi-check-circle-fill text-success mapping-status-icon"></i>
+                                        </td>
+                                        <td class="text-center">
+                                            <button class="btn btn-sm btn-outline-secondary" title="Ignorer cette colonne">
+                                                <i class="bi bi-x-lg"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+
+                                    <!-- Ligne 9: Entreprise - Non mappé (optionnel) -->
+                                    <tr class="mapping-row-ignored">
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <i class="bi bi-grip-vertical text-secondary me-2"></i>
+                                                <div>
+                                                    <strong>Entreprise</strong>
+                                                    <p class="small text-secondary mb-0">1,234 valeurs, 289 vides</p>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <select class="form-select" aria-label="Mapping pour Entreprise">
+                                                <option value="" selected>-- Sélectionner un champ --</option>
+                                                <option value="mail">mail (requis)</option>
+                                                <option value="nom">nom (requis)</option>
+                                                <option value="prenom">prénom (requis)</option>
+                                                <option value="telephone">téléphone</option>
+                                                <option value="adresse">adresse</option>
+                                                <option value="code_postal">code_postal</option>
+                                                <option value="ville">ville</option>
+                                                <option value="pays">pays</option>
+                                            </select>
+                                        </td>
+                                        <td class="text-center">
+                                            <i class="bi bi-dash-circle text-secondary mapping-status-icon"></i>
+                                        </td>
+                                        <td class="text-center">
+                                            <button class="btn btn-sm btn-outline-secondary" title="Ignorer cette colonne">
+                                                <i class="bi bi-x-lg"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+
+                                    <!-- Ligne 10: Date inscription - Ignoré -->
+                                    <tr class="mapping-row-ignored">
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <i class="bi bi-grip-vertical text-secondary me-2"></i>
+                                                <div>
+                                                    <strong>Date inscription</strong>
+                                                    <p class="small text-secondary mb-0">1,523 valeurs</p>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <select class="form-select" disabled aria-label="Mapping pour Date inscription">
+                                                <option value="" selected>-- Ignoré --</option>
+                                            </select>
+                                        </td>
+                                        <td class="text-center">
+                                            <i class="bi bi-dash-circle text-secondary mapping-status-icon"></i>
+                                        </td>
+                                        <td class="text-center">
+                                            <button class="btn btn-sm btn-outline-primary" title="Mapper cette colonne">
+                                                <i class="bi bi-plus-lg"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+
+                                    <!-- Ligne 11: Source - Ignoré -->
+                                    <tr class="mapping-row-ignored">
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <i class="bi bi-grip-vertical text-secondary me-2"></i>
+                                                <div>
+                                                    <strong>Source</strong>
+                                                    <p class="small text-secondary mb-0">967 valeurs, 556 vides</p>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <select class="form-select" disabled aria-label="Mapping pour Source">
+                                                <option value="" selected>-- Ignoré --</option>
+                                            </select>
+                                        </td>
+                                        <td class="text-center">
+                                            <i class="bi bi-dash-circle text-secondary mapping-status-icon"></i>
+                                        </td>
+                                        <td class="text-center">
+                                            <button class="btn btn-sm btn-outline-primary" title="Mapper cette colonne">
+                                                <i class="bi bi-plus-lg"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+
+                                    <!-- Ligne 12: Remarques - Ignoré -->
+                                    <tr class="mapping-row-ignored">
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <i class="bi bi-grip-vertical text-secondary me-2"></i>
+                                                <div>
+                                                    <strong>Remarques</strong>
+                                                    <p class="small text-secondary mb-0">456 valeurs, 1067 vides</p>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <select class="form-select" disabled aria-label="Mapping pour Remarques">
+                                                <option value="" selected>-- Ignoré --</option>
+                                            </select>
+                                        </td>
+                                        <td class="text-center">
+                                            <i class="bi bi-dash-circle text-secondary mapping-status-icon"></i>
+                                        </td>
+                                        <td class="text-center">
+                                            <button class="btn btn-sm btn-outline-primary" title="Mapper cette colonne">
+                                                <i class="bi bi-plus-lg"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="small text-secondary">
+                            <i class="bi bi-info-circle me-1"></i>
+                            Utilisez la souris pour réordonner les lignes (icône grip)
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Speed Dial FAB - Actions -->
+                <div class="speed-dial-container">
+                    <!-- Action 1: Retour -->
+                    <div class="speed-dial-action">
+                        <span class="speed-dial-label">Retour : Suggestions</span>
+                        <a href="contact_upload_suggestions_dark-blue.html" class="speed-dial-btn speed-dial-cancel">
+                            <i class="bi bi-arrow-counterclockwise"></i>
+                        </a>
+                    </div>
+
+                    <!-- Action 2: Valider et continuer -->
+                    <div class="speed-dial-action">
+                        <span class="speed-dial-label">Valider et continuer</span>
+                        <a href="contact_upload_preview_dark-blue.html" class="speed-dial-btn speed-dial-primary">
+                            <i class="bi bi-check-circle"></i>
+                        </a>
+                    </div>
+
+                    <!-- Bouton principal -->
+                    <div class="speed-dial-btn speed-dial-main">
+                        <i class="bi bi-three-dots-vertical"></i>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- FAB Retour -->
+    <a href="../index.html" class="fab-back">
+        <i class="bi bi-arrow-left"></i>
+        <span class="fab-tooltip">Retour à l'index</span>
+    </a>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Design System JS -->
+    <script src="../assets/js/main.js" type="module"></script>
+</body>
+</html>

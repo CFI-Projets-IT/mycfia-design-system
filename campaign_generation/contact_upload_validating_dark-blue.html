@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Validation en cours - Upload de Contacts | myCFiA (Thème Sombre Bleu)</title>
+
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Design System myCFiA -->
+    <link rel="stylesheet" href="../assets/css/main.css">
+    <link rel="stylesheet" href="../assets/css/themes/dark-blue.css" id="theme-stylesheet">
+</head>
+<body>
+    <div class="app">
+        <!-- Sidebar -->
+        <aside class="sidebar d-flex flex-column">
+            <!-- Header -->
+            <div class="sidebar-header">
+                <button class="btn btn-link text-white-50 p-0" data-sidebar-toggle>
+                    <i class="bi bi-list fs-4"></i>
+                </button>
+                <button class="btn btn-link text-white-50 p-0" data-sidebar-toggle>
+                    <i class="bi bi-arrow-left-circle fs-5"></i>
+                </button>
+            </div>
+
+            <!-- Navigation -->
+            <nav class="flex-grow-1 overflow-auto px-3">
+                <!-- Marketing -->
+                <div class="nav-section mb-4">
+                    <div class="nav-section-title-pill mb-3">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-megaphone"></i>
+                            <span>Marketing</span>
+                        </div>
+                        <i class="bi bi-chevron-down"></i>
+                    </div>
+                    <div class="nav-section-content">
+                        <a href="step1_create_dark-blue.html" class="sidebar-link active">
+                            <i class="bi bi-plus-circle"></i>
+                            <span>Nouvelle campagne</span>
+                        </a>
+                        <a href="dashboard_dark-blue.html" class="sidebar-link">
+                            <i class="bi bi-grid"></i>
+                            <span>Mes campagnes</span>
+                        </a>
+                        <a href="analytics_dark-blue.html" class="sidebar-link">
+                            <i class="bi bi-bar-chart-line"></i>
+                            <span>Analytics</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Favoris -->
+                <div class="nav-section mb-4">
+                    <div class="nav-section-title-pill mb-3">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-star"></i>
+                            <span>Favoris</span>
+                        </div>
+                        <i class="bi bi-chevron-down"></i>
+                    </div>
+                    <div class="px-3 py-2 text-white-50 small">
+                        <span>Aucune campagne favorite</span>
+                    </div>
+                </div>
+
+                <!-- Historique -->
+                <div class="nav-section mb-4">
+                    <div class="nav-section-title-pill mb-3">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-clock-history"></i>
+                            <span>Historique</span>
+                        </div>
+                        <i class="bi bi-chevron-down"></i>
+                    </div>
+                </div>
+            </nav>
+
+            <!-- Footer -->
+            <div class="sidebar-footer">
+                <a href="../settings_index/settings_index_dark-blue.html" class="sidebar-link">
+                    <i class="bi bi-gear"></i>
+                    <span>Paramètres</span>
+                </a>
+                <a href="../profile/profile_dark-blue.html" class="sidebar-link">
+                    <i class="bi bi-person-circle"></i>
+                    <span>Mon compte</span>
+                </a>
+                <a href="#" class="sidebar-link">
+                    <i class="bi bi-box-arrow-right"></i>
+                    <span>Quitter</span>
+                </a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main">
+            <!-- Header -->
+            <header class="header">
+                <div class="header-content">
+                    <!-- Logo -->
+                    <a href="../index.html" class="step1-header-logo-link">
+                        <img src="../images/logo_picto.svg" alt="CFI" class="header-logo-picto">
+                        <img src="../images/logo.svg" alt="myCFiA" class="header-logo">
+                    </a>
+
+                    <!-- Actions -->
+                    <div class="step1-header-buttons">
+                        <button class="btn btn-glass header-btn step1-header-btn-primary">
+                            <i class="bi bi-building"></i>
+                            <span class="header-btn-text">Ma Division</span>
+                        </button>
+                        <button class="btn btn-glass-primary header-btn">
+                            <i class="bi bi-moon-stars-fill"></i>
+                            <span class="header-btn-text">Sombre Bleu</span>
+                        </button>
+                        <a href="#" class="btn btn-glass header-btn step1-header-link">
+                            <i class="bi bi-arrow-left-circle"></i>
+                            <span class="header-btn-text">Retour CFI</span>
+                        </a>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Content -->
+            <div class="content step1-content">
+                <!-- Breadcrumb -->
+                <nav aria-label="breadcrumb" class="step1-breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="dashboard_dark-blue.html" class="step1-breadcrumb-link">Campagnes Marketing</a></li>
+                        <li class="breadcrumb-item"><a href="step1_create_dark-blue.html" class="step1-breadcrumb-link">Nouvelle campagne</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Upload de contacts</li>
+                    </ol>
+                </nav>
+
+                <!-- Stepper -->
+                <div class="campaign-stepper">
+                    <div class="stepper-container">
+                        <div class="stepper-line">
+                            <div class="stepper-progress contact-upload-stepper-progress"></div>
+                        </div>
+
+                        <div class="stepper-step completed">
+                            <div class="stepper-circle">
+                                <i class="bi bi-check-lg"></i>
+                            </div>
+                            <div class="stepper-label">Projet</div>
+                        </div>
+
+                        <div class="stepper-step active">
+                            <div class="stepper-circle">2</div>
+                            <div class="stepper-label">Upload Contacts</div>
+                        </div>
+
+                        <div class="stepper-step">
+                            <div class="stepper-circle">3</div>
+                            <div class="stepper-label">Personas</div>
+                        </div>
+
+                        <div class="stepper-step">
+                            <div class="stepper-circle">4</div>
+                            <div class="stepper-label">Concurrents</div>
+                        </div>
+
+                        <div class="stepper-step">
+                            <div class="stepper-circle">5</div>
+                            <div class="stepper-label">Stratégie</div>
+                        </div>
+
+                        <div class="stepper-step">
+                            <div class="stepper-circle">6</div>
+                            <div class="stepper-label">Assets</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Preview Mode Banner -->
+                <div class="alert alert-warning border-start border-warning border-4 mb-4">
+                    <div class="d-flex align-items-center mb-3">
+                        <i class="bi bi-eye-fill fs-4 me-2 text-warning"></i>
+                        <h5 class="mb-0">MODE PREVIEW - Workflow Upload &amp; Mapping Contacts</h5>
+                    </div>
+
+                    <div class="mb-3">
+                        <p class="mb-2">
+                            <i class="bi bi-envelope-fill text-primary me-1"></i>
+                            <strong>Cette étape OPTIONNELLE concerne uniquement les campagnes avec assets SMS, Email ou Courrier.</strong>
+                        </p>
+                    </div>
+
+                    <div class="mb-3">
+                        <h6 class="mb-2">
+                            <i class="bi bi-shield-check text-primary me-1"></i>
+                            Étape 1/2 : Validation de la qualité des données
+                        </h6>
+                        <ul class="small mb-0">
+                            <li>Vérification des formats d'emails (RFC 5322)</li>
+                            <li>Validation des champs requis (aucune valeur vide)</li>
+                            <li>Contrôle de la cohérence des données (formats téléphone, dates, etc.)</li>
+                            <li>Détection des doublons et anomalies</li>
+                        </ul>
+                    </div>
+
+                    <div class="mb-3">
+                        <h6 class="mb-2">
+                            <i class="bi bi-diagram-3 text-primary me-1"></i>
+                            Workflow complet (7 états) :
+                        </h6>
+                        <div class="d-flex flex-wrap gap-2 align-items-center">
+                            <a href="contact_upload_empty_dark-blue.html" class="badge bg-secondary text-decoration-none fs-6 py-2 px-3">1. Upload</a>
+                            <i class="bi bi-arrow-right text-secondary"></i>
+                            <a href="contact_upload_validating_dark-blue.html" class="badge bg-primary text-decoration-none fs-6 py-2 px-3">2. Validation</a>
+                            <i class="bi bi-arrow-right text-secondary"></i>
+                            <a href="contact_upload_errors_dark-blue.html" class="badge bg-warning text-dark text-decoration-none fs-6 py-2 px-3 opacity-75">[Erreurs]</a>
+                            <i class="bi bi-arrow-right text-secondary"></i>
+                            <a href="contact_upload_analyzing_dark-blue.html" class="badge bg-secondary text-decoration-none fs-6 py-2 px-3">3. Analyse</a>
+                            <i class="bi bi-arrow-right text-secondary"></i>
+                            <a href="contact_upload_suggestions_dark-blue.html" class="badge bg-secondary text-decoration-none fs-6 py-2 px-3">4. Suggestions</a>
+                            <i class="bi bi-arrow-right text-secondary"></i>
+                            <a href="contact_upload_mapping_dark-blue.html" class="badge bg-secondary text-decoration-none fs-6 py-2 px-3">5. Mapping</a>
+                            <i class="bi bi-arrow-right text-secondary"></i>
+                            <a href="contact_upload_preview_dark-blue.html" class="badge bg-secondary text-decoration-none fs-6 py-2 px-3">6. Preview</a>
+                        </div>
+                    </div>
+
+                    <div class="mb-0">
+                        <p class="small mb-2">
+                            <i class="bi bi-exclamation-triangle text-warning me-1"></i>
+                            <strong>Si des erreurs sont détectées</strong> lors de la validation, vous serez redirigé vers une page d'erreurs détaillées avec un rapport téléchargeable. Vous devrez corriger votre fichier source avant de continuer.
+                        </p>
+                        <p class="small text-secondary mb-0">
+                            <i class="bi bi-gear me-1"></i>
+                            <strong>En production :</strong> la validation s'effectue automatiquement après l'upload du fichier CSV/Excel.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Page Title -->
+                <div class="mb-4">
+                    <h1 class="h3 mb-2">
+                        <i class="bi bi-shield-check text-success me-2"></i>
+                        Validation de votre fichier en cours
+                    </h1>
+                    <p class="text-secondary">
+                        Vérification de la qualité des données avant le mapping automatique
+                    </p>
+                </div>
+
+                <!-- 2-Column Layout -->
+                <div class="row g-4">
+                    <!-- Left Column: Campaign Information (40%) -->
+                    <div class="col-md-5">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h5 class="mb-4">
+                                    <i class="bi bi-briefcase text-primary"></i>
+                                    Campagne en cours
+                                </h5>
+
+                                <div class="mb-3">
+                                    <label class="form-label small text-secondary">Nom de la campagne</label>
+                                    <p class="mb-0"><strong>Lancement Produit Q1 2025</strong></p>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label small text-secondary">Secteur d'activité</label>
+                                    <p class="mb-0">Formation professionnelle</p>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label small text-secondary">Objectif marketing</label>
+                                    <p class="mb-0">Générer des leads qualifiés pour formations finance/comptabilité</p>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label small text-secondary">Budget total</label>
+                                    <p class="mb-0"><strong>50 000€</strong></p>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label small text-secondary">Durée de la campagne</label>
+                                    <p class="mb-0">3 mois (Q1 2025)</p>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label small text-secondary">Canaux marketing</label>
+                                    <div class="d-flex flex-wrap gap-2 mt-2">
+                                        <span class="badge bg-primary">Linkedin</span>
+                                        <span class="badge bg-primary">GoogleAds</span>
+                                        <span class="badge bg-primary">Email</span>
+                                        <span class="badge bg-primary">Courrier</span>
+                                    </div>
+                                </div>
+
+                                <div class="mb-0">
+                                    <label class="form-label small text-secondary">URL analysée</label>
+                                    <p class="mb-0">
+                                        <a href="https://www.cfi-groupe.fr" target="_blank" class="text-primary text-decoration-none">
+                                            <i class="bi bi-link-45deg"></i> www.cfi-groupe.fr
+                                        </a>
+                                    </p>
+                                </div>
+
+                                <div class="alert alert-success mt-4 mb-0 p-3">
+                                    <small>
+                                        <i class="bi bi-shield-check"></i>
+                                        <strong>Validation automatique</strong><br>
+                                        L'IA vérifie la qualité de vos données pour garantir un mapping fiable et éviter les erreurs d'envoi.
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Column: Loader & Progress (60%) -->
+                    <div class="col-md-7">
+                        <!-- File Info Card -->
+                        <div class="card shadow-sm mb-4">
+                            <div class="card-body">
+                                <div class="d-flex align-items-center justify-content-between">
+                                    <div class="d-flex align-items-center">
+                                        <div class="upload-info-icon-wrapper me-3">
+                                            <i class="bi bi-file-earmark-spreadsheet upload-info-icon"></i>
+                                        </div>
+                                        <div>
+                                            <h5 class="mb-1">contacts_entreprise.csv</h5>
+                                            <div class="d-flex gap-3 small text-secondary">
+                                                <span><i class="bi bi-hdd me-1"></i>2.4 MB</span>
+                                                <span><i class="bi bi-list-ol me-1"></i>1,523 lignes</span>
+                                                <span><i class="bi bi-grid-3x3 me-1"></i>12 colonnes</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button class="btn btn-sm btn-outline-danger">
+                                        <i class="bi bi-x-lg me-1"></i>
+                                        Annuler
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Loader Container -->
+                        <div class="loader-container mb-4">
+                            <div class="ai-animation">
+                                <div class="ai-icon-ring"></div>
+                                <div class="ai-icon-ring"></div>
+                                <div class="ai-icon-main">
+                                    <i class="bi bi-shield-check"></i>
+                                </div>
+                            </div>
+                            <h4 class="loader-title">Validation en cours...</h4>
+                            <p class="loader-subtitle text-secondary">Vérification de la qualité et de la cohérence des données</p>
+
+                            <!-- Progress Bar -->
+                            <div class="progress-wrapper">
+                                <div class="progress">
+                                    <div class="progress-bar"></div>
+                                </div>
+                                <div class="progress-text">0% complété</div>
+                            </div>
+                        </div>
+
+                        <!-- Progress Steps -->
+                        <div class="card shadow-sm">
+                            <div class="card-body">
+                                <h5 class="mb-4">
+                                    <i class="bi bi-list-check me-2"></i>
+                                    Progression de la validation
+                                </h5>
+
+                                <ul class="list-unstyled">
+                                    <li class="d-flex align-items-center mb-3 pb-3 border-bottom">
+                                        <i class="bi bi-check-circle-fill text-success me-3"></i>
+                                        <div class="flex-grow-1">
+                                            <strong>Validation du format de fichier</strong>
+                                            <p class="small text-secondary mb-0">Structure CSV conforme et encodage UTF-8 vérifié</p>
+                                        </div>
+                                        <span class="badge bg-success">Terminé</span>
+                                    </li>
+
+                                    <li class="d-flex align-items-center mb-3 pb-3 border-bottom">
+                                        <div class="spinner-border spinner-border-sm text-primary me-3" role="status">
+                                            <span class="visually-hidden">Chargement...</span>
+                                        </div>
+                                        <div class="flex-grow-1">
+                                            <strong>Vérification des emails</strong>
+                                            <p class="small text-secondary mb-0">Validation du format et de la syntaxe des adresses email...</p>
+                                        </div>
+                                        <span class="badge bg-primary">En cours</span>
+                                    </li>
+
+                                    <li class="d-flex align-items-center mb-3 pb-3 border-bottom">
+                                        <i class="bi bi-circle text-secondary me-3"></i>
+                                        <div class="flex-grow-1">
+                                            <strong>Contrôle des champs requis</strong>
+                                            <p class="small text-secondary mb-0">Vérification que les champs essentiels ne sont pas vides</p>
+                                        </div>
+                                        <span class="badge bg-secondary">En attente</span>
+                                    </li>
+
+                                    <li class="d-flex align-items-center">
+                                        <i class="bi bi-circle text-secondary me-3"></i>
+                                        <div class="flex-grow-1">
+                                            <strong>Validation des formats de données</strong>
+                                            <p class="small text-secondary mb-0">Contrôle téléphones, dates, codes postaux, etc.</p>
+                                        </div>
+                                        <span class="badge bg-secondary">En attente</span>
+                                    </li>
+                                </ul>
+
+                                <div class="alert alert-info mt-4 mb-0 p-3">
+                                    <small>
+                                        <i class="bi bi-info-circle"></i>
+                                        <strong>Prochaine étape :</strong> Si la validation réussit, l'IA analysera automatiquement vos colonnes pour proposer un mapping intelligent.
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- FAB Retour -->
+    <a href="../index.html" class="fab-back">
+        <i class="bi bi-arrow-left"></i>
+        <span class="fab-tooltip">Retour à l'index</span>
+    </a>
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Design System JS -->
+    <script src="../assets/js/main.js" type="module"></script>
+</body>
+</html>

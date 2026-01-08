@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Erreurs de Validation - Upload de Contacts | myCFiA</title>
+
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Design System myCFiA -->
+    <link rel="stylesheet" href="../assets/css/main.css">
+    <link rel="stylesheet" href="../assets/css/themes/light.css" id="theme-stylesheet">
+    <link rel="stylesheet" href="../assets/css/components/_step1-create.css">
+</head>
+<body>
+    <div class="app">
+        <!-- Sidebar -->
+        <aside class="sidebar d-flex flex-column">
+            <!-- Header -->
+            <div class="sidebar-header">
+                <button class="btn btn-link text-white-50 p-0" data-sidebar-toggle>
+                    <i class="bi bi-list fs-4"></i>
+                </button>
+                <button class="btn btn-link text-white-50 p-0" data-sidebar-toggle>
+                    <i class="bi bi-arrow-left-circle fs-5"></i>
+                </button>
+            </div>
+
+            <!-- Navigation -->
+            <nav class="flex-grow-1 overflow-auto px-3">
+                <!-- Marketing -->
+                <div class="nav-section mb-4">
+                    <div class="nav-section-title-pill mb-3">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-megaphone"></i>
+                            <span>Marketing</span>
+                        </div>
+                        <i class="bi bi-chevron-down"></i>
+                    </div>
+                    <div class="nav-section-content">
+                        <a href="step1_create_light.html" class="sidebar-link active">
+                            <i class="bi bi-plus-circle"></i>
+                            <span>Nouvelle campagne</span>
+                        </a>
+                        <a href="dashboard_light.html" class="sidebar-link">
+                            <i class="bi bi-grid"></i>
+                            <span>Mes campagnes</span>
+                        </a>
+                        <a href="analytics_light.html" class="sidebar-link">
+                            <i class="bi bi-bar-chart-line"></i>
+                            <span>Analytics</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Favoris -->
+                <div class="nav-section mb-4">
+                    <div class="nav-section-title-pill mb-3">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-star"></i>
+                            <span>Favoris</span>
+                        </div>
+                        <i class="bi bi-chevron-down"></i>
+                    </div>
+                    <div class="px-3 py-2 text-white-50 small">
+                        <span>Aucune campagne favorite</span>
+                    </div>
+                </div>
+
+                <!-- Historique -->
+                <div class="nav-section mb-4">
+                    <div class="nav-section-title-pill mb-3">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-clock-history"></i>
+                            <span>Historique</span>
+                        </div>
+                        <i class="bi bi-chevron-down"></i>
+                    </div>
+                </div>
+            </nav>
+
+            <!-- Footer -->
+            <div class="sidebar-footer">
+                <a href="../settings_index/settings_index_light.html" class="sidebar-link">
+                    <i class="bi bi-gear"></i>
+                    <span>Paramètres</span>
+                </a>
+                <a href="../profile/profile_light.html" class="sidebar-link">
+                    <i class="bi bi-person-circle"></i>
+                    <span>Mon compte</span>
+                </a>
+                <a href="#" class="sidebar-link">
+                    <i class="bi bi-box-arrow-right"></i>
+                    <span>Quitter</span>
+                </a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main">
+            <!-- Header -->
+            <header class="header">
+                <div class="header-content">
+                    <!-- Logo -->
+                    <a href="../index.html" class="step1-header-logo-link">
+                        <img src="../images/logo_picto.svg" alt="CFI" class="header-logo-picto">
+                        <img src="../images/logo.svg" alt="myCFiA" class="header-logo">
+                    </a>
+
+                    <!-- Actions -->
+                    <div class="step1-header-buttons">
+                        <button class="btn btn-glass header-btn step1-header-btn-primary">
+                            <i class="bi bi-building"></i>
+                            <span class="header-btn-text">Ma Division</span>
+                        </button>
+                        <button class="btn btn-glass-primary header-btn">
+                            <i class="bi bi-sun-fill"></i>
+                            <span class="header-btn-text">Clair</span>
+                        </button>
+                        <a href="#" class="btn btn-glass header-btn step1-header-link">
+                            <i class="bi bi-arrow-left-circle"></i>
+                            <span class="header-btn-text">Retour CFI</span>
+                        </a>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Content -->
+            <div class="content step1-content">
+                <!-- Breadcrumb -->
+                <nav aria-label="breadcrumb" class="step1-breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="dashboard_light.html" class="step1-breadcrumb-link">Campagnes Marketing</a></li>
+                        <li class="breadcrumb-item"><a href="step1_create_light.html" class="step1-breadcrumb-link">Nouvelle campagne</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Erreurs de validation</li>
+                    </ol>
+                </nav>
+
+                <!-- Stepper -->
+                <div class="campaign-stepper">
+                    <div class="stepper-container">
+                        <div class="stepper-line">
+                            <div class="stepper-progress contact-upload-stepper-progress"></div>
+                        </div>
+
+                        <div class="stepper-step completed">
+                            <div class="stepper-circle">
+                                <i class="bi bi-check-lg"></i>
+                            </div>
+                            <div class="stepper-label">Projet</div>
+                        </div>
+
+                        <div class="stepper-step active">
+                            <div class="stepper-circle">2</div>
+                            <div class="stepper-label">Upload Contacts</div>
+                        </div>
+
+                        <div class="stepper-step">
+                            <div class="stepper-circle">3</div>
+                            <div class="stepper-label">Personas</div>
+                        </div>
+
+                        <div class="stepper-step">
+                            <div class="stepper-circle">4</div>
+                            <div class="stepper-label">Concurrents</div>
+                        </div>
+
+                        <div class="stepper-step">
+                            <div class="stepper-circle">5</div>
+                            <div class="stepper-label">Stratégie</div>
+                        </div>
+
+                        <div class="stepper-step">
+                            <div class="stepper-circle">6</div>
+                            <div class="stepper-label">Assets</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Preview Mode Banner -->
+                <div class="alert alert-warning border-start border-warning border-4 mb-4">
+                    <div class="d-flex align-items-center mb-3">
+                        <i class="bi bi-exclamation-triangle-fill fs-4 me-2 text-warning"></i>
+                        <h5 class="mb-0">VALIDATION BLOQUÉE - Erreurs détectées dans votre fichier</h5>
+                    </div>
+
+                    <div class="mb-3">
+                        <p class="mb-2">
+                            <i class="bi bi-shield-x text-warning me-1"></i>
+                            <strong>La validation de votre fichier a échoué.</strong> Des erreurs critiques empêchent la poursuite du workflow de mapping.
+                        </p>
+                    </div>
+
+                    <div class="mb-3">
+                        <h6 class="mb-2">
+                            <i class="bi bi-diagram-3 text-primary me-1"></i>
+                            Workflow bloqué - États suivants inaccessibles :
+                        </h6>
+                        <div class="d-flex flex-wrap gap-2 align-items-center">
+                            <a href="contact_upload_empty_light.html" class="badge bg-secondary text-decoration-none fs-6 py-2 px-3">1. Upload</a>
+                            <i class="bi bi-arrow-right text-secondary"></i>
+                            <span class="badge bg-warning text-dark text-decoration-none fs-6 py-2 px-3">2. Validation ❌</span>
+                            <i class="bi bi-arrow-right text-secondary"></i>
+                            <span class="badge bg-warning text-dark text-decoration-none fs-6 py-2 px-3">ERREURS (actuel)</span>
+                            <i class="bi bi-arrow-right text-secondary"></i>
+                            <span class="badge bg-secondary text-decoration-none fs-6 py-2 px-3 opacity-50" title="Bloqué - Corrigez les erreurs d'abord">3. Analyse 🔒</span>
+                            <i class="bi bi-arrow-right text-secondary"></i>
+                            <span class="badge bg-secondary text-decoration-none fs-6 py-2 px-3 opacity-50" title="Bloqué - Corrigez les erreurs d'abord">4. Suggestions 🔒</span>
+                            <i class="bi bi-arrow-right text-secondary"></i>
+                            <span class="badge bg-secondary text-decoration-none fs-6 py-2 px-3 opacity-50" title="Bloqué - Corrigez les erreurs d'abord">5. Mapping 🔒</span>
+                            <i class="bi bi-arrow-right text-secondary"></i>
+                            <span class="badge bg-secondary text-decoration-none fs-6 py-2 px-3 opacity-50" title="Bloqué - Corrigez les erreurs d'abord">6. Preview 🔒</span>
+                        </div>
+                    </div>
+
+                    <div class="mb-0">
+                        <p class="small mb-0">
+                            <i class="bi bi-info-circle text-warning me-1"></i>
+                            <strong>Actions requises :</strong> Téléchargez le rapport d'erreurs détaillé, corrigez votre fichier source, puis réessayez l'upload.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Page Title -->
+                <div class="mb-4">
+                    <h1 class="h3 mb-2">
+                        <i class="bi bi-exclamation-triangle-fill text-warning me-2"></i>
+                        Erreurs de Validation Détectées
+                    </h1>
+                    <p class="text-secondary">
+                        Des erreurs critiques ont été détectées lors de la validation de votre fichier de contacts
+                    </p>
+                </div>
+
+                <!-- Alert Critique -->
+                <div class="alert alert-warning border-warning mb-4" role="alert">
+                    <div class="d-flex align-items-start">
+                        <i class="bi bi-exclamation-octagon-fill me-3 fs-1"></i>
+                        <div>
+                            <h4 class="alert-heading mb-2">15 erreurs critiques empêchent la poursuite du workflow</h4>
+                            <p class="mb-0">
+                                Vous devez corriger ces erreurs avant de pouvoir continuer vers l'étape de mapping.
+                                Téléchargez le rapport détaillé ci-dessous pour identifier et corriger chaque problème.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Cards Résumé Erreurs -->
+                <div class="row g-3 mb-4">
+                    <div class="col-md-4">
+                        <div class="card border-warning h-100">
+                            <div class="card-body text-center">
+                                <i class="bi bi-envelope-x text-warning mb-2 fs-1"></i>
+                                <div class="display-6 text-warning mb-2">8</div>
+                                <h6 class="text-secondary mb-0">Emails invalides</h6>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card border-warning h-100">
+                            <div class="card-body text-center">
+                                <i class="bi bi-person-x text-warning mb-2 fs-1"></i>
+                                <div class="display-6 text-warning mb-2">5</div>
+                                <h6 class="text-secondary mb-0">Champs requis manquants</h6>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card border-warning h-100">
+                            <div class="card-body text-center">
+                                <i class="bi bi-file-earmark-excel text-warning mb-2 fs-1"></i>
+                                <div class="display-6 text-warning mb-2">2</div>
+                                <h6 class="text-secondary mb-0">Erreurs de format</h6>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Liste Détaillée des Erreurs -->
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            <i class="bi bi-list-ul me-2"></i>
+                            Détail des erreurs par type
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <!-- Erreur type 1: Emails invalides -->
+                        <div class="mb-4 pb-4 border-bottom">
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="rounded-circle p-2 me-3 bg-warning bg-opacity-10">
+                                    <i class="bi bi-envelope-x text-warning fs-4"></i>
+                                </div>
+                                <div>
+                                    <h6 class="mb-1">Emails invalides</h6>
+                                    <p class="small text-secondary mb-0">8 lignes concernées - <strong>Champ requis</strong></p>
+                                </div>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table table-sm mb-0">
+                                    <thead>
+                                        <tr>
+                                            <th>Ligne</th>
+                                            <th>Valeur trouvée</th>
+                                            <th>Problème</th>
+                                            <th>Solution suggérée</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>12</td>
+                                            <td><code>marie.invalide</code></td>
+                                            <td>Format email incorrect</td>
+                                            <td>Ajouter @domaine.com</td>
+                                        </tr>
+                                        <tr>
+                                            <td>45</td>
+                                            <td><code>paul@</code></td>
+                                            <td>Domaine manquant</td>
+                                            <td>Compléter avec domaine.com</td>
+                                        </tr>
+                                        <tr>
+                                            <td>78</td>
+                                            <td><code>julie.test</code></td>
+                                            <td>Format email incorrect</td>
+                                            <td>Ajouter @domaine.com</td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="4" class="text-center text-secondary small">
+                                                <i class="bi bi-three-dots"></i>
+                                                5 autres erreurs similaires
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Erreur type 2: Champs requis manquants -->
+                        <div class="mb-4 pb-4 border-bottom">
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="rounded-circle p-2 me-3 bg-warning bg-opacity-10">
+                                    <i class="bi bi-person-x text-warning fs-4"></i>
+                                </div>
+                                <div>
+                                    <h6 class="mb-1">Champs requis manquants</h6>
+                                    <p class="small text-secondary mb-0">5 lignes concernées - <strong>Nom ou Prénom vide</strong></p>
+                                </div>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table table-sm mb-0">
+                                    <thead>
+                                        <tr>
+                                            <th>Ligne</th>
+                                            <th>Email</th>
+                                            <th>Champ manquant</th>
+                                            <th>Solution suggérée</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>23</td>
+                                            <td>contact@example.com</td>
+                                            <td><strong>Nom</strong></td>
+                                            <td>Compléter le champ requis</td>
+                                        </tr>
+                                        <tr>
+                                            <td>56</td>
+                                            <td>info@test.com</td>
+                                            <td><strong>Prénom</strong></td>
+                                            <td>Compléter le champ requis</td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="4" class="text-center text-secondary small">
+                                                <i class="bi bi-three-dots"></i>
+                                                3 autres erreurs similaires
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Erreur type 3: Format de données incorrect -->
+                        <div>
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="rounded-circle p-2 me-3 bg-warning bg-opacity-10">
+                                    <i class="bi bi-file-earmark-excel text-warning fs-4"></i>
+                                </div>
+                                <div>
+                                    <h6 class="mb-1">Erreurs de format de données</h6>
+                                    <p class="small text-secondary mb-0">2 lignes concernées - <strong>Encodage ou caractères spéciaux</strong></p>
+                                </div>
+                            </div>
+                            <div class="alert alert-warning" role="alert">
+                                <i class="bi bi-info-circle me-2"></i>
+                                <small>
+                                    Le fichier contient des caractères spéciaux non supportés.
+                                    Assurez-vous d'utiliser l'encodage <strong>UTF-8</strong> lors de l'export CSV.
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Actions Recommandées -->
+                <div class="card border-primary shadow-sm">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0">
+                            <i class="bi bi-clipboard-check me-2"></i>
+                            Actions recommandées
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <ol class="mb-0">
+                            <li class="mb-3">
+                                <strong>Télécharger le rapport d'erreurs détaillé</strong>
+                                <p class="small text-secondary mb-2">Un fichier CSV contenant toutes les lignes en erreur avec les détails</p>
+                                <button class="btn btn-sm btn-outline-primary">
+                                    <i class="bi bi-download me-1"></i>
+                                    Télécharger rapport_erreurs.csv
+                                </button>
+                            </li>
+                            <li class="mb-3">
+                                <strong>Corriger votre fichier source</strong>
+                                <p class="small text-secondary mb-0">Utilisez le rapport pour identifier et corriger les erreurs dans votre fichier original</p>
+                            </li>
+                            <li class="mb-0">
+                                <strong>Réuploader le fichier corrigé</strong>
+                                <p class="small text-secondary mb-0">Une fois les corrections effectuées, réessayez l'upload</p>
+                            </li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- FAB Retour -->
+    <a href="../index.html" class="fab-back">
+        <i class="bi bi-arrow-left"></i>
+        <span class="fab-tooltip">Retour à l'index</span>
+    </a>
+
+    <!-- Speed Dial FAB -->
+    <div class="speed-dial-container">
+        <div class="speed-dial-action">
+            <span class="speed-dial-label">Télécharger rapport détaillé</span>
+            <button class="speed-dial-btn speed-dial-primary">
+                <i class="bi bi-download"></i>
+            </button>
+        </div>
+
+        <div class="speed-dial-action">
+            <span class="speed-dial-label">Corriger fichier et réessayer</span>
+            <a href="contact_upload_empty_light.html" class="speed-dial-btn speed-dial-cancel">
+                <i class="bi bi-arrow-counterclockwise"></i>
+            </a>
+        </div>
+
+        <div class="speed-dial-btn speed-dial-main">
+            <i class="bi bi-three-dots-vertical"></i>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Design System JS -->
+    <script src="../assets/js/main.js" type="module"></script>
+</body>
+</html>

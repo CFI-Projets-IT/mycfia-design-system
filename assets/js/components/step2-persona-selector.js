@@ -4,6 +4,30 @@
  */
 
 /**
+ * Detecte le suffixe de theme depuis l'URL actuelle
+ * @returns {string} Le suffixe de theme (_light, _dark-blue, _dark-red)
+ */
+function getThemeSuffix() {
+    const path = window.location.pathname;
+    if (path.includes('_dark-blue')) {
+        return '_dark-blue';
+    } else if (path.includes('_dark-red')) {
+        return '_dark-red';
+    }
+    return '_light';
+}
+
+/**
+ * Adapte une URL de base au theme actuel
+ * @param {string} baseUrl - URL avec suffixe _light par defaut
+ * @returns {string} URL adaptee au theme actuel
+ */
+function adaptUrlToTheme(baseUrl) {
+    const themeSuffix = getThemeSuffix();
+    return baseUrl.replace('_light.html', `${themeSuffix}.html`);
+}
+
+/**
  * Toggle la sélection d'une persona card
  * @param {HTMLElement} card - L'élément persona-card cliqué
  */
@@ -55,7 +79,7 @@ function validatePersonas() {
     console.log(`[persona-selector] Validation de ${selectedPersonas.length} persona(s)`);
 
     // Redirection vers l'étape suivante
-    window.location.href = 'step3_loading.html';
+    window.location.href = adaptUrlToTheme('step3_loading_light.html');
 }
 
 /**

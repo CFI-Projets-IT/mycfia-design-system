@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prévisualisation des Données - Upload de Contacts | myCFiA (Thème Sombre Bleu)</title>
+
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Design System myCFiA -->
+    <link rel="stylesheet" href="../assets/css/main.css">
+    <link rel="stylesheet" href="../assets/css/themes/dark-blue.css" id="theme-stylesheet">
+</head>
+<body>
+    <div class="app">
+        <!-- Sidebar -->
+        <aside class="sidebar d-flex flex-column">
+            <!-- Header -->
+            <div class="sidebar-header">
+                <button class="btn btn-link text-white-50 p-0" data-sidebar-toggle>
+                    <i class="bi bi-list fs-4"></i>
+                </button>
+                <button class="btn btn-link text-white-50 p-0" data-sidebar-toggle>
+                    <i class="bi bi-arrow-left-circle fs-5"></i>
+                </button>
+            </div>
+
+            <!-- Navigation -->
+            <nav class="flex-grow-1 overflow-auto px-3">
+                <!-- Marketing -->
+                <div class="nav-section mb-4">
+                    <div class="nav-section-title-pill mb-3">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-megaphone"></i>
+                            <span>Marketing</span>
+                        </div>
+                        <i class="bi bi-chevron-down"></i>
+                    </div>
+                    <div class="nav-section-content">
+                        <a href="step1_create_dark-blue.html" class="sidebar-link active">
+                            <i class="bi bi-plus-circle"></i>
+                            <span>Nouvelle campagne</span>
+                        </a>
+                        <a href="dashboard_dark-blue.html" class="sidebar-link">
+                            <i class="bi bi-grid"></i>
+                            <span>Mes campagnes</span>
+                        </a>
+                        <a href="analytics_dark-blue.html" class="sidebar-link">
+                            <i class="bi bi-bar-chart-line"></i>
+                            <span>Analytics</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Favoris -->
+                <div class="nav-section mb-4">
+                    <div class="nav-section-title-pill mb-3">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-star"></i>
+                            <span>Favoris</span>
+                        </div>
+                        <i class="bi bi-chevron-down"></i>
+                    </div>
+                    <div class="px-3 py-2 text-white-50 small">
+                        <span>Aucune campagne favorite</span>
+                    </div>
+                </div>
+
+                <!-- Historique -->
+                <div class="nav-section mb-4">
+                    <div class="nav-section-title-pill mb-3">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-clock-history"></i>
+                            <span>Historique</span>
+                        </div>
+                        <i class="bi bi-chevron-down"></i>
+                    </div>
+                </div>
+            </nav>
+
+            <!-- Footer -->
+            <div class="sidebar-footer">
+                <a href="../settings_index/settings_index_dark-blue.html" class="sidebar-link">
+                    <i class="bi bi-gear"></i>
+                    <span>Paramètres</span>
+                </a>
+                <a href="../profile/profile_dark-blue.html" class="sidebar-link">
+                    <i class="bi bi-person-circle"></i>
+                    <span>Mon compte</span>
+                </a>
+                <a href="#" class="sidebar-link">
+                    <i class="bi bi-box-arrow-right"></i>
+                    <span>Quitter</span>
+                </a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main">
+            <!-- Header -->
+            <header class="header">
+                <div class="header-content">
+                    <!-- Logo -->
+                    <a href="../index.html" class="step1-header-logo-link">
+                        <img src="../images/logo_picto.svg" alt="CFI" class="header-logo-picto">
+                        <img src="../images/logo.svg" alt="myCFiA" class="header-logo">
+                    </a>
+
+                    <!-- Actions -->
+                    <div class="step1-header-buttons">
+                        <button class="btn btn-glass header-btn step1-header-btn-primary">
+                            <i class="bi bi-building"></i>
+                            <span class="header-btn-text">Ma Division</span>
+                        </button>
+                        <button class="btn btn-glass-primary header-btn">
+                            <i class="bi bi-moon-stars-fill"></i>
+                            <span class="header-btn-text">Sombre Bleu</span>
+                        </button>
+                        <a href="#" class="btn btn-glass header-btn step1-header-link">
+                            <i class="bi bi-arrow-left-circle"></i>
+                            <span class="header-btn-text">Retour CFI</span>
+                        </a>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Content -->
+            <div class="content step1-content">
+                <!-- Breadcrumb -->
+                <nav aria-label="breadcrumb" class="step1-breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="dashboard_dark-blue.html" class="step1-breadcrumb-link">Campagnes Marketing</a></li>
+                        <li class="breadcrumb-item"><a href="step1_create_dark-blue.html" class="step1-breadcrumb-link">Nouvelle campagne</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Upload de contacts</li>
+                    </ol>
+                </nav>
+
+                <!-- Stepper -->
+                <div class="campaign-stepper">
+                    <div class="stepper-container">
+                        <div class="stepper-line">
+                            <div class="stepper-progress contact-upload-stepper-progress"></div>
+                        </div>
+
+                        <div class="stepper-step completed">
+                            <div class="stepper-circle">
+                                <i class="bi bi-check-lg"></i>
+                            </div>
+                            <div class="stepper-label">Projet</div>
+                        </div>
+
+                        <div class="stepper-step active">
+                            <div class="stepper-circle">2</div>
+                            <div class="stepper-label">Upload Contacts</div>
+                        </div>
+
+                        <div class="stepper-step">
+                            <div class="stepper-circle">3</div>
+                            <div class="stepper-label">Personas</div>
+                        </div>
+
+                        <div class="stepper-step">
+                            <div class="stepper-circle">4</div>
+                            <div class="stepper-label">Concurrents</div>
+                        </div>
+
+                        <div class="stepper-step">
+                            <div class="stepper-circle">5</div>
+                            <div class="stepper-label">Stratégie</div>
+                        </div>
+
+                        <div class="stepper-step">
+                            <div class="stepper-circle">6</div>
+                            <div class="stepper-label">Assets</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Preview Mode Banner -->
+                <div class="alert alert-warning border-start border-warning border-4 mb-4">
+                    <div class="d-flex align-items-center mb-3">
+                        <i class="bi bi-eye-fill fs-4 me-2 text-warning"></i>
+                        <h5 class="mb-0">MODE PREVIEW - Workflow Upload &amp; Mapping Contacts</h5>
+                    </div>
+
+                    <div class="mb-3">
+                        <p class="mb-2">
+                            <i class="bi bi-envelope-fill text-primary me-1"></i>
+                            <strong>Cette étape OPTIONNELLE concerne uniquement les campagnes avec assets SMS, Email ou Courrier.</strong>
+                        </p>
+                    </div>
+
+                    <div class="mb-3">
+                        <h6 class="mb-2">
+                            <i class="bi bi-bullseye text-primary me-1"></i>
+                            Pourquoi uploader vos contacts ?
+                        </h6>
+                        <ul class="small mb-0">
+                            <li>Personnaliser les messages SMS/Email/Courrier avec vos données clients réelles (noms, préférences, historique)</li>
+                            <li>Segmenter vos envois selon vos personas enrichis</li>
+                            <li>Générer des campagnes ultra-ciblées</li>
+                        </ul>
+                    </div>
+
+                    <div class="mb-3">
+                        <h6 class="mb-2">
+                            <i class="bi bi-diagram-3 text-primary me-1"></i>
+                            Workflow complet (7 états) :
+                        </h6>
+                        <div class="d-flex flex-wrap gap-2 align-items-center">
+                            <a href="contact_upload_empty_dark-blue.html" class="badge bg-secondary text-decoration-none fs-6 py-2 px-3">1. Upload</a>
+                            <i class="bi bi-arrow-right text-secondary"></i>
+                            <a href="contact_upload_validating_dark-blue.html" class="badge bg-secondary text-decoration-none fs-6 py-2 px-3">2. Validation</a>
+                            <i class="bi bi-arrow-right text-secondary"></i>
+                            <a href="contact_upload_errors_dark-blue.html" class="badge bg-warning text-dark text-decoration-none fs-6 py-2 px-3 opacity-75">[Erreurs]</a>
+                            <i class="bi bi-arrow-right text-secondary"></i>
+                            <a href="contact_upload_analyzing_dark-blue.html" class="badge bg-secondary text-decoration-none fs-6 py-2 px-3">3. Analyse</a>
+                            <i class="bi bi-arrow-right text-secondary"></i>
+                            <a href="contact_upload_suggestions_dark-blue.html" class="badge bg-secondary text-decoration-none fs-6 py-2 px-3">4. Suggestions</a>
+                            <i class="bi bi-arrow-right text-secondary"></i>
+                            <a href="contact_upload_mapping_dark-blue.html" class="badge bg-secondary text-decoration-none fs-6 py-2 px-3">5. Mapping</a>
+                            <i class="bi bi-arrow-right text-secondary"></i>
+                            <a href="contact_upload_preview_dark-blue.html" class="badge bg-primary text-decoration-none fs-6 py-2 px-3">6. Preview</a>
+                        </div>
+                    </div>
+
+                    <div class="mb-0">
+                        <p class="small text-secondary mb-0">
+                            <i class="bi bi-gear me-1"></i>
+                            <strong>En production :</strong> ce workflow se déclenche automatiquement lors de l'upload d'un fichier CSV/Excel.
+                        </p>
+                    </div>
+                </div>
+                <!-- Section titre + résumé validation -->
+                <div class="mb-4">
+                    <div class="d-flex align-items-center justify-content-between mb-2">
+                        <h1 class="h3 mb-0">
+                            <i class="bi bi-eye text-primary me-2"></i>
+                            Prévisualisation des données
+                        </h1>
+                    </div>
+                    <p class="text-secondary">
+                        Vérifiez que le mapping est correct avant de continuer la génération de campagne
+                    </p>
+                </div>
+
+                <!-- Cards de résumé -->
+                <div class="row g-3 mb-4">
+                    <div class="col-md-3">
+                        <div class="card border-0 h-100 shadow-sm">
+                            <div class="card-body text-center">
+                                <div class="display-4 text-success mb-2">1,523</div>
+                                <h6 class="text-secondary mb-0">Lignes totales</h6>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card border-0 h-100 shadow-sm">
+                            <div class="card-body text-center">
+                                <div class="display-4 text-success mb-2">1,489</div>
+                                <h6 class="text-secondary mb-0">Lignes valides</h6>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card border-0 h-100 shadow-sm">
+                            <div class="card-body text-center">
+                                <div class="display-4 text-warning mb-2">32</div>
+                                <h6 class="text-secondary mb-0">Avec avertissements</h6>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card border-0 h-100 shadow-sm">
+                            <div class="card-body text-center">
+                                <div class="display-4 text-danger mb-2">2</div>
+                                <h6 class="text-secondary mb-0">Avec erreurs</h6>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Toggle pour filtrer les données -->
+                <div class="d-flex align-items-center justify-content-between mb-3">
+                    <h5 class="mb-0">
+                        <i class="bi bi-table me-2"></i>
+                        Aperçu des données mappées
+                    </h5>
+                    <div class="btn-group" role="group" aria-label="Filtrer les données">
+                        <input type="radio" class="btn-check" name="filter" id="filter-all" autocomplete="off" checked>
+                        <label class="btn btn-outline-primary btn-sm" for="filter-all">
+                            <i class="bi bi-list-ul me-1"></i>
+                            Toutes (10)
+                        </label>
+
+                        <input type="radio" class="btn-check" name="filter" id="filter-warnings" autocomplete="off">
+                        <label class="btn btn-outline-warning btn-sm" for="filter-warnings">
+                            <i class="bi bi-exclamation-triangle me-1"></i>
+                            Avertissements (2)
+                        </label>
+
+                        <input type="radio" class="btn-check" name="filter" id="filter-errors" autocomplete="off">
+                        <label class="btn btn-outline-danger btn-sm" for="filter-errors">
+                            <i class="bi bi-x-circle me-1"></i>
+                            Erreurs (1)
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Table de prévisualisation -->
+                <div class="card shadow-sm mb-4">
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-sm table-hover align-middle mb-0">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">mail</th>
+                                        <th scope="col">nom</th>
+                                        <th scope="col">prénom</th>
+                                        <th scope="col">téléphone</th>
+                                        <th scope="col">adresse</th>
+                                        <th scope="col">ville</th>
+                                        <th scope="col" class="text-center">Statut</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Ligne 1: OK -->
+                                    <tr>
+                                        <td>1</td>
+                                        <td>jean.dupont@email.com</td>
+                                        <td>Dupont</td>
+                                        <td>Jean</td>
+                                        <td>06 01 02 03 04</td>
+                                        <td>12 rue Example</td>
+                                        <td>Paris</td>
+                                        <td class="text-center">
+                                            <i class="bi bi-check-circle-fill text-success"></i>
+                                        </td>
+                                    </tr>
+
+                                    <!-- Ligne 2: OK -->
+                                    <tr>
+                                        <td>2</td>
+                                        <td>sophie.martin@email.com</td>
+                                        <td>Martin</td>
+                                        <td>Sophie</td>
+                                        <td>06 05 06 07 08</td>
+                                        <td>34 avenue Test</td>
+                                        <td>Lyon</td>
+                                        <td class="text-center">
+                                            <i class="bi bi-check-circle-fill text-success"></i>
+                                        </td>
+                                    </tr>
+
+                                    <!-- Ligne 3: Warning (téléphone manquant) -->
+                                    <tr class="table-warning">
+                                        <td>3</td>
+                                        <td>luc.bernard@email.com</td>
+                                        <td>Bernard</td>
+                                        <td>Luc</td>
+                                        <td><em class="text-secondary">—</em></td>
+                                        <td>56 boulevard Demo</td>
+                                        <td>Marseille</td>
+                                        <td class="text-center">
+                                            <i class="bi bi-exclamation-triangle-fill text-warning" title="Téléphone manquant"></i>
+                                        </td>
+                                    </tr>
+
+                                    <!-- Ligne 4: Erreur (email invalide) -->
+                                    <tr class="table-danger">
+                                        <td>4</td>
+                                        <td><span class="text-danger">marie.invalide</span></td>
+                                        <td>Dubois</td>
+                                        <td>Marie</td>
+                                        <td>06 09 10 11 12</td>
+                                        <td>78 place Sample</td>
+                                        <td>Toulouse</td>
+                                        <td class="text-center">
+                                            <i class="bi bi-x-circle-fill text-danger" title="Email invalide"></i>
+                                        </td>
+                                    </tr>
+
+                                    <!-- Ligne 5: OK -->
+                                    <tr>
+                                        <td>5</td>
+                                        <td>paul.petit@email.com</td>
+                                        <td>Petit</td>
+                                        <td>Paul</td>
+                                        <td>06 13 14 15 16</td>
+                                        <td>90 rue Model</td>
+                                        <td>Nice</td>
+                                        <td class="text-center">
+                                            <i class="bi bi-check-circle-fill text-success"></i>
+                                        </td>
+                                    </tr>
+
+                                    <!-- Ligne 6: OK -->
+                                    <tr>
+                                        <td>6</td>
+                                        <td>claire.robert@email.com</td>
+                                        <td>Robert</td>
+                                        <td>Claire</td>
+                                        <td>06 17 18 19 20</td>
+                                        <td>11 chemin Pattern</td>
+                                        <td>Nantes</td>
+                                        <td class="text-center">
+                                            <i class="bi bi-check-circle-fill text-success"></i>
+                                        </td>
+                                    </tr>
+
+                                    <!-- Ligne 7: OK -->
+                                    <tr>
+                                        <td>7</td>
+                                        <td>thomas.richard@email.com</td>
+                                        <td>Richard</td>
+                                        <td>Thomas</td>
+                                        <td>06 21 22 23 24</td>
+                                        <td>22 allée Template</td>
+                                        <td>Strasbourg</td>
+                                        <td class="text-center">
+                                            <i class="bi bi-check-circle-fill text-success"></i>
+                                        </td>
+                                    </tr>
+
+                                    <!-- Ligne 8: OK -->
+                                    <tr>
+                                        <td>8</td>
+                                        <td>julie.simon@email.com</td>
+                                        <td>Simon</td>
+                                        <td>Julie</td>
+                                        <td>06 25 26 27 28</td>
+                                        <td>33 impasse Example</td>
+                                        <td>Bordeaux</td>
+                                        <td class="text-center">
+                                            <i class="bi bi-check-circle-fill text-success"></i>
+                                        </td>
+                                    </tr>
+
+                                    <!-- Ligne 9: Warning (téléphone manquant) -->
+                                    <tr class="table-warning">
+                                        <td>9</td>
+                                        <td>marc.laurent@email.com</td>
+                                        <td>Laurent</td>
+                                        <td>Marc</td>
+                                        <td><em class="text-secondary">—</em></td>
+                                        <td>44 square Demo</td>
+                                        <td>Lille</td>
+                                        <td class="text-center">
+                                            <i class="bi bi-exclamation-triangle-fill text-warning" title="Téléphone manquant"></i>
+                                        </td>
+                                    </tr>
+
+                                    <!-- Ligne 10: OK -->
+                                    <tr>
+                                        <td>10</td>
+                                        <td>emma.lefebvre@email.com</td>
+                                        <td>Lefebvre</td>
+                                        <td>Emma</td>
+                                        <td>06 29 30 31 32</td>
+                                        <td>55 cours Sample</td>
+                                        <td>Rennes</td>
+                                        <td class="text-center">
+                                            <i class="bi bi-check-circle-fill text-success"></i>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+                            <small class="text-secondary">
+                                <i class="bi bi-info-circle me-1"></i>
+                                Affichage des lignes 1-10 sur 1,523 au total
+                            </small>
+
+                            <nav aria-label="Navigation des pages de données">
+                                <ul class="pagination pagination-sm mb-0">
+                                    <li class="page-item disabled">
+                                        <a class="page-link" href="#" tabindex="-1" aria-disabled="true" aria-label="Précédent">
+                                            <span aria-hidden="true">&laquo;</span>
+                                        </a>
+                                    </li>
+                                    <li class="page-item active" aria-current="page">
+                                        <span class="page-link">1</span>
+                                    </li>
+                                    <li class="page-item">
+                                        <a class="page-link" href="#">2</a>
+                                    </li>
+                                    <li class="page-item">
+                                        <a class="page-link" href="#">3</a>
+                                    </li>
+                                    <li class="page-item">
+                                        <a class="page-link" href="#">4</a>
+                                    </li>
+                                    <li class="page-item">
+                                        <a class="page-link" href="#">5</a>
+                                    </li>
+                                    <li class="page-item disabled">
+                                        <span class="page-link">...</span>
+                                    </li>
+                                    <li class="page-item">
+                                        <a class="page-link" href="#">153</a>
+                                    </li>
+                                    <li class="page-item">
+                                        <a class="page-link" href="#" aria-label="Suivant">
+                                            <span aria-hidden="true">&raquo;</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Message erreurs à corriger -->
+                <div class="alert alert-danger" role="alert">
+                    <div class="d-flex align-items-center mb-2">
+                        <i class="bi bi-exclamation-octagon-fill me-2 fs-4"></i>
+                        <strong>2 lignes contiennent des erreurs</strong>
+                    </div>
+                    <p class="mb-2 small">Ces lignes seront ignorées lors de l'import. Vous pouvez :</p>
+                    <ul class="mb-0 small">
+                        <li>Corriger votre fichier source et réuploader</li>
+                        <li>Continuer l'import sans ces lignes (1,521 lignes seront importées)</li>
+                    </ul>
+                </div>
+
+                <!-- Speed Dial FAB - Actions -->
+                <div class="speed-dial-container">
+                    <!-- Action 1: Retour -->
+                    <div class="speed-dial-action">
+                        <span class="speed-dial-label">Retour : Mapping</span>
+                        <a href="contact_upload_mapping_dark-blue.html" class="speed-dial-btn speed-dial-cancel">
+                            <i class="bi bi-arrow-counterclockwise"></i>
+                        </a>
+                    </div>
+
+                    <!-- Action 2: Valider et continuer -->
+                    <div class="speed-dial-action">
+                        <span class="speed-dial-label">Valider et continuer</span>
+                        <a href="step2_loading_dark-blue.html" class="speed-dial-btn speed-dial-primary">
+                            <i class="bi bi-check-circle"></i>
+                        </a>
+                    </div>
+
+                    <!-- Bouton principal -->
+                    <div class="speed-dial-btn speed-dial-main">
+                        <i class="bi bi-three-dots-vertical"></i>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- FAB Retour -->
+    <a href="../index.html" class="fab-back">
+        <i class="bi bi-arrow-left"></i>
+        <span class="fab-tooltip">Retour à l'index</span>
+    </a>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Design System JS -->
+    <script src="../assets/js/main.js" type="module"></script>
+</body>
+</html>
