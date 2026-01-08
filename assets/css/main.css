@@ -46,6 +46,8 @@
 @import 'components/_step5-config.css';
 @import 'components/_step5-loading.css';
 @import 'components/_step5-validate.css';
+@import 'components/_contact-upload.css';
+@import 'components/_contact-source-modal.css';
 
 /* ==========================================================================
    USAGE

@@ -1,0 +1,136 @@
+/**
+ * Contact Source Modal
+ * Styles pour la modal de choix de source des contacts
+ */
+
+/* Card source contact */
+.contact-source-card {
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.contact-source-card.card {
+    background-color: var(--modal-card-bg, rgba(0, 0, 0, 0.05));
+    color: var(--text-primary);
+    border-color: var(--border);
+}
+
+.contact-source-card-active.card {
+    border-color: var(--color-primary) !important;
+    background-color: var(--modal-card-bg-active, rgba(0, 48, 128, 0.08));
+}
+
+.contact-source-card-active:hover {
+    transform: translateX(4px);
+    box-shadow: var(--shadow-md);
+}
+
+.contact-source-card-disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Icône source contact */
+.contact-source-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: var(--border-radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+/* Modal customization */
+#contactSourceModal .modal-content {
+    border-radius: var(--border-radius-lg);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-xl);
+    background-color: var(--modal-bg, #ffffff);
+    color: var(--text-primary);
+}
+
+#contactSourceModal .modal-header {
+    padding: var(--spacing-xl) var(--spacing-xl) 0;
+    border-bottom: none;
+}
+
+#contactSourceModal .modal-body {
+    padding: var(--spacing-lg) var(--spacing-xl);
+}
+
+#contactSourceModal .modal-footer {
+    padding: 0 var(--spacing-xl) var(--spacing-xl);
+    border-top: none;
+}
+
+/* Titres et textes dans la modal - Override Bootstrap */
+#contactSourceModal .modal-title {
+    color: var(--text-primary);
+}
+
+#contactSourceModal h6 {
+    color: var(--text-primary);
+}
+
+#contactSourceModal .text-body {
+    color: var(--text-primary) !important;
+}
+
+#contactSourceModal p,
+#contactSourceModal .text-secondary {
+    color: var(--text-secondary) !important;
+}
+
+/* Bouton close adapté au thème */
+#contactSourceModal .btn-close {
+    filter: var(--btn-close-filter, none);
+}
+
+/* Override des backgrounds Bootstrap pour la modal */
+#contactSourceModal .bg-primary.bg-opacity-10 {
+    background-color: rgba(var(--color-primary-rgb, 0, 48, 128), 0.15) !important;
+}
+
+#contactSourceModal .bg-secondary.bg-opacity-10 {
+    background-color: rgba(108, 117, 125, 0.15) !important;
+}
+
+/* Bouton annuler adapté au thème */
+#contactSourceModal .btn-outline-secondary {
+    color: var(--text-secondary);
+    border-color: var(--border);
+}
+
+#contactSourceModal .btn-outline-secondary:hover {
+    background-color: var(--modal-card-bg, rgba(0, 0, 0, 0.05));
+    color: var(--text-primary);
+}
+
+/* Alerte info dans la modal */
+#contactSourceModal .alert-info {
+    background-color: var(--modal-alert-bg, rgba(13, 202, 240, 0.1));
+    border-color: var(--modal-alert-border, rgba(13, 202, 240, 0.3));
+    color: var(--text-primary);
+}
+
+#contactSourceModal .alert-info strong {
+    color: var(--text-primary);
+}
+
+#contactSourceModal .alert-info p {
+    color: var(--text-secondary) !important;
+}
+
+#contactSourceModal .alert-info i {
+    color: var(--color-primary);
+}
+
+/* Lien passer aux personas */
+#contactSourceModal .btn-link {
+    color: var(--color-primary);
+}
+
+#contactSourceModal .btn-link:hover {
+    color: var(--color-primary-hover, var(--color-primary));
+}
