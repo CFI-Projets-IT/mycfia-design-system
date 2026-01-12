@@ -27,7 +27,7 @@ export function launchAIEnrichment() {
     }
 
     // Redirect to loading page
-    window.location.href = 'step1_loading.html';
+    window.location.href = 'step1_loading_light.html';
 }
 
 // Auto-select date (start = today, end = today + 90 days)
