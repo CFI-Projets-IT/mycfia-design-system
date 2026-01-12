@@ -171,3 +171,37 @@ body::after {
 .schedule-item .fw-semibold {
     color: #ffffff !important;
 }
+
+/* Accordion for dark theme */
+.accordion-item {
+    background-color: var(--bg-card) !important;
+    border-color: var(--border) !important;
+}
+
+.accordion-button {
+    background-color: var(--bg-card) !important;
+    color: var(--text-primary) !important;
+}
+
+.accordion-button:not(.collapsed) {
+    background-color: var(--bg-card) !important;
+    color: var(--text-primary) !important;
+    box-shadow: none !important;
+}
+
+.accordion-button::after {
+    filter: invert(1);
+}
+
+.accordion-body {
+    background-color: var(--bg-card) !important;
+    color: var(--text-primary) !important;
+}
+
+.accordion-body .fw-semibold {
+    color: #ffffff !important;
+}
+
+.accordion-body h6 {
+    color: var(--text-secondary) !important;
+}

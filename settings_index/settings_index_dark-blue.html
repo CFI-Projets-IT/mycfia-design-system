@@ -12,6 +12,7 @@
     <!-- Design System myCFiA -->
     <link rel="stylesheet" href="../assets/css/main.css">
     <link rel="stylesheet" href="../assets/css/themes/dark-blue.css" id="theme-stylesheet">
+    <link rel="stylesheet" href="../assets/css/components/_settings-social.css">
 </head>
 <body>
     <div class="app">
@@ -118,14 +119,30 @@
                             <p>c.bichon@BNPPRE</p>
                         </div>
                     </div>
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px;">
-                        <div>
-                            <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 4px;">Organisation</div>
-                            <div style="font-weight: 600;">BNP Paribas Real Estate</div>
+                    <div class="row g-3 mb-4">
+                        <div class="col-6">
+                            <div class="small text-secondary mb-1">Organisation</div>
+                            <div class="fw-semibold">BNP Paribas Real Estate</div>
                         </div>
-                        <div>
-                            <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 4px;">ID CFI</div>
-                            <div style="font-weight: 600; color: var(--color-secondary);">12345</div>
+                        <div class="col-6">
+                            <div class="small text-secondary mb-1">ID CFI</div>
+                            <div class="fw-semibold text-primary">12345</div>
+                        </div>
+                    </div>
+
+                    <!-- Logo Entreprise -->
+                    <div class="border-top pt-4">
+                        <div class="small text-secondary mb-3">Logo entreprise</div>
+                        <div class="d-flex align-items-center gap-4">
+                            <div class="company-logo-placeholder">
+                                <img src="../images/logo_picto.svg" alt="Logo BNP Paribas RE" class="company-logo-img">
+                            </div>
+                            <div class="flex-grow-1">
+                                <p class="small text-secondary mb-2">Format recommandé : PNG ou SVG, 200x200px minimum</p>
+                                <button class="btn btn-outline-primary btn-sm">
+                                    <i class="bi bi-upload me-1"></i>Modifier le logo
+                                </button>
+                            </div>
                         </div>
                     </div>
                         </section>
@@ -242,6 +259,233 @@
                         </section>
                     </div>
                 </div>
+
+                <!-- Section Connexions Réseaux Sociaux -->
+                <section class="section mt-4">
+                    <div class="section-header">
+                        <i class="bi bi-share text-primary fs-4"></i>
+                        <h2>Connexions Réseaux Sociaux</h2>
+                    </div>
+                    <p class="text-secondary mb-4">Connectez vos comptes pour publier directement depuis myCFiA vers vos réseaux sociaux.</p>
+
+                    <div class="accordion" id="socialAccountsAccordion">
+                        <!-- LinkedIn -->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseLinkedin">
+                                    <div class="d-flex align-items-center gap-3 flex-grow-1">
+                                        <div class="social-icon social-icon-linkedin">
+                                            <i class="bi bi-linkedin"></i>
+                                        </div>
+                                        <span class="fw-semibold">LinkedIn</span>
+                                        <span class="badge bg-success ms-auto me-3">Connecté</span>
+                                    </div>
+                                </button>
+                            </h2>
+                            <div id="collapseLinkedin" class="accordion-collapse collapse show" data-bs-parent="#socialAccountsAccordion">
+                                <div class="accordion-body">
+                                    <div class="row g-4">
+                                        <div class="col-md-6">
+                                            <h6 class="text-secondary mb-3">Compte connecté</h6>
+                                            <div class="d-flex align-items-center gap-3 mb-3">
+                                                <div class="avatar-sm bg-primary text-white rounded-circle d-flex align-items-center justify-content-center">CB</div>
+                                                <div>
+                                                    <p class="mb-0 fw-semibold">Christophe Bichon</p>
+                                                    <p class="mb-0 small text-secondary">BNP Paribas Real Estate</p>
+                                                </div>
+                                            </div>
+                                            <p class="small text-secondary mb-0">
+                                                <i class="bi bi-calendar3 me-1"></i>Connecté le 10 janvier 2025
+                                            </p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <h6 class="text-secondary mb-3">Permissions accordées</h6>
+                                            <ul class="list-unstyled small">
+                                                <li class="mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i>Publier des posts</li>
+                                                <li class="mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i>Gérer la page entreprise</li>
+                                                <li class="mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i>Accéder aux statistiques</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <hr>
+                                    <div class="d-flex justify-content-end gap-2">
+                                        <button class="btn btn-outline-secondary btn-sm">
+                                            <i class="bi bi-arrow-repeat me-1"></i>Actualiser
+                                        </button>
+                                        <button class="btn btn-outline-danger btn-sm">
+                                            <i class="bi bi-x-circle me-1"></i>Déconnecter
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Facebook -->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFacebook">
+                                    <div class="d-flex align-items-center gap-3 flex-grow-1">
+                                        <div class="social-icon social-icon-facebook">
+                                            <i class="bi bi-facebook"></i>
+                                        </div>
+                                        <span class="fw-semibold">Facebook</span>
+                                        <span class="badge bg-success ms-auto me-3">Connecté</span>
+                                    </div>
+                                </button>
+                            </h2>
+                            <div id="collapseFacebook" class="accordion-collapse collapse" data-bs-parent="#socialAccountsAccordion">
+                                <div class="accordion-body">
+                                    <div class="row g-4">
+                                        <div class="col-md-6">
+                                            <h6 class="text-secondary mb-3">Page connectée</h6>
+                                            <div class="d-flex align-items-center gap-3 mb-3">
+                                                <div class="avatar-sm bg-primary text-white rounded-circle d-flex align-items-center justify-content-center">BP</div>
+                                                <div>
+                                                    <p class="mb-0 fw-semibold">BNP Paribas Real Estate France</p>
+                                                    <p class="mb-0 small text-secondary">Page Entreprise • 45.2K abonnés</p>
+                                                </div>
+                                            </div>
+                                            <p class="small text-secondary mb-0">
+                                                <i class="bi bi-calendar3 me-1"></i>Connecté le 8 janvier 2025
+                                            </p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <h6 class="text-secondary mb-3">Permissions accordées</h6>
+                                            <ul class="list-unstyled small">
+                                                <li class="mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i>Publier sur la page</li>
+                                                <li class="mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i>Gérer les publicités</li>
+                                                <li class="mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i>Accéder aux insights</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <hr>
+                                    <div class="d-flex justify-content-end gap-2">
+                                        <button class="btn btn-outline-secondary btn-sm">
+                                            <i class="bi bi-arrow-repeat me-1"></i>Actualiser
+                                        </button>
+                                        <button class="btn btn-outline-danger btn-sm">
+                                            <i class="bi bi-x-circle me-1"></i>Déconnecter
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Instagram -->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseInstagram">
+                                    <div class="d-flex align-items-center gap-3 flex-grow-1">
+                                        <div class="social-icon social-icon-instagram">
+                                            <i class="bi bi-instagram"></i>
+                                        </div>
+                                        <span class="fw-semibold">Instagram</span>
+                                        <span class="badge bg-secondary ms-auto me-3">Non connecté</span>
+                                    </div>
+                                </button>
+                            </h2>
+                            <div id="collapseInstagram" class="accordion-collapse collapse" data-bs-parent="#socialAccountsAccordion">
+                                <div class="accordion-body">
+                                    <div class="text-center py-3">
+                                        <div class="social-icon social-icon-instagram mx-auto mb-3">
+                                            <i class="bi bi-instagram"></i>
+                                        </div>
+                                        <h6 class="mb-2">Connectez votre compte Instagram</h6>
+                                        <p class="text-secondary small mb-4">Publiez des stories et des posts directement depuis myCFiA vers votre compte Instagram Business.</p>
+                                        <button class="btn btn-instagram">
+                                            <i class="bi bi-instagram me-2"></i>Connecter avec Instagram
+                                        </button>
+                                        <p class="small text-secondary mt-3 mb-0">
+                                            <i class="bi bi-info-circle me-1"></i>Nécessite un compte Instagram Business lié à une page Facebook
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Google Ads -->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseGoogle">
+                                    <div class="d-flex align-items-center gap-3 flex-grow-1">
+                                        <div class="social-icon social-icon-google">
+                                            <i class="bi bi-google"></i>
+                                        </div>
+                                        <span class="fw-semibold">Google Ads</span>
+                                        <span class="badge bg-success ms-auto me-3">Connecté</span>
+                                    </div>
+                                </button>
+                            </h2>
+                            <div id="collapseGoogle" class="accordion-collapse collapse" data-bs-parent="#socialAccountsAccordion">
+                                <div class="accordion-body">
+                                    <div class="row g-4">
+                                        <div class="col-md-6">
+                                            <h6 class="text-secondary mb-3">Compte connecté</h6>
+                                            <div class="d-flex align-items-center gap-3 mb-3">
+                                                <div class="avatar-sm bg-danger text-white rounded-circle d-flex align-items-center justify-content-center">
+                                                    <i class="bi bi-google"></i>
+                                                </div>
+                                                <div>
+                                                    <p class="mb-0 fw-semibold">BNP Paribas RE - Ads</p>
+                                                    <p class="mb-0 small text-secondary">ID: 123-456-7890</p>
+                                                </div>
+                                            </div>
+                                            <p class="small text-secondary mb-0">
+                                                <i class="bi bi-calendar3 me-1"></i>Connecté le 5 janvier 2025
+                                            </p>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <h6 class="text-secondary mb-3">Permissions accordées</h6>
+                                            <ul class="list-unstyled small">
+                                                <li class="mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i>Créer des campagnes</li>
+                                                <li class="mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i>Gérer les annonces</li>
+                                                <li class="mb-2"><i class="bi bi-check-circle-fill text-success me-2"></i>Accéder aux rapports</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <hr>
+                                    <div class="d-flex justify-content-end gap-2">
+                                        <button class="btn btn-outline-secondary btn-sm">
+                                            <i class="bi bi-arrow-repeat me-1"></i>Actualiser
+                                        </button>
+                                        <button class="btn btn-outline-danger btn-sm">
+                                            <i class="bi bi-x-circle me-1"></i>Déconnecter
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Bing Ads -->
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseBing">
+                                    <div class="d-flex align-items-center gap-3 flex-grow-1">
+                                        <div class="social-icon social-icon-bing">
+                                            <i class="bi bi-microsoft"></i>
+                                        </div>
+                                        <span class="fw-semibold">Microsoft Advertising (Bing)</span>
+                                        <span class="badge bg-secondary ms-auto me-3">Non connecté</span>
+                                    </div>
+                                </button>
+                            </h2>
+                            <div id="collapseBing" class="accordion-collapse collapse" data-bs-parent="#socialAccountsAccordion">
+                                <div class="accordion-body">
+                                    <div class="text-center py-3">
+                                        <div class="social-icon social-icon-bing mx-auto mb-3">
+                                            <i class="bi bi-microsoft"></i>
+                                        </div>
+                                        <h6 class="mb-2">Connectez votre compte Microsoft Advertising</h6>
+                                        <p class="text-secondary small mb-4">Gérez vos campagnes Bing Ads directement depuis myCFiA.</p>
+                                        <button class="btn btn-bing">
+                                            <i class="bi bi-microsoft me-2"></i>Connecter avec Microsoft
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
 
                 <!-- Boutons Actions -->
                 <div style="display: flex; justify-content: center; gap: 16px; margin-top: 32px; flex-wrap: wrap;">

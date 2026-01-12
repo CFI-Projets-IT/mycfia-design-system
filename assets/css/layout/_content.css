@@ -21,7 +21,16 @@
     display: grid;
     grid-template-columns: 400px 1fr;
     gap: var(--gap-lg);
-    align-items: start;
+    align-items: stretch;
+}
+
+.settings-grid > div {
+    display: flex;
+    flex-direction: column;
+}
+
+.settings-grid .section {
+    flex: 1;
 }
 
 @media (max-width: 992px) {
