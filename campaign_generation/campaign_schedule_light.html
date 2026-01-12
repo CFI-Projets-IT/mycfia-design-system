@@ -445,6 +445,107 @@
         </div>
     </div>
 
+    <!-- Modal: Aucun asset planifié -->
+    <div class="modal fade" id="noAssetModal" tabindex="-1" aria-labelledby="noAssetModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header border-0 pb-0">
+                    <h5 class="modal-title" id="noAssetModalLabel">
+                        <i class="bi bi-exclamation-triangle text-warning"></i>
+                        Planning vide
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="mb-0">Aucun asset n'a été planifié. Glissez-déposez des assets sur le calendrier pour définir leurs dates de publication.</p>
+                </div>
+                <div class="modal-footer border-0 pt-0">
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Compris</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Confirmation validation -->
+    <div class="modal fade" id="confirmValidateModal" tabindex="-1" aria-labelledby="confirmValidateModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header border-0 pb-0">
+                    <h5 class="modal-title" id="confirmValidateModalLabel">
+                        <i class="bi bi-check-circle text-success"></i>
+                        Valider le planning
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="mb-3">Vous êtes sur le point de valider la planification de vos assets.</p>
+                    <div class="alert alert-light mb-0">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-calendar-check text-primary"></i>
+                            <span><strong id="confirm-asset-count">0</strong> asset(s) seront programmés pour publication.</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer border-0 pt-0">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button type="button" class="btn btn-success" id="confirm-validate">
+                        <i class="bi bi-check-lg"></i>
+                        Valider le planning
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Confirmation retrait -->
+    <div class="modal fade" id="removeEventModal" tabindex="-1" aria-labelledby="removeEventModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header border-0 pb-0">
+                    <h5 class="modal-title" id="removeEventModalLabel">
+                        <i class="bi bi-calendar-x text-warning"></i>
+                        Retirer du planning
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="mb-0">Voulez-vous retirer <strong id="remove-event-title"></strong> du planning ?</p>
+                </div>
+                <div class="modal-footer border-0 pt-0">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button type="button" class="btn btn-warning" id="confirm-remove-event">
+                        <i class="bi bi-trash"></i>
+                        Retirer
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Succès -->
+    <div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header border-0 pb-0">
+                    <h5 class="modal-title" id="successModalLabel">
+                        <i class="bi bi-check-circle-fill text-success"></i>
+                        Planning validé
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="mb-0">Votre planning de publication a été validé avec succès. Les assets seront publiés aux dates et heures définies.</p>
+                </div>
+                <div class="modal-footer border-0 pt-0">
+                    <a href="campaign_show_light.html" class="btn btn-primary">
+                        <i class="bi bi-arrow-left"></i>
+                        Retour à la campagne
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <a href="campaign_show_light.html" class="fab-back">
         <i class="bi bi-arrow-left"></i>
     </a>

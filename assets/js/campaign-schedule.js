@@ -9,6 +9,10 @@ document.addEventListener('DOMContentLoaded', function () {
     const externalEventsEl = document.getElementById('external-events');
     const removeAfterDropCheckbox = document.getElementById('remove-after-drop');
     const timeModal = new bootstrap.Modal(document.getElementById('timeModal'));
+    const noAssetModal = new bootstrap.Modal(document.getElementById('noAssetModal'));
+    const confirmValidateModal = new bootstrap.Modal(document.getElementById('confirmValidateModal'));
+    const successModal = new bootstrap.Modal(document.getElementById('successModal'));
+    const removeEventModal = new bootstrap.Modal(document.getElementById('removeEventModal'));
     const confirmTimeBtn = document.getElementById('confirm-time');
     const scheduledCountEl = document.getElementById('scheduled-count');
     const scheduledThisWeekEl = document.getElementById('scheduled-this-week');
@@ -18,6 +22,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // State
     let scheduledAssets = [];
     let pendingDrop = null;
+    let pendingRemove = null;
 
     // Initialize FullCalendar
     const calendar = new FullCalendar.Calendar(calendarEl, {
@@ -107,28 +112,17 @@ document.addEventListener('DOMContentLoaded', function () {
             const popover = bootstrap.Popover.getInstance(info.el);
             if (popover) popover.hide();
 
-            if (confirm(`Retirer "${info.event.title}" du planning ?`)) {
-                // Re-enable the asset card
-                const assetId = info.event.extendedProps.assetId;
-                const assetType = info.event.extendedProps.assetType;
-                const assetCard = document.querySelector(`[data-asset-id="${assetId}"]`);
-                if (assetCard) {
-                    assetCard.classList.remove('scheduled');
-                    assetCard.style.display = '';
-                }
+            // Store event info for removal
+            pendingRemove = {
+                event: info.event,
+                assetId: info.event.extendedProps.assetId,
+                assetType: info.event.extendedProps.assetType,
+                title: info.event.title
+            };
 
-                // Remove from scheduled list
-                scheduledAssets = scheduledAssets.filter(a => a.assetId !== assetId);
-
-                // Update badge count for this asset type
-                updateAssetGroupCount(assetType, 1);
-
-                // Remove event
-                info.event.remove();
-
-                // Update summary
-                updateSummary();
-            }
+            // Update modal and show
+            document.getElementById('remove-event-title').textContent = info.event.title;
+            removeEventModal.show();
         }
     });
 
@@ -224,16 +218,48 @@ document.addEventListener('DOMContentLoaded', function () {
     // Validate schedule button
     document.getElementById('btn-validate-schedule').addEventListener('click', function () {
         if (scheduledAssets.length === 0) {
-            alert('Aucun asset planifié. Glissez-déposez des assets sur le calendrier.');
+            noAssetModal.show();
             return;
         }
 
-        // Show confirmation
-        const message = `Valider la planification de ${scheduledAssets.length} asset(s) ?`;
-        if (confirm(message)) {
-            alert('Planning validé avec succès ! (Simulation)');
-            // In real app: send to backend
+        // Update confirmation modal with count
+        document.getElementById('confirm-asset-count').textContent = scheduledAssets.length;
+        confirmValidateModal.show();
+    });
+
+    // Confirm validation button in modal
+    document.getElementById('confirm-validate').addEventListener('click', function () {
+        confirmValidateModal.hide();
+        // In real app: send to backend here
+        successModal.show();
+    });
+
+    // Confirm remove event button in modal
+    document.getElementById('confirm-remove-event').addEventListener('click', function () {
+        if (!pendingRemove) return;
+
+        // Re-enable the asset card
+        const assetCard = document.querySelector(`[data-asset-id="${pendingRemove.assetId}"]`);
+        if (assetCard) {
+            assetCard.classList.remove('scheduled');
+            assetCard.style.display = '';
         }
+
+        // Remove from scheduled list
+        scheduledAssets = scheduledAssets.filter(a => a.assetId !== pendingRemove.assetId);
+
+        // Update badge count for this asset type
+        updateAssetGroupCount(pendingRemove.assetType, 1);
+
+        // Remove event
+        pendingRemove.event.remove();
+
+        // Update summary
+        updateSummary();
+
+        // Close modal and reset
+        removeEventModal.hide();
+        pendingRemove = null;
     });
 
     // Helper: Get color by asset type
