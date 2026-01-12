@@ -443,6 +443,62 @@
 }
 
 /* ==========================================================================
+   Schedule Overview Widget (campaign_show)
+   ========================================================================== */
+
+/* Schedule Icon */
+.schedule-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: var(--border-radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    flex-shrink: 0;
+}
+
+.schedule-icon-linkedin {
+    background-color: #0077B5;
+}
+
+.schedule-icon-facebook {
+    background-color: #1877F2;
+}
+
+.schedule-icon-instagram {
+    background-color: #E4405F;
+}
+
+.schedule-icon-google {
+    background-color: #4285F4;
+}
+
+.schedule-icon-bing {
+    background-color: #00A4EF;
+}
+
+.schedule-icon-iab {
+    background-color: #6c757d;
+}
+
+/* Schedule Item (publication row) */
+.schedule-item {
+    background-color: var(--bg-card);
+    border-color: var(--border) !important;
+}
+
+/* Progress bar thin */
+.progress-thin {
+    height: 8px;
+}
+
+/* Schedule progress (13% default for demo) */
+.progress-schedule {
+    width: 13%;
+}
+
+/* ==========================================================================
    Responsive
    ========================================================================== */
 

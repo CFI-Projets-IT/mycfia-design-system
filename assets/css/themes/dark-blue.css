@@ -166,3 +166,8 @@ body::after {
 .btn-close {
     filter: invert(1) !important;
 }
+
+/* Schedule widget text visibility */
+.schedule-item .fw-semibold {
+    color: #ffffff !important;
+}

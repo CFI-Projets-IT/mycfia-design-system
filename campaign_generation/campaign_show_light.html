@@ -17,6 +17,7 @@
     <!-- Design System myCFiA -->
     <link rel="stylesheet" href="../assets/css/main.css">
     <link rel="stylesheet" href="../assets/css/themes/light.css" id="theme-stylesheet">
+    <link rel="stylesheet" href="../assets/css/components/_campaign-schedule.css">
 </head>
 <body>
     <div class="app">
@@ -209,6 +210,124 @@
                                 <h3 class="mb-1" style="color: var(--color-primary);">18.2%</h3>
                                 <p class="small text-secondary mb-2">Taux de conversion</p>
                                 <p class="small mb-0"><strong>Inscrits:</strong> 70 / 387 leads</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Planning Overview -->
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h5 class="mb-0"><i class="bi bi-calendar-check text-primary me-2"></i>Planification des publications</h5>
+                            <a href="campaign_schedule_light.html" class="btn btn-sm btn-outline-primary">
+                                <i class="bi bi-calendar-event me-1"></i>
+                                Voir le calendrier
+                            </a>
+                        </div>
+
+                        <!-- Stats Row -->
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-3">
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="p-2 bg-success bg-opacity-10 rounded">
+                                        <i class="bi bi-check-circle text-success fs-5"></i>
+                                    </div>
+                                    <div>
+                                        <p class="small text-secondary mb-0">Planifiées</p>
+                                        <strong class="fs-5">8 <span class="text-secondary fw-normal small">/ 62</span></strong>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="p-2 bg-primary bg-opacity-10 rounded">
+                                        <i class="bi bi-calendar-week text-primary fs-5"></i>
+                                    </div>
+                                    <div>
+                                        <p class="small text-secondary mb-0">Cette semaine</p>
+                                        <strong class="fs-5">3</strong>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="p-2 bg-info bg-opacity-10 rounded">
+                                        <i class="bi bi-calendar-month text-info fs-5"></i>
+                                    </div>
+                                    <div>
+                                        <p class="small text-secondary mb-0">Ce mois</p>
+                                        <strong class="fs-5">8</strong>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="p-2 bg-warning bg-opacity-10 rounded">
+                                        <i class="bi bi-hourglass-split text-warning fs-5"></i>
+                                    </div>
+                                    <div>
+                                        <p class="small text-secondary mb-0">Non planifiées</p>
+                                        <strong class="fs-5">54</strong>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Progress Bar -->
+                        <div class="mb-4">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="small text-secondary">Progression de la planification</span>
+                                <span class="small"><strong>13%</strong> planifié</span>
+                            </div>
+                            <div class="progress progress-thin">
+                                <div class="progress-bar bg-success progress-schedule"></div>
+                            </div>
+                        </div>
+
+                        <!-- Upcoming Publications -->
+                        <h6 class="mb-3"><i class="bi bi-clock-history text-secondary me-1"></i>Prochaines publications</h6>
+                        <div class="d-flex flex-column gap-2">
+                            <!-- Publication 1 - LinkedIn -->
+                            <div class="d-flex align-items-center justify-content-between p-2 rounded border schedule-item">
+                                <div class="d-flex align-items-center gap-3">
+                                    <div class="schedule-icon schedule-icon-linkedin">
+                                        <i class="bi bi-linkedin"></i>
+                                    </div>
+                                    <div>
+                                        <p class="mb-0 small fw-semibold text-body">Post LinkedIn - Témoignage Sophie</p>
+                                        <p class="mb-0 small text-secondary">Lun 20 Jan • 09:00</p>
+                                    </div>
+                                </div>
+                                <span class="badge bg-success">Dans 2h</span>
+                            </div>
+
+                            <!-- Publication 2 - Google -->
+                            <div class="d-flex align-items-center justify-content-between p-2 rounded border schedule-item">
+                                <div class="d-flex align-items-center gap-3">
+                                    <div class="schedule-icon schedule-icon-google">
+                                        <i class="bi bi-google"></i>
+                                    </div>
+                                    <div>
+                                        <p class="mb-0 small fw-semibold text-body">Google Ads - Formation CPF</p>
+                                        <p class="mb-0 small text-secondary">Mar 21 Jan • 14:00</p>
+                                    </div>
+                                </div>
+                                <span class="badge bg-primary">Demain</span>
+                            </div>
+
+                            <!-- Publication 3 - Instagram -->
+                            <div class="d-flex align-items-center justify-content-between p-2 rounded border schedule-item">
+                                <div class="d-flex align-items-center gap-3">
+                                    <div class="schedule-icon schedule-icon-instagram">
+                                        <i class="bi bi-instagram"></i>
+                                    </div>
+                                    <div>
+                                        <p class="mb-0 small fw-semibold text-body">Story Instagram - Behind the scenes</p>
+                                        <p class="mb-0 small text-secondary">Mer 22 Jan • 18:00</p>
+                                    </div>
+                                </div>
+                                <span class="badge bg-secondary">Dans 3 jours</span>
                             </div>
                         </div>
                     </div>
