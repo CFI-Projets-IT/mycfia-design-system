@@ -133,12 +133,36 @@ body::after {
 }
 
 .form-control {
-    background-color: var(--bg-card);
-    color: var(--text-primary);
-    border-color: var(--border);
+    background-color: var(--bg-card) !important;
+    color: var(--text-primary) !important;
+    border-color: var(--border) !important;
 }
 
 .form-control:focus {
-    background-color: var(--bg-card);
-    color: var(--text-primary);
+    background-color: var(--bg-card) !important;
+    color: var(--text-primary) !important;
+}
+
+/* Modal content for dark theme */
+.modal-content {
+    background-color: #1a2a3a !important;
+    color: var(--text-primary) !important;
+    border-color: var(--border) !important;
+}
+
+.modal-content .form-label {
+    color: #ffffff !important;
+}
+
+.modal-content .modal-title {
+    color: #ffffff !important;
+}
+
+.modal-header,
+.modal-footer {
+    border-color: var(--border) !important;
+}
+
+.btn-close {
+    filter: invert(1) !important;
 }

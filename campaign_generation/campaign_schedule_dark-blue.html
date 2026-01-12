@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Planifier la publication | myCFiA</title>
+
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- FullCalendar -->
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.css" rel="stylesheet">
+
+    <!-- Design System myCFiA -->
+    <link rel="stylesheet" href="../assets/css/main.css">
+    <link rel="stylesheet" href="../assets/css/themes/dark-blue.css" id="theme-stylesheet">
+    <link rel="stylesheet" href="../assets/css/components/_campaign-schedule.css">
+</head>
+<body>
+    <div class="app">
+        <aside class="sidebar d-flex flex-column">
+            <div class="sidebar-header">
+                <button class="btn btn-link text-white-50 p-0" data-sidebar-toggle>
+                    <i class="bi bi-list fs-4"></i>
+                </button>
+                <button class="btn btn-link text-white-50 p-0" data-sidebar-toggle>
+                    <i class="bi bi-arrow-left-circle fs-5"></i>
+                </button>
+            </div>
+            <nav class="flex-grow-1 overflow-auto px-3">
+                <!-- Marketing -->
+                <div class="nav-section mb-4">
+                    <div class="nav-section-title-pill mb-3">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-megaphone"></i>
+                            <span>Marketing</span>
+                        </div>
+                        <i class="bi bi-chevron-down"></i>
+                    </div>
+                    <div class="nav-section-content">
+                        <a href="step1_create_dark-blue.html" class="sidebar-link">
+                            <i class="bi bi-plus-circle"></i>
+                            <span>Nouvelle campagne</span>
+                        </a>
+                        <a href="dashboard_dark-blue.html" class="sidebar-link">
+                            <i class="bi bi-grid"></i>
+                            <span>Mes campagnes</span>
+                        </a>
+                        <a href="analytics_dark-blue.html" class="sidebar-link">
+                            <i class="bi bi-bar-chart-line"></i>
+                            <span>Analytics</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Favoris -->
+                <div class="nav-section mb-4">
+                    <div class="nav-section-title-pill mb-3">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-star"></i>
+                            <span>Favoris</span>
+                        </div>
+                        <i class="bi bi-chevron-down"></i>
+                    </div>
+                    <div class="px-3 py-2 text-white-50 small">
+                        <span>Aucune campagne favorite</span>
+                    </div>
+                </div>
+
+                <!-- Historique -->
+                <div class="nav-section mb-4">
+                    <div class="nav-section-title-pill mb-3">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-clock-history"></i>
+                            <span>Historique</span>
+                        </div>
+                        <i class="bi bi-chevron-down"></i>
+                    </div>
+                </div>
+            </nav>
+
+            <!-- Footer -->
+            <div class="sidebar-footer">
+                <a href="../settings_index/settings_index_dark-blue.html" class="sidebar-link">
+                    <i class="bi bi-gear"></i>
+                    <span>Paramètres</span>
+                </a>
+                <a href="../profile/profile_dark-blue.html" class="sidebar-link">
+                    <i class="bi bi-person-circle"></i>
+                    <span>Mon compte</span>
+                </a>
+                <a href="#" class="sidebar-link">
+                    <i class="bi bi-box-arrow-right"></i>
+                    <span>Quitter</span>
+                </a>
+            </div>
+        </aside>
+
+        <main class="main">
+            <header class="header">
+                <div class="header-content">
+                    <!-- Logo -->
+                    <a href="../index.html" class="step5-validate-header-logo-link">
+                        <img src="../images/logo_picto.svg" alt="CFI" class="header-logo-picto">
+                        <img src="../images/logo.svg" alt="myCFiA" class="header-logo">
+                    </a>
+
+                    <!-- Actions -->
+                    <div class="step5-validate-header-buttons">
+                        <button class="btn btn-glass header-btn step5-validate-header-btn-primary">
+                            <i class="bi bi-building"></i>
+                            <span class="header-btn-text">Ma Division</span>
+                        </button>
+                        <button class="btn btn-glass-primary header-btn">
+                            <i class="bi bi-sun-fill"></i>
+                            <span class="header-btn-text">Clair</span>
+                        </button>
+                        <a href="#" class="btn btn-glass header-btn step5-validate-header-link">
+                            <i class="bi bi-arrow-left-circle"></i>
+                            <span class="header-btn-text">Retour CFI</span>
+                        </a>
+                    </div>
+                </div>
+            </header>
+
+            <div class="content">
+                <!-- Breadcrumb -->
+                <nav aria-label="breadcrumb" class="mb-4">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="dashboard_dark-blue.html">Campagnes</a></li>
+                        <li class="breadcrumb-item"><a href="campaign_show_dark-blue.html">Lancement Produit Q1 2025</a></li>
+                        <li class="breadcrumb-item active">Planification</li>
+                    </ol>
+                </nav>
+
+                <!-- Page Header -->
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <div>
+                        <h1 class="page-title mb-1">
+                            <i class="bi bi-calendar-event text-success"></i>
+                            Planifier la publication
+                        </h1>
+                        <p class="text-secondary mb-0">Glissez-déposez vos assets sur le calendrier pour planifier leur publication</p>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <a href="campaign_show_dark-blue.html" class="btn btn-outline-secondary">
+                            <i class="bi bi-x-lg"></i>
+                            Annuler
+                        </a>
+                        <button class="btn btn-success" id="btn-validate-schedule">
+                            <i class="bi bi-check-lg"></i>
+                            Valider le planning
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Main Layout: Calendar + Assets -->
+                <div class="row g-3">
+                    <!-- Calendar Column -->
+                    <div class="col-lg-9">
+                        <div class="card h-100">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h5 class="mb-0">
+                                    <i class="bi bi-calendar3 text-primary"></i>
+                                    Calendrier de publication
+                                </h5>
+                                <div class="btn-group btn-group-sm">
+                                    <button class="btn btn-outline-primary active" data-view="dayGridMonth">Mois</button>
+                                    <button class="btn btn-outline-primary" data-view="timeGridWeek">Semaine</button>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div id="calendar"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Assets Column -->
+                    <div class="col-lg-3">
+                        <div class="card h-100">
+                            <div class="card-header">
+                                <h5 class="mb-0">
+                                    <i class="bi bi-collection text-primary"></i>
+                                    Assets à planifier
+                                </h5>
+                                <p class="text-secondary small mb-0 mt-1">Glissez les assets vers le calendrier</p>
+                            </div>
+                            <div class="card-body p-0">
+                                <div id="external-events" class="external-events-container">
+                                    <!-- LinkedIn -->
+                                    <div class="asset-group">
+                                        <div class="asset-group-header">
+                                            <i class="bi bi-linkedin"></i>
+                                            <span>LinkedIn</span>
+                                            <span class="badge bg-secondary">3</span>
+                                        </div>
+                                        <div class="asset-group-items">
+                                            <div class="fc-event asset-card" data-asset-type="linkedin" data-asset-id="ln-1">
+                                                <div class="asset-card-icon">
+                                                    <i class="bi bi-linkedin"></i>
+                                                </div>
+                                                <div class="asset-card-content">
+                                                    <span class="asset-card-title">Post sponsorisé 1</span>
+                                                    <span class="asset-card-meta">Carrousel • 5 slides</span>
+                                                </div>
+                                            </div>
+                                            <div class="fc-event asset-card" data-asset-type="linkedin" data-asset-id="ln-2">
+                                                <div class="asset-card-icon">
+                                                    <i class="bi bi-linkedin"></i>
+                                                </div>
+                                                <div class="asset-card-content">
+                                                    <span class="asset-card-title">Post sponsorisé 2</span>
+                                                    <span class="asset-card-meta">Image • Témoignage</span>
+                                                </div>
+                                            </div>
+                                            <div class="fc-event asset-card" data-asset-type="linkedin" data-asset-id="ln-3">
+                                                <div class="asset-card-icon">
+                                                    <i class="bi bi-linkedin"></i>
+                                                </div>
+                                                <div class="asset-card-content">
+                                                    <span class="asset-card-title">Post sponsorisé 3</span>
+                                                    <span class="asset-card-meta">Vidéo • 30s</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Facebook -->
+                                    <div class="asset-group">
+                                        <div class="asset-group-header">
+                                            <i class="bi bi-facebook"></i>
+                                            <span>Facebook</span>
+                                            <span class="badge bg-secondary">2</span>
+                                        </div>
+                                        <div class="asset-group-items">
+                                            <div class="fc-event asset-card" data-asset-type="facebook" data-asset-id="fb-1">
+                                                <div class="asset-card-icon">
+                                                    <i class="bi bi-facebook"></i>
+                                                </div>
+                                                <div class="asset-card-content">
+                                                    <span class="asset-card-title">Ad visuel 1</span>
+                                                    <span class="asset-card-meta">Feed • 1200x628</span>
+                                                </div>
+                                            </div>
+                                            <div class="fc-event asset-card" data-asset-type="facebook" data-asset-id="fb-2">
+                                                <div class="asset-card-icon">
+                                                    <i class="bi bi-facebook"></i>
+                                                </div>
+                                                <div class="asset-card-content">
+                                                    <span class="asset-card-title">Ad visuel 2</span>
+                                                    <span class="asset-card-meta">Story • 1080x1920</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Instagram -->
+                                    <div class="asset-group">
+                                        <div class="asset-group-header">
+                                            <i class="bi bi-instagram"></i>
+                                            <span>Instagram</span>
+                                            <span class="badge bg-secondary">1</span>
+                                        </div>
+                                        <div class="asset-group-items">
+                                            <div class="fc-event asset-card" data-asset-type="instagram" data-asset-id="ig-1">
+                                                <div class="asset-card-icon">
+                                                    <i class="bi bi-instagram"></i>
+                                                </div>
+                                                <div class="asset-card-content">
+                                                    <span class="asset-card-title">Post Reel</span>
+                                                    <span class="asset-card-meta">Vidéo • 15s</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Google Ads -->
+                                    <div class="asset-group">
+                                        <div class="asset-group-header">
+                                            <i class="bi bi-google"></i>
+                                            <span>Google Ads</span>
+                                            <span class="badge bg-secondary">2</span>
+                                        </div>
+                                        <div class="asset-group-items">
+                                            <div class="fc-event asset-card" data-asset-type="google" data-asset-id="ga-1">
+                                                <div class="asset-card-icon">
+                                                    <i class="bi bi-google"></i>
+                                                </div>
+                                                <div class="asset-card-content">
+                                                    <span class="asset-card-title">Search Ad 1</span>
+                                                    <span class="asset-card-meta">Responsive • 3 titres</span>
+                                                </div>
+                                            </div>
+                                            <div class="fc-event asset-card" data-asset-type="google" data-asset-id="ga-2">
+                                                <div class="asset-card-icon">
+                                                    <i class="bi bi-google"></i>
+                                                </div>
+                                                <div class="asset-card-content">
+                                                    <span class="asset-card-title">Display Ad 1</span>
+                                                    <span class="asset-card-meta">Banner • 300x250</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Bing Ads -->
+                                    <div class="asset-group">
+                                        <div class="asset-group-header">
+                                            <i class="bi bi-microsoft"></i>
+                                            <span>Bing Ads</span>
+                                            <span class="badge bg-secondary">1</span>
+                                        </div>
+                                        <div class="asset-group-items">
+                                            <div class="fc-event asset-card" data-asset-type="bing" data-asset-id="ba-1">
+                                                <div class="asset-card-icon">
+                                                    <i class="bi bi-microsoft"></i>
+                                                </div>
+                                                <div class="asset-card-content">
+                                                    <span class="asset-card-title">Search Ad</span>
+                                                    <span class="asset-card-meta">Expanded • 2 titres</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- IAB -->
+                                    <div class="asset-group">
+                                        <div class="asset-group-header">
+                                            <i class="bi bi-badge-ad"></i>
+                                            <span>IAB Display</span>
+                                            <span class="badge bg-secondary">1</span>
+                                        </div>
+                                        <div class="asset-group-items">
+                                            <div class="fc-event asset-card" data-asset-type="iab" data-asset-id="iab-1">
+                                                <div class="asset-card-icon">
+                                                    <i class="bi bi-badge-ad"></i>
+                                                </div>
+                                                <div class="asset-card-content">
+                                                    <span class="asset-card-title">Bannière IAB</span>
+                                                    <span class="asset-card-meta">Leaderboard • 728x90</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="remove-after-drop" checked>
+                                    <label class="form-check-label small" for="remove-after-drop">
+                                        Retirer de la liste après planification
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Planning Summary -->
+                <div class="card mt-4">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="mb-1">
+                                    <i class="bi bi-info-circle text-primary"></i>
+                                    Résumé du planning
+                                </h6>
+                                <p class="text-secondary small mb-0">
+                                    <span id="scheduled-count">0</span> assets planifiés sur <span id="total-count">10</span>
+                                </p>
+                            </div>
+                            <div class="d-flex gap-4">
+                                <div class="text-center">
+                                    <div class="h4 mb-0 text-primary" id="scheduled-this-week">0</div>
+                                    <small class="text-secondary">Cette semaine</small>
+                                </div>
+                                <div class="text-center">
+                                    <div class="h4 mb-0 text-success" id="scheduled-this-month">0</div>
+                                    <small class="text-secondary">Ce mois</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal: Time Selection -->
+    <div class="modal fade" id="timeModal" tabindex="-1" aria-labelledby="timeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="timeModalLabel">
+                        <i class="bi bi-clock text-primary"></i>
+                        Choisir l'heure de publication
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label text-body">Asset sélectionné</label>
+                        <div class="alert alert-secondary" id="selected-asset-info">
+                            <i class="bi bi-linkedin text-primary"></i>
+                            <strong>Post sponsorisé 1</strong>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label text-body">Date sélectionnée</label>
+                        <input type="text" class="form-control" id="selected-date" readonly>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label text-body">Heure de publication</label>
+                        <select class="form-select" id="publication-time">
+                            <option value="08:00">08:00 - Début de journée</option>
+                            <option value="09:00">09:00</option>
+                            <option value="10:00">10:00</option>
+                            <option value="11:00">11:00</option>
+                            <option value="12:00" selected>12:00 - Pause déjeuner</option>
+                            <option value="13:00">13:00</option>
+                            <option value="14:00">14:00</option>
+                            <option value="15:00">15:00</option>
+                            <option value="16:00">16:00</option>
+                            <option value="17:00">17:00</option>
+                            <option value="18:00">18:00 - Fin de journée</option>
+                            <option value="19:00">19:00</option>
+                            <option value="20:00">20:00 - Soirée</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button type="button" class="btn btn-primary" id="confirm-time">
+                        <i class="bi bi-check-lg"></i>
+                        Confirmer
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Aucun asset planifié -->
+    <div class="modal fade" id="noAssetModal" tabindex="-1" aria-labelledby="noAssetModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header border-0 pb-0">
+                    <h5 class="modal-title" id="noAssetModalLabel">
+                        <i class="bi bi-exclamation-triangle text-warning"></i>
+                        Planning vide
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="mb-0">Aucun asset n'a été planifié. Glissez-déposez des assets sur le calendrier pour définir leurs dates de publication.</p>
+                </div>
+                <div class="modal-footer border-0 pt-0">
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Compris</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Confirmation validation -->
+    <div class="modal fade" id="confirmValidateModal" tabindex="-1" aria-labelledby="confirmValidateModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header border-0 pb-0">
+                    <h5 class="modal-title" id="confirmValidateModalLabel">
+                        <i class="bi bi-check-circle text-success"></i>
+                        Valider le planning
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="mb-3">Vous êtes sur le point de valider la planification de vos assets.</p>
+                    <div class="alert alert-secondary mb-0">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-calendar-check text-primary"></i>
+                            <span><strong id="confirm-asset-count">0</strong> asset(s) seront programmés pour publication.</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer border-0 pt-0">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button type="button" class="btn btn-success" id="confirm-validate">
+                        <i class="bi bi-check-lg"></i>
+                        Valider le planning
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Confirmation retrait -->
+    <div class="modal fade" id="removeEventModal" tabindex="-1" aria-labelledby="removeEventModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header border-0 pb-0">
+                    <h5 class="modal-title" id="removeEventModalLabel">
+                        <i class="bi bi-calendar-x text-warning"></i>
+                        Retirer du planning
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="mb-0">Voulez-vous retirer <strong id="remove-event-title"></strong> du planning ?</p>
+                </div>
+                <div class="modal-footer border-0 pt-0">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button type="button" class="btn btn-warning" id="confirm-remove-event">
+                        <i class="bi bi-trash"></i>
+                        Retirer
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Succès -->
+    <div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header border-0 pb-0">
+                    <h5 class="modal-title" id="successModalLabel">
+                        <i class="bi bi-check-circle-fill text-success"></i>
+                        Planning validé
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="mb-0">Votre planning de publication a été validé avec succès. Les assets seront publiés aux dates et heures définies.</p>
+                </div>
+                <div class="modal-footer border-0 pt-0">
+                    <a href="campaign_show_dark-blue.html" class="btn btn-primary">
+                        <i class="bi bi-arrow-left"></i>
+                        Retour à la campagne
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <a href="campaign_show_dark-blue.html" class="fab-back">
+        <i class="bi bi-arrow-left"></i>
+    </a>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
+    <script src="../assets/js/main.js" type="module"></script>
+    <script src="../assets/js/campaign-schedule.js" type="module"></script>
+</body>
+</html>
