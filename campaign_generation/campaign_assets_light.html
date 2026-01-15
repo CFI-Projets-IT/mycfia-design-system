@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assets - Lancement Produit Q1 2025 | myCFiA</title>
+
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Design System myCFiA -->
+    <link rel="stylesheet" href="../assets/css/main.css">
+    <link rel="stylesheet" href="../assets/css/themes/light.css" id="theme-stylesheet">
+</head>
+<body>
+    <div class="app">
+        <aside class="sidebar d-flex flex-column">
+            <div class="sidebar-header">
+                <button class="btn btn-link text-white-50 p-0" data-sidebar-toggle>
+                    <i class="bi bi-list fs-4"></i>
+                </button>
+                <button class="btn btn-link text-white-50 p-0" data-sidebar-toggle>
+                    <i class="bi bi-arrow-left-circle fs-5"></i>
+                </button>
+            </div>
+
+            <nav class="flex-grow-1 overflow-auto px-3">
+                <div class="nav-section mb-4">
+                    <div class="nav-section-title-pill mb-3">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-megaphone"></i>
+                            <span>Marketing</span>
+                        </div>
+                    </div>
+                    <div class="nav-section-content">
+                        <a href="dashboard_light.html" class="sidebar-link">
+                            <i class="bi bi-grid"></i>
+                            <span>Mes campagnes</span>
+                        </a>
+                        <a href="step1_create_light.html" class="sidebar-link">
+                            <i class="bi bi-plus-circle"></i>
+                            <span>Nouvelle campagne</span>
+                        </a>
+                    </div>
+                </div>
+            </nav>
+
+            <!-- Footer -->
+            <div class="sidebar-footer">
+                <a href="../settings_index/settings_index_light.html" class="sidebar-link">
+                    <i class="bi bi-gear"></i>
+                    <span>Paramètres</span>
+                </a>
+                <a href="../profile/profile_light.html" class="sidebar-link">
+                    <i class="bi bi-person-circle"></i>
+                    <span>Mon compte</span>
+                </a>
+                <a href="#" class="sidebar-link">
+                    <i class="bi bi-box-arrow-right"></i>
+                    <span>Quitter</span>
+                </a>
+            </div>
+        </aside>
+
+        <main class="main">
+            <header class="header">
+                <div class="header-content">
+                    <a href="../index.html" class="d-flex align-items-center gap-2 text-decoration-none">
+                        <img src="../images/logo_picto.svg" alt="CFI" class="header-logo-picto">
+                        <img src="../images/logo.svg" alt="myCFiA" class="header-logo">
+                    </a>
+
+                    <!-- Actions -->
+                    <div class="d-flex gap-3 align-items-center">
+                        <button class="btn btn-glass header-btn text-primary">
+                            <i class="bi bi-building"></i>
+                            <span class="header-btn-text">Ma Division</span>
+                        </button>
+                        <button class="btn btn-glass-primary header-btn">
+                            <i class="bi bi-sun-fill"></i>
+                            <span class="header-btn-text">Clair</span>
+                        </button>
+                        <a href="#" class="btn btn-glass header-btn text-primary text-decoration-none">
+                            <i class="bi bi-arrow-left-circle"></i>
+                            <span class="header-btn-text">Retour CFI</span>
+                        </a>
+                    </div>
+                </div>
+            </header>
+
+            <div class="content">
+                <!-- Breadcrumb -->
+                <nav aria-label="breadcrumb" class="mb-4">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="dashboard_light.html" class="text-primary text-decoration-none">Campagnes</a></li>
+                        <li class="breadcrumb-item"><a href="campaign_show_light.html" class="text-primary text-decoration-none">Lancement Produit Q1 2025</a></li>
+                        <li class="breadcrumb-item active">Assets</li>
+                    </ol>
+                </nav>
+
+                <!-- Page Header -->
+                <div class="form-section">
+                    <div class="form-section-header">
+                        <div class="form-section-icon">
+                            <i class="bi bi-images"></i>
+                        </div>
+                        <h2 class="form-section-title">Assets de la campagne</h2>
+                        <p class="form-section-subtitle">62 assets déployés • Cliquez sur un asset pour voir le détail et les performances</p>
+                    </div>
+
+                    <!-- KPIs Summary -->
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-3">
+                            <div class="d-flex align-items-center gap-2 p-3 border rounded">
+                                <div class="p-2 bg-primary bg-opacity-10 rounded">
+                                    <i class="bi bi-collection text-primary fs-5"></i>
+                                </div>
+                                <div>
+                                    <p class="small text-secondary mb-0">Total assets</p>
+                                    <strong class="fs-5">62</strong>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="d-flex align-items-center gap-2 p-3 border rounded">
+                                <div class="p-2 bg-success bg-opacity-10 rounded">
+                                    <i class="bi bi-eye text-success fs-5"></i>
+                                </div>
+                                <div>
+                                    <p class="small text-secondary mb-0">Impressions</p>
+                                    <strong class="fs-5">156K</strong>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="d-flex align-items-center gap-2 p-3 border rounded">
+                                <div class="p-2 bg-info bg-opacity-10 rounded">
+                                    <i class="bi bi-cursor text-info fs-5"></i>
+                                </div>
+                                <div>
+                                    <p class="small text-secondary mb-0">Clics totaux</p>
+                                    <strong class="fs-5">4 892</strong>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="d-flex align-items-center gap-2 p-3 border rounded">
+                                <div class="p-2 bg-warning bg-opacity-10 rounded">
+                                    <i class="bi bi-percent text-warning fs-5"></i>
+                                </div>
+                                <div>
+                                    <p class="small text-secondary mb-0">CTR moyen</p>
+                                    <strong class="fs-5">3.14%</strong>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Filters -->
+                    <div class="d-flex gap-2 mb-4">
+                        <button class="btn btn-primary btn-sm">
+                            <i class="bi bi-grid-3x3-gap"></i> Tous (62)
+                        </button>
+                        <button class="btn btn-outline-secondary btn-sm">
+                            <i class="bi bi-linkedin"></i> LinkedIn (18)
+                        </button>
+                        <button class="btn btn-outline-secondary btn-sm">
+                            <i class="bi bi-google"></i> Google (12)
+                        </button>
+                        <button class="btn btn-outline-secondary btn-sm">
+                            <i class="bi bi-facebook"></i> Facebook (10)
+                        </button>
+                        <button class="btn btn-outline-secondary btn-sm">
+                            <i class="bi bi-envelope"></i> Email (8)
+                        </button>
+                        <button class="btn btn-outline-secondary btn-sm">
+                            <i class="bi bi-file-text"></i> Articles (6)
+                        </button>
+                        <button class="btn btn-outline-secondary btn-sm">
+                            <i class="bi bi-three-dots"></i> Autres (8)
+                        </button>
+                    </div>
+
+                    <!-- Assets Table -->
+                    <div class="mb-4">
+                        <table class="table table-hover asset-table">
+                            <thead>
+                                <tr>
+                                    <th class="asset-table-col-type">Type</th>
+                                    <th class="asset-table-col-variation">Var.</th>
+                                    <th>Aperçu du contenu</th>
+                                    <th class="text-end">Impressions</th>
+                                    <th class="text-end">Clics</th>
+                                    <th class="text-end">CTR</th>
+                                    <th class="text-center">Statut</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- LinkedIn Assets -->
+                                <tr class="asset-row" data-asset-id="linkedin_1">
+                                    <td>
+                                        <span class="asset-type-badge asset-type-linkedin">
+                                            <i class="bi bi-linkedin"></i> LinkedIn
+                                        </span>
+                                    </td>
+                                    <td><span class="badge bg-info">1/3</span></td>
+                                    <td>
+                                        <p class="small mb-0 asset-content-italic">
+                                            "Reconversion professionnelle réussie : Sophie, 34 ans, a doublé son salaire..."
+                                        </p>
+                                    </td>
+                                    <td class="text-end"><strong>4 823</strong></td>
+                                    <td class="text-end"><strong>187</strong></td>
+                                    <td class="text-end"><span class="badge bg-success">3.88%</span></td>
+                                    <td class="text-center"><span class="badge bg-success">Actif</span></td>
+                                </tr>
+                                <tr class="asset-row" data-asset-id="linkedin_2">
+                                    <td>
+                                        <span class="asset-type-badge asset-type-linkedin">
+                                            <i class="bi bi-linkedin"></i> LinkedIn
+                                        </span>
+                                    </td>
+                                    <td><span class="badge bg-info">2/3</span></td>
+                                    <td>
+                                        <p class="small mb-0 asset-content-italic">
+                                            "92% de nos alumni trouvent un emploi sous 6 mois. Voici ce qui fait la différence..."
+                                        </p>
+                                    </td>
+                                    <td class="text-end"><strong>3 956</strong></td>
+                                    <td class="text-end"><strong>142</strong></td>
+                                    <td class="text-end"><span class="badge bg-success">3.59%</span></td>
+                                    <td class="text-center"><span class="badge bg-success">Actif</span></td>
+                                </tr>
+                                <tr class="asset-row" data-asset-id="linkedin_3">
+                                    <td>
+                                        <span class="asset-type-badge asset-type-linkedin">
+                                            <i class="bi bi-linkedin"></i> LinkedIn
+                                        </span>
+                                    </td>
+                                    <td><span class="badge bg-info">3/3</span></td>
+                                    <td>
+                                        <div class="d-flex align-items-center gap-2 mb-1">
+                                            <span class="badge bg-warning text-dark asset-badge-small">
+                                                <i class="bi bi-image"></i> Image
+                                            </span>
+                                        </div>
+                                        <p class="small mb-0 asset-content-italic">
+                                            "Vous méritez une carrière qui vous passionne. Découvrez comment transformer..."
+                                        </p>
+                                    </td>
+                                    <td class="text-end"><strong>5 234</strong></td>
+                                    <td class="text-end"><strong>218</strong></td>
+                                    <td class="text-end"><span class="badge bg-success">4.16%</span></td>
+                                    <td class="text-center"><span class="badge bg-success">Actif</span></td>
+                                </tr>
+
+                                <!-- Google Ads Assets -->
+                                <tr class="asset-row" data-asset-id="google_1">
+                                    <td>
+                                        <span class="asset-type-badge asset-type-google">
+                                            <i class="bi bi-google"></i> GoogleAds
+                                        </span>
+                                    </td>
+                                    <td><span class="badge bg-warning text-dark">1/2</span></td>
+                                    <td>
+                                        <p class="small mb-0">
+                                            <strong>Formation Professionnelle Certifiante | Financement CPF</strong> - Changez de carrière...
+                                        </p>
+                                    </td>
+                                    <td class="text-end"><strong>12 456</strong></td>
+                                    <td class="text-end"><strong>512</strong></td>
+                                    <td class="text-end"><span class="badge bg-success">4.11%</span></td>
+                                    <td class="text-center"><span class="badge bg-success">Actif</span></td>
+                                </tr>
+                                <tr class="asset-row" data-asset-id="google_2">
+                                    <td>
+                                        <span class="asset-type-badge asset-type-google">
+                                            <i class="bi bi-google"></i> GoogleAds
+                                        </span>
+                                    </td>
+                                    <td><span class="badge bg-warning text-dark">2/2</span></td>
+                                    <td>
+                                        <p class="small mb-0">
+                                            <strong>Reconversion Garantie | 92% de Placement</strong> - Obtenez une certification reconnue...
+                                        </p>
+                                    </td>
+                                    <td class="text-end"><strong>10 823</strong></td>
+                                    <td class="text-end"><strong>398</strong></td>
+                                    <td class="text-end"><span class="badge bg-success">3.68%</span></td>
+                                    <td class="text-center"><span class="badge bg-success">Actif</span></td>
+                                </tr>
+
+                                <!-- Facebook Assets -->
+                                <tr class="asset-row" data-asset-id="facebook_1">
+                                    <td>
+                                        <span class="asset-type-badge asset-type-facebook">
+                                            <i class="bi bi-facebook"></i> Facebook
+                                        </span>
+                                    </td>
+                                    <td><span class="badge bg-primary">1/2</span></td>
+                                    <td>
+                                        <p class="small mb-0 asset-content-italic">
+                                            "Prêt(e) pour une nouvelle carrière ? Découvrez nos formations certifiantes..."
+                                        </p>
+                                    </td>
+                                    <td class="text-end"><strong>8 234</strong></td>
+                                    <td class="text-end"><strong>245</strong></td>
+                                    <td class="text-end"><span class="badge bg-warning text-dark">2.98%</span></td>
+                                    <td class="text-center"><span class="badge bg-success">Actif</span></td>
+                                </tr>
+                                <tr class="asset-row" data-asset-id="facebook_2">
+                                    <td>
+                                        <span class="asset-type-badge asset-type-facebook">
+                                            <i class="bi bi-facebook"></i> Facebook
+                                        </span>
+                                    </td>
+                                    <td><span class="badge bg-primary">2/2</span></td>
+                                    <td>
+                                        <div class="d-flex align-items-center gap-2 mb-1">
+                                            <span class="badge bg-warning text-dark asset-badge-small">
+                                                <i class="bi bi-image"></i> Image
+                                            </span>
+                                        </div>
+                                        <p class="small mb-0 asset-content-italic">
+                                            "La formation qui change tout. De caissière à chef de projet en 8 mois..."
+                                        </p>
+                                    </td>
+                                    <td class="text-end"><strong>9 567</strong></td>
+                                    <td class="text-end"><strong>312</strong></td>
+                                    <td class="text-end"><span class="badge bg-success">3.26%</span></td>
+                                    <td class="text-center"><span class="badge bg-success">Actif</span></td>
+                                </tr>
+
+                                <!-- Email Assets -->
+                                <tr class="asset-row" data-asset-id="email_1">
+                                    <td>
+                                        <span class="asset-type-badge asset-type-email">
+                                            <i class="bi bi-envelope"></i> Email
+                                        </span>
+                                    </td>
+                                    <td><span class="badge bg-danger">1/2</span></td>
+                                    <td>
+                                        <p class="small mb-0">
+                                            <strong>Objet:</strong> Sophie a doublé son salaire en 6 mois. Voici comment...
+                                        </p>
+                                    </td>
+                                    <td class="text-end"><strong>2 754</strong></td>
+                                    <td class="text-end"><strong>892</strong></td>
+                                    <td class="text-end"><span class="badge bg-success">32.4%</span></td>
+                                    <td class="text-center"><span class="badge bg-success">Envoyé</span></td>
+                                </tr>
+                                <tr class="asset-row" data-asset-id="email_2">
+                                    <td>
+                                        <span class="asset-type-badge asset-type-email">
+                                            <i class="bi bi-envelope"></i> Email
+                                        </span>
+                                    </td>
+                                    <td><span class="badge bg-danger">2/2</span></td>
+                                    <td>
+                                        <p class="small mb-0">
+                                            <strong>Objet:</strong> 3 mois pour changer de vie (financement CPF 100%)
+                                        </p>
+                                    </td>
+                                    <td class="text-end"><strong>2 456</strong></td>
+                                    <td class="text-end"><strong>687</strong></td>
+                                    <td class="text-end"><span class="badge bg-success">27.9%</span></td>
+                                    <td class="text-center"><span class="badge bg-warning text-dark">Planifié</span></td>
+                                </tr>
+
+                                <!-- Article Assets -->
+                                <tr class="asset-row" data-asset-id="article_1">
+                                    <td>
+                                        <span class="asset-type-badge asset-type-article">
+                                            <i class="bi bi-file-text"></i> Article
+                                        </span>
+                                    </td>
+                                    <td><span class="badge bg-secondary">1/2</span></td>
+                                    <td>
+                                        <p class="small mb-0">
+                                            <strong>Titre:</strong> "Les 5 étapes clés pour réussir sa reconversion professionnelle en 2025"
+                                        </p>
+                                    </td>
+                                    <td class="text-end"><strong>1 234</strong></td>
+                                    <td class="text-end"><strong>—</strong></td>
+                                    <td class="text-end"><span class="badge bg-info">5m 24s</span></td>
+                                    <td class="text-center"><span class="badge bg-success">Publié</span></td>
+                                </tr>
+                                <tr class="asset-row" data-asset-id="article_2">
+                                    <td>
+                                        <span class="asset-type-badge asset-type-article">
+                                            <i class="bi bi-file-text"></i> Article
+                                        </span>
+                                    </td>
+                                    <td><span class="badge bg-secondary">2/2</span></td>
+                                    <td>
+                                        <div class="d-flex align-items-center gap-2 mb-1">
+                                            <span class="badge bg-warning text-dark asset-badge-small">
+                                                <i class="bi bi-image"></i> Image
+                                            </span>
+                                        </div>
+                                        <p class="small mb-0">
+                                            <strong>Titre:</strong> "Témoignage reconversion : De caissière à développeuse web en 6 mois"
+                                        </p>
+                                    </td>
+                                    <td class="text-end"><strong>987</strong></td>
+                                    <td class="text-end"><strong>—</strong></td>
+                                    <td class="text-end"><span class="badge bg-info">7m 12s</span></td>
+                                    <td class="text-center"><span class="badge bg-success">Publié</span></td>
+                                </tr>
+
+                                <!-- Instagram Asset -->
+                                <tr class="asset-row" data-asset-id="instagram_1">
+                                    <td>
+                                        <span class="asset-type-badge asset-type-instagram">
+                                            <i class="bi bi-instagram"></i> Instagram
+                                        </span>
+                                    </td>
+                                    <td><span class="badge bg-secondary">1/1</span></td>
+                                    <td>
+                                        <div class="d-flex align-items-center gap-2 mb-1">
+                                            <span class="badge bg-warning text-dark asset-badge-small">
+                                                <i class="bi bi-image"></i> Image
+                                            </span>
+                                        </div>
+                                        <p class="small mb-0 asset-content-italic">
+                                            "Nouvelle vie, nouvelle carrière. Marie partage son parcours inspirant..."
+                                        </p>
+                                    </td>
+                                    <td class="text-end"><strong>6 543</strong></td>
+                                    <td class="text-end"><strong>234</strong></td>
+                                    <td class="text-end"><span class="badge bg-success">3.58%</span></td>
+                                    <td class="text-center"><span class="badge bg-success">Actif</span></td>
+                                </tr>
+
+                                <!-- SMS Assets -->
+                                <tr class="asset-row" data-asset-id="sms_1">
+                                    <td>
+                                        <span class="asset-type-badge asset-type-sms">
+                                            <i class="bi bi-phone"></i> SMS
+                                        </span>
+                                    </td>
+                                    <td><span class="badge bg-secondary">1/2</span></td>
+                                    <td>
+                                        <p class="small mb-0">
+                                            "CFI: Session info GRATUITE mardi 18h. Reconversion + CPF. Places limitées..."
+                                        </p>
+                                    </td>
+                                    <td class="text-end"><strong>1 500</strong></td>
+                                    <td class="text-end"><strong>127</strong></td>
+                                    <td class="text-end"><span class="badge bg-success">8.47%</span></td>
+                                    <td class="text-center"><span class="badge bg-success">Envoyé</span></td>
+                                </tr>
+                                <tr class="asset-row" data-asset-id="sms_2">
+                                    <td>
+                                        <span class="asset-type-badge asset-type-sms">
+                                            <i class="bi bi-phone"></i> SMS
+                                        </span>
+                                    </td>
+                                    <td><span class="badge bg-secondary">2/2</span></td>
+                                    <td>
+                                        <p class="small mb-0">
+                                            "Nouvelle carrière en 3 mois? CFI Formation vous rappelle gratuitement..."
+                                        </p>
+                                    </td>
+                                    <td class="text-end"><strong>1 200</strong></td>
+                                    <td class="text-end"><strong>89</strong></td>
+                                    <td class="text-end"><span class="badge bg-warning text-dark">7.42%</span></td>
+                                    <td class="text-center"><span class="badge bg-warning text-dark">Planifié</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Pagination -->
+                    <div class="d-flex justify-content-between align-items-center">
+                        <p class="small text-secondary mb-0">Affichage 1-15 sur 62 assets</p>
+                        <nav>
+                            <ul class="pagination pagination-sm mb-0">
+                                <li class="page-item disabled"><a class="page-link" href="#">Précédent</a></li>
+                                <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                <li class="page-item"><a class="page-link" href="#">4</a></li>
+                                <li class="page-item"><a class="page-link" href="#">5</a></li>
+                                <li class="page-item"><a class="page-link" href="#">Suivant</a></li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal Detail Asset -->
+    <div class="modal fade" id="assetDetailModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-fullscreen-custom">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <span id="modalAssetType"></span>
+                        <span id="modalAssetVariation" class="badge bg-secondary ms-2"></span>
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-0 modal-body-asset">
+                    <div class="row g-0">
+                        <!-- Colonne gauche: Analyse IA -->
+                        <div class="col-md-5 modal-col-left">
+                            <div class="modal-col-left-header">
+                                <h4><i class="bi bi-info-circle text-primary"></i> Détails de l'asset</h4>
+                            </div>
+                            <div class="modal-col-left-content">
+                                <!-- Section Planification - Version PLANIFIÉ (masquée par défaut) -->
+                                <div class="planning-section mb-4 d-none" id="planningSectionScheduled">
+                                    <div class="d-flex align-items-center justify-content-between mb-3">
+                                        <h5 class="mb-0"><i class="bi bi-calendar-event text-primary"></i> Planification</h5>
+                                        <span class="badge bg-success">Planifié</span>
+                                    </div>
+                                    <div>
+                                        <div class="d-flex align-items-center gap-3 mb-2">
+                                            <i class="bi bi-calendar3 text-primary fs-5"></i>
+                                            <div>
+                                                <p class="small text-secondary mb-0">Date de publication</p>
+                                                <strong id="planningDate">Lundi 20 Janvier 2025</strong>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex align-items-center gap-3 mb-3">
+                                            <i class="bi bi-clock text-primary fs-5"></i>
+                                            <div>
+                                                <p class="small text-secondary mb-0">Heure</p>
+                                                <strong id="planningTime">09:00</strong>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex gap-2">
+                                        <button type="button" class="btn btn-outline-primary btn-sm flex-grow-1">
+                                            <i class="bi bi-pencil"></i> Modifier
+                                        </button>
+                                        <button type="button" class="btn btn-success btn-sm flex-grow-1">
+                                            <i class="bi bi-send"></i> Publier maintenant
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- Section Planification - Version NON PLANIFIÉ -->
+                                <div class="planning-section planning-section-not-scheduled mb-4" id="planningSectionNotScheduled">
+                                    <div class="d-flex align-items-center justify-content-between mb-3">
+                                        <h5 class="mb-0"><i class="bi bi-calendar-x text-warning"></i> Planification</h5>
+                                        <span class="badge bg-warning text-dark">Non planifié</span>
+                                    </div>
+                                    <div class="text-center py-3">
+                                        <i class="bi bi-calendar-plus text-secondary fs-1 mb-2 d-block opacity-50"></i>
+                                        <p class="text-secondary mb-3">Cet asset n'a pas encore de date de publication programmée.</p>
+                                    </div>
+                                    <div class="d-flex gap-2">
+                                        <button type="button" class="btn btn-primary btn-sm flex-grow-1">
+                                            <i class="bi bi-calendar-plus"></i> Planifier la publication
+                                        </button>
+                                        <button type="button" class="btn btn-success btn-sm flex-grow-1">
+                                            <i class="bi bi-send"></i> Publier maintenant
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- Section Analyse IA -->
+                                <h5><i class="bi bi-robot text-primary"></i> Analyse IA</h5>
+                                <div id="reasoningContent">
+                                    <!-- Sera rempli dynamiquement -->
+                                </div>
+
+                                <h5><i class="bi bi-graph-up-arrow text-success"></i> Métriques & KPIs</h5>
+                                <div id="kpisContent">
+                                    <!-- Sera rempli dynamiquement -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Colonne droite: Preview -->
+                        <div class="col-md-7 modal-col-right">
+                            <div class="modal-col-right-header">
+                                <h4><i class="bi bi-eye text-primary"></i> Aperçu visuel</h4>
+                            </div>
+                            <div class="modal-col-right-content">
+                                <div id="previewContent">
+                                    <!-- Sera rempli dynamiquement -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="d-flex justify-content-between align-items-center w-100">
+                        <!-- Actions gauche -->
+                        <div>
+                            <button type="button" class="btn btn-outline-secondary">
+                                <i class="bi bi-download"></i> Exporter
+                            </button>
+                            <button type="button" class="btn btn-outline-secondary ms-2">
+                                <i class="bi bi-files"></i> Dupliquer
+                            </button>
+                        </div>
+
+                        <!-- Navigation diaporama centrale -->
+                        <div class="d-flex align-items-center gap-2">
+                            <button type="button" class="btn btn-outline-primary" id="modalNavPrev" title="Asset précédent">
+                                <i class="bi bi-chevron-left"></i>
+                            </button>
+                            <span class="badge bg-secondary px-3 py-2" id="modalNavCounter">1 / 15</span>
+                            <button type="button" class="btn btn-outline-primary" id="modalNavNext" title="Asset suivant">
+                                <i class="bi bi-chevron-right"></i>
+                            </button>
+                        </div>
+
+                        <!-- Actions droite -->
+                        <div>
+                            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Fermer</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <a href="campaign_show_light.html" class="fab-back">
+        <i class="bi bi-arrow-left"></i>
+        <span class="fab-tooltip">Retour à la campagne</span>
+    </a>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../assets/js/main.js" type="module"></script>
+</body>
+</html>

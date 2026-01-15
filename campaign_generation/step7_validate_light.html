@@ -136,28 +136,39 @@
                 <div class="campaign-stepper">
                     <div class="stepper-container">
                         <div class="stepper-line">
-                            <div class="stepper-progress step5-validate-stepper-progress"></div>
+                            <div class="stepper-progress step7-validate-stepper-progress"></div>
                         </div>
+
                         <div class="stepper-step completed">
                             <div class="stepper-circle"><i class="bi bi-check-lg"></i></div>
                             <div class="stepper-label">Projet</div>
                         </div>
-                        <div class="stepper-step completed">
-                            <div class="stepper-circle"><i class="bi bi-check-lg"></i></div>
-                            <div class="stepper-label">Upload Contacts</div>
-                        </div>
-                        <div class="stepper-step completed">
-                            <div class="stepper-circle"><i class="bi bi-check-lg"></i></div>
-                            <div class="stepper-label">Personas</div>
-                        </div>
+
                         <div class="stepper-step completed">
                             <div class="stepper-circle"><i class="bi bi-check-lg"></i></div>
                             <div class="stepper-label">Concurrents</div>
                         </div>
+
+                        <div class="stepper-step completed">
+                            <div class="stepper-circle"><i class="bi bi-check-lg"></i></div>
+                            <div class="stepper-label">Personas</div>
+                        </div>
+
+                        <div class="stepper-step completed">
+                            <div class="stepper-circle"><i class="bi bi-check-lg"></i></div>
+                            <div class="stepper-label">Upload</div>
+                        </div>
+
                         <div class="stepper-step completed">
                             <div class="stepper-circle"><i class="bi bi-check-lg"></i></div>
                             <div class="stepper-label">Stratégie</div>
                         </div>
+
+                        <div class="stepper-step completed">
+                            <div class="stepper-circle"><i class="bi bi-check-lg"></i></div>
+                            <div class="stepper-label">Canaux</div>
+                        </div>
+
                         <div class="stepper-step active">
                             <div class="stepper-circle"><i class="bi bi-check-lg"></i></div>
                             <div class="stepper-label">Assets</div>
@@ -563,7 +574,7 @@
         <!-- Action 1: Régénérer -->
         <div class="speed-dial-action">
             <span class="speed-dial-label">Régénérer les assets</span>
-            <a href="step5_loading_light.html" class="speed-dial-btn speed-dial-cancel">
+            <a href="step7_loading_light.html" class="speed-dial-btn speed-dial-cancel">
                 <i class="bi bi-arrow-clockwise"></i>
             </a>
         </div>
@@ -571,9 +582,9 @@
         <!-- Action 2: Valider et finaliser -->
         <div class="speed-dial-action">
             <span class="speed-dial-label">Valider et finaliser la campagne</span>
-            <button type="button" class="speed-dial-btn speed-dial-primary">
+            <a href="campaign_show_light.html" class="speed-dial-btn speed-dial-primary">
                 <i class="bi bi-check-circle-fill"></i>
-            </button>
+            </a>
         </div>
 
         <!-- Bouton principal -->
@@ -633,19 +644,33 @@
                         </div>
                     </div>
                 </div>
-                <div class="modal-footer" style="border-top: 2px solid var(--border-color); justify-content: space-between;">
+                <div class="modal-footer border-top-2 d-flex justify-content-between align-items-center">
+                    <!-- Actions gauche -->
                     <div>
                         <button type="button" class="btn btn-outline-danger">
-                            <i class="bi bi-trash"></i> Rejeter cet asset
+                            <i class="bi bi-trash"></i> Rejeter
                         </button>
                         <button type="button" class="btn btn-outline-secondary ms-2">
                             <i class="bi bi-arrow-clockwise"></i> Régénérer
                         </button>
                     </div>
+
+                    <!-- Navigation diaporama centrale -->
+                    <div class="d-flex align-items-center gap-2">
+                        <button type="button" class="btn btn-outline-primary" id="modalNavPrev" title="Asset précédent">
+                            <i class="bi bi-chevron-left"></i>
+                        </button>
+                        <span class="badge bg-secondary px-3 py-2" id="modalNavCounter">1 / 15</span>
+                        <button type="button" class="btn btn-outline-primary" id="modalNavNext" title="Asset suivant">
+                            <i class="bi bi-chevron-right"></i>
+                        </button>
+                    </div>
+
+                    <!-- Actions droite -->
                     <div>
                         <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Fermer</button>
-                        <button type="button" class="btn btn-primary">
-                            <i class="bi bi-check-lg"></i> Valider cet asset
+                        <button type="button" class="btn btn-primary ms-2">
+                            <i class="bi bi-check-lg"></i> Valider
                         </button>
                     </div>
                 </div>
@@ -653,7 +678,7 @@
         </div>
     </div>
 
-    <a href="step5_config_light.html" class="fab-back">
+    <a href="step6_select_light.html" class="fab-back">
         <i class="bi bi-arrow-left"></i>
         <span class="fab-tooltip">Retour à la configuration</span>
     </a>

@@ -1,5 +1,5 @@
 /**
- * Persona Selector for Step 2
+ * Persona Selector for Step 3
  * Gestion de la sélection des personas pour la campagne
  */
 
@@ -78,8 +78,8 @@ function validatePersonas() {
 
     console.log(`[persona-selector] Validation de ${selectedPersonas.length} persona(s)`);
 
-    // Redirection vers l'étape suivante
-    window.location.href = adaptUrlToTheme('step3_loading_light.html');
+    // Redirection vers l'étape suivante (upload contacts)
+    window.location.href = adaptUrlToTheme('contact_upload_empty_light.html');
 }
 
 /**
@@ -100,11 +100,8 @@ export function initPersonaSelector() {
         });
     });
 
-    // Attacher l'event listener au bouton de validation
-    const validateBtn = document.getElementById('validateBtn');
-    if (validateBtn) {
-        validateBtn.addEventListener('click', validatePersonas);
-    }
+    // Le bouton de validation ouvre maintenant une modal Bootstrap
+    // via data-bs-toggle="modal", donc pas besoin d'event listener JS
 
     // État initial du bouton
     updateValidateButton();

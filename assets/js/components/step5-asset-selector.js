@@ -67,16 +67,46 @@ export function updateEstimation() {
         totalVariations += parseInt(valueElement.textContent);
     });
 
+    // Mettre à jour le compteur dans le titre de section
     const selectedAssetsCountElement = document.getElementById('selectedAssetsCount');
-    const totalVariationsElement = document.getElementById('totalVariations');
-
     if (selectedAssetsCountElement) {
-        selectedAssetsCountElement.textContent = activeCards.length + ' types d\'assets';
+        selectedAssetsCountElement.textContent = activeCards.length;
     }
 
+    // Mettre à jour le compteur dans l'estimation card
+    const totalAssetsCountElement = document.getElementById('totalAssetsCount');
+    if (totalAssetsCountElement) {
+        totalAssetsCountElement.textContent = activeCards.length + ' canaux';
+    }
+
+    const totalVariationsElement = document.getElementById('totalVariations');
     if (totalVariationsElement) {
         totalVariationsElement.textContent = totalVariations + ' variations';
     }
+
+    // Mettre à jour les badges actifs
+    updateActiveBadges(activeCards);
+}
+
+/**
+ * Met à jour les badges des canaux actifs dans l'estimation card
+ * @param {NodeList} activeCards - Les cartes actives
+ */
+function updateActiveBadges(activeCards) {
+    const badgesContainer = document.getElementById('activeBadges');
+    if (!badgesContainer) return;
+
+    badgesContainer.innerHTML = '';
+
+    activeCards.forEach(card => {
+        const title = card.querySelector('.asset-card-title')?.textContent || 'Unknown';
+        const variations = card.querySelector('.stepper-value')?.textContent || '1';
+
+        const badge = document.createElement('span');
+        badge.className = 'badge bg-success estimation-badge';
+        badge.textContent = `${title} (${variations})`;
+        badgesContainer.appendChild(badge);
+    });
 }
 
 /**

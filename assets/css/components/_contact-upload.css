@@ -1,0 +1,138 @@
+/**
+ * Contact Upload Component
+ * Composant pour la page d'upload de contacts
+ */
+
+/* Stepper Progress - Contact Upload Step */
+.contact-upload-stepper-progress {
+    width: 22%;
+}
+
+/* Upload Dropzone */
+.upload-dropzone {
+    border: 2px dashed var(--border) !important;
+    background: var(--bg-card) !important;
+    transition: all 0.3s ease;
+}
+
+.upload-dropzone:hover {
+    border-color: var(--color-primary) !important;
+    background: var(--bg-hover) !important;
+}
+
+/* Upload Icon */
+.upload-icon {
+    font-size: 4rem;
+    color: var(--color-primary);
+    opacity: 0.5;
+}
+
+/* Upload Info Cards */
+.upload-info-card {
+    background: var(--bg-card) !important;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.upload-info-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Upload Info Icon Wrapper */
+.upload-info-icon-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: rgba(var(--color-primary-rgb), 0.1);
+}
+
+/* Upload Info Icon */
+.upload-info-icon {
+    font-size: 1.5rem;
+    color: var(--color-primary);
+}
+
+/* Mapping Table */
+.mapping-table thead {
+    background: var(--bg-card);
+    border-bottom: 2px solid var(--border);
+}
+
+.mapping-table th {
+    font-weight: 600;
+}
+
+.mapping-table-col-source {
+    width: 40%;
+}
+
+.mapping-table-col-target {
+    width: 40%;
+}
+
+.mapping-table-col-status {
+    width: 10%;
+    text-align: center;
+}
+
+.mapping-table-col-action {
+    width: 10%;
+    text-align: center;
+}
+
+/* Mapping Row States */
+.mapping-row-success {
+    border-left: 4px solid #28a745;
+}
+
+.mapping-row-error {
+    border-left: 4px solid #dc3545;
+}
+
+.mapping-row-ignored {
+    border-left: 4px solid #6c757d;
+}
+
+/* Status Icons */
+.mapping-status-icon {
+    font-size: 1.2rem;
+}
+
+/* Badge Size */
+.badge-large {
+    font-size: 0.9rem;
+    padding: 0.4rem 0.8rem;
+}
+
+/* Card Header Primary */
+.card-header-primary {
+    background: var(--bg-primary);
+    border-bottom: 1px solid var(--border);
+}
+
+/* Card Footer */
+.card-footer-custom {
+    background: var(--bg-card);
+    border-top: 1px solid var(--border);
+}
+
+/* Preview Table Sticky Header */
+.table-header-sticky {
+    background: var(--bg-primary);
+    border-bottom: 2px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+/* Preview Table Column Widths */
+.preview-table-col-id {
+    width: 5%;
+}
+
+.preview-table-col-status {
+    width: 8%;
+}

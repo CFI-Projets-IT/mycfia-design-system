@@ -6,6 +6,52 @@
 
 ---
 
+## ÉTAT ACTUEL (2026-01-14 15:30)
+
+**Phase 1 : TERMINÉE** - Tous les fichiers renommés
+**Phase 2 : TERMINÉE** - Modifications de contenu effectuées
+**Phase 3 : TERMINÉE** - Mise à jour des steppers (21 fichiers)
+**Phase 4 : TERMINÉE** - Mise à jour de la navigation
+**Phase 5 : TERMINÉE** - Mise à jour CSS
+
+### Fichiers stepper mis à jour (21/21) :
+- [x] step1_create_light.html
+- [x] step1_loading_light.html
+- [x] step1_review_light.html
+- [x] step2_loading_light.html
+- [x] step2_validate_light.html
+- [x] step3_loading_light.html
+- [x] step3_select_light.html
+- [x] step6_select_light.html (créé avec bon stepper)
+- [x] contact_upload_empty_light.html
+- [x] contact_upload_validating_light.html
+- [x] contact_upload_errors_light.html
+- [x] contact_upload_analyzing_light.html
+- [x] contact_upload_suggestions_light.html
+- [x] contact_upload_mapping_light.html
+- [x] contact_upload_preview_light.html
+- [x] step5_loading_light.html
+- [x] step5_recap_light.html
+- [x] step5_result_light.html
+- [x] step7_loading_light.html
+- [x] step7_config_light.html
+- [x] step7_validate_light.html
+
+### Nouveau stepper à 7 étapes (template) :
+```html
+1. Projet
+2. Concurrents
+3. Personas
+4. Upload
+5. Stratégie
+6. Canaux
+7. Assets
+```
+
+---
+
+---
+
 ## Contexte
 
 Passage de 6 à 7 étapes avec réorganisation de l'ordre des étapes selon le flux client.
@@ -24,30 +70,30 @@ Passage de 6 à 7 étapes avec réorganisation de l'ordre des étapes selon le f
 
 ### 1.1 - Renommer step5_* → step7_* (Génération Assets)
 
-- [ ] `step5_loading_light.html` → `step7_loading_light.html`
-- [ ] `step5_config_light.html` → `step7_config_light.html`
-- [ ] `step5_validate_light.html` → `step7_validate_light.html`
+- [x] `step5_loading_light.html` → `step7_loading_light.html`
+- [x] `step5_config_light.html` → `step7_config_light.html`
+- [x] `step5_validate_light.html` → `step7_validate_light.html`
 
 ### 1.2 - Renommer step4_* → step5_* (Stratégie)
 
-- [ ] `step4_loading_light.html` → `step5_loading_light.html`
-- [ ] `step4_recap_light.html` → `step5_recap_light.html`
-- [ ] `step4_result_light.html` → `step5_result_light.html`
+- [x] `step4_loading_light.html` → `step5_loading_light.html`
+- [x] `step4_recap_light.html` → `step5_recap_light.html`
+- [x] `step4_result_light.html` → `step5_result_light.html`
 
 ### 1.3 - Renommer step3_* → TEMP_* (Concurrents - temporaire)
 
-- [ ] `step3_loading_light.html` → `TEMP_concurrents_loading_light.html`
-- [ ] `step3_validate_light.html` → `TEMP_concurrents_validate_light.html`
+- [x] `step3_loading_light.html` → `TEMP_concurrents_loading_light.html`
+- [x] `step3_validate_light.html` → `TEMP_concurrents_validate_light.html`
 
 ### 1.4 - Renommer step2_* → step3_* (Personas)
 
-- [ ] `step2_loading_light.html` → `step3_loading_light.html`
-- [ ] `step2_select_light.html` → `step3_select_light.html`
+- [x] `step2_loading_light.html` → `step3_loading_light.html`
+- [x] `step2_select_light.html` → `step3_select_light.html`
 
 ### 1.5 - Renommer TEMP_* → step2_* (Concurrents - final)
 
-- [ ] `TEMP_concurrents_loading_light.html` → `step2_loading_light.html`
-- [ ] `TEMP_concurrents_validate_light.html` → `step2_validate_light.html`
+- [x] `TEMP_concurrents_loading_light.html` → `step2_loading_light.html`
+- [x] `TEMP_concurrents_validate_light.html` → `step2_validate_light.html`
 
 ---
 
@@ -55,29 +101,29 @@ Passage de 6 à 7 étapes avec réorganisation de l'ordre des étapes selon le f
 
 ### 2.1 - Modifier step1_create_light.html
 
-- [ ] Retirer la section "Sélection des canaux de diffusion"
-- [ ] Ajuster le layout si nécessaire
-- [ ] Vérifier que le formulaire reste cohérent
+- [x] Retirer la section "Sélection des canaux de diffusion"
+- [x] Ajuster le layout si nécessaire
+- [x] Vérifier que le formulaire reste cohérent
 
 ### 2.2 - Modifier step2_validate_light.html (Concurrents)
 
-- [ ] Ajouter formulaire d'ajout de concurrent :
+- [x] Ajouter formulaire d'ajout de concurrent :
   - Champ : Nom du concurrent (text, required)
   - Champ : URL du concurrent (url, required)
   - Bouton : Ajouter
-- [ ] Intégrer le formulaire dans le design existant
+- [x] Intégrer le formulaire dans le design existant
 
 ### 2.3 - Créer step6_select_light.html (Sélection Assets)
 
-- [ ] Créer la nouvelle page
-- [ ] Section 1 : "Assets recommandés par l'IA" (mise en avant)
+- [x] Créer la nouvelle page
+- [x] Section 1 : "Assets recommandés par l'IA" (mise en avant)
   - Cards assets avec badge "Recommandé"
   - Checkboxes pour sélection
-- [ ] Section 2 : "Autres canaux disponibles"
+- [x] Section 2 : "Autres canaux disponibles"
   - Cards assets standard
   - Checkboxes pour sélection
-- [ ] Intégrer le stepper (étape 6 active)
-- [ ] Boutons navigation (Précédent / Continuer)
+- [x] Intégrer le stepper (étape 6 active)
+- [x] Boutons navigation (Précédent / Continuer)
 
 ---
 

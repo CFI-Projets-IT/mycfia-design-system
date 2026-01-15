@@ -1,5 +1,5 @@
 /**
- * Competitor Selector for Step 3
+ * Competitor Selector for Step 2
  * Gestion de la sélection des concurrents pour la campagne
  */
 
@@ -69,8 +69,8 @@ function validateCompetitors() {
 
     console.log(`[competitor-selector] Validation de ${selectedCompetitors.length} concurrent(s)`);
 
-    // Redirection vers l'étape suivante (loading stratégie)
-    window.location.href = adaptUrlToTheme('step4_loading_light.html');
+    // Redirection vers l'étape suivante (loading personas)
+    window.location.href = adaptUrlToTheme('step3_loading_light.html');
 }
 
 /**

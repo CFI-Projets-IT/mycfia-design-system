@@ -210,7 +210,7 @@ function initPersonaLoader() {
 
     simulateLoading({
         duration: 12000,
-        redirectUrl: adaptUrlToTheme('step2_select_light.html'),
+        redirectUrl: adaptUrlToTheme('step3_select_light.html'),
         messages: personaMessages
     });
 }
@@ -232,7 +232,7 @@ function initCompetitorLoader() {
 
     simulateLoading({
         duration: 10000,
-        redirectUrl: adaptUrlToTheme('step3_validate_light.html'),
+        redirectUrl: adaptUrlToTheme('step2_validate_light.html'),
         messages: competitorMessages
     });
 }
@@ -254,7 +254,7 @@ function initStrategyLoader() {
 
     simulateLoading({
         duration: 13000,
-        redirectUrl: adaptUrlToTheme('step4_result_light.html'),
+        redirectUrl: adaptUrlToTheme('step5_result_light.html'),
         messages: strategyMessages
     });
 }
@@ -277,7 +277,7 @@ function initAssetLoader() {
 
     simulateLoading({
         duration: 18000,
-        redirectUrl: adaptUrlToTheme('step5_validate_light.html'),
+        redirectUrl: adaptUrlToTheme('step7_validate_light.html'),
         messages: assetMessages
     });
 }
@@ -320,6 +320,155 @@ function initContactAnalysisLoader() {
     });
 }
 
+/**
+ * Messages de progression pour analyse Profilia
+ */
+const PROFILIA_MESSAGES = [
+    "Connexion à la base Profilia",
+    "Extraction des critères personas",
+    "Matching avec 150+ critères",
+    "Calcul du reach potentiel"
+];
+
+/**
+ * Initialise le loader Profilia (inline, sans redirection)
+ * Gère la transition entre les 3 états : Initial → Loading → Results
+ */
+export function initProfiliaLoader() {
+    const analyzeBtn = document.getElementById('profiliaAnalyzeBtn');
+    const initialCard = document.getElementById('profiliaInitial');
+    const loadingCard = document.getElementById('profiliaLoading');
+    const resultsCard = document.getElementById('profiliaResults');
+    const progressBar = document.getElementById('profiliaProgress');
+
+    if (!analyzeBtn || !initialCard || !loadingCard || !resultsCard) {
+        return;
+    }
+
+    analyzeBtn.addEventListener('click', () => {
+        // Passer à l'état loading
+        initialCard.classList.add('d-none');
+        loadingCard.classList.remove('d-none');
+
+        // Démarrer l'animation
+        simulateProfiliaLoading({
+            duration: 8000,
+            progressBar: progressBar,
+            onComplete: () => {
+                // Passer à l'état résultats
+                loadingCard.classList.add('d-none');
+                resultsCard.classList.remove('d-none');
+            }
+        });
+    });
+}
+
+/**
+ * Simule le chargement Profilia avec progression par étapes
+ * @param {Object} options - Options de configuration
+ */
+function simulateProfiliaLoading(options = {}) {
+    const {
+        duration = 8000,
+        progressBar = null,
+        onComplete = () => {}
+    } = options;
+
+    const steps = [
+        document.getElementById('profiliaStep1'),
+        document.getElementById('profiliaStep2'),
+        document.getElementById('profiliaStep3'),
+        document.getElementById('profiliaStep4')
+    ];
+
+    let progress = 0;
+    const interval = 100;
+    const totalSteps = duration / interval;
+    const increment = 100 / totalSteps;
+
+    const progressInterval = setInterval(() => {
+        progress += increment;
+
+        if (progress >= 100) {
+            progress = 100;
+            clearInterval(progressInterval);
+
+            // Marquer toutes les étapes comme terminées
+            steps.forEach(step => {
+                if (step) {
+                    updateStepState(step, 'done');
+                }
+            });
+
+            // Callback de fin
+            setTimeout(onComplete, 500);
+        }
+
+        // Mettre à jour la barre de progression
+        if (progressBar) {
+            progressBar.style.width = `${progress}%`;
+        }
+
+        // Mettre à jour les étapes
+        const activeStepIndex = Math.floor((progress / 100) * steps.length);
+        steps.forEach((step, index) => {
+            if (!step) return;
+
+            if (index < activeStepIndex) {
+                updateStepState(step, 'done');
+            } else if (index === activeStepIndex) {
+                updateStepState(step, 'active');
+            }
+        });
+    }, interval);
+}
+
+/**
+ * Met à jour l'état visuel d'une étape
+ * @param {HTMLElement} step - Element de l'étape
+ * @param {string} state - État ('pending', 'active', 'done')
+ */
+function updateStepState(step, state) {
+    const icon = step.querySelector('i');
+    const text = step.querySelector('span');
+
+    // Reset classes
+    step.classList.remove('profilia-step-active', 'profilia-step-done');
+    if (icon) {
+        icon.classList.remove('bi-circle', 'bi-circle-fill', 'bi-check-circle-fill', 'text-secondary', 'text-primary', 'text-success');
+    }
+
+    switch (state) {
+        case 'active':
+            step.classList.add('profilia-step-active');
+            if (icon) {
+                icon.classList.add('bi-circle-fill', 'text-primary');
+            }
+            if (text) {
+                text.classList.remove('text-secondary');
+                text.classList.add('text-primary', 'fw-medium');
+            }
+            break;
+        case 'done':
+            step.classList.add('profilia-step-done');
+            if (icon) {
+                icon.classList.add('bi-check-circle-fill', 'text-success');
+            }
+            if (text) {
+                text.classList.remove('text-secondary', 'text-primary');
+                text.classList.add('text-success');
+            }
+            break;
+        default: // pending
+            if (icon) {
+                icon.classList.add('bi-circle', 'text-secondary');
+            }
+            if (text) {
+                text.classList.add('text-secondary');
+            }
+    }
+}
+
 // Auto-detect loader type from URL and initialize
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initLoader);
@@ -333,12 +482,14 @@ function initLoader() {
     if (path.includes('step1_loading')) {
         initEnrichmentLoader();
     } else if (path.includes('step2_loading')) {
-        initPersonaLoader();
-    } else if (path.includes('step3_loading')) {
         initCompetitorLoader();
-    } else if (path.includes('step4_loading')) {
-        initStrategyLoader();
+    } else if (path.includes('step3_loading')) {
+        initPersonaLoader();
+    } else if (path.includes('step3_select')) {
+        initProfiliaLoader();
     } else if (path.includes('step5_loading')) {
+        initStrategyLoader();
+    } else if (path.includes('step7_loading')) {
         initAssetLoader();
     } else if (path.includes('contact_upload_validating')) {
         initContactValidationLoader();

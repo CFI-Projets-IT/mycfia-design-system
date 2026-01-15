@@ -5,7 +5,7 @@
 
 /**
  * Met à jour le stepper selon l'étape active
- * @param {number} currentStep - Numéro de l'étape active (1-5)
+ * @param {number} currentStep - Numéro de l'étape active (1-7)
  */
 export function updateStepper(currentStep) {
     const steps = document.querySelectorAll('.stepper-step');
@@ -50,8 +50,10 @@ function autoDetectStep() {
     if (path.includes('step1')) step = 1;
     else if (path.includes('step2')) step = 2;
     else if (path.includes('step3')) step = 3;
-    else if (path.includes('step4')) step = 4;
+    else if (path.includes('contact_upload')) step = 4;
     else if (path.includes('step5')) step = 5;
+    else if (path.includes('step6')) step = 6;
+    else if (path.includes('step7')) step = 7;
 
     updateStepper(step);
 }

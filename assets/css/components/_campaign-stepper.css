@@ -93,6 +93,66 @@
     color: var(--text-primary);
 }
 
+/* ========================================
+   STEPPER PROGRESS - 7 ÉTAPES
+   Progression calculée: étape N = (N-1)/6 * 100%
+   ======================================== */
+
+/* Étape 1 - Projet (active ou loading) */
+.step1-create-stepper-progress,
+.step1-loading-stepper-progress,
+.step1-review-stepper-progress {
+    width: 0%;
+}
+
+/* Étape 2 - Concurrents */
+.step2-loading-stepper-progress {
+    width: 8.33%;
+}
+.step2-validate-stepper-progress {
+    width: 16.67%;
+}
+
+/* Étape 3 - Personas */
+.step3-loading-stepper-progress {
+    width: 25%;
+}
+.step3-select-stepper-progress {
+    width: 33.33%;
+}
+
+/* Étape 4 - Upload */
+.contact-upload-stepper-progress {
+    width: 50%;
+}
+
+/* Étape 5 - Stratégie */
+.step5-loading-stepper-progress {
+    width: 58.33%;
+}
+.step5-recap-stepper-progress {
+    width: 62.5%;
+}
+.step5-result-stepper-progress {
+    width: 66.67%;
+}
+
+/* Étape 6 - Canaux */
+.step6-select-stepper-progress {
+    width: 83.33%;
+}
+
+/* Étape 7 - Assets */
+.step7-loading-stepper-progress {
+    width: 87.5%;
+}
+.step7-config-stepper-progress {
+    width: 91.67%;
+}
+.step7-validate-stepper-progress {
+    width: 100%;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
     .campaign-stepper {
