@@ -602,11 +602,23 @@
     <div class="modal fade" id="assetDetailModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-fullscreen-custom">
             <div class="modal-content">
-                <div class="modal-header" style="border-bottom: 2px solid var(--border-color);">
-                    <h5 class="modal-title">
+                <div class="modal-header border-bottom border-2">
+                    <!-- Titre à gauche -->
+                    <h5 class="modal-title mb-0">
                         <span id="modalAssetType"></span>
                         <span id="modalAssetVariation" class="badge bg-secondary ms-2"></span>
                     </h5>
+                    <!-- Navigation diaporama centrée -->
+                    <div class="position-absolute start-50 translate-middle-x d-flex align-items-center gap-2">
+                        <button type="button" class="btn btn-outline-primary btn-sm" id="modalNavPrev" title="Asset précédent">
+                            <i class="bi bi-chevron-left"></i>
+                        </button>
+                        <span class="badge bg-secondary px-3 py-2" id="modalNavCounter">1 / 15</span>
+                        <button type="button" class="btn btn-outline-primary btn-sm" id="modalNavNext" title="Asset suivant">
+                            <i class="bi bi-chevron-right"></i>
+                        </button>
+                    </div>
+                    <!-- Bouton close à droite -->
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body p-0" style="height: calc(95vh - 140px); overflow: hidden;">
@@ -649,7 +661,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="modal-footer border-top-2 d-flex justify-content-between align-items-center">
+                <div class="modal-footer border-top border-2 d-flex justify-content-between align-items-center">
                     <!-- Actions gauche -->
                     <div>
                         <button type="button" class="btn btn-outline-danger">
@@ -657,17 +669,6 @@
                         </button>
                         <button type="button" class="btn btn-outline-secondary ms-2">
                             <i class="bi bi-arrow-clockwise"></i> Régénérer
-                        </button>
-                    </div>
-
-                    <!-- Navigation diaporama centrale -->
-                    <div class="d-flex align-items-center gap-2">
-                        <button type="button" class="btn btn-outline-primary" id="modalNavPrev" title="Asset précédent">
-                            <i class="bi bi-chevron-left"></i>
-                        </button>
-                        <span class="badge bg-secondary px-3 py-2" id="modalNavCounter">1 / 15</span>
-                        <button type="button" class="btn btn-outline-primary" id="modalNavNext" title="Asset suivant">
-                            <i class="bi bi-chevron-right"></i>
                         </button>
                     </div>
 
