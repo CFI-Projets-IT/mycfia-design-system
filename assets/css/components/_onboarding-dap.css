@@ -1,0 +1,592 @@
+/**
+ * myCFiA Design System - Digital Adoption Platform (DAP) Onboarding
+ * Composant responsable de l'accueil et du guidage utilisateur
+ *
+ * Features:
+ * - Welcome modal (première visite)
+ * - Overlay + Spotlight tour guidé
+ * - Hotspots pulsants
+ * - Tooltips contextuels
+ * - Progress dots
+ * - Help button
+ * - Feature badges
+ *
+ * Compatible: light, dark-blue, dark-red themes
+ * Performance: Animations GPU-accelerated (transform + opacity)
+ */
+
+/* ==========================================================================
+   OVERLAY & BACKDROP
+   ========================================================================== */
+
+/**
+ * Overlay sombre avec transparence progressive
+ * Z-index: 9999 (au-dessus de tout le contenu)
+ * Opacité très réduite (0.2) pour garder le contenu visible
+ */
+.onboarding-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.2);
+    z-index: 9999;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+    pointer-events: none;
+}
+
+.onboarding-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* ==========================================================================
+   SPOTLIGHT
+   ========================================================================== */
+
+/**
+ * Zone éclairée mettant en valeur l'élément cible
+ * Utilise box-shadow pour créer l'effet de lumière
+ * Opacité très réduite (0.3) pour garder le contenu visible
+ */
+.onboarding-spotlight {
+    position: absolute;
+    border-radius: var(--border-radius, 8px);
+    box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.3),
+                0 0 20px 4px rgba(255, 255, 255, 0.3);
+    z-index: 10000;
+    pointer-events: none;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.onboarding-spotlight.pulse {
+    animation: spotlight-pulse 2s ease-in-out infinite;
+}
+
+@keyframes spotlight-pulse {
+    0%, 100% {
+        box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.3),
+                    0 0 20px 4px rgba(255, 255, 255, 0.3),
+                    0 0 0 4px rgba(0, 48, 128, 0.8);
+    }
+    50% {
+        box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.3),
+                    0 0 30px 6px rgba(255, 255, 255, 0.5),
+                    0 0 0 8px rgba(0, 48, 128, 1);
+    }
+}
+
+/* ==========================================================================
+   HOTSPOT (Point pulsant)
+   ========================================================================== */
+
+/**
+ * Indicateur visuel animé attirant l'attention sur un élément
+ */
+.onboarding-hotspot {
+    position: absolute;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--color-primary, #003080);
+    z-index: 10001;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: hotspot-pulse 2s ease-in-out infinite;
+    transition: transform 0.2s ease;
+}
+
+.onboarding-hotspot::before {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: var(--color-primary, #003080);
+    opacity: 0.4;
+    animation: hotspot-ripple 2s ease-in-out infinite;
+}
+
+.onboarding-hotspot::after {
+    content: '';
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: white;
+}
+
+.onboarding-hotspot:hover {
+    transform: scale(1.1);
+}
+
+@keyframes hotspot-pulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.15);
+    }
+}
+
+@keyframes hotspot-ripple {
+    0% {
+        transform: scale(1);
+        opacity: 0.4;
+    }
+    100% {
+        transform: scale(2.5);
+        opacity: 0;
+    }
+}
+
+/* ==========================================================================
+   TOOLTIP CONTEXTUEL
+   ========================================================================== */
+
+/**
+ * Bulle d'information guidant l'utilisateur
+ * Positionnement dynamique (top/bottom/left/right)
+ * Fixed position pour éviter le scroll et rester dans le viewport
+ */
+.onboarding-tooltip {
+    position: fixed;
+    min-width: 280px;
+    max-width: 400px;
+    background: var(--bg-card, #ffffff);
+    border: 1px solid var(--border, #e0e0e0);
+    border-radius: var(--border-radius, 8px);
+    box-shadow: var(--shadow-lg, 0 10px 30px rgba(0, 0, 0, 0.15));
+    padding: var(--spacing-lg, 20px);
+    z-index: 10002;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    pointer-events: none;
+}
+
+.onboarding-tooltip.active {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+/* Flèche du tooltip */
+.onboarding-tooltip::before {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 0;
+    border: 8px solid transparent;
+}
+
+.onboarding-tooltip.position-bottom::before {
+    top: -16px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-bottom-color: var(--bg-card, #ffffff);
+}
+
+.onboarding-tooltip.position-top::before {
+    bottom: -16px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-top-color: var(--bg-card, #ffffff);
+}
+
+.onboarding-tooltip.position-right::before {
+    left: -16px;
+    top: 50%;
+    transform: translateY(-50%);
+    border-right-color: var(--bg-card, #ffffff);
+}
+
+.onboarding-tooltip.position-left::before {
+    right: -16px;
+    top: 50%;
+    transform: translateY(-50%);
+    border-left-color: var(--bg-card, #ffffff);
+}
+
+/* Contenu du tooltip */
+.onboarding-tooltip-header {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm, 8px);
+    margin-bottom: var(--spacing-md, 12px);
+}
+
+.onboarding-tooltip-icon {
+    width: 32px;
+    height: 32px;
+    background: rgba(0, 48, 128, 0.1);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-primary, #003080);
+    flex-shrink: 0;
+}
+
+.onboarding-tooltip-title {
+    font-size: var(--font-size-lg, 1.125rem);
+    font-weight: 600;
+    color: var(--text-primary, #1a1a1a);
+    margin: 0;
+}
+
+.onboarding-tooltip-content {
+    font-size: var(--font-size-base, 1rem);
+    line-height: 1.5;
+    color: var(--text-secondary, #666666);
+    margin-bottom: var(--spacing-lg, 20px);
+}
+
+.onboarding-tooltip-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--spacing-md, 12px);
+}
+
+/* ==========================================================================
+   PROGRESS DOTS
+   ========================================================================== */
+
+/**
+ * Indicateur de progression du tour (ex: 2/4)
+ */
+.onboarding-progress {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs, 6px);
+}
+
+.onboarding-progress-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--border, #e0e0e0);
+    transition: all 0.3s ease;
+}
+
+.onboarding-progress-dot.active {
+    width: 24px;
+    border-radius: 4px;
+    background: var(--color-primary, #003080);
+}
+
+.onboarding-progress-dot.completed {
+    background: var(--color-success, #28a745);
+}
+
+/* ==========================================================================
+   BUTTONS
+   ========================================================================== */
+
+/**
+ * Boutons d'action du tooltip
+ */
+.onboarding-btn {
+    padding: var(--spacing-sm, 8px) var(--spacing-md, 16px);
+    border: none;
+    border-radius: var(--border-radius, 6px);
+    font-size: var(--font-size-sm, 0.875rem);
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-xs, 6px);
+}
+
+.onboarding-btn-primary {
+    background: var(--color-primary, #003080);
+    color: white;
+}
+
+.onboarding-btn-primary:hover {
+    background: var(--color-primary-dark, #002060);
+    transform: translateY(-1px);
+}
+
+.onboarding-btn-secondary {
+    background: transparent;
+    color: var(--text-secondary, #666666);
+    border: 1px solid var(--border, #e0e0e0);
+}
+
+.onboarding-btn-secondary:hover {
+    background: var(--bg-secondary, #f8f9fa);
+}
+
+/* ==========================================================================
+   HELP BUTTON (Floating Action Button)
+   ========================================================================== */
+
+/**
+ * Bouton d'aide inline dans le header de page
+ * Position: Aligné avec le titre, pas fixed
+ */
+.onboarding-help-button-inline {
+    width: 48px;
+    height: 48px;
+    background: var(--color-primary, #003080);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    box-shadow: var(--shadow-md, 0 2px 8px rgba(0, 0, 0, 0.1));
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+}
+
+.onboarding-help-button-inline:hover {
+    transform: scale(1.1);
+    box-shadow: var(--shadow-lg, 0 4px 12px rgba(0, 0, 0, 0.15));
+}
+
+.onboarding-help-button-inline:active {
+    transform: scale(0.95);
+}
+
+.onboarding-help-button-inline:focus-visible {
+    outline: 2px solid var(--color-primary, #003080);
+    outline-offset: 2px;
+}
+
+/**
+ * Bouton d'aide flottant (legacy - peut être supprimé si non utilisé)
+ * DEPRECATED: Utiliser .onboarding-help-button-inline à la place
+ */
+.onboarding-help-button {
+    display: none;
+}
+
+.onboarding-help-button:hover {
+    transform: scale(1.1);
+    box-shadow: var(--shadow-xl, 0 8px 20px rgba(0, 0, 0, 0.2));
+}
+
+.onboarding-help-button:active {
+    transform: scale(0.95);
+}
+
+/* Animation subtile d'attention */
+@keyframes help-button-wiggle {
+    0%, 100% {
+        transform: rotate(0deg);
+    }
+    10%, 30% {
+        transform: rotate(-10deg);
+    }
+    20%, 40% {
+        transform: rotate(10deg);
+    }
+    50% {
+        transform: rotate(0deg);
+    }
+}
+
+/* ==========================================================================
+   FEATURE BADGES
+   ========================================================================== */
+
+/**
+ * Badges "NEW" ou "UPDATED" sur des éléments UI
+ */
+.onboarding-feature-badge {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    padding: 2px 8px;
+    background: var(--color-primary, #003080);
+    color: white;
+    font-size: 0.625rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    border-radius: 12px;
+    z-index: 10;
+    animation: badge-bounce 2s ease-in-out infinite;
+}
+
+.onboarding-feature-badge.badge-new {
+    background: var(--color-success, #28a745);
+}
+
+.onboarding-feature-badge.badge-updated {
+    background: var(--color-warning, #ffc107);
+}
+
+@keyframes badge-bounce {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-4px);
+    }
+}
+
+/* ==========================================================================
+   ANIMATIONS GLOBALES
+   ========================================================================== */
+
+/**
+ * Fade-in pour apparition douce
+ */
+@keyframes fade-in {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+/**
+ * Slide-up pour apparition depuis le bas
+ */
+@keyframes slide-up {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ==========================================================================
+   RESPONSIVE
+   ========================================================================== */
+
+/**
+ * Adaptations pour tablettes
+ */
+@media (max-width: 768px) {
+    .onboarding-tooltip {
+        min-width: 240px;
+        max-width: 90%;
+        padding: var(--spacing-md, 16px);
+    }
+
+    .onboarding-tooltip-title {
+        font-size: var(--font-size-base, 1rem);
+    }
+
+    .onboarding-tooltip-content {
+        font-size: var(--font-size-sm, 0.875rem);
+    }
+
+    .onboarding-help-button {
+        width: 40px;
+        height: 40px;
+        top: 16px;
+        right: 180px;
+        font-size: 1rem;
+    }
+}
+
+/**
+ * Adaptations pour mobiles
+ */
+@media (max-width: 480px) {
+    .onboarding-tooltip {
+        min-width: 200px;
+        position: fixed !important;
+        bottom: 80px !important;
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+        top: auto !important;
+        right: auto !important;
+    }
+
+    .onboarding-tooltip.active {
+        transform: translateX(-50%) translateY(0) !important;
+    }
+
+    .onboarding-tooltip::before {
+        display: none;
+    }
+
+    .onboarding-progress {
+        justify-content: center;
+    }
+}
+
+/* ==========================================================================
+   THÈMES
+   ========================================================================== */
+
+/**
+ * Ajustements spécifiques pour les thèmes sombres
+ * Variables CSS héritées automatiquement du thème actif
+ */
+[data-theme="dark-blue"] .onboarding-tooltip,
+[data-theme="dark-red"] .onboarding-tooltip {
+    background: var(--bg-card);
+    border-color: var(--border);
+}
+
+[data-theme="dark-blue"] .onboarding-tooltip::before,
+[data-theme="dark-red"] .onboarding-tooltip::before {
+    border-bottom-color: var(--bg-card);
+    border-top-color: var(--bg-card);
+    border-right-color: var(--bg-card);
+    border-left-color: var(--bg-card);
+}
+
+[data-theme="dark-blue"] .onboarding-help-button,
+[data-theme="dark-red"] .onboarding-help-button {
+    background: var(--color-primary);
+}
+
+[data-theme="dark-blue"] .onboarding-btn-secondary,
+[data-theme="dark-red"] .onboarding-btn-secondary {
+    border-color: var(--border);
+    color: var(--text-secondary);
+}
+
+[data-theme="dark-blue"] .onboarding-btn-secondary:hover,
+[data-theme="dark-red"] .onboarding-btn-secondary:hover {
+    background: var(--bg-secondary);
+}
+
+/* ==========================================================================
+   ACCESSIBILITÉ
+   ========================================================================== */
+
+/**
+ * Focus states pour navigation clavier
+ */
+.onboarding-btn:focus-visible,
+.onboarding-help-button:focus-visible {
+    outline: 2px solid var(--color-primary, #003080);
+    outline-offset: 2px;
+}
+
+/**
+ * Réduction de mouvement pour utilisateurs sensibles
+ */
+@media (prefers-reduced-motion: reduce) {
+    .onboarding-overlay,
+    .onboarding-spotlight,
+    .onboarding-tooltip,
+    .onboarding-hotspot,
+    .onboarding-help-button {
+        animation: none;
+        transition: opacity 0.1s linear;
+    }
+
+    .onboarding-progress-dot {
+        transition: background-color 0.1s linear;
+    }
+}

@@ -124,15 +124,20 @@
                 <!-- Page Header -->
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <div>
-                        <h1 style="font-size: var(--font-size-3xl); font-weight: var(--font-weight-bold); color: var(--color-text-primary); margin-bottom: var(--spacing-xs);">
+                        <h1 class="dashboard-page-title">
                             Mes Campagnes Marketing
                         </h1>
                         <p class="text-secondary mb-0">Gérez et suivez vos campagnes multicanales générées par IA</p>
                     </div>
-                    <a href="step1_create_light.html" class="btn-ai">
-                        <i class="bi bi-plus-circle"></i>
-                        Nouvelle campagne
-                    </a>
+                    <div class="d-flex gap-3 align-items-center">
+                        <button class="onboarding-help-button-inline" id="helpButtonInline" type="button" aria-label="Aide - Relancer le tour guidé" title="Relancer le tour guidé">
+                            <i class="bi bi-question-lg"></i>
+                        </button>
+                        <a href="step1_create_light.html" class="btn-ai">
+                            <i class="bi bi-plus-circle"></i>
+                            Nouvelle campagne
+                        </a>
+                    </div>
                 </div>
 
                 <!-- Stats Cards -->
@@ -554,6 +559,96 @@
                     </div>
                 </div>
             </div>
+
+            <!-- ========================================
+                 ONBOARDING WELCOME MODAL
+                 ======================================== -->
+            <div class="modal fade" id="onboardingWelcomeModal" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header border-bottom-0 pb-0">
+                            <h5 class="modal-title d-flex align-items-center gap-2">
+                                <i class="bi bi-rocket-takeoff text-primary fs-3"></i>
+                                <span>Bienvenue dans Mes Campagnes !</span>
+                            </h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body py-4">
+                            <p class="lead text-secondary mb-4">
+                                Créez des campagnes marketing complètes assistées par IA en 8 étapes simples.
+                            </p>
+
+                            <!-- 4 bénéfices clés -->
+                            <div class="row g-3 mb-4">
+                                <div class="col-md-6">
+                                    <div class="d-flex align-items-start gap-3">
+                                        <div class="p-2 rounded bg-primary bg-opacity-10 text-primary">
+                                            <i class="bi bi-lightning-charge-fill fs-4"></i>
+                                        </div>
+                                        <div>
+                                            <h6 class="mb-1">Génération Automatique</h6>
+                                            <p class="small text-secondary mb-0">L'IA analyse votre projet et génère contenus, personas et recommandations</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="d-flex align-items-start gap-3">
+                                        <div class="p-2 rounded bg-primary bg-opacity-10 text-primary">
+                                            <i class="bi bi-diagram-3-fill fs-4"></i>
+                                        </div>
+                                        <div>
+                                            <h6 class="mb-1">Workflow Guidé</h6>
+                                            <p class="small text-secondary mb-0">8 étapes claires pour créer une campagne multi-canaux professionnelle</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="d-flex align-items-start gap-3">
+                                        <div class="p-2 rounded bg-primary bg-opacity-10 text-primary">
+                                            <i class="bi bi-check2-circle fs-4"></i>
+                                        </div>
+                                        <div>
+                                            <h6 class="mb-1">Validation Étape par Étape</h6>
+                                            <p class="small text-secondary mb-0">Vous gardez le contrôle total sur chaque proposition de l'IA</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="d-flex align-items-start gap-3">
+                                        <div class="p-2 rounded bg-primary bg-opacity-10 text-primary">
+                                            <i class="bi bi-graph-up-arrow fs-4"></i>
+                                        </div>
+                                        <div>
+                                            <h6 class="mb-1">Analytics Temps Réel</h6>
+                                            <p class="small text-secondary mb-0">Suivez les performances de vos campagnes en direct</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Alerte info -->
+                            <div class="alert alert-info d-flex align-items-center gap-2 mb-0">
+                                <i class="bi bi-info-circle-fill"></i>
+                                <div>
+                                    <strong>Première visite ?</strong>
+                                    <span class="text-secondary">Nous vous recommandons de faire le tour guidé (2 minutes)</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer border-top-0 pt-0">
+                            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                                <i class="bi bi-x-lg me-1"></i>
+                                Passer
+                            </button>
+                            <button type="button" class="btn btn-primary" id="startOnboardingTour">
+                                <i class="bi bi-play-circle me-1"></i>
+                                Faire le tour guidé
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </main>
     </div>
 

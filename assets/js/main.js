@@ -18,6 +18,7 @@ import { initAssetSelector as initStep5AssetSelector } from "./components/step5-
 import { initStep5Loading } from "./components/step5-loading-config.js";
 import { initAssetValidation } from "./components/step5-validate-ui.js";
 import { initCampaignAssetsPlanning } from "./components/campaign-assets-planning.js";
+import { initOnboardingDAP } from "./components/onboarding-dap.js";
 import "./components/campaign-stepper.js";
 import "./components/campaign-form.js";
 import "./components/campaign-loader.js";
@@ -120,6 +121,15 @@ document.addEventListener("DOMContentLoaded", () => {
         "[main] Initialisation de la planification campaign_assets...",
       );
       initCampaignAssetsPlanning();
+    }
+
+    // 14. Initialiser l'onboarding DAP (si dashboard)
+    if (
+      window.location.pathname.includes("dashboard") ||
+      document.querySelector(".content")
+    ) {
+      console.log("[main] Initialisation de l'onboarding DAP...");
+      initOnboardingDAP();
     }
 
     console.log("===========================================");
