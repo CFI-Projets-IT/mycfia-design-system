@@ -45,7 +45,7 @@ const ONBOARDING_STEPS = [
         target: ".nav-section:first-child",
         title: "Navigation Marketing",
         content:
-            "Accédez rapidement à toutes les fonctionnalités : campagnes, analytics, contacts et paramètres.",
+            "Accédez rapidement à vos campagnes, analytics, favoris et historique. Tout est organisé pour une navigation efficace.",
         icon: "bi-compass",
     },
     {
@@ -214,14 +214,47 @@ class OnboardingDAP {
             return;
         }
 
+        // Nettoyer le wrapper temporaire de l'étape précédente
+        if (this._tempWrapper) {
+            this._tempWrapper.remove();
+            this._tempWrapper = null;
+        }
+
         // Trouver l'élément cible
-        const targetEl = document.querySelector(step.target);
+        let targetEl = document.querySelector(step.target);
         if (!targetEl) {
             console.warn(
                 `[OnboardingDAP] Élément cible "${step.target}" introuvable, passage à l'étape suivante`
             );
             this.showStep(stepIndex + 1);
             return;
+        }
+
+        // Cas spécial : sidebar-navigation doit englober les 3 nav-section
+        if (step.id === "sidebar-navigation") {
+            const navSections = document.querySelectorAll('.nav-section');
+            if (navSections.length >= 3) {
+                // Créer un wrapper temporaire pour englober les 3 sections
+                const wrapper = document.createElement('div');
+                wrapper.id = 'onboarding-nav-wrapper';
+                wrapper.style.position = 'absolute';
+
+                // Calculer la bounding box des 3 sections
+                const firstRect = navSections[0].getBoundingClientRect();
+                const lastRect = navSections[2].getBoundingClientRect();
+
+                wrapper.style.top = `${firstRect.top + window.scrollY}px`;
+                wrapper.style.left = `${firstRect.left + window.scrollX}px`;
+                wrapper.style.width = `${firstRect.width}px`;
+                wrapper.style.height = `${lastRect.bottom - firstRect.top}px`;
+                wrapper.style.pointerEvents = 'none';
+
+                document.body.appendChild(wrapper);
+                targetEl = wrapper;
+
+                // Marquer pour nettoyage ultérieur
+                this._tempWrapper = wrapper;
+            }
         }
 
         // Positionner le spotlight
@@ -331,76 +364,129 @@ class OnboardingDAP {
 
         let position = "bottom"; // Position par défaut
 
-        // Déterminer la meilleure position
-        const spaceBelow = viewportHeight - rect.bottom - minBottomMargin;
-        const spaceAbove = rect.top - minTopMargin;
-        const tooltipHeight = tooltipRect.height || 200; // Estimation si pas encore rendu
+        // Cas spécial : sidebar-navigation (wrapper temporaire) -> centrage vertical
+        const isSidebarNav = targetEl.id === 'onboarding-nav-wrapper';
 
-        // Choisir position selon espace disponible
-        if (spaceBelow < tooltipHeight + spacing && spaceAbove > tooltipHeight + spacing) {
-            position = "top";
-        }
-
-        // Appliquer la position initiale
-        this.tooltip.classList.add(`position-${position}`);
-
-        if (position === "bottom") {
-            // Positionner en dessous, mais limiter pour ne pas dépasser viewport
-            const topPos = Math.min(
-                rect.bottom + spacing,
-                viewportHeight - tooltipHeight - minBottomMargin
-            );
-            this.tooltip.style.top = `${topPos}px`;
-            this.tooltip.style.left = `${rect.left + rect.width / 2}px`;
-            this.tooltip.style.transform = "translateX(-50%)";
-        } else if (position === "top") {
-            // Positionner au-dessus
+        if (isSidebarNav) {
+            // Centrer verticalement le tooltip par rapport à l'élément
+            const tooltipHeight = tooltipRect.height || 200;
+            const centerY = rect.top + rect.height / 2;
             const topPos = Math.max(
                 minTopMargin,
-                rect.top - tooltipHeight - spacing
+                Math.min(
+                    centerY - tooltipHeight / 2,
+                    viewportHeight - tooltipHeight - minBottomMargin
+                )
             );
+
+            // Nettoyer les anciennes classes de direction
+            this.tooltip.classList.remove('position-top', 'position-bottom', 'position-left', 'position-right');
+            this.tooltip.classList.add('position-right'); // Flèche à gauche
+
             this.tooltip.style.top = `${topPos}px`;
-            this.tooltip.style.left = `${rect.left + rect.width / 2}px`;
-            this.tooltip.style.transform = "translateX(-50%)";
+            this.tooltip.style.left = `${rect.right + spacing}px`;
+            this.tooltip.style.transform = "translateY(0)";
+
+            console.log(`[DAP] Sidebar nav: centrage vertical à ${topPos}px`);
+        } else {
+            // Déterminer la meilleure position (logique normale)
+            const spaceBelow = viewportHeight - rect.bottom - minBottomMargin;
+            const spaceAbove = rect.top - minTopMargin;
+            const tooltipHeight = tooltipRect.height || 200;
+
+            // Choisir position selon espace disponible
+            if (spaceBelow < tooltipHeight + spacing && spaceAbove > tooltipHeight + spacing) {
+                position = "top";
+            }
+
+            // Nettoyer les anciennes classes de direction
+            this.tooltip.classList.remove('position-top', 'position-bottom', 'position-left', 'position-right');
+
+            // Appliquer la classe de direction (correspond à la position du tooltip)
+            this.tooltip.classList.add(`position-${position}`);
+            console.log(`[DAP] Position initiale: ${position}, classe ajoutée: position-${position}`);
+
+            if (position === "bottom") {
+                // Positionner en dessous, mais limiter pour ne pas dépasser viewport
+                const topPos = Math.min(
+                    rect.bottom + spacing,
+                    viewportHeight - tooltipHeight - minBottomMargin
+                );
+                this.tooltip.style.top = `${topPos}px`;
+                this.tooltip.style.left = `${rect.left + rect.width / 2}px`;
+                this.tooltip.style.transform = "translateX(-50%)";
+            } else if (position === "top") {
+                // Positionner au-dessus
+                const topPos = Math.max(
+                    minTopMargin,
+                    rect.top - tooltipHeight - spacing
+                );
+                this.tooltip.style.top = `${topPos}px`;
+                this.tooltip.style.left = `${rect.left + rect.width / 2}px`;
+                this.tooltip.style.transform = "translateX(-50%)";
+            }
         }
 
         // Stocker la position initiale de l'élément cible pour détection ultérieure
         this.tooltip.dataset.targetLeft = rect.left;
         this.tooltip.dataset.targetCenterX = rect.left + rect.width / 2;
 
-        // Ajuster si déborde à gauche ou droite
-        setTimeout(() => {
-            const finalRect = this.tooltip.getBoundingClientRect();
-            const margin = 20;
-            const sidebarWidth = 250; // Largeur approximative de la sidebar
-            const leftBoundary = sidebarWidth + margin; // Ne pas déborder sous la sidebar
-            const targetCenterX = parseFloat(this.tooltip.dataset.targetCenterX);
-            let wasRepositioned = false;
+        // Ajuster si déborde à gauche ou droite (avec seuil de tolérance)
+        // Sauf pour sidebar-navigation qui a déjà un positionnement personnalisé
+        if (!isSidebarNav) {
+            setTimeout(() => {
+                const finalRect = this.tooltip.getBoundingClientRect();
+                const margin = 20;
+                const sidebarWidth = 250; // Largeur approximative de la sidebar
+                const leftBoundary = sidebarWidth + margin; // Ne pas déborder sous la sidebar
+                const targetCenterX = parseFloat(this.tooltip.dataset.targetCenterX);
+                let wasRepositioned = false;
 
-            // Vérifier débordement à gauche (sous la sidebar)
-            if (finalRect.left < leftBoundary) {
+            // Calculer le débordement
+            const overflowLeft = leftBoundary - finalRect.left;
+            const overflowRight = finalRect.right - (viewportWidth - margin);
+            const repositionThreshold = 50; // Ne repositionner que si débordement > 50px
+
+            // Vérifier débordement significatif à gauche (sous la sidebar)
+            if (overflowLeft > repositionThreshold) {
                 this.tooltip.style.left = `${leftBoundary}px`;
                 this.tooltip.style.transform = "translateX(0)";
                 wasRepositioned = true;
+                console.log(`[DAP] Repositionné à gauche (débordement: ${overflowLeft.toFixed(0)}px)`);
             }
-            // Vérifier débordement à droite
-            else if (finalRect.right > viewportWidth - margin) {
+            // Vérifier débordement significatif à droite
+            else if (overflowRight > repositionThreshold) {
                 this.tooltip.style.left = `${viewportWidth - finalRect.width - margin}px`;
                 this.tooltip.style.transform = "translateX(0)";
                 wasRepositioned = true;
+                console.log(`[DAP] Repositionné à droite (débordement: ${overflowRight.toFixed(0)}px)`);
             }
 
-            // Si repositionné loin de l'élément cible, changer la position de la flèche
+            // Si repositionné très loin de l'élément cible (> 150px), changer vers flèche horizontale
             if (wasRepositioned) {
                 const tooltipCenterX = finalRect.left + finalRect.width / 2;
                 const distanceFromTarget = Math.abs(tooltipCenterX - targetCenterX);
+                console.log(`[DAP] Repositionné: distance=${distanceFromTarget.toFixed(0)}px, targetX=${targetCenterX.toFixed(0)}, tooltipX=${tooltipCenterX.toFixed(0)}`);
 
-                // Si le tooltip est très décalé (> 100px), mettre la flèche à gauche
-                if (distanceFromTarget > 100 && targetCenterX < tooltipCenterX) {
-                    // L'élément cible est à gauche du tooltip
-                    this.tooltip.classList.remove('position-top', 'position-bottom');
-                    this.tooltip.classList.add('position-right');
+                // Seulement si très décalé (> 150px), changer pour flèche horizontale
+                if (distanceFromTarget > 150) {
+                    this.tooltip.classList.remove('position-top', 'position-bottom', 'position-left', 'position-right');
+
+                    if (targetCenterX < tooltipCenterX) {
+                        // L'élément cible est à gauche du tooltip → flèche à gauche du tooltip
+                        // position-right = flèche à gauche (left: -16px) pointant vers la droite →
+                        this.tooltip.classList.add('position-right');
+                        console.log(`[DAP] Flèche placée à gauche du tooltip (position-right)`);
+                    } else {
+                        // L'élément cible est à droite du tooltip → flèche à droite du tooltip
+                        // position-left = flèche à droite (right: -16px) pointant vers la gauche ←
+                        this.tooltip.classList.add('position-left');
+                        console.log(`[DAP] Flèche placée à droite du tooltip (position-left)`);
+                    }
+                } else {
+                    console.log(`[DAP] Distance < 150px, flèche verticale conservée`);
                 }
+                // Sinon, garder la direction verticale (top/bottom) déjà définie ligne 349
             }
 
             // Vérification finale : le tooltip doit être visible verticalement
@@ -411,7 +497,8 @@ class OnboardingDAP {
             if (updatedRect.bottom > viewportHeight - minBottomMargin) {
                 this.tooltip.style.top = `${viewportHeight - updatedRect.height - minBottomMargin}px`;
             }
-        }, 10);
+            }, 10);
+        } // Fin du if (!isSidebarNav)
     }
 
     /**
@@ -477,10 +564,11 @@ class OnboardingDAP {
      * Affiche un message de félicitation à la fin du tour
      */
     showCompletionMessage() {
-        // Créer une petite notification toast
+        // Créer une petite notification toast en haut à droite
         const toast = document.createElement("div");
-        toast.className = "position-fixed bottom-0 end-0 p-3";
+        toast.className = "position-fixed top-0 end-0 p-3";
         toast.style.zIndex = "11000";
+        toast.style.marginTop = "80px"; // En dessous du header
         toast.innerHTML = `
             <div class="toast show" role="alert">
                 <div class="toast-header">
@@ -495,6 +583,12 @@ class OnboardingDAP {
         `;
 
         document.body.appendChild(toast);
+
+        // Gérer la fermeture manuelle
+        const closeBtn = toast.querySelector('.btn-close');
+        closeBtn.addEventListener('click', () => {
+            toast.remove();
+        });
 
         // Supprimer après 5 secondes
         setTimeout(() => {
@@ -530,6 +624,12 @@ class OnboardingDAP {
                 this.tooltip.remove();
                 this.tooltip = null;
             }, 300);
+        }
+
+        // Supprimer wrapper temporaire (sidebar-navigation)
+        if (this._tempWrapper) {
+            this._tempWrapper.remove();
+            this._tempWrapper = null;
         }
     }
 
