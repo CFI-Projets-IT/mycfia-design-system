@@ -127,13 +127,18 @@
 
             <div class="content">
                 <!-- Breadcrumb -->
-                <nav aria-label="breadcrumb" class="step1-review-breadcrumb">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="dashboard_light.html" class="step1-review-breadcrumb-link">Campagnes Marketing</a></li>
-                        <li class="breadcrumb-item"><a href="step1_create_light.html" class="step1-review-breadcrumb-link">Nouvelle campagne</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">Validation enrichissement</li>
-                    </ol>
-                </nav>
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <nav aria-label="breadcrumb" class="step1-review-breadcrumb mb-0">
+                        <ol class="breadcrumb mb-0">
+                            <li class="breadcrumb-item"><a href="dashboard_light.html" class="step1-review-breadcrumb-link">Campagnes Marketing</a></li>
+                            <li class="breadcrumb-item"><a href="step1_create_light.html" class="step1-review-breadcrumb-link">Nouvelle campagne</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Validation enrichissement</li>
+                        </ol>
+                    </nav>
+                    <button class="onboarding-help-button-inline" id="helpButtonInlineStep1Review" type="button" aria-label="Aide - Relancer le tour guidé" title="Relancer le tour guidé">
+                        <i class="bi bi-question-lg"></i>
+                    </button>
+                </div>
 
                 <!-- Stepper -->
                 <div class="campaign-stepper">
@@ -182,16 +187,6 @@
                             <div class="stepper-label">Planning</div>
                         </div>
                     </div>
-                </div>
-
-                <!-- Success Alert -->
-                <div class="alert alert-success alert-dismissible fade show ai-enrichment-alert">
-                    <i class="bi bi-check-circle-fill ai-enrichment-alert-icon"></i>
-                    <div>
-                        <strong>Enrichissement terminé avec succès!</strong><br>
-                        L'IA a analysé vos informations et généré des données enrichies. Vérifiez et validez les informations ci-dessous.
-                    </div>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
 
                 <!-- Layout 2 colonnes -->
@@ -468,14 +463,6 @@
                                         Recommandations IA
                                     </h5>
 
-                                    <div class="alert alert-info alert-dismissible fade show mb-3 alert-compact">
-                                        <small>
-                                            <i class="bi bi-lightbulb"></i>
-                                            <strong>Suggestions générées automatiquement</strong>
-                                        </small>
-                                        <button type="button" class="btn-close btn-close-sm" data-bs-dismiss="alert" aria-label="Close"></button>
-                                    </div>
-
                                     <div class="mb-3">
                                         <h6 class="small"><i class="bi bi-1-circle-fill text-primary"></i> Ciblage multi-générationnel</h6>
                                         <p class="small text-secondary mb-0">Créer des personas distincts pour les jeunes professionnels (25-35 ans) en reconversion et les cadres expérimentés (45-55 ans) en montée en compétences.</p>
@@ -510,6 +497,93 @@
 
             </div>
         </main>
+    </div>
+
+    <!-- Modal d'accueil DAP Step 1 Review -->
+    <div class="modal fade" id="onboardingWelcomeModalStep1Review" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header border-bottom-0 pb-0">
+                    <h5 class="modal-title d-flex align-items-center gap-2">
+                        <i class="bi bi-stars text-primary fs-3"></i>
+                        <span>Validation de l'enrichissement IA</span>
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body py-4">
+                    <p class="lead text-secondary mb-4">
+                        L'IA a analysé vos informations et généré des données enrichies pour optimiser votre campagne.
+                    </p>
+
+                    <!-- 4 bénéfices clés -->
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-6">
+                            <div class="d-flex align-items-start gap-3">
+                                <div class="p-2 rounded bg-primary bg-opacity-10 text-primary">
+                                    <i class="bi bi-pencil-square fs-4"></i>
+                                </div>
+                                <div>
+                                    <h6 class="mb-1">Nom de campagne</h6>
+                                    <p class="small text-secondary mb-0">Choisissez parmi les propositions IA ou gardez votre nom initial</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="d-flex align-items-start gap-3">
+                                <div class="p-2 rounded bg-primary bg-opacity-10 text-primary">
+                                    <i class="bi bi-palette fs-4"></i>
+                                </div>
+                                <div>
+                                    <h6 class="mb-1">Identité de marque</h6>
+                                    <p class="small text-secondary mb-0">Branding, style et palette de couleurs détectés automatiquement</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="d-flex align-items-start gap-3">
+                                <div class="p-2 rounded bg-primary bg-opacity-10 text-primary">
+                                    <i class="bi bi-briefcase fs-4"></i>
+                                </div>
+                                <div>
+                                    <h6 class="mb-1">Intelligence business</h6>
+                                    <p class="small text-secondary mb-0">Proposition de valeur, marché et audience cible identifiés</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="d-flex align-items-start gap-3">
+                                <div class="p-2 rounded bg-primary bg-opacity-10 text-primary">
+                                    <i class="bi bi-search fs-4"></i>
+                                </div>
+                                <div>
+                                    <h6 class="mb-1">Mots-clés Google Ads</h6>
+                                    <p class="small text-secondary mb-0">42 mots-clés pertinents avec volumes et CPC moyens</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Alerte info -->
+                    <div class="alert alert-info d-flex align-items-center gap-2 mb-0">
+                        <i class="bi bi-info-circle-fill"></i>
+                        <div>
+                            <strong>Découvrir les fonctionnalités ?</strong>
+                            <span class="text-secondary">Nous vous recommandons de faire le tour guidé (1 minute)</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer border-top-0 pt-0">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                        <i class="bi bi-x-lg me-1"></i>
+                        Passer
+                    </button>
+                    <button type="button" class="btn btn-primary" id="startOnboardingTourStep1Review">
+                        <i class="bi bi-play-circle me-1"></i>
+                        Faire le tour guidé
+                    </button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- Speed Dial FAB - Boîte à outils -->
