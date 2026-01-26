@@ -134,12 +134,17 @@
             <!-- Content -->
             <div class="content step1-content">
                 <!-- Breadcrumb -->
-                <nav aria-label="breadcrumb" class="step1-breadcrumb">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="dashboard_light.html" class="step1-breadcrumb-link">Campagnes Marketing</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">Nouvelle campagne</li>
-                    </ol>
-                </nav>
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <nav aria-label="breadcrumb" class="step1-breadcrumb mb-0">
+                        <ol class="breadcrumb mb-0">
+                            <li class="breadcrumb-item"><a href="dashboard_light.html" class="step1-breadcrumb-link">Campagnes Marketing</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Nouvelle campagne</li>
+                        </ol>
+                    </nav>
+                    <button class="onboarding-help-button-inline" id="helpButtonInlineStep1" type="button" aria-label="Aide - Relancer le tour guidé" title="Relancer le tour guidé">
+                        <i class="bi bi-question-lg"></i>
+                    </button>
+                </div>
 
                 <!-- Stepper -->
                 <div class="campaign-stepper">
@@ -349,6 +354,96 @@
                     </div>
                 </form>
             </div>
+
+            <!-- ========================================
+                 ONBOARDING WELCOME MODAL - STEP 1
+                 ======================================== -->
+            <div class="modal fade" id="onboardingWelcomeModalStep1" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header border-bottom-0 pb-0">
+                            <h5 class="modal-title d-flex align-items-center gap-2">
+                                <i class="bi bi-rocket-takeoff text-primary fs-3"></i>
+                                <span>Créez votre première campagne assistée par IA</span>
+                            </h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body py-4">
+                            <p class="lead text-secondary mb-4">
+                                Un workflow simple en 8 étapes pour créer une campagne marketing complète optimisée par l'IA.
+                            </p>
+
+                            <!-- 4 bénéfices clés -->
+                            <div class="row g-3 mb-4">
+                                <div class="col-md-6">
+                                    <div class="d-flex align-items-start gap-3">
+                                        <div class="p-2 rounded bg-primary bg-opacity-10 text-primary">
+                                            <i class="bi bi-lightning-charge-fill fs-4"></i>
+                                        </div>
+                                        <div>
+                                            <h6 class="mb-1">Analyse IA Automatique</h6>
+                                            <p class="small text-secondary mb-0">L'IA analyse votre projet et génère des recommandations personnalisées</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="d-flex align-items-start gap-3">
+                                        <div class="p-2 rounded bg-primary bg-opacity-10 text-primary">
+                                            <i class="bi bi-clock-history fs-4"></i>
+                                        </div>
+                                        <div>
+                                            <h6 class="mb-1">Rapide et Efficace</h6>
+                                            <p class="small text-secondary mb-0">Complétez les 8 étapes en 10-15 minutes seulement</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="d-flex align-items-start gap-3">
+                                        <div class="p-2 rounded bg-primary bg-opacity-10 text-primary">
+                                            <i class="bi bi-people-fill fs-4"></i>
+                                        </div>
+                                        <div>
+                                            <h6 class="mb-1">Personas et Concurrents</h6>
+                                            <p class="small text-secondary mb-0">L'IA génère automatiquement vos personas et analyse la concurrence</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="d-flex align-items-start gap-3">
+                                        <div class="p-2 rounded bg-primary bg-opacity-10 text-primary">
+                                            <i class="bi bi-distribute-vertical fs-4"></i>
+                                        </div>
+                                        <div>
+                                            <h6 class="mb-1">Stratégie Multicanale</h6>
+                                            <p class="small text-secondary mb-0">Recommandations optimales pour vos canaux et contenus marketing</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Alerte info -->
+                            <div class="alert alert-info d-flex align-items-center gap-2 mb-0">
+                                <i class="bi bi-info-circle-fill"></i>
+                                <div>
+                                    <strong>Première création ?</strong>
+                                    <span class="text-secondary">Nous vous recommandons de faire le tour guidé (2 minutes)</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer border-top-0 pt-0">
+                            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                                <i class="bi bi-x-lg me-1"></i>
+                                Passer
+                            </button>
+                            <button type="button" class="btn btn-primary" id="startOnboardingTourStep1">
+                                <i class="bi bi-play-circle me-1"></i>
+                                Faire le tour guidé
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </main>
     </div>
 

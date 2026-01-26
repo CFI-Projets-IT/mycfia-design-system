@@ -19,6 +19,8 @@ import { initStep5Loading } from "./components/step5-loading-config.js";
 import { initAssetValidation } from "./components/step5-validate-ui.js";
 import { initCampaignAssetsPlanning } from "./components/campaign-assets-planning.js";
 import { initOnboardingDAP } from "./components/onboarding-dap.js";
+import { initOnboardingDAPStep1 } from "./components/onboarding-dap-step1.js";
+import { initVideoDemo } from "./components/video-demo.js";
 import "./components/campaign-stepper.js";
 import "./components/campaign-form.js";
 import "./components/campaign-loader.js";
@@ -130,6 +132,21 @@ document.addEventListener("DOMContentLoaded", () => {
     ) {
       console.log("[main] Initialisation de l'onboarding DAP...");
       initOnboardingDAP();
+    }
+
+    // 15. Initialiser le lecteur vidéo démo (si modal présent)
+    if (document.getElementById("videoDemoModal")) {
+      console.log("[main] Initialisation du lecteur vidéo démo...");
+      initVideoDemo();
+    }
+
+    // 16. Initialiser l'onboarding DAP Step 1 (si step1_create)
+    if (
+      window.location.pathname.includes("step1_create") ||
+      document.getElementById("onboardingWelcomeModalStep1")
+    ) {
+      console.log("[main] Initialisation de l'onboarding DAP Step 1...");
+      initOnboardingDAPStep1();
     }
 
     console.log("===========================================");
