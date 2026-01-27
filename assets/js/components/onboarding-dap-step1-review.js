@@ -184,6 +184,13 @@ class OnboardingDAPStep1Review {
         this.isActive = true;
         this.currentStep = 1; // Commencer après le modal (step 0 = welcome)
 
+        // Sauvegarder la position de scroll actuelle
+        this._scrollPosition = window.scrollY;
+
+        // Bloquer le scroll du body (UX: seul le DAP contrôle le scroll)
+        document.body.classList.add('onboarding-active');
+        document.body.style.top = `-${this._scrollPosition}px`;
+
         // Créer l'overlay
         this.createOverlay();
 
@@ -248,7 +255,70 @@ class OnboardingDAPStep1Review {
             this.openSpeedDial();
         }
 
-        // Positionner le spotlight
+        // ✅ CORRECTION DAP : Scroll automatique vers l'élément si pas suffisamment visible
+        const rect = targetEl.getBoundingClientRect();
+
+        // Vérifier si l'élément est suffisamment visible (au moins 80% dans le viewport)
+        const visibleHeight = Math.min(rect.bottom, window.innerHeight) - Math.max(rect.top, 0);
+        const visibleWidth = Math.min(rect.right, window.innerWidth) - Math.max(rect.left, 0);
+        const elementHeight = rect.height;
+        const elementWidth = rect.width;
+
+        const visibilityRatio = (visibleHeight / elementHeight) * 100;
+
+        console.log(`[DAP] Étape "${step.id}":`, {
+            top: rect.top,
+            bottom: rect.bottom,
+            height: elementHeight,
+            visibleHeight,
+            visibilityRatio: visibilityRatio.toFixed(0) + '%',
+            viewportHeight: window.innerHeight
+        });
+
+        const isVisible = (
+            visibleHeight >= elementHeight * 0.8 &&
+            visibleWidth >= elementWidth * 0.8 &&
+            rect.top >= 0 &&
+            rect.bottom <= window.innerHeight
+        );
+
+        if (!isVisible) {
+            console.log(`[DAP] Scroll nécessaire pour "${step.id}" (${visibilityRatio.toFixed(0)}% visible)`);
+
+            // Débloquer temporairement le scroll pour permettre scrollIntoView
+            const wasBlocked = document.body.classList.contains('onboarding-active');
+            if (wasBlocked) {
+                document.body.classList.remove('onboarding-active');
+                document.body.style.top = '';
+                if (this._scrollPosition !== undefined) {
+                    window.scrollTo(0, this._scrollPosition);
+                }
+            }
+
+            targetEl.scrollIntoView({
+                behavior: 'smooth',
+                block: 'center',
+                inline: 'center'
+            });
+
+            // Attendre que le scroll se termine (500ms suffisant)
+            setTimeout(() => {
+                // Rebloquer le scroll
+                if (wasBlocked) {
+                    this._scrollPosition = window.scrollY;
+                    document.body.classList.add('onboarding-active');
+                    document.body.style.top = `-${this._scrollPosition}px`;
+                }
+
+                this.positionSpotlight(targetEl);
+                this.createTooltip(step, targetEl);
+            }, 500);
+            return;
+        }
+        console.log(`[DAP] Élément "${step.id}" déjà visible (${visibilityRatio.toFixed(0)}%)`);
+        // ✅ FIN DU BLOC
+
+        // Positionner le spotlight (si déjà visible)
         this.positionSpotlight(targetEl);
 
         // Créer et afficher le tooltip
@@ -266,7 +336,12 @@ class OnboardingDAPStep1Review {
         const rect = targetEl.getBoundingClientRect();
         const padding = 8;
 
-        this.spotlight.style.top = `${rect.top - padding + window.scrollY}px`;
+        // Si le body est bloqué, utiliser _scrollPosition au lieu de window.scrollY
+        const scrollY = document.body.classList.contains('onboarding-active')
+            ? (this._scrollPosition || 0)
+            : window.scrollY;
+
+        this.spotlight.style.top = `${rect.top - padding + scrollY}px`;
         this.spotlight.style.left = `${rect.left - padding + window.scrollX}px`;
         this.spotlight.style.width = `${rect.width + padding * 2}px`;
         this.spotlight.style.height = `${rect.height + padding * 2}px`;
@@ -341,7 +416,7 @@ class OnboardingDAPStep1Review {
 
     /**
      * Positionne le tooltip par rapport à l'élément cible
-     * Utilise position fixed pour rester dans le viewport sans scroll
+     * Utilise position absolute avec window.scrollY/scrollX pour suivre l'élément pendant le scroll
      * @param {HTMLElement} targetEl - Élément cible
      */
     positionTooltip(targetEl) {
@@ -352,6 +427,11 @@ class OnboardingDAPStep1Review {
         const minTopMargin = 20;
         const minBottomMargin = 20;
         const spacing = 20;
+
+        // Si le body est bloqué, utiliser _scrollPosition au lieu de window.scrollY
+        const scrollY = document.body.classList.contains('onboarding-active')
+            ? (this._scrollPosition || 0)
+            : window.scrollY;
 
         // Cas spécial pour Speed Dial FAB : positionner à gauche avec plus d'espace
         const isSpeedDialFAB = targetEl.classList.contains('speed-dial-container');
@@ -377,8 +457,9 @@ class OnboardingDAPStep1Review {
             this.tooltip.classList.remove('position-top', 'position-bottom', 'position-left', 'position-right');
             this.tooltip.classList.add('position-left'); // Flèche à droite pointant vers la gauche
 
-            this.tooltip.style.top = `${topPos}px`;
-            this.tooltip.style.left = `${leftPos}px`;
+            // ✅ CORRECTION DAP : Ajouter window.scrollY et window.scrollX
+            this.tooltip.style.top = `${topPos + scrollY}px`;
+            this.tooltip.style.left = `${leftPos + window.scrollX}px`;
             this.tooltip.style.transform = "translateY(0)";
 
             return; // Sortir, pas besoin du reste du code
@@ -408,8 +489,9 @@ class OnboardingDAPStep1Review {
                 rect.bottom + spacing,
                 viewportHeight - tooltipHeight - minBottomMargin
             );
-            this.tooltip.style.top = `${topPos}px`;
-            this.tooltip.style.left = `${rect.left + rect.width / 2}px`;
+            // ✅ CORRECTION DAP : Ajouter window.scrollY et window.scrollX
+            this.tooltip.style.top = `${topPos + scrollY}px`;
+            this.tooltip.style.left = `${rect.left + rect.width / 2 + window.scrollX}px`;
             this.tooltip.style.transform = "translateX(-50%)";
         } else if (position === "top") {
             // Positionner au-dessus
@@ -417,8 +499,9 @@ class OnboardingDAPStep1Review {
                 minTopMargin,
                 rect.top - tooltipHeight - spacing
             );
-            this.tooltip.style.top = `${topPos}px`;
-            this.tooltip.style.left = `${rect.left + rect.width / 2}px`;
+            // ✅ CORRECTION DAP : Ajouter window.scrollY et window.scrollX
+            this.tooltip.style.top = `${topPos + scrollY}px`;
+            this.tooltip.style.left = `${rect.left + rect.width / 2 + window.scrollX}px`;
             this.tooltip.style.transform = "translateX(-50%)";
         }
 
@@ -583,6 +666,16 @@ class OnboardingDAPStep1Review {
      */
     cleanup() {
         this.isActive = false;
+
+        // Débloquer le scroll du body et restaurer la position
+        document.body.classList.remove('onboarding-active');
+        document.body.style.top = '';
+
+        // Restaurer la position de scroll sauvegardée
+        if (this._scrollPosition !== undefined) {
+            window.scrollTo(0, this._scrollPosition);
+            this._scrollPosition = undefined;
+        }
 
         // Fermer le Speed Dial s'il était ouvert
         this.closeSpeedDial();

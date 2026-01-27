@@ -165,6 +165,11 @@ class OnboardingDAP {
         this.isActive = true;
         this.currentStep = 1; // Commencer après le modal (step 0 = welcome)
 
+        // ✅ BLOQUER LE SCROLL pendant le tour
+        this._scrollPosition = window.scrollY;
+        document.body.classList.add('onboarding-active');
+        document.body.style.top = `-${this._scrollPosition}px`;
+
         // Créer l'overlay
         this.createOverlay();
 
@@ -601,6 +606,13 @@ class OnboardingDAP {
      */
     cleanup() {
         this.isActive = false;
+
+        // ✅ DÉBLOQUER LE SCROLL à la fin du tour
+        document.body.classList.remove('onboarding-active');
+        document.body.style.top = '';
+        if (this._scrollPosition !== undefined) {
+            window.scrollTo(0, this._scrollPosition);
+        }
 
         // Supprimer overlay
         if (this.overlay) {
