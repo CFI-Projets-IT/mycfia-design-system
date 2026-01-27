@@ -103,13 +103,13 @@
         <main class="main">
             <header class="header">
                 <div class="header-content">
-                    <a href="../index.html" class="step3-validate-header-logo-link">
+                    <a href="../index.html" class="step2-validate-header-logo-link">
                         <img src="../images/logo_picto.svg" alt="CFI" class="header-logo-picto">
                         <img src="../images/logo.svg" alt="myCFiA" class="header-logo">
                     </a>
 
-                    <div class="step3-validate-header-buttons">
-                        <button class="btn btn-glass header-btn step3-validate-header-btn-primary">
+                    <div class="step2-validate-header-buttons">
+                        <button class="btn btn-glass header-btn step2-validate-header-btn-primary">
                             <i class="bi bi-building"></i>
                             <span class="header-btn-text">Ma Division</span>
                         </button>
@@ -117,7 +117,7 @@
                             <i class="bi bi-sun-fill"></i>
                             <span class="header-btn-text">Clair</span>
                         </button>
-                        <a href="#" class="btn btn-glass header-btn step3-validate-header-link">
+                        <a href="#" class="btn btn-glass header-btn step2-validate-header-link">
                             <i class="bi bi-arrow-left-circle"></i>
                             <span class="header-btn-text">Retour CFI</span>
                         </a>
@@ -126,14 +126,23 @@
             </header>
 
             <div class="content">
-                <!-- Breadcrumb -->
-                <nav aria-label="breadcrumb" class="step3-validate-breadcrumb">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="dashboard_light.html" class="step3-validate-breadcrumb-link">Campagnes Marketing</a></li>
-                        <li class="breadcrumb-item"><a href="step1_create_light.html" class="step3-validate-breadcrumb-link">Nouvelle campagne</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">Validation Concurrents</li>
-                    </ol>
-                </nav>
+                <!-- Breadcrumb avec bouton d'aide -->
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <nav aria-label="breadcrumb" class="step2-validate-breadcrumb mb-0">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="dashboard_light.html" class="step2-validate-breadcrumb-link">Campagnes Marketing</a></li>
+                            <li class="breadcrumb-item"><a href="step1_create_light.html" class="step2-validate-breadcrumb-link">Nouvelle campagne</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Validation Concurrents</li>
+                        </ol>
+                    </nav>
+                    <button class="onboarding-help-button-inline"
+                            id="helpButtonInlineStep2"
+                            type="button"
+                            aria-label="Aide - Relancer le tour guidé"
+                            title="Relancer le tour guidé">
+                        <i class="bi bi-question-lg"></i>
+                    </button>
+                </div>
 
                 <!-- Stepper -->
                 <div class="campaign-stepper">
@@ -182,16 +191,6 @@
                             <div class="stepper-label">Planning</div>
                         </div>
                     </div>
-                </div>
-
-                <!-- Success Alert -->
-                <div class="alert alert-success alert-dismissible fade show competitors-detected-alert">
-                    <i class="bi bi-check-circle-fill competitors-detected-alert-icon"></i>
-                    <div>
-                        <strong>7 concurrents détectés!</strong><br>
-                        Sélectionnez les concurrents les plus pertinents pour affiner votre stratégie marketing.
-                    </div>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
 
                 <!-- Competitor Cards -->
@@ -542,6 +541,98 @@
         <i class="bi bi-arrow-left"></i>
         <span class="fab-tooltip">Retour aux personas</span>
     </a>
+
+    <!-- Welcome Modal Onboarding DAP -->
+    <div class="modal fade" id="onboardingWelcomeModalStep2" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header border-0 pb-0">
+                    <h4 class="modal-title d-flex align-items-center gap-2">
+                        <i class="bi bi-stars text-primary"></i>
+                        <span>Bienvenue sur la validation des concurrents</span>
+                    </h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body pt-2">
+                    <p class="lead mb-4">
+                        L'IA a analysé votre marché et détecté vos concurrents. Laissez-nous vous guider pour comprendre et valider ces résultats.
+                    </p>
+
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-6">
+                            <div class="d-flex align-items-start gap-3">
+                                <div class="flex-shrink-0">
+                                    <i class="bi bi-lightning-charge-fill text-warning fs-3"></i>
+                                </div>
+                                <div>
+                                    <h6 class="mb-1">Analyse IA automatique</h6>
+                                    <p class="mb-0 small text-secondary">
+                                        L'IA a détecté 7 concurrents pertinents avec leurs scores d'alignement et métriques clés.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="d-flex align-items-start gap-3">
+                                <div class="flex-shrink-0">
+                                    <i class="bi bi-bar-chart-line text-info fs-3"></i>
+                                </div>
+                                <div>
+                                    <h6 class="mb-1">Scores d'alignement</h6>
+                                    <p class="mb-0 small text-secondary">
+                                        Comprenez l'overlap de votre offre et de votre marché avec chaque concurrent.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="d-flex align-items-start gap-3">
+                                <div class="flex-shrink-0">
+                                    <i class="bi bi-plus-circle text-success fs-3"></i>
+                                </div>
+                                <div>
+                                    <h6 class="mb-1">Ajout manuel possible</h6>
+                                    <p class="mb-0 small text-secondary">
+                                        Vous pouvez ajouter vos propres concurrents si l'IA en a manqué certains.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="d-flex align-items-start gap-3">
+                                <div class="flex-shrink-0">
+                                    <i class="bi bi-arrow-clockwise text-primary fs-3"></i>
+                                </div>
+                                <div>
+                                    <h6 class="mb-1">Régénération à volonté</h6>
+                                    <p class="mb-0 small text-secondary">
+                                        Si les résultats ne vous satisfont pas, régénérez l'analyse concurrentielle.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="alert alert-info mb-0">
+                        <i class="bi bi-info-circle me-2"></i>
+                        <strong>Conseil :</strong> Prenez le temps de sélectionner les concurrents les plus pertinents. Ces informations affineront votre stratégie marketing.
+                    </div>
+                </div>
+                <div class="modal-footer border-0 pt-0">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        Passer
+                    </button>
+                    <button type="button" class="btn btn-primary" id="startOnboardingTourStep2">
+                        <i class="bi bi-play-circle me-2"></i>
+                        Faire le tour guidé
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>

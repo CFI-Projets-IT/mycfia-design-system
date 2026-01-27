@@ -42,6 +42,17 @@
     pointer-events: auto;
 }
 
+/**
+ * Bloquer le scroll du body pendant le tour guidé
+ * Le scroll est géré automatiquement par scrollIntoView()
+ * L'utilisateur ne peut pas scroller manuellement pour éviter les désynchronisations
+ */
+body.onboarding-active {
+    overflow: hidden;
+    position: fixed;
+    width: 100%;
+}
+
 /* ==========================================================================
    SPOTLIGHT
    ========================================================================== */
@@ -150,10 +161,10 @@
 /**
  * Bulle d'information guidant l'utilisateur
  * Positionnement dynamique (top/bottom/left/right)
- * Fixed position pour éviter le scroll et rester dans le viewport
+ * Absolute position pour suivre l'élément pendant le scroll
  */
 .onboarding-tooltip {
-    position: fixed;
+    position: absolute;
     min-width: 280px;
     max-width: 400px;
     background: var(--bg-card, #ffffff);

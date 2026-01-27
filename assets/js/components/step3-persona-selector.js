@@ -70,9 +70,7 @@ function validatePersonas() {
     const selectedPersonas = document.querySelectorAll('.persona-card.selected');
 
     if (selectedPersonas.length === 0) {
-        // TODO: Remplacer par Toast Bootstrap dans composant Twig final
         console.error('[persona-selector] Aucun persona sélectionné');
-        alert('Veuillez sélectionner au moins un persona avant de continuer.');
         return;
     }
 

@@ -20,9 +20,7 @@ export function launchAIEnrichment() {
   // Check if at least one asset is selected
   const selectedAssets = document.querySelectorAll(".asset-card.selected");
   if (selectedAssets.length === 0) {
-    // TODO: Remplacer par Toast Bootstrap dans composant Twig final
     console.error("[campaign-form] Aucun canal de diffusion sélectionné");
-    alert("Veuillez sélectionner au moins un canal de diffusion.");
     return;
   }
 

@@ -61,9 +61,7 @@ function validateCompetitors() {
     const selectedCompetitors = document.querySelectorAll('.asset-card.selected');
 
     if (selectedCompetitors.length === 0) {
-        // TODO: Remplacer par Toast Bootstrap dans composant Twig final
         console.error('[competitor-selector] Aucun concurrent sélectionné');
-        alert('Veuillez sélectionner au moins un concurrent.');
         return;
     }
 
