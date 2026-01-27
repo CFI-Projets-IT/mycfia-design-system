@@ -17,6 +17,7 @@
     <!-- Design System myCFiA -->
     <link rel="stylesheet" href="../assets/css/main.css">
     <link rel="stylesheet" href="../assets/css/themes/light.css" id="theme-stylesheet">
+    <link rel="stylesheet" href="../assets/css/video-demo.css">
 </head>
 <body>
     <div class="app">
@@ -132,6 +133,10 @@
                     <div class="d-flex gap-3 align-items-center">
                         <button class="onboarding-help-button-inline" id="helpButtonInline" type="button" aria-label="Aide - Relancer le tour guidé" title="Relancer le tour guidé">
                             <i class="bi bi-question-lg"></i>
+                        </button>
+                        <button class="btn-video-demo pulse" data-bs-toggle="modal" data-bs-target="#videoDemoModal" type="button">
+                            <i class="bi bi-play-circle-fill"></i>
+                            <span>Voir la démo</span>
                         </button>
                         <a href="step1_create_light.html" class="btn-ai">
                             <i class="bi bi-plus-circle"></i>
@@ -644,6 +649,88 @@
                                 <i class="bi bi-play-circle me-1"></i>
                                 Faire le tour guidé
                             </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========================================
+                 VIDEO DEMO MODAL
+                 ======================================== -->
+            <div class="modal fade video-demo-modal" id="videoDemoModal" tabindex="-1" aria-labelledby="videoDemoModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content" data-controller="video-demo">
+                        <div class="modal-header">
+                            <h5 class="modal-title d-flex align-items-center gap-2" id="videoDemoModalLabel">
+                                <i class="bi bi-play-circle text-primary fs-4"></i>
+                                <span>Démo : Créer une campagne en 8 étapes</span>
+                            </h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="video-demo-player">
+                                <!-- Viewport -->
+                                <div class="video-demo-viewport">
+                                    <!-- Les iframes sont créées dynamiquement par le JS pour le double buffering -->
+
+                                    <!-- Loading indicator -->
+                                    <div class="video-demo-loading hide">
+                                        <i class="bi bi-hourglass-split"></i>
+                                    </div>
+
+                                    <!-- Play overlay (centre) -->
+                                    <div class="video-demo-play-overlay">
+                                        <i class="bi bi-play-fill"></i>
+                                    </div>
+
+                                    <!-- Tooltip contextuel -->
+                                    <div class="video-demo-tooltip" data-video-demo-target="tooltip">
+                                        Tooltip contexte
+                                    </div>
+                                </div>
+
+                                <!-- Contrôles vidéo -->
+                                <div class="video-demo-controls">
+                                    <!-- Barre de progression -->
+                                    <div class="video-demo-progress-bar" data-video-demo-target="progressBar">
+                                        <div class="video-demo-progress-fill" data-video-demo-target="progressFill"></div>
+                                    </div>
+
+                                    <!-- Controls bottom -->
+                                    <div class="video-demo-controls-bottom">
+                                        <div class="video-demo-controls-left">
+                                            <button class="video-demo-btn video-demo-btn-play"
+                                                    data-video-demo-target="playButton"
+                                                    type="button"
+                                                    aria-label="Lecture">
+                                                <i class="bi bi-play-fill"></i>
+                                            </button>
+                                            <div class="video-demo-time">
+                                                <span data-video-demo-target="currentTime">0:00</span>
+                                                <span> / </span>
+                                                <span data-video-demo-target="totalTime">0:45</span>
+                                            </div>
+                                        </div>
+                                        <div class="video-demo-controls-right">
+                                            <button class="video-demo-btn"
+                                                    data-action-restart
+                                                    type="button"
+                                                    aria-label="Recommencer"
+                                                    title="Recommencer">
+                                                <i class="bi bi-arrow-clockwise"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Info bottom -->
+                            <div class="alert alert-info d-flex align-items-center gap-2 m-3 mb-0">
+                                <i class="bi bi-lightbulb-fill"></i>
+                                <div class="small">
+                                    <strong>Astuce :</strong> Cliquez sur la barre de progression pour naviguer entre les étapes
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

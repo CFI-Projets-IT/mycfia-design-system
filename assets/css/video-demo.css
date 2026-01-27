@@ -1,0 +1,408 @@
+/* ========================================
+   VIDEO DEMO PLAYER - YouTube-like
+   ======================================== */
+
+.video-demo-modal .modal-dialog {
+    max-width: 90vw;
+    height: 90vh;
+    margin: 5vh auto;
+}
+
+.video-demo-modal .modal-content {
+    height: 100%;
+    border-radius: var(--border-radius-lg);
+    overflow: hidden;
+    background: var(--color-background);
+}
+
+.video-demo-modal .modal-header {
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid var(--color-border);
+    background: var(--color-surface);
+}
+
+.video-demo-modal .modal-body {
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    height: calc(100% - 60px);
+    position: relative;
+}
+
+/* ========================================
+   Lecteur vidéo
+   ======================================== */
+
+.video-demo-player {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background: #000;
+    position: relative;
+}
+
+.video-demo-viewport {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+    background: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.video-demo-iframe {
+    border: none;
+    display: block;
+    background: #fff;
+    position: absolute;
+    opacity: 0;
+    transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+    pointer-events: none;
+    top: 0;
+    left: 0;
+}
+
+.video-demo-iframe.active {
+    opacity: 1;
+    z-index: 2;
+}
+
+.video-demo-iframe.scaled {
+    /* L'iframe prend toute la largeur/hauteur du viewport avec zoom CSS */
+    width: 100%;
+    height: 100%;
+    transform: scale(var(--viewport-scale, 1));
+    transform-origin: top left;
+}
+
+/* ========================================
+   Contrôles vidéo
+   ======================================== */
+
+.video-demo-controls {
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.7));
+    padding: 12px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 10;
+}
+
+.video-demo-player:hover .video-demo-controls {
+    opacity: 1;
+}
+
+/* Barre de progression */
+.video-demo-progress-bar {
+    width: 100%;
+    height: 5px;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 3px;
+    cursor: pointer;
+    position: relative;
+    transition: height 0.2s ease;
+}
+
+.video-demo-progress-bar:hover {
+    height: 8px;
+}
+
+.video-demo-progress-fill {
+    height: 100%;
+    background: var(--color-primary);
+    border-radius: 3px;
+    width: 0%;
+    transition: width 0.1s linear;
+    position: relative;
+}
+
+.video-demo-progress-fill::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 12px;
+    height: 12px;
+    background: var(--color-primary);
+    border-radius: 50%;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.video-demo-progress-bar:hover .video-demo-progress-fill::after {
+    opacity: 1;
+}
+
+/* Controls bottom */
+.video-demo-controls-bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.video-demo-controls-left,
+.video-demo-controls-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Boutons */
+.video-demo-btn {
+    background: transparent;
+    border: none;
+    color: #fff;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--border-radius-sm);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 1.2rem;
+}
+
+.video-demo-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: scale(1.05);
+}
+
+.video-demo-btn:active {
+    transform: scale(0.95);
+}
+
+.video-demo-btn-play {
+    width: 40px;
+    height: 40px;
+    font-size: 1.5rem;
+}
+
+/* Time display */
+.video-demo-time {
+    color: #fff;
+    font-size: 0.875rem;
+    font-weight: 500;
+    white-space: nowrap;
+    font-family: 'Roboto Mono', monospace;
+}
+
+/* ========================================
+   Tooltip contextuel
+   ======================================== */
+
+.video-demo-tooltip {
+    position: absolute;
+    top: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-20px);
+    max-width: 85%;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 20;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.video-demo-tooltip.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+.video-demo-tooltip-item {
+    background: linear-gradient(135deg, rgba(0, 48, 128, 0.95), rgba(57, 191, 239, 0.95));
+    color: #fff;
+    padding: 12px 20px;
+    border-radius: var(--border-radius-lg);
+    font-size: 0.95rem;
+    font-weight: 600;
+    text-align: center;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(8px);
+    animation: tooltipSlideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes tooltipSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ========================================
+   CTA Dashboard
+   ======================================== */
+
+.btn-video-demo {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+    color: white;
+    border: none;
+    border-radius: var(--border-radius-md);
+    font-weight: 600;
+    font-size: 0.95rem;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0, 48, 128, 0.2);
+}
+
+.btn-video-demo:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 48, 128, 0.3);
+    color: white;
+}
+
+.btn-video-demo:active {
+    transform: translateY(0);
+}
+
+.btn-video-demo i {
+    font-size: 1.1rem;
+}
+
+/* Animation pulse pour attirer l'attention */
+@keyframes pulse-video {
+    0%, 100% {
+        box-shadow: 0 4px 12px rgba(0, 48, 128, 0.2);
+    }
+    50% {
+        box-shadow: 0 4px 20px rgba(0, 48, 128, 0.4), 0 0 0 8px rgba(0, 48, 128, 0.1);
+    }
+}
+
+.btn-video-demo.pulse {
+    animation: pulse-video 2s ease-in-out infinite;
+}
+
+/* ========================================
+   Responsive
+   ======================================== */
+
+@media (max-width: 768px) {
+    .video-demo-modal .modal-dialog {
+        max-width: 100vw;
+        height: 100vh;
+        margin: 0;
+    }
+
+    .video-demo-modal .modal-content {
+        border-radius: 0;
+    }
+
+    .video-demo-controls {
+        opacity: 1; /* Toujours visible sur mobile */
+    }
+
+    .video-demo-tooltip {
+        max-width: 90%;
+        gap: 8px;
+    }
+
+    .video-demo-tooltip-item {
+        font-size: 0.85rem;
+        padding: 10px 16px;
+    }
+
+    .btn-video-demo span {
+        display: none; /* Masquer texte sur très petits écrans */
+    }
+}
+
+@media (max-width: 576px) {
+    .video-demo-time {
+        font-size: 0.75rem;
+    }
+
+    .video-demo-btn {
+        width: 32px;
+        height: 32px;
+        font-size: 1rem;
+    }
+
+    .video-demo-btn-play {
+        width: 36px;
+        height: 36px;
+        font-size: 1.3rem;
+    }
+}
+
+/* ========================================
+   États et animations
+   ======================================== */
+
+/* Transition entre slides */
+.video-demo-iframe {
+    transition: opacity 0.3s ease;
+}
+
+.video-demo-iframe.loading {
+    opacity: 0.5;
+}
+
+/* Loading state */
+.video-demo-loading {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #fff;
+    font-size: 2rem;
+    z-index: 5;
+    pointer-events: none;
+}
+
+.video-demo-loading.hide {
+    display: none;
+}
+
+/* Play overlay (au centre quand en pause) */
+.video-demo-play-overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80px;
+    height: 80px;
+    background: rgba(0, 48, 128, 0.9);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 2rem;
+    cursor: pointer;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.3s ease;
+    z-index: 15;
+}
+
+.video-demo-player:not(.playing):hover .video-demo-play-overlay {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.video-demo-play-overlay:hover {
+    transform: translate(-50%, -50%) scale(1.1);
+    background: var(--color-primary);
+}
