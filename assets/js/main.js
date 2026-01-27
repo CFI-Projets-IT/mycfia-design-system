@@ -20,6 +20,9 @@ import { initAssetValidation } from "./components/step5-validate-ui.js";
 import { initCampaignAssetsPlanning } from "./components/campaign-assets-planning.js";
 import { initOnboardingDAP } from "./components/onboarding-dap.js";
 import { initOnboardingDAPStep1 } from "./components/onboarding-dap-step1.js";
+import { initOnboardingDAPStep1Review } from "./components/onboarding-dap-step1-review.js";
+import { initOnboardingDAPStep2 } from "./components/onboarding-dap-step2.js";
+import { initOnboardingDAPStep3 } from "./components/onboarding-dap-step3.js";
 import { initVideoDemo } from "./components/video-demo.js";
 import "./components/campaign-stepper.js";
 import "./components/campaign-form.js";
@@ -125,10 +128,10 @@ document.addEventListener("DOMContentLoaded", () => {
       initCampaignAssetsPlanning();
     }
 
-    // 14. Initialiser l'onboarding DAP (si dashboard)
+    // 14. Initialiser l'onboarding DAP (si dashboard uniquement)
     if (
       window.location.pathname.includes("dashboard") ||
-      document.querySelector(".content")
+      document.getElementById("onboardingWelcomeModal")
     ) {
       console.log("[main] Initialisation de l'onboarding DAP...");
       initOnboardingDAP();
@@ -147,6 +150,33 @@ document.addEventListener("DOMContentLoaded", () => {
     ) {
       console.log("[main] Initialisation de l'onboarding DAP Step 1...");
       initOnboardingDAPStep1();
+    }
+
+    // 17. Initialiser l'onboarding DAP Step 1 Review (si step1_review)
+    if (
+      window.location.pathname.includes("step1_review") ||
+      document.getElementById("onboardingWelcomeModalStep1Review")
+    ) {
+      console.log("[main] Initialisation de l'onboarding DAP Step 1 Review...");
+      initOnboardingDAPStep1Review();
+    }
+
+    // 18. Initialiser l'onboarding DAP Step 2 (si step2_validate)
+    if (
+      window.location.pathname.includes("step2_validate") ||
+      document.getElementById("onboardingWelcomeModalStep2")
+    ) {
+      console.log("[main] Initialisation de l'onboarding DAP Step 2...");
+      initOnboardingDAPStep2();
+    }
+
+    // 19. Initialiser l'onboarding DAP Step 3 (si step3_select)
+    if (
+      window.location.pathname.includes("step3_select") ||
+      document.getElementById("onboardingWelcomeModalStep3")
+    ) {
+      console.log("[main] Initialisation de l'onboarding DAP Step 3...");
+      initOnboardingDAPStep3();
     }
 
     console.log("===========================================");

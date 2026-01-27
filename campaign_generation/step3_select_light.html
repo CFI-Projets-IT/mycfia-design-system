@@ -127,13 +127,18 @@
 
             <div class="content">
                 <!-- Breadcrumb -->
-                <nav aria-label="breadcrumb" class="step2-select-breadcrumb">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="dashboard_light.html" class="step2-select-breadcrumb-link">Campagnes Marketing</a></li>
-                        <li class="breadcrumb-item"><a href="step1_create_light.html" class="step2-select-breadcrumb-link">Nouvelle campagne</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">Sélection Personas</li>
-                    </ol>
-                </nav>
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <nav aria-label="breadcrumb" class="step3-select-breadcrumb mb-0">
+                        <ol class="breadcrumb mb-0">
+                            <li class="breadcrumb-item"><a href="dashboard_light.html" class="step3-select-breadcrumb-link">Campagnes Marketing</a></li>
+                            <li class="breadcrumb-item"><a href="step1_create_light.html" class="step3-select-breadcrumb-link">Nouvelle campagne</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Sélection Personas</li>
+                        </ol>
+                    </nav>
+                    <button class="onboarding-help-button-inline" id="restartOnboardingTourStep3" type="button" aria-label="Aide - Relancer le tour guidé" title="Relancer le tour guidé">
+                        <i class="bi bi-question-lg"></i>
+                    </button>
+                </div>
 
                 <!-- Stepper -->
                 <div class="campaign-stepper">
@@ -182,16 +187,6 @@
                             <div class="stepper-label">Planning</div>
                         </div>
                     </div>
-                </div>
-
-                <!-- Success Alert -->
-                <div class="alert alert-success alert-dismissible fade show personas-generated-alert">
-                    <i class="bi bi-check-circle-fill personas-generated-alert-icon"></i>
-                    <div>
-                        <strong>5 personas générés avec succès!</strong><br>
-                        Sélectionnez les personas les plus pertinents pour votre campagne. La détection de concurrents se lancera automatiquement.
-                    </div>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
 
                 <!-- Layout 2 colonnes : Personas + Profilia sidebar -->
@@ -646,6 +641,87 @@
                         Passer directement a la Strategie
                     </a>
                     <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Annuler</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Welcome Modal DAP Step 3 -->
+    <div class="modal fade" id="onboardingWelcomeModalStep3" tabindex="-1" aria-labelledby="onboardingWelcomeModalStep3Label" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content onboarding-welcome-modal">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title d-flex align-items-center gap-2" id="onboardingWelcomeModalStep3Label">
+                        <i class="bi bi-people-fill text-primary"></i>
+                        Sélectionnez vos personas
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="lead mb-4">L'IA a généré 5 personas basés sur votre projet. Suivez le tour guidé pour comprendre comment les sélectionner et les enrichir.</p>
+
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-6">
+                            <div class="d-flex gap-3">
+                                <div class="flex-shrink-0">
+                                    <i class="bi bi-person-badge fs-1 text-primary"></i>
+                                </div>
+                                <div>
+                                    <h6 class="mb-1">Personas détaillés</h6>
+                                    <p class="text-secondary small mb-0">Chaque persona inclut profil, score de pertinence et besoins clés identifiés par l'IA.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="d-flex gap-3">
+                                <div class="flex-shrink-0">
+                                    <i class="bi bi-check-circle fs-1 text-success"></i>
+                                </div>
+                                <div>
+                                    <h6 class="mb-1">Sélection facile</h6>
+                                    <p class="text-secondary small mb-0">Cliquez sur les cartes personas pour les sélectionner. Vous pouvez en choisir de 1 à 5.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="d-flex gap-3">
+                                <div class="flex-shrink-0">
+                                    <i class="bi bi-database-check fs-1 text-info"></i>
+                                </div>
+                                <div>
+                                    <h6 class="mb-1">Enrichissement Profilia</h6>
+                                    <p class="text-secondary small mb-0">Optionnel : validez vos personas avec la mégabase Profilia pour estimer votre reach potentiel.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="d-flex gap-3">
+                                <div class="flex-shrink-0">
+                                    <i class="bi bi-lightning-charge-fill fs-1 text-warning"></i>
+                                </div>
+                                <div>
+                                    <h6 class="mb-1">Validation rapide</h6>
+                                    <p class="text-secondary small mb-0">Une fois satisfait, validez pour continuer vers l'étape 4 : Upload Contacts.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="alert alert-info d-flex align-items-start gap-2 mb-0">
+                        <i class="bi bi-info-circle-fill fs-5"></i>
+                        <div class="small">
+                            <strong>Première sélection de personas ?</strong>
+                            <p class="mb-0">Nous vous recommandons de faire le tour guidé (2 minutes) pour découvrir toutes les fonctionnalités.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer border-0">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="bi bi-skip-forward"></i> Passer
+                    </button>
+                    <button type="button" class="btn btn-primary" id="startOnboardingTourStep3">
+                        <i class="bi bi-play-circle"></i> Faire le tour guidé
+                    </button>
                 </div>
             </div>
         </div>
