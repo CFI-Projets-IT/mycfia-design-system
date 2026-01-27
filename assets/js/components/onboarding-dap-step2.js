@@ -606,28 +606,77 @@ class OnboardingDAPStep2 {
     }
 
     /**
-     * Ouvre le Speed Dial FAB
+     * Ouvre le Speed Dial FAB pour l'étape de démonstration
      */
     openSpeedDial() {
-        const speedDialMain = document.querySelector(".speed-dial-main");
-        const speedDialContainer = document.querySelector(".speed-dial-container");
+        console.log("[OnboardingDAPStep2] Ouverture du Speed Dial FAB");
 
-        if (speedDialContainer && !speedDialContainer.classList.contains("open")) {
-            speedDialContainer.classList.add("open");
-            this._speedDialOpen = true;
+        const speedDialContainer = document.querySelector('.speed-dial-container');
+        if (!speedDialContainer) {
+            console.warn("[OnboardingDAPStep2] Speed Dial container introuvable");
+            return;
         }
+
+        // Ajouter classe pour forcer l'affichage
+        speedDialContainer.classList.add('dap-force-open');
+
+        // Trouver toutes les actions
+        const actions = speedDialContainer.querySelectorAll('.speed-dial-action');
+
+        // Forcer l'affichage avec styles inline (pour surpasser le CSS :hover)
+        actions.forEach((action, index) => {
+            action.classList.remove('d-none');
+            action.style.opacity = '1';
+            action.style.transform = 'translateY(0) scale(1)';
+            action.style.pointerEvents = 'all';
+        });
+
+        // Changer l'icône du bouton principal (trois points → X)
+        const mainBtn = speedDialContainer.querySelector('.speed-dial-main i');
+        if (mainBtn) {
+            mainBtn.className = 'bi bi-x-lg';
+        }
+
+        // Marquer comme ouvert
+        this._speedDialOpen = true;
     }
 
     /**
      * Ferme le Speed Dial FAB
      */
     closeSpeedDial() {
-        const speedDialContainer = document.querySelector(".speed-dial-container");
-
-        if (speedDialContainer && this._speedDialOpen) {
-            speedDialContainer.classList.remove("open");
-            this._speedDialOpen = false;
+        if (!this._speedDialOpen) {
+            return;
         }
+
+        console.log("[OnboardingDAPStep2] Fermeture du Speed Dial FAB");
+
+        const speedDialContainer = document.querySelector('.speed-dial-container');
+        if (!speedDialContainer) {
+            return;
+        }
+
+        // Retirer classe de forçage
+        speedDialContainer.classList.remove('dap-force-open');
+
+        // Trouver toutes les actions
+        const actions = speedDialContainer.querySelectorAll('.speed-dial-action');
+
+        // Retirer les styles inline pour restaurer le comportement CSS par défaut
+        actions.forEach(action => {
+            action.style.opacity = '';
+            action.style.transform = '';
+            action.style.pointerEvents = '';
+        });
+
+        // Restaurer l'icône du bouton principal (X → trois points)
+        const mainBtn = speedDialContainer.querySelector('.speed-dial-main i');
+        if (mainBtn) {
+            mainBtn.className = 'bi bi-three-dots-vertical';
+        }
+
+        // Marquer comme fermé
+        this._speedDialOpen = false;
     }
 
     /**
