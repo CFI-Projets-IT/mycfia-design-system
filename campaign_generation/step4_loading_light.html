@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Génération Assets - Étape 5 | myCFiA</title>
+    <title>Génération Stratégie - Étape 4 | myCFiA</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -95,14 +95,14 @@
             <header class="header">
                 <div class="header-content">
                     <!-- Logo -->
-                    <a href="../index.html" class="step5-loading-header-logo-link">
+                    <a href="../index.html" style="display: flex; align-items: center; gap: 12px; text-decoration: none;">
                         <img src="../images/logo_picto.svg" alt="CFI" class="header-logo-picto">
                         <img src="../images/logo.svg" alt="myCFiA" class="header-logo">
                     </a>
 
                     <!-- Actions -->
-                    <div class="step5-loading-header-buttons">
-                        <button class="btn btn-glass header-btn step5-loading-header-btn-primary">
+                    <div style="display: flex; gap: 16px; align-items: center;">
+                        <button class="btn btn-glass header-btn" style="color: var(--color-primary);">
                             <i class="bi bi-building"></i>
                             <span class="header-btn-text">Ma Division</span>
                         </button>
@@ -110,7 +110,7 @@
                             <i class="bi bi-sun-fill"></i>
                             <span class="header-btn-text">Clair</span>
                         </button>
-                        <a href="#" class="btn btn-glass header-btn step5-loading-header-link">
+                        <a href="#" class="btn btn-glass header-btn" style="color: var(--color-primary); text-decoration: none;">
                             <i class="bi bi-arrow-left-circle"></i>
                             <span class="header-btn-text">Retour CFI</span>
                         </a>
@@ -122,7 +122,7 @@
                 <!-- Stepper -->
                 <div class="campaign-stepper">
                     <div class="stepper-container">
-                        <div class="stepper-line"><div class="stepper-progress step7-loading-stepper-progress"></div></div>
+                        <div class="stepper-line"><div class="stepper-progress step4-loading-stepper-progress"></div></div>
 
                         <div class="stepper-step completed">
                             <div class="stepper-circle"><i class="bi bi-check-lg"></i></div>
@@ -139,22 +139,22 @@
                             <div class="stepper-label">Personas</div>
                         </div>
 
-                        <div class="stepper-step completed">
-                            <div class="stepper-circle"><i class="bi bi-check-lg"></i></div>
-                            <div class="stepper-label">Upload</div>
-                        </div>
-
-                        <div class="stepper-step completed">
-                            <div class="stepper-circle"><i class="bi bi-check-lg"></i></div>
+                        <div class="stepper-step active">
+                            <div class="stepper-circle">4</div>
                             <div class="stepper-label">Stratégie</div>
                         </div>
 
-                        <div class="stepper-step completed">
-                            <div class="stepper-circle"><i class="bi bi-check-lg"></i></div>
+                        <div class="stepper-step">
+                            <div class="stepper-circle">5</div>
                             <div class="stepper-label">Canaux</div>
                         </div>
 
-                        <div class="stepper-step active">
+                        <div class="stepper-step">
+                            <div class="stepper-circle">6</div>
+                            <div class="stepper-label">Upload</div>
+                        </div>
+
+                        <div class="stepper-step">
                             <div class="stepper-circle">7</div>
                             <div class="stepper-label">Assets</div>
                         </div>
@@ -174,7 +174,7 @@
                             <div class="card-body">
                                 <h5 class="mb-4">
                                     <i class="bi bi-briefcase text-primary"></i>
-                                    Configuration complète
+                                    Contexte stratégique
                                 </h5>
 
                                 <!-- Campaign Info -->
@@ -183,128 +183,75 @@
                                     <p class="mb-0"><strong>Lancement Produit Q1 2025</strong></p>
                                 </div>
 
-                                <div class="mb-3 pb-3" class="campaign-context-divider">
-                                    <label class="form-label small text-secondary">Budget et durée</label>
-                                    <p class="mb-0"><strong>50 000€</strong> sur 3 mois (Q1 2025)</p>
+                                <div class="mb-3">
+                                    <label class="form-label small text-secondary">Secteur d'activité</label>
+                                    <p class="mb-0">Formation professionnelle</p>
+                                </div>
+
+                                <div class="mb-3 pb-3" style="border-bottom: 1px solid var(--border);">
+                                    <label class="form-label small text-secondary">Budget total</label>
+                                    <p class="mb-0"><strong>50 000€</strong> sur 3 mois</p>
                                 </div>
 
                                 <!-- Personas -->
                                 <div class="mb-3">
                                     <label class="form-label small text-secondary mb-2">
                                         <i class="bi bi-people-fill text-primary"></i>
-                                        Personas (3)
+                                        Personas ciblés (3)
                                     </label>
                                     <div class="d-flex flex-wrap gap-2">
-                                        <span class="badge bg-primary campaign-badge-small">Sophie Martin</span>
-                                        <span class="badge bg-primary campaign-badge-small">Marc Dubois</span>
-                                        <span class="badge bg-primary campaign-badge-small">Claire Rousseau</span>
+                                        <span class="badge bg-primary" style="font-size: 0.75rem;">Sophie Martin</span>
+                                        <span class="badge bg-primary" style="font-size: 0.75rem;">Marc Dubois</span>
+                                        <span class="badge bg-primary" style="font-size: 0.75rem;">Claire Rousseau</span>
                                     </div>
                                 </div>
 
                                 <!-- Competitors -->
-                                <div class="mb-3 pb-3" class="campaign-context-divider">
+                                <div class="mb-0 pb-3" style="border-bottom: 1px solid var(--border);">
                                     <label class="form-label small text-secondary mb-2">
                                         <i class="bi bi-building text-danger"></i>
-                                        Concurrents (3)
+                                        Concurrents analysés (3)
                                     </label>
                                     <div class="d-flex flex-wrap gap-2">
-                                        <span class="badge bg-danger campaign-badge-small">AFPA</span>
-                                        <span class="badge bg-warning text-dark campaign-badge-small">CEGOS</span>
-                                        <span class="badge bg-warning text-dark campaign-badge-small">EFE</span>
+                                        <span class="badge bg-danger" style="font-size: 0.75rem;">AFPA</span>
+                                        <span class="badge bg-warning text-dark" style="font-size: 0.75rem;">CEGOS</span>
+                                        <span class="badge bg-warning text-dark" style="font-size: 0.75rem;">EFE Formation</span>
                                     </div>
                                 </div>
 
-                                <!-- Strategy Validated -->
-                                <div class="mb-3">
-                                    <label class="form-label small text-secondary mb-2">
-                                        <i class="bi bi-check-circle-fill text-success"></i>
-                                        Stratégie validée
-                                    </label>
-                                    <div class="d-flex flex-wrap gap-2">
-                                        <span class="badge bg-success campaign-badge-small">
-                                            <i class="bi bi-bullseye"></i> Positionnement
-                                        </span>
-                                        <span class="badge bg-success campaign-badge-small">
-                                            <i class="bi bi-graph-up"></i> KPIs définis
-                                        </span>
-                                        <span class="badge bg-success campaign-badge-small">
-                                            <i class="bi bi-cash"></i> Budget alloué
-                                        </span>
-                                    </div>
-                                </div>
-
-                                <!-- Channels -->
-                                <div class="mb-0 pb-3" class="campaign-context-divider">
-                                    <label class="form-label small text-secondary mb-2">
-                                        <i class="bi bi-broadcast text-info"></i>
-                                        Canaux marketing (6)
-                                    </label>
-                                    <div class="d-flex flex-wrap gap-2">
-                                        <span class="badge bg-info campaign-badge-small">
-                                            <i class="bi bi-linkedin"></i> Linkedin
-                                        </span>
-                                        <span class="badge bg-info campaign-badge-small">
-                                            <i class="bi bi-google"></i> GoogleAds
-                                        </span>
-                                        <span class="badge bg-info campaign-badge-small">
-                                            <i class="bi bi-facebook"></i> Facebook
-                                        </span>
-                                        <span class="badge bg-info campaign-badge-small">
-                                            <i class="bi bi-instagram"></i> Instagram
-                                        </span>
-                                        <span class="badge bg-info campaign-badge-small">
-                                            <i class="bi bi-envelope"></i> Email
-                                        </span>
-                                        <span class="badge bg-info campaign-badge-small">
-                                            <i class="bi bi-phone"></i> Sms
-                                        </span>
-                                    </div>
-                                </div>
-
-                                <!-- Assets Being Generated -->
+                                <!-- Strategy Elements -->
                                 <div class="mt-3 mb-0">
                                     <label class="form-label small text-secondary mb-2">
-                                        <i class="bi bi-images text-warning"></i>
-                                        Assets en cours de génération
+                                        <i class="bi bi-graph-up-arrow text-success"></i>
+                                        Éléments de stratégie en cours
                                     </label>
                                     <div class="d-flex flex-column gap-1">
                                         <div class="d-flex align-items-center gap-2">
-                                            <div class="spinner-border spinner-border-sm text-primary campaign-spinner-small" role="status">
+                                            <div class="spinner-border spinner-border-sm text-primary" role="status" style="width: 12px; height: 12px;">
                                                 <span class="visually-hidden">Loading...</span>
                                             </div>
-                                            <small class="text-secondary campaign-text-small">Visuels Linkedin (12)</small>
+                                            <small class="text-secondary" style="font-size: 0.75rem;">Positionnement stratégique</small>
                                         </div>
                                         <div class="d-flex align-items-center gap-2">
-                                            <i class="bi bi-circle text-secondary campaign-icon-small"></i>
-                                            <small class="text-secondary campaign-text-small">Bannières GoogleAds (18)</small>
+                                            <i class="bi bi-circle text-secondary" style="font-size: 0.5rem;"></i>
+                                            <small class="text-secondary" style="font-size: 0.75rem;">Tactiques par canal</small>
                                         </div>
                                         <div class="d-flex align-items-center gap-2">
-                                            <i class="bi bi-circle text-secondary campaign-icon-small"></i>
-                                            <small class="text-secondary campaign-text-small">Stories Instagram (10)</small>
+                                            <i class="bi bi-circle text-secondary" style="font-size: 0.5rem;"></i>
+                                            <small class="text-secondary" style="font-size: 0.75rem;">KPIs et objectifs</small>
                                         </div>
                                         <div class="d-flex align-items-center gap-2">
-                                            <i class="bi bi-circle text-secondary campaign-icon-small"></i>
-                                            <small class="text-secondary campaign-text-small">Templates Email (8)</small>
-                                        </div>
-                                        <div class="d-flex align-items-center gap-2">
-                                            <i class="bi bi-circle text-secondary campaign-icon-small"></i>
-                                            <small class="text-secondary campaign-text-small">Article (5)</small>
-                                        </div>
-                                        <div class="d-flex align-items-center gap-2">
-                                            <i class="bi bi-circle text-secondary campaign-icon-small"></i>
-                                            <small class="text-secondary campaign-text-small">Sms (9)</small>
+                                            <i class="bi bi-circle text-secondary" style="font-size: 0.5rem;"></i>
+                                            <small class="text-secondary" style="font-size: 0.75rem;">Allocation budgétaire</small>
                                         </div>
                                     </div>
-                                    <small class="text-primary d-block mt-2 campaign-total-text">
-                                        Total: 62 assets multicanaux
-                                    </small>
                                 </div>
 
-                                <div class="alert alert-warning mt-4 mb-0 campaign-alert-compact">
+                                <div class="alert alert-info mt-4 mb-0" style="padding: 0.75rem;">
                                     <small>
-                                        <i class="bi bi-hourglass-split"></i>
-                                        <strong>Génération en cours</strong><br>
-                                        La création de 62 assets optimisés prend environ 2 minutes. Restez sur cette page.
+                                        <i class="bi bi-info-circle"></i>
+                                        <strong>Stratégie optimisée</strong><br>
+                                        L'IA génère une stratégie marketing complète basée sur vos personas et l'analyse concurrentielle.
                                     </small>
                                 </div>
                             </div>
@@ -317,10 +264,10 @@
                             <div class="ai-animation">
                                 <div class="ai-icon-ring"></div>
                                 <div class="ai-icon-ring"></div>
-                                <div class="ai-icon-main"><i class="bi bi-images"></i></div>
+                                <div class="ai-icon-main"><i class="bi bi-graph-up-arrow"></i></div>
                             </div>
-                            <h1 class="loader-title">Génération des assets marketing</h1>
-                            <p class="loader-subtitle">L'IA crée vos visuels et contenus optimisés pour chaque canal...</p>
+                            <h1 class="loader-title">Génération de la stratégie marketing</h1>
+                            <p class="loader-subtitle">L'IA optimise votre stratégie basée sur vos personas et concurrents...</p>
 
                             <div class="phase-indicators">
                                 <div class="phase-dot active"></div>
@@ -328,13 +275,12 @@
                                 <div class="phase-dot"></div>
                                 <div class="phase-dot"></div>
                                 <div class="phase-dot"></div>
-                                <div class="phase-dot"></div>
                             </div>
 
-                            <div class="status-message">Génération des visuels Linkedin...</div>
+                            <div class="status-message">Analyse de votre positionnement...</div>
 
                             <div class="progress-wrapper">
-                                <div class="progress"><div class="progress-bar step5-loading-progress-initial"></div></div>
+                                <div class="progress"><div class="progress-bar" style="width: 0%;"></div></div>
                                 <div class="progress-text">0% complété</div>
                             </div>
 
@@ -345,9 +291,9 @@
                             </div>
 
                             <div class="loader-metadata">
-                                <div class="metadata-item"><i class="bi bi-cpu"></i><span>Mistral Large + DALL-E 3</span></div>
-                                <div class="metadata-item"><i class="bi bi-stack"></i><span>62 assets multicanaux</span></div>
-                                <div class="metadata-item"><i class="bi bi-clock-history"></i><span>Durée estimée: ~2 minutes</span></div>
+                                <div class="metadata-item"><i class="bi bi-cpu"></i><span>Modèle: Mistral Large</span></div>
+                                <div class="metadata-item"><i class="bi bi-cash"></i><span>Budget: 50 000€</span></div>
+                                <div class="metadata-item"><i class="bi bi-clock-history"></i><span>Durée estimée: ~13 secondes</span></div>
                             </div>
                         </div>
                     </div>

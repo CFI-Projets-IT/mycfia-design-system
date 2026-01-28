@@ -254,7 +254,7 @@ function initStrategyLoader() {
 
     simulateLoading({
         duration: 13000,
-        redirectUrl: adaptUrlToTheme('step5_result_light.html'),
+        redirectUrl: adaptUrlToTheme('step4_result_light.html'),
         messages: strategyMessages
     });
 }
@@ -277,7 +277,7 @@ function initAssetLoader() {
 
     simulateLoading({
         duration: 18000,
-        redirectUrl: adaptUrlToTheme('step7_validate_light.html'),
+        redirectUrl: adaptUrlToTheme('step8_validate_light.html'),
         messages: assetMessages
     });
 }
@@ -296,7 +296,7 @@ function initContactValidationLoader() {
 
     simulateLoading({
         duration: 8000,
-        redirectUrl: adaptUrlToTheme('contact_upload_analyzing_light.html'),
+        redirectUrl: adaptUrlToTheme('step6_upload_analyzing_light.html'),
         messages: validationMessages
     });
 }
@@ -315,7 +315,7 @@ function initContactAnalysisLoader() {
 
     simulateLoading({
         duration: 10000,
-        redirectUrl: adaptUrlToTheme('contact_upload_suggestions_light.html'),
+        redirectUrl: adaptUrlToTheme('step6_upload_suggestions_light.html'),
         messages: analysisMessages
     });
 }
@@ -487,13 +487,13 @@ function initLoader() {
         initPersonaLoader();
     } else if (path.includes('step3_select')) {
         initProfiliaLoader();
-    } else if (path.includes('step5_loading')) {
+    } else if (path.includes('step4_loading')) {
         initStrategyLoader();
-    } else if (path.includes('step7_loading')) {
+    } else if (path.includes('step8_loading')) {
         initAssetLoader();
-    } else if (path.includes('contact_upload_validating')) {
+    } else if (path.includes('step6_upload_validating')) {
         initContactValidationLoader();
-    } else if (path.includes('contact_upload_analyzing')) {
+    } else if (path.includes('step6_upload_analyzing')) {
         initContactAnalysisLoader();
     }
 }

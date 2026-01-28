@@ -63,7 +63,7 @@ const ONBOARDING_STEPS_STEP3 = [
         target: ".speed-dial-container",
         title: "Validez ou régénérez",
         content:
-            "Une fois vos personas sélectionnés, validez pour continuer vers l'étape 4 (Upload Contacts), ou régénérez si vous souhaitez d'autres propositions.",
+            "Une fois vos personas sélectionnés, validez pour continuer vers l'étape 4 (Stratégie), ou régénérez si vous souhaitez d'autres propositions.",
         icon: "bi-lightning-charge-fill",
     },
 ];

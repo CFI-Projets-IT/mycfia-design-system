@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Analyse en cours - Upload de Contacts | myCFiA</title>
+    <title>Upload de Contacts - Étape 6 | myCFiA</title>
 
     <!-- Bootstrap 5 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -146,7 +146,7 @@
                 <div class="campaign-stepper">
                     <div class="stepper-container">
                         <div class="stepper-line">
-                            <div class="stepper-progress contact-upload-stepper-progress"></div>
+                            <div class="stepper-progress step6-upload-stepper-progress"></div>
                         </div>
 
                         <div class="stepper-step completed">
@@ -164,19 +164,19 @@
                             <div class="stepper-label">Personas</div>
                         </div>
 
-                        <div class="stepper-step active">
-                            <div class="stepper-circle">4</div>
-                            <div class="stepper-label">Upload</div>
-                        </div>
-
-                        <div class="stepper-step">
-                            <div class="stepper-circle">5</div>
+                        <div class="stepper-step completed">
+                            <div class="stepper-circle"><i class="bi bi-check-lg"></i></div>
                             <div class="stepper-label">Stratégie</div>
                         </div>
 
-                        <div class="stepper-step">
-                            <div class="stepper-circle">6</div>
+                        <div class="stepper-step completed">
+                            <div class="stepper-circle"><i class="bi bi-check-lg"></i></div>
                             <div class="stepper-label">Canaux</div>
+                        </div>
+
+                        <div class="stepper-step active">
+                            <div class="stepper-circle">6</div>
+                            <div class="stepper-label">Upload</div>
                         </div>
 
                         <div class="stepper-step">
@@ -223,23 +223,31 @@
                             Workflow complet (7 états) :
                         </h6>
                         <div class="d-flex flex-wrap gap-2 align-items-center">
-                            <a href="contact_upload_empty_light.html" class="badge bg-secondary text-decoration-none fs-6 py-2 px-3">1. Upload</a>
+                            <a href="step6_upload_empty_light.html" class="badge bg-primary text-decoration-none fs-6 py-2 px-3">1. Upload</a>
                             <i class="bi bi-arrow-right text-secondary"></i>
-                            <a href="contact_upload_validating_light.html" class="badge bg-secondary text-decoration-none fs-6 py-2 px-3">2. Validation</a>
+                            <a href="step6_upload_validating_light.html" class="badge bg-secondary text-decoration-none fs-6 py-2 px-3">2. Validation</a>
                             <i class="bi bi-arrow-right text-secondary"></i>
-                            <a href="contact_upload_errors_light.html" class="badge bg-warning text-dark text-decoration-none fs-6 py-2 px-3 opacity-75">[Erreurs]</a>
+                            <a href="step6_upload_errors_light.html" class="badge bg-warning text-dark text-decoration-none fs-6 py-2 px-3 opacity-75">[Erreurs]</a>
                             <i class="bi bi-arrow-right text-secondary"></i>
-                            <a href="contact_upload_analyzing_light.html" class="badge bg-primary text-decoration-none fs-6 py-2 px-3">3. Analyse</a>
+                            <a href="step6_upload_analyzing_light.html" class="badge bg-secondary text-decoration-none fs-6 py-2 px-3">3. Analyse</a>
                             <i class="bi bi-arrow-right text-secondary"></i>
-                            <a href="contact_upload_suggestions_light.html" class="badge bg-secondary text-decoration-none fs-6 py-2 px-3">4. Suggestions</a>
+                            <a href="step6_upload_suggestions_light.html" class="badge bg-secondary text-decoration-none fs-6 py-2 px-3">4. Suggestions</a>
                             <i class="bi bi-arrow-right text-secondary"></i>
-                            <a href="contact_upload_mapping_light.html" class="badge bg-secondary text-decoration-none fs-6 py-2 px-3">5. Mapping</a>
+                            <a href="step6_upload_mapping_light.html" class="badge bg-secondary text-decoration-none fs-6 py-2 px-3">5. Mapping</a>
                             <i class="bi bi-arrow-right text-secondary"></i>
-                            <a href="contact_upload_preview_light.html" class="badge bg-secondary text-decoration-none fs-6 py-2 px-3">6. Preview</a>
+                            <a href="step6_upload_preview_light.html" class="badge bg-secondary text-decoration-none fs-6 py-2 px-3">6. Preview</a>
                         </div>
                     </div>
 
                     <div class="mb-0">
+                        <p class="small mb-2">
+                            <i class="bi bi-shield-check text-success me-1"></i>
+                            <strong>Validation automatique :</strong> Si des erreurs sont détectées lors de la validation (étape 2), vous serez redirigé vers une page d'erreurs détaillées. Vous devrez corriger votre fichier avant de continuer.
+                        </p>
+                        <p class="small mb-2">
+                            <i class="bi bi-info-circle text-info me-1"></i>
+                            <strong>Si vous n'avez PAS sélectionné SMS/Email/Courrier</strong> dans votre campagne, vous pouvez passer cette étape directement (bouton <i class="bi bi-three-dots-vertical"></i> en bas à droite → "Passer cette étape").
+                        </p>
                         <p class="small text-secondary mb-0">
                             <i class="bi bi-gear me-1"></i>
                             <strong>En production :</strong> ce workflow se déclenche automatiquement lors de l'upload d'un fichier CSV/Excel.
@@ -250,11 +258,11 @@
                 <!-- Page Title -->
                 <div class="mb-4">
                     <h1 class="h3 mb-2">
-                        <i class="bi bi-magic text-primary me-2"></i>
-                        Analyse de votre fichier en cours
+                        <i class="bi bi-file-earmark-arrow-up text-primary me-2"></i>
+                        Import de vos contacts
                     </h1>
                     <p class="text-secondary">
-                        L'IA analyse votre fichier pour détecter automatiquement la structure et proposer un mapping intelligent
+                        Uploadez votre fichier de contacts pour enrichir la génération de personas avec des données réelles
                     </p>
                 </div>
 
@@ -316,111 +324,118 @@
                                 <div class="alert alert-info mt-4 mb-0 p-3">
                                     <small>
                                         <i class="bi bi-info-circle"></i>
-                                        <strong>Analyse intelligente</strong><br>
-                                        L'IA détecte automatiquement les colonnes de votre fichier pour un mapping rapide et précis.
+                                        <strong>Upload de contacts</strong><br>
+                                        Enrichissez vos personas avec vos données clients réelles pour des campagnes ultra-ciblées.
                                     </small>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Right Column: Loader & Progress (60%) -->
+                    <!-- Right Column: Upload Zone (60%) -->
                     <div class="col-md-7">
-                        <!-- File Info Card -->
-                        <div class="card shadow-sm mb-4">
-                            <div class="card-body">
-                                <div class="d-flex align-items-center justify-content-between">
-                                    <div class="d-flex align-items-center">
-                                        <div class="upload-info-icon-wrapper me-3">
-                                            <i class="bi bi-file-earmark-spreadsheet upload-info-icon"></i>
-                                        </div>
-                                        <div>
-                                            <h5 class="mb-1">contacts_entreprise.csv</h5>
-                                            <div class="d-flex gap-3 small text-secondary">
-                                                <span><i class="bi bi-hdd me-1"></i>2.4 MB</span>
-                                                <span><i class="bi bi-list-ol me-1"></i>1,523 lignes</span>
-                                                <span><i class="bi bi-grid-3x3 me-1"></i>12 colonnes</span>
+                        <!-- Upload Zone -->
+                        <div class="card shadow-sm mb-4 upload-dropzone">
+                            <div class="card-body text-center py-5">
+                                <div class="mb-4">
+                                    <i class="bi bi-cloud-upload upload-icon"></i>
+                                </div>
+
+                                <h3 class="h5 mb-3">Glissez-déposez votre fichier ici</h3>
+                                <p class="text-secondary mb-4">ou</p>
+
+                                <button class="btn btn-primary btn-lg mb-4">
+                                    <i class="bi bi-folder2-open me-2"></i>
+                                    Parcourir vos fichiers
+                                </button>
+
+                                <div class="small text-secondary">
+                                    <p class="mb-1">
+                                        <i class="bi bi-info-circle me-1"></i>
+                                        Formats acceptés : <strong>.csv, .xlsx, .xls</strong>
+                                    </p>
+                                    <p class="mb-0">
+                                        <i class="bi bi-file-earmark-check me-1"></i>
+                                        Taille maximale : <strong>10 MB</strong>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Information Cards -->
+                        <div class="row g-3">
+                            <div class="col-12">
+                                <div class="card border-0 upload-info-card">
+                                    <div class="card-body">
+                                        <div class="d-flex align-items-center mb-2">
+                                            <div class="upload-info-icon-wrapper me-3">
+                                                <i class="bi bi-magic upload-info-icon"></i>
                                             </div>
+                                            <h6 class="mb-0">Enrichissement IA</h6>
                                         </div>
+                                        <p class="small text-secondary mb-0">
+                                            L'IA analysera vos contacts pour générer des personas plus précis et adaptés à votre audience réelle
+                                        </p>
                                     </div>
-                                    <button class="btn btn-sm btn-outline-danger">
-                                        <i class="bi bi-x-lg me-1"></i>
-                                        Annuler
-                                    </button>
                                 </div>
                             </div>
-                        </div>
 
-                        <!-- Loader Container -->
-                        <div class="loader-container mb-4">
-                            <div class="ai-animation">
-                                <div class="ai-icon-ring"></div>
-                                <div class="ai-icon-ring"></div>
-                                <div class="ai-icon-main">
-                                    <i class="bi bi-lightning-charge-fill"></i>
+                            <div class="col-12">
+                                <div class="card border-0 upload-info-card">
+                                    <div class="card-body">
+                                        <div class="d-flex align-items-center mb-2">
+                                            <div class="upload-info-icon-wrapper me-3">
+                                                <i class="bi bi-shield-check upload-info-icon"></i>
+                                            </div>
+                                            <h6 class="mb-0">Sécurité RGPD</h6>
+                                        </div>
+                                        <p class="small text-secondary mb-0">
+                                            Vos données sont chiffrées et supprimées automatiquement après la génération de la campagne
+                                        </p>
+                                    </div>
                                 </div>
                             </div>
-                            <h4 class="loader-title">Analyse en cours...</h4>
-                            <p class="loader-subtitle text-secondary">L'IA détecte les colonnes et leurs types de données</p>
 
-                            <!-- Progress Bar -->
-                            <div class="progress-wrapper">
-                                <div class="progress">
-                                    <div class="progress-bar"></div>
+                            <div class="col-12">
+                                <div class="card border-0 upload-info-card">
+                                    <div class="card-body">
+                                        <div class="d-flex align-items-center mb-2">
+                                            <div class="upload-info-icon-wrapper me-3">
+                                                <i class="bi bi-lightning-charge upload-info-icon"></i>
+                                            </div>
+                                            <h6 class="mb-0">Mapping intelligent</h6>
+                                        </div>
+                                        <p class="small text-secondary mb-0">
+                                            L'IA détecte automatiquement les colonnes de votre fichier pour un mapping rapide et précis
+                                        </p>
+                                    </div>
                                 </div>
-                                <div class="progress-text">0% complété</div>
-                            </div>
+                    </div>
                         </div>
+                    </div>
+                </div>
 
-                        <!-- Progress Steps -->
-                        <div class="card shadow-sm">
-                            <div class="card-body">
-                                <h5 class="mb-4">
-                                    <i class="bi bi-list-check me-2"></i>
-                                    Progression de l'analyse
-                                </h5>
+                <!-- Speed Dial FAB - Actions -->
+                <div class="speed-dial-container">
+                    <!-- Action 1: Annuler -->
+                    <div class="speed-dial-action">
+                        <span class="speed-dial-label">Annuler</span>
+                        <a href="step1_create_light.html" class="speed-dial-btn speed-dial-cancel">
+                            <i class="bi bi-x-lg"></i>
+                        </a>
+                    </div>
 
-                                <ul class="list-unstyled">
-                                    <li class="d-flex align-items-center mb-3 pb-3 border-bottom">
-                                        <i class="bi bi-check-circle-fill text-success me-3"></i>
-                                        <div class="flex-grow-1">
-                                            <strong>Validation du fichier</strong>
-                                            <p class="small text-secondary mb-0">Format et structure vérifiés</p>
-                                        </div>
-                                        <span class="badge bg-success">Terminé</span>
-                                    </li>
+                    <!-- Action 2: Passer cette étape -->
+                    <div class="speed-dial-action">
+                        <span class="speed-dial-label">Passer cette étape</span>
+                        <a href="step8_loading_light.html" class="speed-dial-btn speed-dial-primary">
+                            <i class="bi bi-arrow-right"></i>
+                        </a>
+                    </div>
 
-                                    <li class="d-flex align-items-center mb-3 pb-3 border-bottom">
-                                        <i class="bi bi-check-circle-fill text-success me-3"></i>
-                                        <div class="flex-grow-1">
-                                            <strong>Détection des colonnes</strong>
-                                            <p class="small text-secondary mb-0">12 colonnes identifiées</p>
-                                        </div>
-                                        <span class="badge bg-success">Terminé</span>
-                                    </li>
-
-                                    <li class="d-flex align-items-center mb-3 pb-3 border-bottom">
-                                        <div class="spinner-border spinner-border-sm text-primary me-3" role="status">
-                                            <span class="visually-hidden">Chargement...</span>
-                                        </div>
-                                        <div class="flex-grow-1">
-                                            <strong>Analyse des données</strong>
-                                            <p class="small text-secondary mb-0">Classification des types de données en cours...</p>
-                                        </div>
-                                        <span class="badge bg-primary">En cours</span>
-                                    </li>
-
-                                    <li class="d-flex align-items-center">
-                                        <i class="bi bi-circle text-secondary me-3"></i>
-                                        <div class="flex-grow-1">
-                                            <strong>Génération suggestions IA</strong>
-                                            <p class="small text-secondary mb-0">Mapping intelligent des colonnes</p>
-                                        </div>
-                                        <span class="badge bg-secondary">En attente</span>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
+                    <!-- Bouton principal -->
+                    <div class="speed-dial-btn speed-dial-main">
+                        <i class="bi bi-three-dots-vertical"></i>
                     </div>
                 </div>
             </div>
@@ -428,10 +443,11 @@
     </div>
 
     <!-- FAB Retour -->
-    <a href="../index.html" class="fab-back">
+    <a href="step3_select_light.html" class="fab-back">
         <i class="bi bi-arrow-left"></i>
         <span class="fab-tooltip">Retour à l'index</span>
     </a>
+
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
 

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Validation en cours - Upload de Contacts | myCFiA</title>
+    <title>Analyse en cours - Upload de Contacts | myCFiA</title>
 
     <!-- Bootstrap 5 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -146,7 +146,7 @@
                 <div class="campaign-stepper">
                     <div class="stepper-container">
                         <div class="stepper-line">
-                            <div class="stepper-progress contact-upload-stepper-progress"></div>
+                            <div class="stepper-progress step6-upload-stepper-progress"></div>
                         </div>
 
                         <div class="stepper-step completed">
@@ -164,19 +164,19 @@
                             <div class="stepper-label">Personas</div>
                         </div>
 
-                        <div class="stepper-step active">
-                            <div class="stepper-circle">4</div>
-                            <div class="stepper-label">Upload</div>
-                        </div>
-
-                        <div class="stepper-step">
-                            <div class="stepper-circle">5</div>
+                        <div class="stepper-step completed">
+                            <div class="stepper-circle"><i class="bi bi-check-lg"></i></div>
                             <div class="stepper-label">Stratégie</div>
                         </div>
 
-                        <div class="stepper-step">
-                            <div class="stepper-circle">6</div>
+                        <div class="stepper-step completed">
+                            <div class="stepper-circle"><i class="bi bi-check-lg"></i></div>
                             <div class="stepper-label">Canaux</div>
+                        </div>
+
+                        <div class="stepper-step active">
+                            <div class="stepper-circle">6</div>
+                            <div class="stepper-label">Upload</div>
                         </div>
 
                         <div class="stepper-step">
@@ -207,14 +207,13 @@
 
                     <div class="mb-3">
                         <h6 class="mb-2">
-                            <i class="bi bi-shield-check text-primary me-1"></i>
-                            Étape 1/2 : Validation de la qualité des données
+                            <i class="bi bi-bullseye text-primary me-1"></i>
+                            Pourquoi uploader vos contacts ?
                         </h6>
                         <ul class="small mb-0">
-                            <li>Vérification des formats d'emails (RFC 5322)</li>
-                            <li>Validation des champs requis (aucune valeur vide)</li>
-                            <li>Contrôle de la cohérence des données (formats téléphone, dates, etc.)</li>
-                            <li>Détection des doublons et anomalies</li>
+                            <li>Personnaliser les messages SMS/Email/Courrier avec vos données clients réelles (noms, préférences, historique)</li>
+                            <li>Segmenter vos envois selon vos personas enrichis</li>
+                            <li>Générer des campagnes ultra-ciblées</li>
                         </ul>
                     </div>
 
@@ -224,30 +223,26 @@
                             Workflow complet (7 états) :
                         </h6>
                         <div class="d-flex flex-wrap gap-2 align-items-center">
-                            <a href="contact_upload_empty_light.html" class="badge bg-secondary text-decoration-none fs-6 py-2 px-3">1. Upload</a>
+                            <a href="step6_upload_empty_light.html" class="badge bg-secondary text-decoration-none fs-6 py-2 px-3">1. Upload</a>
                             <i class="bi bi-arrow-right text-secondary"></i>
-                            <a href="contact_upload_validating_light.html" class="badge bg-primary text-decoration-none fs-6 py-2 px-3">2. Validation</a>
+                            <a href="step6_upload_validating_light.html" class="badge bg-secondary text-decoration-none fs-6 py-2 px-3">2. Validation</a>
                             <i class="bi bi-arrow-right text-secondary"></i>
-                            <a href="contact_upload_errors_light.html" class="badge bg-warning text-dark text-decoration-none fs-6 py-2 px-3 opacity-75">[Erreurs]</a>
+                            <a href="step6_upload_errors_light.html" class="badge bg-warning text-dark text-decoration-none fs-6 py-2 px-3 opacity-75">[Erreurs]</a>
                             <i class="bi bi-arrow-right text-secondary"></i>
-                            <a href="contact_upload_analyzing_light.html" class="badge bg-secondary text-decoration-none fs-6 py-2 px-3">3. Analyse</a>
+                            <a href="step6_upload_analyzing_light.html" class="badge bg-primary text-decoration-none fs-6 py-2 px-3">3. Analyse</a>
                             <i class="bi bi-arrow-right text-secondary"></i>
-                            <a href="contact_upload_suggestions_light.html" class="badge bg-secondary text-decoration-none fs-6 py-2 px-3">4. Suggestions</a>
+                            <a href="step6_upload_suggestions_light.html" class="badge bg-secondary text-decoration-none fs-6 py-2 px-3">4. Suggestions</a>
                             <i class="bi bi-arrow-right text-secondary"></i>
-                            <a href="contact_upload_mapping_light.html" class="badge bg-secondary text-decoration-none fs-6 py-2 px-3">5. Mapping</a>
+                            <a href="step6_upload_mapping_light.html" class="badge bg-secondary text-decoration-none fs-6 py-2 px-3">5. Mapping</a>
                             <i class="bi bi-arrow-right text-secondary"></i>
-                            <a href="contact_upload_preview_light.html" class="badge bg-secondary text-decoration-none fs-6 py-2 px-3">6. Preview</a>
+                            <a href="step6_upload_preview_light.html" class="badge bg-secondary text-decoration-none fs-6 py-2 px-3">6. Preview</a>
                         </div>
                     </div>
 
                     <div class="mb-0">
-                        <p class="small mb-2">
-                            <i class="bi bi-exclamation-triangle text-warning me-1"></i>
-                            <strong>Si des erreurs sont détectées</strong> lors de la validation, vous serez redirigé vers une page d'erreurs détaillées avec un rapport téléchargeable. Vous devrez corriger votre fichier source avant de continuer.
-                        </p>
                         <p class="small text-secondary mb-0">
                             <i class="bi bi-gear me-1"></i>
-                            <strong>En production :</strong> la validation s'effectue automatiquement après l'upload du fichier CSV/Excel.
+                            <strong>En production :</strong> ce workflow se déclenche automatiquement lors de l'upload d'un fichier CSV/Excel.
                         </p>
                     </div>
                 </div>
@@ -255,11 +250,11 @@
                 <!-- Page Title -->
                 <div class="mb-4">
                     <h1 class="h3 mb-2">
-                        <i class="bi bi-shield-check text-success me-2"></i>
-                        Validation de votre fichier en cours
+                        <i class="bi bi-magic text-primary me-2"></i>
+                        Analyse de votre fichier en cours
                     </h1>
                     <p class="text-secondary">
-                        Vérification de la qualité des données avant le mapping automatique
+                        L'IA analyse votre fichier pour détecter automatiquement la structure et proposer un mapping intelligent
                     </p>
                 </div>
 
@@ -318,11 +313,11 @@
                                     </p>
                                 </div>
 
-                                <div class="alert alert-success mt-4 mb-0 p-3">
+                                <div class="alert alert-info mt-4 mb-0 p-3">
                                     <small>
-                                        <i class="bi bi-shield-check"></i>
-                                        <strong>Validation automatique</strong><br>
-                                        L'IA vérifie la qualité de vos données pour garantir un mapping fiable et éviter les erreurs d'envoi.
+                                        <i class="bi bi-info-circle"></i>
+                                        <strong>Analyse intelligente</strong><br>
+                                        L'IA détecte automatiquement les colonnes de votre fichier pour un mapping rapide et précis.
                                     </small>
                                 </div>
                             </div>
@@ -362,11 +357,11 @@
                                 <div class="ai-icon-ring"></div>
                                 <div class="ai-icon-ring"></div>
                                 <div class="ai-icon-main">
-                                    <i class="bi bi-shield-check"></i>
+                                    <i class="bi bi-lightning-charge-fill"></i>
                                 </div>
                             </div>
-                            <h4 class="loader-title">Validation en cours...</h4>
-                            <p class="loader-subtitle text-secondary">Vérification de la qualité et de la cohérence des données</p>
+                            <h4 class="loader-title">Analyse en cours...</h4>
+                            <p class="loader-subtitle text-secondary">L'IA détecte les colonnes et leurs types de données</p>
 
                             <!-- Progress Bar -->
                             <div class="progress-wrapper">
@@ -382,15 +377,24 @@
                             <div class="card-body">
                                 <h5 class="mb-4">
                                     <i class="bi bi-list-check me-2"></i>
-                                    Progression de la validation
+                                    Progression de l'analyse
                                 </h5>
 
                                 <ul class="list-unstyled">
                                     <li class="d-flex align-items-center mb-3 pb-3 border-bottom">
                                         <i class="bi bi-check-circle-fill text-success me-3"></i>
                                         <div class="flex-grow-1">
-                                            <strong>Validation du format de fichier</strong>
-                                            <p class="small text-secondary mb-0">Structure CSV conforme et encodage UTF-8 vérifié</p>
+                                            <strong>Validation du fichier</strong>
+                                            <p class="small text-secondary mb-0">Format et structure vérifiés</p>
+                                        </div>
+                                        <span class="badge bg-success">Terminé</span>
+                                    </li>
+
+                                    <li class="d-flex align-items-center mb-3 pb-3 border-bottom">
+                                        <i class="bi bi-check-circle-fill text-success me-3"></i>
+                                        <div class="flex-grow-1">
+                                            <strong>Détection des colonnes</strong>
+                                            <p class="small text-secondary mb-0">12 colonnes identifiées</p>
                                         </div>
                                         <span class="badge bg-success">Terminé</span>
                                     </li>
@@ -400,37 +404,21 @@
                                             <span class="visually-hidden">Chargement...</span>
                                         </div>
                                         <div class="flex-grow-1">
-                                            <strong>Vérification des emails</strong>
-                                            <p class="small text-secondary mb-0">Validation du format et de la syntaxe des adresses email...</p>
+                                            <strong>Analyse des données</strong>
+                                            <p class="small text-secondary mb-0">Classification des types de données en cours...</p>
                                         </div>
                                         <span class="badge bg-primary">En cours</span>
-                                    </li>
-
-                                    <li class="d-flex align-items-center mb-3 pb-3 border-bottom">
-                                        <i class="bi bi-circle text-secondary me-3"></i>
-                                        <div class="flex-grow-1">
-                                            <strong>Contrôle des champs requis</strong>
-                                            <p class="small text-secondary mb-0">Vérification que les champs essentiels ne sont pas vides</p>
-                                        </div>
-                                        <span class="badge bg-secondary">En attente</span>
                                     </li>
 
                                     <li class="d-flex align-items-center">
                                         <i class="bi bi-circle text-secondary me-3"></i>
                                         <div class="flex-grow-1">
-                                            <strong>Validation des formats de données</strong>
-                                            <p class="small text-secondary mb-0">Contrôle téléphones, dates, codes postaux, etc.</p>
+                                            <strong>Génération suggestions IA</strong>
+                                            <p class="small text-secondary mb-0">Mapping intelligent des colonnes</p>
                                         </div>
                                         <span class="badge bg-secondary">En attente</span>
                                     </li>
                                 </ul>
-
-                                <div class="alert alert-info mt-4 mb-0 p-3">
-                                    <small>
-                                        <i class="bi bi-info-circle"></i>
-                                        <strong>Prochaine étape :</strong> Si la validation réussit, l'IA analysera automatiquement vos colonnes pour proposer un mapping intelligent.
-                                    </small>
-                                </div>
                             </div>
                         </div>
                     </div>
