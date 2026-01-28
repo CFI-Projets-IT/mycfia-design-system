@@ -1,5 +1,5 @@
 /**
- * Step 5 Loading Configuration - Assets Generation Loading Config
+ * Step 8 Loading Configuration - Assets Generation Loading Config
  * Configuration pour la simulation de génération d'assets
  */
 
@@ -34,10 +34,10 @@ const ASSET_TIPS = [
 /**
  * Initialise le loader de génération d'assets
  */
-export function initStep5Loading() {
+export function initStep8Loading() {
     simulateLoading({
         duration: 120000,
-        redirectUrl: 'step5_validate.html',
+        redirectUrl: 'step8_validate_light.html',
         messages: ASSET_MESSAGES,
         tips: ASSET_TIPS
     });

@@ -126,13 +126,13 @@
 
 /* Étape 4 - Stratégie */
 .step4-loading-stepper-progress {
-    width: 50%;
+    width: 35.71%;
 }
 .step4-recap-stepper-progress {
-    width: 53.57%;
+    width: 39.29%;
 }
 .step4-result-stepper-progress {
-    width: 57.14%;
+    width: 42.86%;
 }
 
 /* Étape 5 - Canaux */

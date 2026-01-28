@@ -1,5 +1,5 @@
 /**
- * Step 5 Validate UI - Asset Validation Interactive Logic
+ * Step 8 Validate UI - Asset Validation Interactive Logic
  * Gère l'interaction utilisateur sur la page de validation des assets
  * Gère la navigation diaporama entre assets
  */
@@ -8,7 +8,7 @@ import {
   openAssetDetail,
   navigateToPrevious,
   navigateToNext,
-} from "./step5-validate-data.js";
+} from "./step8-validate-data.js";
 
 // TODO: Supprimer ces expositions globales lors de l'intégration Twig
 // Les event handlers seront gérés via Stimulus controllers

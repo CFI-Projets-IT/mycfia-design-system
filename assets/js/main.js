@@ -23,6 +23,7 @@ import { initOnboardingDAPStep1 } from "./components/onboarding-dap-step1.js";
 import { initOnboardingDAPStep1Review } from "./components/onboarding-dap-step1-review.js";
 import { initOnboardingDAPStep2 } from "./components/onboarding-dap-step2.js";
 import { initOnboardingDAPStep3 } from "./components/onboarding-dap-step3.js";
+import { initOnboardingDAPStep4 } from "./components/onboarding-dap-step4.js";
 import { initVideoDemo } from "./components/video-demo.js";
 import "./components/campaign-stepper.js";
 import "./components/campaign-form.js";
@@ -177,6 +178,15 @@ document.addEventListener("DOMContentLoaded", () => {
     ) {
       console.log("[main] Initialisation de l'onboarding DAP Step 3...");
       initOnboardingDAPStep3();
+    }
+
+    // 20. Initialiser l'onboarding DAP Step 4 (si step4_result)
+    if (
+      window.location.pathname.includes("step4_result") ||
+      document.getElementById("onboardingWelcomeModalStep4")
+    ) {
+      console.log("[main] Initialisation de l'onboarding DAP Step 4...");
+      initOnboardingDAPStep4();
     }
 
     console.log("===========================================");

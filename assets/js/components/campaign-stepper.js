@@ -50,11 +50,11 @@ function autoDetectStep() {
     if (path.includes('step1')) step = 1;
     else if (path.includes('step2')) step = 2;
     else if (path.includes('step3')) step = 3;
-    else if (path.includes('contact_upload')) step = 4;
+    else if (path.includes('step4')) step = 4;
     else if (path.includes('step5')) step = 5;
-    else if (path.includes('step6')) step = 6;
-    else if (path.includes('step7')) step = 7;
-    else if (path.includes('step8')) step = 8;
+    else if (path.includes('step6_upload')) step = 6;
+    else if (path.includes('step8')) step = 7;
+    else if (path.includes('step9')) step = 8;
 
     updateStepper(step);
 }

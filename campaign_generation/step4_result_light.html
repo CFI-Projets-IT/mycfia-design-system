@@ -124,12 +124,18 @@
             </header>
 
             <div class="content">
-                <nav aria-label="breadcrumb" class="step4-result-breadcrumb">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="dashboard_light.html" class="step4-result-breadcrumb-link">Campagnes</a></li>
-                        <li class="breadcrumb-item active">Stratégie Marketing</li>
-                    </ol>
-                </nav>
+                <!-- Breadcrumb + Help Button -->
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <nav aria-label="breadcrumb" class="step4-result-breadcrumb mb-0">
+                        <ol class="breadcrumb mb-0">
+                            <li class="breadcrumb-item"><a href="dashboard_light.html" class="step4-result-breadcrumb-link">Campagnes</a></li>
+                            <li class="breadcrumb-item active">Stratégie Marketing</li>
+                        </ol>
+                    </nav>
+                    <button class="onboarding-help-button-inline" id="restartOnboardingTourStep4" type="button" aria-label="Aide - Relancer le tour guidé" title="Relancer le tour guidé">
+                        <i class="bi bi-question-lg"></i>
+                    </button>
+                </div>
 
                 <div class="campaign-stepper">
                     <div class="stepper-container">
@@ -473,6 +479,34 @@
         <i class="bi bi-arrow-left"></i>
         <span class="fab-tooltip">Retour au récap</span>
     </a>
+
+    <!-- Modal Welcome DAP Step 4 -->
+    <div class="modal fade" id="onboardingWelcomeModalStep4" tabindex="-1" aria-labelledby="onboardingWelcomeModalStep4Label" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title" id="onboardingWelcomeModalStep4Label">
+                        <i class="bi bi-graph-up-arrow text-primary me-2"></i>
+                        Bienvenue à l'étape Stratégie Marketing
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                </div>
+                <div class="modal-body">
+                    <p>L'IA a analysé vos <strong>personas</strong> et <strong>concurrents</strong> pour générer une stratégie marketing complète et personnalisée.</p>
+                    <p class="mb-0">Voulez-vous découvrir les recommandations stratégiques, les tactiques par canal, les KPIs à suivre et la répartition budgétaire optimale ?</p>
+                </div>
+                <div class="modal-footer border-0">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        Passer
+                    </button>
+                    <button type="button" class="btn btn-primary" id="startOnboardingTourStep4">
+                        Faire le tour guidé
+                        <i class="bi bi-arrow-right ms-1"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
     <script src="../assets/js/main.js" type="module"></script>
