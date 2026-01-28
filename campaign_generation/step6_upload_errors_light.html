@@ -135,13 +135,18 @@
             <!-- Content -->
             <div class="content step1-content">
                 <!-- Breadcrumb -->
-                <nav aria-label="breadcrumb" class="step1-breadcrumb">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="dashboard_light.html" class="step1-breadcrumb-link">Campagnes Marketing</a></li>
-                        <li class="breadcrumb-item"><a href="step1_create_light.html" class="step1-breadcrumb-link">Nouvelle campagne</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">Erreurs de validation</li>
-                    </ol>
-                </nav>
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <nav aria-label="breadcrumb" class="step6-upload-breadcrumb mb-0">
+                        <ol class="breadcrumb mb-0">
+                            <li class="breadcrumb-item"><a href="dashboard_light.html" class="step1-breadcrumb-link">Campagnes Marketing</a></li>
+                            <li class="breadcrumb-item"><a href="step1_create_light.html" class="step1-breadcrumb-link">Nouvelle campagne</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Erreurs de validation</li>
+                        </ol>
+                    </nav>
+                    <button class="onboarding-help-button-inline" id="restartOnboardingTourStep6Errors" type="button">
+                        <i class="bi bi-question-lg"></i>
+                    </button>
+                </div>
 
                 <!-- Stepper -->
                 <div class="campaign-stepper">
@@ -476,6 +481,32 @@
 
         <div class="speed-dial-btn speed-dial-main">
             <i class="bi bi-three-dots-vertical"></i>
+        </div>
+    </div>
+
+    <!-- Onboarding Welcome Modal -->
+    <div class="modal fade" id="onboardingWelcomeModalStep6Errors" tabindex="-1" aria-labelledby="onboardingWelcomeModalStep6ErrorsLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title" id="onboardingWelcomeModalStep6ErrorsLabel">
+                        <i class="bi bi-exclamation-triangle text-warning me-2"></i>
+                        Erreurs de Validation Détectées
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                </div>
+                <div class="modal-body">
+                    <p>La validation de votre fichier a <strong>échoué</strong>. Des <strong>erreurs critiques</strong> empêchent la poursuite du workflow.</p>
+                    <p class="mb-0">Voulez-vous découvrir comment identifier les erreurs, télécharger le rapport détaillé et corriger votre fichier efficacement ?</p>
+                </div>
+                <div class="modal-footer border-0">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Passer</button>
+                    <button type="button" class="btn btn-primary" id="startOnboardingTourStep6Errors">
+                        Faire le tour guidé
+                        <i class="bi bi-arrow-right ms-1"></i>
+                    </button>
+                </div>
+            </div>
         </div>
     </div>
 
