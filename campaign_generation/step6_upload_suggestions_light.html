@@ -134,13 +134,18 @@
             <!-- Content -->
             <div class="content step1-content">
                 <!-- Breadcrumb -->
-                <nav aria-label="breadcrumb" class="step1-breadcrumb">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="dashboard_light.html" class="step1-breadcrumb-link">Campagnes Marketing</a></li>
-                        <li class="breadcrumb-item"><a href="step1_create_light.html" class="step1-breadcrumb-link">Nouvelle campagne</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">Upload de contacts</li>
-                    </ol>
-                </nav>
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <nav aria-label="breadcrumb" class="step6-upload-breadcrumb mb-0">
+                        <ol class="breadcrumb mb-0">
+                            <li class="breadcrumb-item"><a href="dashboard_light.html" class="step1-breadcrumb-link">Campagnes Marketing</a></li>
+                            <li class="breadcrumb-item"><a href="step1_create_light.html" class="step1-breadcrumb-link">Nouvelle campagne</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Upload de contacts</li>
+                        </ol>
+                    </nav>
+                    <button class="onboarding-help-button-inline" id="restartOnboardingTourStep6Suggestions" type="button">
+                        <i class="bi bi-question-lg"></i>
+                    </button>
+                </div>
 
                 <!-- Stepper -->
                 <div class="campaign-stepper">
@@ -766,6 +771,32 @@
                         <i class="bi bi-check-circle me-2"></i>
                         OK, je comprends
                     </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Onboarding Welcome Modal -->
+    <div class="modal fade" id="onboardingWelcomeModalStep6Suggestions" tabindex="-1" aria-labelledby="onboardingWelcomeModalStep6SuggestionsLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title" id="onboardingWelcomeModalStep6SuggestionsLabel">
+                        <i class="bi bi-magic text-primary me-2"></i>
+                        Suggestions de Mapping IA
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                </div>
+                <div class="modal-body">
+                    <p>L'IA a <strong>analysé automatiquement</strong> votre fichier et détecté <strong>9/12 colonnes</strong> avec un niveau de confiance de <strong>95%</strong>.</p>
+                    <p class="mb-0">Voulez-vous découvrir comment valider les suggestions, comprendre les correspondances automatiques et ajuster le mapping si nécessaire ?</p>
+                </div>
+                <div class="modal-footer border-0">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Passer</button>
+                    <button type="button" class="btn btn-primary" id="startOnboardingTourStep6Suggestions">
+                        Faire le tour guidé
+                        <i class="bi bi-arrow-right ms-1"></i>
+                    </button>
                 </div>
             </div>
         </div>
