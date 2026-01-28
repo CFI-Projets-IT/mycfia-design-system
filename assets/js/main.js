@@ -14,9 +14,9 @@ import { initAnalyticsCharts } from "./components/analytics-charts.js";
 import { initAssetSelector } from "./components/step1-asset-selector.js";
 import { initPersonaSelector } from "./components/step3-persona-selector.js";
 import { initCompetitorSelector } from "./components/step2-competitor-selector.js";
-import { initAssetSelector as initStep5AssetSelector } from "./components/step5-asset-selector.js";
-import { initStep5Loading } from "./components/step5-loading-config.js";
-import { initAssetValidation } from "./components/step5-validate-ui.js";
+import { initAssetSelector as initStep8AssetSelector } from "./components/step8-asset-selector.js";
+import { initStep8Loading } from "./components/step8-loading-config.js";
+import { initAssetValidation } from "./components/step8-validate-ui.js";
 import { initCampaignAssetsPlanning } from "./components/campaign-assets-planning.js";
 import { initOnboardingDAP } from "./components/onboarding-dap.js";
 import { initOnboardingDAPStep1 } from "./components/onboarding-dap-step1.js";
@@ -97,19 +97,19 @@ document.addEventListener("DOMContentLoaded", () => {
       initCompetitorSelector();
     }
 
-    // 10. Initialiser le sélecteur d'assets Step 5 (si présent)
+    // 10. Initialiser le sélecteur d'assets Step 8 (si présent)
     if (document.querySelector(".asset-card-modern")) {
-      console.log("[main] Initialisation du sélecteur d'assets Step 5...");
-      initStep5AssetSelector();
+      console.log("[main] Initialisation du sélecteur d'assets Step 8...");
+      initStep8AssetSelector();
     }
 
-    // 11. Initialiser le loading Step 5 (si présent)
+    // 11. Initialiser le loading Step 8 (si présent)
     if (
       document.querySelector(".loader-container") &&
       document.title.includes("Génération Assets")
     ) {
-      console.log("[main] Initialisation du loading Step 5...");
-      initStep5Loading();
+      console.log("[main] Initialisation du loading Step 8...");
+      initStep8Loading();
     }
 
     // 12. Initialiser la validation des assets Step 7 (si présent)

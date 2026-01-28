@@ -1,29 +1,29 @@
 /**
- * Step 5 Loading - Assets Generation Loading Page Styles
+ * Step 8 Loading - Assets Generation Loading Page Styles
  * Styles spécifiques pour la page de loading de génération d'assets
  */
 
 /* ==========================================================================
    Header Styles
    ========================================================================== */
-.step5-loading-header-logo-link {
+.step8-loading-header-logo-link {
     display: flex;
     align-items: center;
     gap: 12px;
     text-decoration: none;
 }
 
-.step5-loading-header-buttons {
+.step8-loading-header-buttons {
     display: flex;
     gap: 16px;
     align-items: center;
 }
 
-.step5-loading-header-btn-primary {
+.step8-loading-header-btn-primary {
     color: var(--color-primary);
 }
 
-.step5-loading-header-link {
+.step8-loading-header-link {
     color: var(--color-primary);
     text-decoration: none;
 }
@@ -31,7 +31,7 @@
 /* ==========================================================================
    Stepper Progress
    ========================================================================== */
-.step5-loading-stepper-progress {
+.step8-loading-stepper-progress {
     width: 100%;
 }
 
@@ -71,6 +71,6 @@
 /* ==========================================================================
    Progress Bar (initial state)
    ========================================================================== */
-.step5-loading-progress-initial {
+.step8-loading-progress-initial {
     width: 0%;
 }

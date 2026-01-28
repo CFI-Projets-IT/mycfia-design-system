@@ -43,9 +43,9 @@
 @import 'components/_step3-validate.css';
 @import 'components/_step4-recap.css';
 @import 'components/_step4-result.css';
-@import 'components/_step5-config.css';
-@import 'components/_step5-loading.css';
-@import 'components/_step5-validate.css';
+@import 'components/_step8-config.css';
+@import 'components/_step8-loading.css';
+@import 'components/_step8-validate.css';
 @import 'components/_contact-upload.css';
 @import 'components/_contact-source-modal.css';
 @import 'components/_onboarding-dap.css';

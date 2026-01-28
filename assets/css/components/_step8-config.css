@@ -1,29 +1,29 @@
 /**
- * Step 5 Config - Asset Configuration Page Styles
+ * Step 8 Config - Asset Configuration Page Styles
  * Styles spécifiques pour la page de configuration des assets (étape 5)
  */
 
 /* ==========================================================================
    Header Styles
    ========================================================================== */
-.step5-config-header-logo-link {
+.step8-config-header-logo-link {
     display: flex;
     align-items: center;
     gap: 12px;
     text-decoration: none;
 }
 
-.step5-config-header-buttons {
+.step8-config-header-buttons {
     display: flex;
     gap: 16px;
     align-items: center;
 }
 
-.step5-config-header-btn-primary {
+.step8-config-header-btn-primary {
     color: var(--color-primary);
 }
 
-.step5-config-header-link {
+.step8-config-header-link {
     color: var(--color-primary);
     text-decoration: none;
 }
@@ -31,11 +31,11 @@
 /* ==========================================================================
    Breadcrumb
    ========================================================================== */
-.step5-config-breadcrumb {
+.step8-config-breadcrumb {
     margin-bottom: var(--spacing-3xl);
 }
 
-.step5-config-breadcrumb-link {
+.step8-config-breadcrumb-link {
     color: var(--color-primary);
     text-decoration: none;
 }
@@ -43,27 +43,27 @@
 /* ==========================================================================
    Stepper Progress
    ========================================================================== */
-.step5-config-stepper-progress {
+.step8-config-stepper-progress {
     width: 100%;
 }
 
 /* ==========================================================================
    Alert Info
    ========================================================================== */
-.step5-config-alert {
+.step8-config-alert {
     display: flex;
     align-items: center;
     gap: var(--gap-md);
 }
 
-.step5-config-alert-icon {
+.step8-config-alert-icon {
     font-size: var(--font-size-xl);
 }
 
 /* ==========================================================================
    Section Title
    ========================================================================== */
-.step5-config-section-title {
+.step8-config-section-title {
     color: var(--text-primary);
     font-weight: var(--font-weight-bold);
     margin-bottom: var(--spacing-md);

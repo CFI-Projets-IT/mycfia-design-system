@@ -1,29 +1,29 @@
 /**
- * Step 5 Validate - Asset Validation Page Styles
+ * Step 8 Validate - Asset Validation Page Styles
  * Styles spécifiques pour la page de validation des assets (étape 5)
  */
 
 /* ==========================================================================
    Header Styles
    ========================================================================== */
-.step5-validate-header-logo-link {
+.step8-validate-header-logo-link {
     display: flex;
     align-items: center;
     gap: 12px;
     text-decoration: none;
 }
 
-.step5-validate-header-buttons {
+.step8-validate-header-buttons {
     display: flex;
     gap: 16px;
     align-items: center;
 }
 
-.step5-validate-header-btn-primary {
+.step8-validate-header-btn-primary {
     color: var(--color-primary);
 }
 
-.step5-validate-header-link {
+.step8-validate-header-link {
     color: var(--color-primary);
     text-decoration: none;
 }
@@ -31,11 +31,11 @@
 /* ==========================================================================
    Breadcrumb
    ========================================================================== */
-.step5-validate-breadcrumb {
+.step8-validate-breadcrumb {
     margin-bottom: var(--spacing-3xl);
 }
 
-.step5-validate-breadcrumb-link {
+.step8-validate-breadcrumb-link {
     color: var(--color-primary);
     text-decoration: none;
 }
@@ -43,20 +43,20 @@
 /* ==========================================================================
    Stepper Progress
    ========================================================================== */
-.step5-validate-stepper-progress {
+.step8-validate-stepper-progress {
     width: 100%;
 }
 
 /* ==========================================================================
    Alert Success
    ========================================================================== */
-.step5-validate-alert {
+.step8-validate-alert {
     display: flex;
     align-items: center;
     gap: var(--gap-md);
 }
 
-.step5-validate-alert-icon {
+.step8-validate-alert-icon {
     font-size: var(--font-size-xl);
 }
 

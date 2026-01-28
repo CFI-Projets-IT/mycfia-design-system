@@ -124,35 +124,38 @@
     width: 42.86%;
 }
 
-/* Étape 5 - Stratégie */
-.step5-loading-stepper-progress {
+/* Étape 4 - Stratégie */
+.step4-loading-stepper-progress {
     width: 50%;
 }
-.step5-recap-stepper-progress {
+.step4-recap-stepper-progress {
     width: 53.57%;
 }
-.step5-result-stepper-progress {
+.step4-result-stepper-progress {
     width: 57.14%;
 }
 
-/* Étape 6 - Canaux */
-.step6-select-stepper-progress {
+/* Étape 5 - Canaux */
+.step5-select-stepper-progress {
     width: 71.43%;
 }
 
-/* Étape 7 - Assets */
-.step7-loading-stepper-progress {
+/* Étape 6 - Upload (nouveau) */
+/* Pas de classes stepper-progress spécifiques pour Upload */
+
+/* Étape 7 - Assets (anciennement Étape 5) */
+.step8-loading-stepper-progress {
     width: 75%;
 }
-.step7-config-stepper-progress {
+.step8-config-stepper-progress {
     width: 78.57%;
 }
-.step7-validate-stepper-progress {
+.step8-validate-stepper-progress {
     width: 85.71%;
 }
 
 /* Étape 8 - Planning */
-.step8-schedule-stepper-progress {
+.step9-schedule-stepper-progress {
     width: 100%;
 }
 
