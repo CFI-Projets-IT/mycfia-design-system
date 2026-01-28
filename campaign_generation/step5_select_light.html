@@ -127,13 +127,18 @@
 
             <div class="content step1-content">
                 <!-- Breadcrumb -->
-                <nav aria-label="breadcrumb" class="step5-select-breadcrumb">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="dashboard_light.html" class="step5-select-breadcrumb-link">Campagnes Marketing</a></li>
-                        <li class="breadcrumb-item"><a href="step1_create_light.html" class="step5-select-breadcrumb-link">Nouvelle campagne</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">Sélection des canaux</li>
-                    </ol>
-                </nav>
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <nav aria-label="breadcrumb" class="step5-select-breadcrumb mb-0">
+                        <ol class="breadcrumb mb-0">
+                            <li class="breadcrumb-item"><a href="dashboard_light.html" class="step5-select-breadcrumb-link">Campagnes Marketing</a></li>
+                            <li class="breadcrumb-item"><a href="step1_create_light.html" class="step5-select-breadcrumb-link">Nouvelle campagne</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Sélection des canaux</li>
+                        </ol>
+                    </nav>
+                    <button class="onboarding-help-button-inline" id="restartOnboardingTourStep5" type="button" aria-label="Aide - Relancer le tour guidé" title="Relancer le tour guidé">
+                        <i class="bi bi-question-lg"></i>
+                    </button>
+                </div>
 
                 <!-- Stepper -->
                 <div class="campaign-stepper">
@@ -182,16 +187,6 @@
                             <div class="stepper-label">Planning</div>
                         </div>
                     </div>
-                </div>
-
-                <!-- Success Alert -->
-                <div class="alert alert-success alert-dismissible fade show">
-                    <i class="bi bi-stars me-2"></i>
-                    <div>
-                        <strong>Stratégie validée !</strong><br>
-                        Sélectionnez maintenant les canaux de diffusion pour votre campagne. L'IA a identifié les canaux les plus pertinents.
-                    </div>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
 
                 <!-- Section: Canaux recommandés par l'IA -->
@@ -743,6 +738,34 @@
                         Passer directement aux Assets
                     </a>
                     <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Annuler</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Onboarding Welcome -->
+    <div class="modal fade" id="onboardingWelcomeModalStep5" tabindex="-1" aria-labelledby="onboardingWelcomeModalStep5Label" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title" id="onboardingWelcomeModalStep5Label">
+                        <i class="bi bi-collection text-primary me-2"></i>
+                        Sélection des Canaux Marketing
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                </div>
+                <div class="modal-body">
+                    <p>L'IA a analysé votre <strong>stratégie marketing</strong> et recommandé les <strong>canaux les plus pertinents</strong> pour atteindre vos objectifs.</p>
+                    <p class="mb-0">Voulez-vous découvrir comment configurer vos canaux, gérer les variations et activer la génération d'images IA ?</p>
+                </div>
+                <div class="modal-footer border-0">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        Passer
+                    </button>
+                    <button type="button" class="btn btn-primary" id="startOnboardingTourStep5">
+                        Faire le tour guidé
+                        <i class="bi bi-arrow-right ms-1"></i>
+                    </button>
                 </div>
             </div>
         </div>
