@@ -132,13 +132,18 @@
 
             <div class="content">
                 <!-- Breadcrumb -->
-                <nav aria-label="breadcrumb" class="mb-4">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="dashboard_light.html">Campagnes</a></li>
-                        <li class="breadcrumb-item"><a href="step1_create_light.html">Nouvelle campagne</a></li>
-                        <li class="breadcrumb-item active">Planification</li>
-                    </ol>
-                </nav>
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <nav aria-label="breadcrumb" class="mb-0">
+                        <ol class="breadcrumb mb-0">
+                            <li class="breadcrumb-item"><a href="dashboard_light.html">Campagnes</a></li>
+                            <li class="breadcrumb-item"><a href="step1_create_light.html">Nouvelle campagne</a></li>
+                            <li class="breadcrumb-item active">Planification</li>
+                        </ol>
+                    </nav>
+                    <button class="onboarding-help-button-inline" id="restartOnboardingTourStep9Schedule" type="button">
+                        <i class="bi bi-question-lg"></i>
+                    </button>
+                </div>
 
                 <!-- Stepper 8 étapes -->
                 <div class="campaign-stepper">
@@ -185,6 +190,33 @@
                         <div class="stepper-step active">
                             <div class="stepper-circle">8</div>
                             <div class="stepper-label">Planning</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Welcome Modal Onboarding DAP Step 9 Schedule -->
+                <div class="modal fade" id="onboardingWelcomeModalStep9Schedule" tabindex="-1" aria-labelledby="onboardingWelcomeModalStep9ScheduleLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header border-0">
+                                <h5 class="modal-title" id="onboardingWelcomeModalStep9ScheduleLabel">
+                                    <i class="bi bi-calendar-event text-primary me-2"></i>
+                                    Planification des Publications
+                                </h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                            </div>
+                            <div class="modal-body">
+                                <p>Dernière étape ! Cette page vous permet de <strong>planifier la publication</strong> de vos 10 assets marketing sur le calendrier.</p>
+                                <p><strong>Glissez-déposez</strong> les assets depuis la colonne de droite vers le calendrier pour définir leur date et heure de publication.</p>
+                                <p class="mb-0"><i class="bi bi-info-circle text-primary me-1"></i> <strong>Note :</strong> Vous pouvez modifier ou retirer un asset planifié à tout moment en cliquant dessus.</p>
+                            </div>
+                            <div class="modal-footer border-0">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Passer</button>
+                                <button type="button" class="btn btn-primary" id="startOnboardingTourStep9Schedule">
+                                    Faire le tour guidé
+                                    <i class="bi bi-arrow-right ms-1"></i>
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -403,7 +435,7 @@
                 </div>
 
                 <!-- Planning Summary -->
-                <div class="card mt-4">
+                <div class="card mt-4 step9-planning-summary-card">
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-center">
                             <div>

@@ -31,6 +31,7 @@ import { initOnboardingDAPStep6Suggestions } from "./components/onboarding-dap-s
 import { initOnboardingDAPStep6Mapping } from "./components/onboarding-dap-step6-mapping.js";
 import { initOnboardingDAPStep6Preview } from "./components/onboarding-dap-step6-preview.js";
 import { initOnboardingDAPStep8Validate } from "./components/onboarding-dap-step8-validate.js";
+import { initOnboardingDAPStep9Schedule } from "./components/onboarding-dap-step9-schedule.js";
 import { initVideoDemo } from "./components/video-demo.js";
 import "./components/campaign-stepper.js";
 import "./components/campaign-form.js";
@@ -257,6 +258,15 @@ document.addEventListener("DOMContentLoaded", () => {
     ) {
       console.log("[main] Initialisation de l'onboarding DAP Step 8 Validate...");
       initOnboardingDAPStep8Validate();
+    }
+
+    // 28. Initialiser l'onboarding DAP Step 9 Schedule (si step9_schedule)
+    if (
+      window.location.pathname.includes("step9_schedule") ||
+      document.getElementById("onboardingWelcomeModalStep9Schedule")
+    ) {
+      console.log("[main] Initialisation de l'onboarding DAP Step 9 Schedule...");
+      initOnboardingDAPStep9Schedule();
     }
 
     console.log("===========================================");
