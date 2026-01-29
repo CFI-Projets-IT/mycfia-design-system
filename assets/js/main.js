@@ -28,6 +28,7 @@ import { initOnboardingDAPStep5 } from "./components/onboarding-dap-step5.js";
 import { initOnboardingDAPStep6 } from "./components/onboarding-dap-step6.js";
 import { initOnboardingDAPStep6Errors } from "./components/onboarding-dap-step6-errors.js";
 import { initOnboardingDAPStep6Suggestions } from "./components/onboarding-dap-step6-suggestions.js";
+import { initOnboardingDAPStep6Mapping } from "./components/onboarding-dap-step6-mapping.js";
 import { initVideoDemo } from "./components/video-demo.js";
 import "./components/campaign-stepper.js";
 import "./components/campaign-form.js";
@@ -227,6 +228,15 @@ document.addEventListener("DOMContentLoaded", () => {
     ) {
       console.log("[main] Initialisation de l'onboarding DAP Step 6 Suggestions...");
       initOnboardingDAPStep6Suggestions();
+    }
+
+    // 25. Initialiser l'onboarding DAP Step 6 Mapping (si step6_upload_mapping)
+    if (
+      window.location.pathname.includes("step6_upload_mapping") ||
+      document.getElementById("onboardingWelcomeModalStep6Mapping")
+    ) {
+      console.log("[main] Initialisation de l'onboarding DAP Step 6 Mapping...");
+      initOnboardingDAPStep6Mapping();
     }
 
     console.log("===========================================");

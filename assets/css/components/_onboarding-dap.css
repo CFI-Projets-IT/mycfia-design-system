@@ -585,6 +585,22 @@ body.onboarding-active {
     outline-offset: 2px;
 }
 
+/* ==========================================================================
+   WELCOME MODALS (Bootstrap overrides)
+   ========================================================================== */
+
+/**
+ * Appliquer la font Poppins aux modaux d'onboarding
+ * Cible tous les modaux dont l'ID commence par "onboardingWelcomeModal"
+ */
+[id^="onboardingWelcomeModal"] .modal-content,
+[id^="onboardingWelcomeModal"] .modal-title,
+[id^="onboardingWelcomeModal"] .modal-body,
+[id^="onboardingWelcomeModal"] .modal-footer,
+[id^="onboardingWelcomeModal"] .modal-content * {
+    font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
 /**
  * Réduction de mouvement pour utilisateurs sensibles
  */

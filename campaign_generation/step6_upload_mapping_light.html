@@ -134,13 +134,18 @@
             <!-- Content -->
             <div class="content step1-content">
                 <!-- Breadcrumb -->
-                <nav aria-label="breadcrumb" class="step1-breadcrumb">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="dashboard_light.html" class="step1-breadcrumb-link">Campagnes Marketing</a></li>
-                        <li class="breadcrumb-item"><a href="step1_create_light.html" class="step1-breadcrumb-link">Nouvelle campagne</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">Upload de contacts</li>
-                    </ol>
-                </nav>
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <nav aria-label="breadcrumb" class="step6-mapping-breadcrumb mb-0">
+                        <ol class="breadcrumb mb-0">
+                            <li class="breadcrumb-item"><a href="dashboard_light.html">Campagnes Marketing</a></li>
+                            <li class="breadcrumb-item"><a href="step1_create_light.html">Nouvelle campagne</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Upload de contacts</li>
+                        </ol>
+                    </nav>
+                    <button class="onboarding-help-button-inline" id="restartOnboardingTourStep6Mapping" type="button">
+                        <i class="bi bi-question-lg"></i>
+                    </button>
+                </div>
 
                 <!-- Stepper -->
                 <div class="campaign-stepper">
@@ -745,5 +750,31 @@
 
     <!-- Design System JS -->
     <script src="../assets/js/main.js" type="module"></script>
+
+    <!-- Onboarding Welcome Modal -->
+    <div class="modal fade" id="onboardingWelcomeModalStep6Mapping" tabindex="-1" aria-labelledby="onboardingWelcomeModalStep6MappingLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title" id="onboardingWelcomeModalStep6MappingLabel">
+                        <i class="bi bi-arrow-left-right text-primary me-2"></i>
+                        Mapping Manuel des Colonnes
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Cette étape vous permet d'associer <strong>manuellement</strong> chaque colonne de votre fichier aux champs du template CFI.</p>
+                    <p class="mb-0">Voulez-vous découvrir comment mapper vos données, comprendre les statuts (requis/optionnel/mappé/ignoré) et valider vos correspondances efficacement ?</p>
+                </div>
+                <div class="modal-footer border-0">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Passer</button>
+                    <button type="button" class="btn btn-primary" id="startOnboardingTourStep6Mapping">
+                        Faire le tour guidé
+                        <i class="bi bi-arrow-right ms-1"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
