@@ -97,15 +97,20 @@
 
             <div class="content">
                 <!-- Breadcrumb -->
-                <nav aria-label="breadcrumb" style="margin-bottom: var(--spacing-2xl);">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="dashboard_light.html" style="color: var(--color-primary); text-decoration: none;">Campagnes</a></li>
-                        <li class="breadcrumb-item active">Lancement Produit Q1 2025</li>
-                    </ol>
-                </nav>
+                <div class="d-flex justify-content-between align-items-center mb-5">
+                    <nav aria-label="breadcrumb" class="campaign-show-breadcrumb mb-0">
+                        <ol class="breadcrumb mb-0">
+                            <li class="breadcrumb-item"><a href="dashboard_light.html" class="text-primary text-decoration-none">Campagnes</a></li>
+                            <li class="breadcrumb-item active">Lancement Produit Q1 2025</li>
+                        </ol>
+                    </nav>
+                    <button class="onboarding-help-button-inline" id="restartOnboardingTourCampaignShow" type="button">
+                        <i class="bi bi-question-lg"></i>
+                    </button>
+                </div>
 
                 <!-- Campaign Header -->
-                <div class="d-flex justify-content-between align-items-start mb-4">
+                <div class="campaign-show-header d-flex justify-content-between align-items-start mb-4">
                     <div class="d-flex align-items-center gap-4">
                         <div style="width: 64px; height: 64px; background: linear-gradient(135deg, var(--color-primary), var(--color-secondary)); border-radius: var(--border-radius-lg); display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 1.5rem;">
                             LP
@@ -150,7 +155,7 @@
                 </div>
 
                 <!-- KPI Cards -->
-                <div class="row g-4 mb-4">
+                <div class="campaign-show-kpi-cards row g-4 mb-4">
                     <div class="col-md-3">
                         <div class="card h-100">
                             <div class="card-body">
@@ -216,7 +221,7 @@
                 </div>
 
                 <!-- Planning Overview -->
-                <div class="card mb-4">
+                <div class="campaign-show-planning-card card mb-4">
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-center mb-3">
                             <h5 class="mb-0"><i class="bi bi-calendar-check text-primary me-2"></i>Planification des publications</h5>
@@ -349,7 +354,7 @@
                 </div>
 
                 <!-- Performance Chart -->
-                <div class="card mb-4">
+                <div class="campaign-show-performance-chart card mb-4">
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-center mb-4">
                             <h5 class="mb-0"><i class="bi bi-graph-up text-primary"></i> Évolution des performances</h5>
@@ -369,7 +374,7 @@
                 </div>
 
                 <!-- Performance by Channel -->
-                <div class="card mb-4">
+                <div class="campaign-show-channel-performance card mb-4">
                     <div class="card-body">
                         <h5 class="mb-4"><i class="bi bi-layers text-primary"></i> Performance par canal</h5>
                         <div class="row g-4">
@@ -512,7 +517,7 @@
                 </div>
 
                 <!-- Assets -->
-                <div class="card mb-4">
+                <div class="campaign-show-assets card mb-4">
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-center mb-4">
                             <h5 class="mb-0"><i class="bi bi-images text-primary"></i> Assets déployés (62 total)</h5>
@@ -585,7 +590,7 @@
                 </div>
 
                 <!-- Campaign Strategy -->
-                <div class="card mb-4">
+                <div class="campaign-show-strategy card mb-4">
                     <div class="card-body">
                         <h5 class="mb-4"><i class="bi bi-bullseye text-primary"></i> Stratégie de campagne</h5>
                         <div class="row g-4">
@@ -652,6 +657,33 @@
                         <i class="bi bi-download"></i>
                         Exporter le rapport
                     </button>
+                </div>
+            </div>
+
+            <!-- Modal de bienvenue DAP -->
+            <div class="modal fade" id="onboardingWelcomeModalCampaignShow" tabindex="-1" aria-labelledby="onboardingWelcomeModalCampaignShowLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header border-0">
+                            <h5 class="modal-title" id="onboardingWelcomeModalCampaignShowLabel">
+                                <i class="bi bi-bar-chart-line text-primary me-2"></i>
+                                Vue d'ensemble de votre campagne
+                            </h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                        </div>
+                        <div class="modal-body">
+                            <p>Cette page vous permet de <strong>suivre les performances</strong> de votre campagne active en temps réel.</p>
+                            <p>Vous pouvez visualiser les <strong>KPIs principaux</strong>, analyser la performance par canal, et gérer la planification de vos 62 assets marketing.</p>
+                            <p class="mb-0"><i class="bi bi-info-circle text-primary me-1"></i> <strong>Astuce :</strong> Utilisez le calendrier de planification pour optimiser vos publications.</p>
+                        </div>
+                        <div class="modal-footer border-0">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Passer</button>
+                            <button type="button" class="btn btn-primary" id="startOnboardingTourCampaignShow">
+                                Faire le tour guidé
+                                <i class="bi bi-arrow-right ms-1"></i>
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </main>
