@@ -10,6 +10,12 @@ import {
   navigateToNext,
 } from "./step8-validate-data.js";
 
+import {
+  initAssetEditor,
+  resetEditor,
+  setCurrentAsset,
+} from "./asset-editor.js";
+
 // TODO: Supprimer ces expositions globales lors de l'intégration Twig
 // Les event handlers seront gérés via Stimulus controllers
 window.openAssetDetail = openAssetDetail;
@@ -20,29 +26,24 @@ window.navigateToNext = navigateToNext;
  * Initialise les event listeners pour la validation des assets
  */
 export function initAssetValidation() {
+  // Initialiser l'éditeur d'assets
+  initAssetEditor();
+
   // Event delegation sur les lignes de tableau pour ouvrir le détail
   const assetRows = document.querySelectorAll(".asset-row[data-asset-id]");
 
   assetRows.forEach((row) => {
     row.addEventListener("click", (e) => {
-      // Ne pas ouvrir le modal si on clique sur le checkbox
-      if (e.target.closest(".form-check-input")) {
-        e.stopPropagation();
-        return;
-      }
-
       const assetId = row.dataset.assetId;
+
+      // Réinitialiser l'éditeur avant d'ouvrir un nouvel asset
+      resetEditor();
+
+      // Définir l'asset courant pour l'éditeur
+      setCurrentAsset(assetId);
 
       // Appeler la fonction openAssetDetail importée du module
       openAssetDetail(assetId);
-    });
-  });
-
-  // Event listener sur les checkboxes pour empêcher la propagation
-  const checkboxes = document.querySelectorAll(".asset-row .form-check-input");
-  checkboxes.forEach((checkbox) => {
-    checkbox.addEventListener("click", (e) => {
-      e.stopPropagation();
     });
   });
 

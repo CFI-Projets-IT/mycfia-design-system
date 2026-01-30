@@ -1,0 +1,73 @@
+/**
+ * Asset Editor Styles
+ * Styles pour le mode édition des assets marketing
+ */
+
+/* Mode édition - Highlight du contenu */
+#previewContent.edit-mode {
+  border: 2px dashed var(--color-primary);
+  border-radius: var(--border-radius);
+  padding: var(--spacing-lg);
+  background: var(--color-background);
+}
+
+/* Éléments éditables */
+[contenteditable="true"].editable {
+  outline: 2px solid var(--color-primary-light);
+  outline-offset: 2px;
+  border-radius: var(--border-radius-sm);
+  padding: var(--spacing-xs);
+  transition: outline-color 0.2s ease;
+  cursor: text;
+}
+
+[contenteditable="true"].editable:hover {
+  outline-color: var(--color-primary);
+}
+
+[contenteditable="true"].editable:focus {
+  outline: 3px solid var(--color-primary);
+  outline-offset: 3px;
+  background: rgba(var(--color-primary-rgb), 0.05);
+}
+
+/* Feedback visuel pour le mode édition */
+.edit-mode::before {
+  content: "✏️ Mode édition actif";
+  display: block;
+  padding: var(--spacing-sm);
+  margin-bottom: var(--spacing-md);
+  background: var(--color-info-light);
+  color: var(--color-info-dark);
+  border-radius: var(--border-radius-sm);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  text-align: center;
+}
+
+/* Toolbar buttons spacing */
+#editToolbarEdit .btn {
+  white-space: nowrap;
+}
+
+/* Animation de transition entre modes */
+#editToolbarRead,
+#editToolbarEdit {
+  transition: opacity 0.3s ease;
+}
+
+/* Toast notification custom (si nécessaire) */
+.alert.position-fixed {
+  animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+  from {
+    transform: translate(-50%, -100%);
+    opacity: 0;
+  }
+  to {
+    transform: translate(-50%, 0);
+    opacity: 1;
+  }
+}

@@ -17,6 +17,8 @@
     <!-- Design System myCFiA -->
     <link rel="stylesheet" href="../assets/css/main.css">
     <link rel="stylesheet" href="../assets/css/themes/light.css" id="theme-stylesheet">
+    <!-- Asset Editor -->
+    <link rel="stylesheet" href="../assets/css/components/asset-editor.css">
 </head>
 <body>
     <div class="app">
@@ -618,14 +620,34 @@
                         </div>
 
                         <!-- Colonne droite: Preview -->
-                        <div class="col-md-7" style="height: 100%; display: flex; flex-direction: column;">
-                            <div style="padding: var(--spacing-2xl); padding-bottom: 0;">
-                                <h4 style="color: var(--text-primary); margin-bottom: var(--spacing-xl);">
-                                    <i class="bi bi-eye text-primary"></i> Aperçu visuel
-                                </h4>
+                        <div class="col-md-7 d-flex flex-column h-100">
+                            <div class="p-4 pb-0">
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <h4 class="text-primary mb-0">
+                                        <i class="bi bi-eye"></i> Aperçu visuel
+                                    </h4>
+                                    <!-- Toolbar édition - Mode lecture -->
+                                    <div id="editToolbarRead">
+                                        <button type="button" class="btn btn-outline-primary btn-sm" id="btnStartEdit">
+                                            <i class="bi bi-pencil"></i> Modifier
+                                        </button>
+                                    </div>
+                                    <!-- Toolbar édition - Mode édition (caché par défaut) -->
+                                    <div id="editToolbarEdit" class="d-none">
+                                        <button type="button" class="btn btn-success btn-sm me-2" id="btnSaveEdit">
+                                            <i class="bi bi-check-lg"></i> Enregistrer
+                                        </button>
+                                        <button type="button" class="btn btn-primary btn-sm me-2" id="btnEnrichAI">
+                                            <i class="bi bi-stars"></i> Enrichir avec l'IA
+                                        </button>
+                                        <button type="button" class="btn btn-outline-secondary btn-sm" id="btnCancelEdit">
+                                            <i class="bi bi-x-lg"></i> Annuler
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
-                            <div style="flex: 1; overflow-y: auto; padding: var(--spacing-2xl); background: #f8f9fa; display: flex; align-items: flex-start; justify-content: center;">
-                                <div id="previewContent" style="width: 100%;">
+                            <div class="flex-grow-1 overflow-auto p-4 bg-light d-flex align-items-start justify-content-center">
+                                <div id="previewContent" class="w-100">
                                     <!-- Sera rempli dynamiquement -->
                                 </div>
                             </div>
