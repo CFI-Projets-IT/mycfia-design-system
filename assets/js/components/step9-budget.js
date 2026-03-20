@@ -26,10 +26,9 @@ const TARIFS = {
 // Choix affranchissement courant
 let currentAffr = 'g4';
 
-// État paiement par parcours
+// État paiement — uniquement Avanci (Standard ne nécessite pas de paiement)
 const paymentState = {
-    standard: false,
-    avanci:   false,
+    avanci: false,
 };
 
 // ─────────────────────────────────────────────────────────────────
@@ -44,6 +43,7 @@ export function initStep9Budget() {
     _initAffranchissementSelector();
     _initPaymentButtons();
     _initSpeedDial();
+    _updateSpeedDial(); // état initial (Standard = pas de paiement requis)
 }
 
 // ─────────────────────────────────────────────────────────────────
@@ -80,6 +80,12 @@ function _switchParcours(parcours) {
     if (sectionStandard) sectionStandard.classList.toggle('d-none', parcours === 'avanci');
     if (sectionAvanci)   sectionAvanci.classList.toggle('d-none', parcours === 'standard');
     if (sectionBoth)     sectionBoth.classList.toggle('d-none', parcours !== 'both');
+
+    // En mode "both", le CTA Standard est masqué : le paiement Avanci est obligatoire
+    const standardCta = document.querySelector('[data-budget-standard-cta]');
+    if (standardCta) standardCta.classList.toggle('d-none', parcours === 'both');
+
+    _updateSpeedDial();
 }
 
 // ─────────────────────────────────────────────────────────────────
@@ -131,12 +137,6 @@ function _recalculerTotal(parcours) {
     if (totalEl) {
         totalEl.textContent = _formatEuro(total);
     }
-
-    // Mettre à jour aussi le montant sur le bouton PayPal
-    const payAmountEl = document.querySelector('[data-budget-pay-amount="standard"]');
-    if (payAmountEl) {
-        payAmountEl.textContent = _formatEuro(total);
-    }
 }
 
 function _formatEuro(amount) {
@@ -181,14 +181,20 @@ function _initSpeedDial() {
     if (!speedPayBtn) return;
 
     speedPayBtn.addEventListener('click', () => {
-        const page    = document.getElementById('budget-page');
+        const page     = document.getElementById('budget-page');
         const parcours = page ? page.dataset.budgetParcours : 'standard';
 
-        if (paymentState[parcours] || paymentState.standard || paymentState.avanci) {
+        // Standard : pas de paiement requis → accès direct à la planification
+        if (parcours === 'standard') {
+            window.location.href = 'step9_schedule_light.html';
+            return;
+        }
+
+        // Avanci ou Upload+Avanci : paiement Avanci obligatoire avant de continuer
+        if (paymentState.avanci) {
             window.location.href = 'step9_schedule_light.html';
         } else {
-            // Scroll vers la section paiement visible
-            const paySection = document.querySelector('.budget-paypal-section:not(.d-none)');
+            const paySection = document.querySelector('.budget-paypal-section');
             if (paySection) {
                 paySection.scrollIntoView({ behavior: 'smooth', block: 'center' });
             }
@@ -202,7 +208,9 @@ function _updateSpeedDial() {
 
     const page     = document.getElementById('budget-page');
     const parcours = page ? page.dataset.budgetParcours : 'standard';
-    const isPaid   = paymentState[parcours] || paymentState.standard || paymentState.avanci;
+    // Standard = pas de paiement requis → speed dial actif d'emblée
+    // Avanci / Both = paiement Avanci requis
+    const isPaid = parcours === 'standard' || paymentState.avanci;
 
     if (isPaid) {
         speedPayBtn.innerHTML = '<i class="bi bi-check-circle-fill"></i>';

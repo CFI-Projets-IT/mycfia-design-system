@@ -464,57 +464,17 @@
                         </div>
                     </div>
 
-                    <!-- PayPal Standard -->
-                    <div class="budget-paypal-section">
-                        <div class="d-flex align-items-center justify-content-between mb-3">
-                            <h5 class="mb-0">
-                                <i class="bi bi-lock-fill text-success me-2"></i>
-                                Paiement sécurisé
-                            </h5>
-                            <span class="budget-paypal-secure">
-                                <i class="bi bi-shield-check-fill text-success"></i>
-                                SSL / 3D Secure
-                            </span>
+                    <!-- Standard : pas de paiement, accès direct à la planification -->
+                    <!-- Masqué si parcours "both" : le paiement Avanci est alors obligatoire -->
+                    <div class="d-flex align-items-center justify-content-between pt-2" data-budget-standard-cta>
+                        <div class="text-secondary small">
+                            <i class="bi bi-info-circle me-1"></i>
+                            Le parcours Standard ne nécessite pas de paiement en ligne.
                         </div>
-                        <p class="text-secondary small mb-4">
-                            Le paiement valide la campagne et débloque l'accès à la planification.
-                            Vous serez redirigé vers PayPal pour finaliser le règlement.
-                        </p>
-
-                        <!-- En attente -->
-                        <div data-budget-payment-status="pending-standard">
-                            <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
-                                <div>
-                                    <div class="text-secondary small mb-1">Montant à régler</div>
-                                    <div class="fw-bold fs-4 text-primary" data-budget-pay-amount="standard">8 010,00 €</div>
-                                </div>
-                                <button class="budget-btn-paypal" data-budget-pay-btn="standard">
-                                    <span class="budget-paypal-logo">
-                                        <span class="pay">Pay</span><span class="pal">Pal</span>
-                                    </span>
-                                    Payer maintenant
-                                </button>
-                            </div>
-                        </div>
-
-                        <!-- Validé (masqué par défaut) -->
-                        <div data-budget-payment-status="done-standard" class="d-none">
-                            <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
-                                <div>
-                                    <span class="budget-payment-success">
-                                        <i class="bi bi-check-circle-fill"></i>
-                                        Paiement validé — 8 010,00 €
-                                    </span>
-                                    <div class="text-secondary small mt-2">
-                                        Référence PayPal : <code>PP-REF-20260320-001</code>
-                                    </div>
-                                </div>
-                                <a href="step9_schedule_light.html" class="btn btn-primary">
-                                    <i class="bi bi-calendar-event me-1"></i>
-                                    Continuer vers la planification
-                                </a>
-                            </div>
-                        </div>
+                        <a href="step9_schedule_light.html" class="btn btn-primary">
+                            <i class="bi bi-calendar-event me-1"></i>
+                            Continuer vers la planification
+                        </a>
                     </div>
 
                 </div>
@@ -624,7 +584,7 @@
                         <div class="row align-items-center">
                             <div class="col-md-7">
                                 <div class="budget-total-label">Total campagne estimé</div>
-                                <div class="budget-total-amount" data-budget-total-amount="avanci">490,00 € + tarif Avanci</div>
+                                <div class="budget-total-amount" data-budget-total-amount="avanci">Tarif Avanci à définir</div>
                                 <div class="budget-total-detail">
                                     Contacts Avanci (tarif à définir)
                                 </div>
@@ -658,7 +618,7 @@
                             <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
                                 <div>
                                     <div class="text-secondary small mb-1">Montant à régler</div>
-                                    <div class="fw-bold fs-4" data-budget-pay-amount="avanci">490,00 € + tarif Avanci</div>
+                                    <div class="fw-bold fs-4" data-budget-pay-amount="avanci">Tarif Avanci à définir</div>
                                 </div>
                                 <button class="budget-btn-paypal" data-budget-pay-btn="avanci">
                                     <span class="budget-paypal-logo">
