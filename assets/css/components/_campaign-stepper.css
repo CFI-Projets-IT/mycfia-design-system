@@ -92,8 +92,8 @@
 }
 
 /* ========================================
-   STEPPER PROGRESS - 8 ÉTAPES
-   Progression calculée: étape N = (N-1)/7 * 100%
+   STEPPER PROGRESS - 9 ÉTAPES
+   Progression calculée: étape N = (N-1)/8 * 100%
    ======================================== */
 
 /* Étape 1 - Projet (active ou loading) */
@@ -154,7 +154,12 @@
     width: 85.71%;
 }
 
-/* Étape 8 - Planning */
+/* Étape 9 - Budget */
+.step9-budget-stepper-progress {
+    width: 87.5%;
+}
+
+/* Étape 10 - Planning */
 .step9-schedule-stepper-progress {
     width: 100%;
 }

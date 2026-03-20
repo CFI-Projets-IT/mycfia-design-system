@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Budget - Étape 9 | myCFiA</title>
+
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Design System myCFiA -->
+    <link rel="stylesheet" href="../assets/css/main.css">
+    <link rel="stylesheet" href="../assets/css/themes/light.css" id="theme-stylesheet">
+</head>
+<body>
+    <div class="app">
+
+        <!-- ══════════════════════════════════════════
+             SIDEBAR
+        ═══════════════════════════════════════════ -->
+        <aside class="sidebar d-flex flex-column">
+            <div class="sidebar-header">
+                <button class="btn btn-link text-white-50 p-0" data-sidebar-toggle>
+                    <i class="bi bi-list fs-4"></i>
+                </button>
+                <button class="btn btn-link text-white-50 p-0" data-sidebar-toggle>
+                    <i class="bi bi-arrow-left-circle fs-5"></i>
+                </button>
+            </div>
+            <nav class="flex-grow-1 overflow-auto px-3">
+                <div class="nav-section mb-4">
+                    <div class="nav-section-title-pill mb-3">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-megaphone"></i>
+                            <span>Marketing</span>
+                        </div>
+                        <i class="bi bi-chevron-down"></i>
+                    </div>
+                    <div class="nav-section-content">
+                        <a href="step1_create_light.html" class="sidebar-link active">
+                            <i class="bi bi-plus-circle"></i>
+                            <span>Nouvelle campagne</span>
+                        </a>
+                        <a href="dashboard_light.html" class="sidebar-link">
+                            <i class="bi bi-grid"></i>
+                            <span>Mes campagnes</span>
+                        </a>
+                        <a href="analytics_light.html" class="sidebar-link">
+                            <i class="bi bi-bar-chart-line"></i>
+                            <span>Analytics</span>
+                        </a>
+                    </div>
+                </div>
+                <div class="nav-section mb-4">
+                    <div class="nav-section-title-pill mb-3">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-star"></i>
+                            <span>Favoris</span>
+                        </div>
+                        <i class="bi bi-chevron-down"></i>
+                    </div>
+                    <div class="px-3 py-2 text-white-50 small">
+                        <span>Aucune campagne favorite</span>
+                    </div>
+                </div>
+                <div class="nav-section mb-4">
+                    <div class="nav-section-title-pill mb-3">
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-clock-history"></i>
+                            <span>Historique</span>
+                        </div>
+                        <i class="bi bi-chevron-down"></i>
+                    </div>
+                </div>
+            </nav>
+            <div class="sidebar-footer">
+                <a href="../settings_index/settings_index_light.html" class="sidebar-link">
+                    <i class="bi bi-gear"></i>
+                    <span>Paramètres</span>
+                </a>
+                <a href="../profile/profile_light.html" class="sidebar-link">
+                    <i class="bi bi-person-circle"></i>
+                    <span>Mon compte</span>
+                </a>
+                <a href="#" class="sidebar-link">
+                    <i class="bi bi-box-arrow-right"></i>
+                    <span>Quitter</span>
+                </a>
+            </div>
+        </aside>
+
+        <!-- ══════════════════════════════════════════
+             MAIN
+        ═══════════════════════════════════════════ -->
+        <main class="main">
+            <header class="header">
+                <div class="header-content">
+                    <a href="../index.html">
+                        <img src="../images/logo_picto.svg" alt="CFI" class="header-logo-picto">
+                        <img src="../images/logo.svg" alt="myCFiA" class="header-logo">
+                    </a>
+                    <div class="d-flex gap-2">
+                        <button class="btn btn-glass header-btn">
+                            <i class="bi bi-building"></i>
+                            <span class="header-btn-text">Ma Division</span>
+                        </button>
+                        <button class="btn btn-glass-primary header-btn">
+                            <i class="bi bi-sun-fill"></i>
+                            <span class="header-btn-text">Clair</span>
+                        </button>
+                        <a href="#" class="btn btn-glass header-btn">
+                            <i class="bi bi-arrow-left-circle"></i>
+                            <span class="header-btn-text">Retour CFI</span>
+                        </a>
+                    </div>
+                </div>
+            </header>
+
+            <div class="content" id="budget-page" data-budget-parcours="standard">
+
+                <!-- Breadcrumb + toggle prototype -->
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <nav aria-label="breadcrumb" class="mb-0">
+                        <ol class="breadcrumb mb-0">
+                            <li class="breadcrumb-item"><a href="dashboard_light.html">Campagnes</a></li>
+                            <li class="breadcrumb-item"><a href="step1_create_light.html">Nouvelle campagne</a></li>
+                            <li class="breadcrumb-item active">Budget</li>
+                        </ol>
+                    </nav>
+
+                    <!-- Toggle parcours -->
+                    <div class="d-flex gap-2">
+                        <button class="btn btn-glass-primary header-btn" data-budget-toggle="standard">
+                            <i class="bi bi-upload"></i>
+                            <span class="header-btn-text">Standard</span>
+                        </button>
+                        <button class="btn btn-glass header-btn" data-budget-toggle="avanci">
+                            <i class="bi bi-stars"></i>
+                            <span class="header-btn-text">Avanci</span>
+                        </button>
+                        <button class="btn btn-glass header-btn" data-budget-toggle="both">
+                            <i class="bi bi-layers"></i>
+                            <span class="header-btn-text">Upload + Avanci</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Stepper 9 étapes -->
+                <div class="campaign-stepper">
+                    <div class="stepper-container">
+                        <div class="stepper-line">
+                            <div class="stepper-progress step9-budget-stepper-progress"></div>
+                        </div>
+                        <div class="stepper-step completed">
+                            <div class="stepper-circle"><i class="bi bi-check-lg"></i></div>
+                            <div class="stepper-label">Projet</div>
+                        </div>
+                        <div class="stepper-step completed">
+                            <div class="stepper-circle"><i class="bi bi-check-lg"></i></div>
+                            <div class="stepper-label">Concurrents</div>
+                        </div>
+                        <div class="stepper-step completed">
+                            <div class="stepper-circle"><i class="bi bi-check-lg"></i></div>
+                            <div class="stepper-label">Personas</div>
+                        </div>
+                        <div class="stepper-step completed">
+                            <div class="stepper-circle"><i class="bi bi-check-lg"></i></div>
+                            <div class="stepper-label">Stratégie</div>
+                        </div>
+                        <div class="stepper-step completed">
+                            <div class="stepper-circle"><i class="bi bi-check-lg"></i></div>
+                            <div class="stepper-label">Canaux</div>
+                        </div>
+                        <div class="stepper-step completed">
+                            <div class="stepper-circle"><i class="bi bi-check-lg"></i></div>
+                            <div class="stepper-label">Upload</div>
+                        </div>
+                        <div class="stepper-step completed">
+                            <div class="stepper-circle"><i class="bi bi-check-lg"></i></div>
+                            <div class="stepper-label">Assets</div>
+                        </div>
+                        <div class="stepper-step active">
+                            <div class="stepper-circle">9</div>
+                            <div class="stepper-label">Budget</div>
+                        </div>
+                        <div class="stepper-step">
+                            <div class="stepper-circle">10</div>
+                            <div class="stepper-label">Planning</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Page header -->
+                <div class="d-flex justify-content-between align-items-start mb-4">
+                    <div>
+                        <h1 class="page-title mb-1">
+                            <i class="bi bi-wallet2 text-primary"></i>
+                            Récapitulatif budgétaire
+                        </h1>
+                        <p class="text-secondary mb-0">Détail des tarifs MyCFiA selon les canaux et volumes établis</p>
+                    </div>
+                    <div class="text-secondary small mt-2">
+                        <i class="bi bi-people me-1"></i>
+                        <strong>5 000</strong> contacts importés
+                    </div>
+                </div>
+
+                <!-- ═══════════════════════════════════════
+                     SECTION STANDARD
+                ═══════════════════════════════════════ -->
+                <div data-budget-section="standard">
+
+                    <!-- 02 — Location adresses -->
+                    <div class="budget-tarif-section">
+                        <div class="budget-tarif-section-header">
+                            <span class="budget-section-code budget-section-code--02">02</span>
+                            <h6 class="budget-tarif-section-title">Location d'adresses</h6>
+                            <span class="ms-auto text-secondary small">Base contacts : 5 000 enregistrements</span>
+                        </div>
+                        <table class="table budget-tarif-table">
+                            <thead>
+                                <tr>
+                                    <th class="budget-col-prestation">Prestation</th>
+                                    <th class="budget-col-unite">Unité</th>
+                                    <th class="budget-col-prix">Prix unitaire</th>
+                                    <th class="budget-col-qty">Qté</th>
+                                    <th class="budget-col-total">Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <div class="budget-tarif-item-name">
+                                            <i class="bi bi-envelope text-primary me-1"></i>
+                                            Location adresse Email
+                                        </div>
+                                    </td>
+                                    <td><span class="budget-tarif-prix">Unité</span></td>
+                                    <td><span class="budget-tarif-prix">0,12 €</span></td>
+                                    <td><span class="budget-tarif-volume">5 000</span></td>
+                                    <td><span class="budget-tarif-total">600,00 €</span></td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="budget-tarif-item-name">
+                                            <i class="bi bi-phone text-primary me-1"></i>
+                                            Location adresse SMS
+                                        </div>
+                                    </td>
+                                    <td><span class="budget-tarif-prix">Unité</span></td>
+                                    <td><span class="budget-tarif-prix">0,14 €</span></td>
+                                    <td><span class="budget-tarif-volume">5 000</span></td>
+                                    <td><span class="budget-tarif-total">700,00 €</span></td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="budget-tarif-item-name">
+                                            <i class="bi bi-mailbox text-primary me-1"></i>
+                                            Location adresse Courrier
+                                        </div>
+                                    </td>
+                                    <td><span class="budget-tarif-prix">Unité</span></td>
+                                    <td><span class="budget-tarif-prix">0,23 €</span></td>
+                                    <td><span class="budget-tarif-volume">5 000</span></td>
+                                    <td><span class="budget-tarif-total">1 150,00 €</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- 03 — Canaux de diffusion -->
+                    <div class="budget-tarif-section">
+                        <div class="budget-tarif-section-header">
+                            <span class="budget-section-code budget-section-code--03">03</span>
+                            <h6 class="budget-tarif-section-title">Canaux de diffusion</h6>
+                        </div>
+                        <table class="table budget-tarif-table">
+                            <thead>
+                                <tr>
+                                    <th class="budget-col-prestation">Prestation</th>
+                                    <th class="budget-col-unite">Unité</th>
+                                    <th class="budget-col-prix">Prix unitaire</th>
+                                    <th class="budget-col-qty">Qté</th>
+                                    <th class="budget-col-total">Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <div class="budget-tarif-item-name">
+                                            <i class="bi bi-envelope-fill text-success me-1"></i>
+                                            Email
+                                        </div>
+                                    </td>
+                                    <td><span class="budget-tarif-prix">Unité</span></td>
+                                    <td><span class="budget-tarif-prix">0,01 €</span></td>
+                                    <td><span class="budget-tarif-volume">5 000</span></td>
+                                    <td><span class="budget-tarif-total">50,00 €</span></td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="budget-tarif-item-name">
+                                            <i class="bi bi-chat-dots-fill text-success me-1"></i>
+                                            SMS
+                                        </div>
+                                    </td>
+                                    <td><span class="budget-tarif-prix">Unité</span></td>
+                                    <td><span class="budget-tarif-prix">0,055 €</span></td>
+                                    <td><span class="budget-tarif-volume">5 000</span></td>
+                                    <td><span class="budget-tarif-total">275,00 €</span></td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="budget-tarif-item-name">
+                                            <i class="bi bi-file-earmark-text-fill text-success me-1"></i>
+                                            Lettre A4 Recto Seul + EP C5
+                                        </div>
+                                        <div class="budget-tarif-item-sub">laser · façonnage · mise sous pli</div>
+                                    </td>
+                                    <td><span class="budget-tarif-prix">Unité</span></td>
+                                    <td><span class="budget-tarif-prix">0,30 €</span></td>
+                                    <td><span class="budget-tarif-volume">5 000</span></td>
+                                    <td><span class="budget-tarif-total">1 500,00 €</span></td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="budget-tarif-item-name">
+                                            <i class="bi bi-linkedin me-1"></i>
+                                            Réseaux sociaux — textes
+                                        </div>
+                                    </td>
+                                    <td><span class="budget-tarif-prix">Unité</span></td>
+                                    <td>—</td>
+                                    <td>—</td>
+                                    <td><span class="budget-tarif-inclus">Inclus forfait</span></td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="budget-tarif-item-name">
+                                            <i class="bi bi-image me-1"></i>
+                                            Réseaux sociaux — images
+                                        </div>
+                                    </td>
+                                    <td><span class="budget-tarif-prix">Unité</span></td>
+                                    <td>—</td>
+                                    <td>—</td>
+                                    <td><span class="budget-tarif-inclus">Inclus forfait</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- 04 — Affranchissement + sélecteur -->
+                    <div class="budget-tarif-section">
+                        <div class="budget-tarif-section-header">
+                            <span class="budget-section-code budget-section-code--04">04</span>
+                            <h6 class="budget-tarif-section-title">Affranchissement</h6>
+                            <span class="ms-auto text-secondary small">Sélectionnez le type — canal courrier actif</span>
+                        </div>
+
+                        <!-- Sélecteur affranchissement -->
+                        <div class="budget-affr-selector">
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <div class="form-check">
+                                        <input
+                                            class="form-check-input"
+                                            type="radio"
+                                            name="affranchissement"
+                                            id="affrG4"
+                                            value="g4"
+                                            data-budget-affr-option="g4"
+                                            checked
+                                        >
+                                        <label class="form-check-label" for="affrG4">
+                                            Affranchissement G4 Standard
+                                            <small> — 0,747 € / unité · EP C6 et C5</small>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-check">
+                                        <input
+                                            class="form-check-input"
+                                            type="radio"
+                                            name="affranchissement"
+                                            id="affrDestinee"
+                                            value="destineo"
+                                            data-budget-affr-option="destineo"
+                                        >
+                                        <label class="form-check-label" for="affrDestinee">
+                                            Affranchissement Destineo MD7
+                                            <small> — 0,388 € / unité · EP C6 et C5</small>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <table class="table budget-tarif-table">
+                            <thead>
+                                <tr>
+                                    <th class="budget-col-prestation">Prestation</th>
+                                    <th class="budget-col-unite">Unité</th>
+                                    <th class="budget-col-prix">Prix unitaire</th>
+                                    <th class="budget-col-qty">Qté</th>
+                                    <th class="budget-col-total">Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Ligne G4 (visible par défaut) -->
+                                <tr data-budget-affr-ligne="g4">
+                                    <td>
+                                        <div class="budget-tarif-item-name">
+                                            <i class="bi bi-stamp me-1"></i>
+                                            Affranchissement G4 Standard
+                                        </div>
+                                        <div class="budget-tarif-item-sub">EP C6 et C5</div>
+                                    </td>
+                                    <td><span class="budget-tarif-prix">Unité</span></td>
+                                    <td><span class="budget-tarif-prix">0,747 €</span></td>
+                                    <td><span class="budget-tarif-volume">5 000</span></td>
+                                    <td><span class="budget-tarif-total">3 735,00 €</span></td>
+                                </tr>
+                                <!-- Ligne Destineo (masquée par défaut) -->
+                                <tr data-budget-affr-ligne="destineo" class="d-none">
+                                    <td>
+                                        <div class="budget-tarif-item-name">
+                                            <i class="bi bi-stamp me-1"></i>
+                                            Affranchissement Destineo MD7
+                                        </div>
+                                        <div class="budget-tarif-item-sub">EP C6 et C5</div>
+                                    </td>
+                                    <td><span class="budget-tarif-prix">Unité</span></td>
+                                    <td><span class="budget-tarif-prix">0,388 €</span></td>
+                                    <td><span class="budget-tarif-volume">5 000</span></td>
+                                    <td><span class="budget-tarif-total">1 940,00 €</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Total Standard -->
+                    <div class="budget-total-card">
+                        <div class="row align-items-center">
+                            <div class="col-md-7">
+                                <div class="budget-total-label">Total campagne estimé</div>
+                                <div class="budget-total-amount" data-budget-total-amount="standard">8 010,00 €</div>
+                                <div class="budget-total-detail">
+                                    Locations 2 450 € · Canaux 1 825 € · Affranchissement 3 735 €
+                                </div>
+                            </div>
+                            <div class="col-md-5 text-end">
+                                <div class="text-secondary small">Volume traité</div>
+                                <div class="fw-bold fs-5">5 000 contacts</div>
+                                <div class="text-secondary small">3 canaux actifs · 1 mois</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- PayPal Standard -->
+                    <div class="budget-paypal-section">
+                        <div class="d-flex align-items-center justify-content-between mb-3">
+                            <h5 class="mb-0">
+                                <i class="bi bi-lock-fill text-success me-2"></i>
+                                Paiement sécurisé
+                            </h5>
+                            <span class="budget-paypal-secure">
+                                <i class="bi bi-shield-check-fill text-success"></i>
+                                SSL / 3D Secure
+                            </span>
+                        </div>
+                        <p class="text-secondary small mb-4">
+                            Le paiement valide la campagne et débloque l'accès à la planification.
+                            Vous serez redirigé vers PayPal pour finaliser le règlement.
+                        </p>
+
+                        <!-- En attente -->
+                        <div data-budget-payment-status="pending-standard">
+                            <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+                                <div>
+                                    <div class="text-secondary small mb-1">Montant à régler</div>
+                                    <div class="fw-bold fs-4 text-primary" data-budget-pay-amount="standard">8 010,00 €</div>
+                                </div>
+                                <button class="budget-btn-paypal" data-budget-pay-btn="standard">
+                                    <span class="budget-paypal-logo">
+                                        <span class="pay">Pay</span><span class="pal">Pal</span>
+                                    </span>
+                                    Payer maintenant
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Validé (masqué par défaut) -->
+                        <div data-budget-payment-status="done-standard" class="d-none">
+                            <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+                                <div>
+                                    <span class="budget-payment-success">
+                                        <i class="bi bi-check-circle-fill"></i>
+                                        Paiement validé — 8 010,00 €
+                                    </span>
+                                    <div class="text-secondary small mt-2">
+                                        Référence PayPal : <code>PP-REF-20260320-001</code>
+                                    </div>
+                                </div>
+                                <a href="step9_schedule_light.html" class="btn btn-primary">
+                                    <i class="bi bi-calendar-event me-1"></i>
+                                    Continuer vers la planification
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <!-- /SECTION STANDARD -->
+
+                <!-- ═══════════════════════════════════════
+                     SECTION AVANCI
+                ═══════════════════════════════════════ -->
+                <div data-budget-section="avanci" class="d-none">
+
+                    <!-- Banner Avanci -->
+                    <div class="budget-avanci-banner">
+                        <div class="d-flex align-items-start gap-3">
+                            <i class="bi bi-stars fs-4 mt-1 text-purple"></i>
+                            <div>
+                                <div class="budget-avanci-logo mb-1">AVANCI</div>
+                                <p class="mb-0 text-secondary small">
+                                    Votre campagne s'appuie sur la base de leads qualifiés Avanci.
+                                    La tarification inclut l'accès aux contacts enrichis et la diffusion multi-canaux intégrée.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 05 — Contacts Avanci (codification imaginée) -->
+                    <div class="budget-tarif-section">
+                        <div class="budget-tarif-section-header">
+                            <span class="budget-section-code budget-section-code--05">05</span>
+                            <h6 class="budget-tarif-section-title">Contacts Avanci</h6>
+                            <span class="ms-auto text-secondary small">Leads qualifiés enrichis</span>
+                        </div>
+                        <table class="table budget-tarif-table">
+                            <thead>
+                                <tr>
+                                    <th class="budget-col-prestation">Prestation</th>
+                                    <th class="budget-col-unite">Unité</th>
+                                    <th class="budget-col-prix">Prix unitaire</th>
+                                    <th class="budget-col-qty">Qté</th>
+                                    <th class="budget-col-total">Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <div class="budget-tarif-item-name">
+                                            <i class="bi bi-stars me-1"></i>
+                                            Accès contacts Avanci qualifiés
+                                        </div>
+                                        <div class="budget-tarif-item-sub">Email · SMS · Courrier inclus · Ciblage comportemental</div>
+                                    </td>
+                                    <td><span class="budget-tarif-prix">Unité</span></td>
+                                    <td><span class="budget-tarif-placeholder">À définir</span></td>
+                                    <td><span class="budget-tarif-volume">5 000</span></td>
+                                    <td><span class="budget-tarif-placeholder">À calculer</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- 03 — Canaux réseaux (Avanci) -->
+                    <div class="budget-tarif-section">
+                        <div class="budget-tarif-section-header">
+                            <span class="budget-section-code budget-section-code--03">03</span>
+                            <h6 class="budget-tarif-section-title">Canaux de diffusion</h6>
+                        </div>
+                        <table class="table budget-tarif-table">
+                            <thead>
+                                <tr>
+                                    <th class="budget-col-prestation">Prestation</th>
+                                    <th class="budget-col-unite">Unité</th>
+                                    <th class="budget-col-prix">Prix unitaire</th>
+                                    <th class="budget-col-qty">Qté</th>
+                                    <th class="budget-col-total">Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <div class="budget-tarif-item-name">
+                                            <i class="bi bi-linkedin me-1"></i>
+                                            Réseaux sociaux — textes
+                                        </div>
+                                    </td>
+                                    <td><span class="budget-tarif-prix">Unité</span></td>
+                                    <td>—</td>
+                                    <td>—</td>
+                                    <td><span class="budget-tarif-inclus">Inclus forfait</span></td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="budget-tarif-item-name">
+                                            <i class="bi bi-image me-1"></i>
+                                            Réseaux sociaux — images
+                                        </div>
+                                    </td>
+                                    <td><span class="budget-tarif-prix">Unité</span></td>
+                                    <td>—</td>
+                                    <td>—</td>
+                                    <td><span class="budget-tarif-inclus">Inclus forfait</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Total Avanci -->
+                    <div class="budget-total-card budget-total-avanci">
+                        <div class="row align-items-center">
+                            <div class="col-md-7">
+                                <div class="budget-total-label">Total campagne estimé</div>
+                                <div class="budget-total-amount" data-budget-total-amount="avanci">490,00 € + tarif Avanci</div>
+                                <div class="budget-total-detail">
+                                    Contacts Avanci (tarif à définir)
+                                </div>
+                            </div>
+                            <div class="col-md-5 text-end">
+                                <div class="text-secondary small">Leads Avanci ciblés</div>
+                                <div class="fw-bold fs-5">5 000 contacts</div>
+                                <div class="text-secondary small">Enrichis · Qualifiés · Multi-canaux</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- PayPal Avanci -->
+                    <div class="budget-paypal-section">
+                        <div class="d-flex align-items-center justify-content-between mb-3">
+                            <h5 class="mb-0">
+                                <i class="bi bi-lock-fill text-success me-2"></i>
+                                Paiement sécurisé
+                            </h5>
+                            <span class="budget-paypal-secure">
+                                <i class="bi bi-shield-check-fill text-success"></i>
+                                SSL / 3D Secure
+                            </span>
+                        </div>
+                        <p class="text-secondary small mb-4">
+                            Le paiement valide la campagne Avanci et débloque l'accès à la planification.
+                        </p>
+
+                        <!-- En attente -->
+                        <div data-budget-payment-status="pending-avanci">
+                            <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+                                <div>
+                                    <div class="text-secondary small mb-1">Montant à régler</div>
+                                    <div class="fw-bold fs-4" data-budget-pay-amount="avanci">490,00 € + tarif Avanci</div>
+                                </div>
+                                <button class="budget-btn-paypal" data-budget-pay-btn="avanci">
+                                    <span class="budget-paypal-logo">
+                                        <span class="pay">Pay</span><span class="pal">Pal</span>
+                                    </span>
+                                    Payer maintenant
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Validé (masqué par défaut) -->
+                        <div data-budget-payment-status="done-avanci" class="d-none">
+                            <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+                                <div>
+                                    <span class="budget-payment-success">
+                                        <i class="bi bi-check-circle-fill"></i>
+                                        Paiement validé — Parcours Avanci
+                                    </span>
+                                    <div class="text-secondary small mt-2">
+                                        Référence PayPal : <code>PP-REF-20260320-002</code>
+                                    </div>
+                                </div>
+                                <a href="step9_schedule_light.html" class="btn btn-primary">
+                                    <i class="bi bi-calendar-event me-1"></i>
+                                    Continuer vers la planification
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <!-- /SECTION AVANCI -->
+
+            </div>
+        </main>
+    </div>
+
+    <!-- Speed Dial FAB -->
+    <div class="speed-dial-container">
+        <div class="speed-dial-action">
+            <span class="speed-dial-label">Retour aux assets</span>
+            <a href="step8_validate_light.html" class="speed-dial-btn speed-dial-cancel">
+                <i class="bi bi-arrow-left"></i>
+            </a>
+        </div>
+        <div class="speed-dial-action">
+            <span class="speed-dial-label">Procéder au paiement</span>
+            <button class="speed-dial-btn speed-dial-primary" id="budget-speed-pay">
+                <i class="bi bi-credit-card-2-front-fill"></i>
+            </button>
+        </div>
+        <div class="speed-dial-btn speed-dial-main">
+            <i class="bi bi-three-dots-vertical"></i>
+        </div>
+    </div>
+
+    <a href="step8_validate_light.html" class="fab-back">
+        <i class="bi bi-arrow-left"></i>
+        <span class="fab-tooltip">Retour aux assets</span>
+    </a>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../assets/js/main.js" type="module"></script>
+</body>
+</html>

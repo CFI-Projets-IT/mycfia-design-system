@@ -34,6 +34,7 @@ import { initOnboardingDAPStep8Validate } from "./components/onboarding-dap-step
 import { initOnboardingDAPStep9Schedule } from "./components/onboarding-dap-step9-schedule.js";
 import { initOnboardingDAPCampaignShow } from "./components/onboarding-dap-campaign-show.js";
 import { initVideoDemo } from "./components/video-demo.js";
+import { initStep9Budget } from "./components/step9-budget.js";
 import "./components/campaign-stepper.js";
 import "./components/campaign-form.js";
 import "./components/campaign-loader.js";
@@ -277,6 +278,12 @@ document.addEventListener("DOMContentLoaded", () => {
     ) {
       console.log("[main] Initialisation de l'onboarding DAP Campaign Show...");
       initOnboardingDAPCampaignShow();
+    }
+
+    // 30. Initialiser Step 9 Budget (si budget-page présent)
+    if (document.getElementById("budget-page")) {
+      console.log("[main] Initialisation de Step 9 Budget...");
+      initStep9Budget();
     }
 
     console.log("===========================================");
