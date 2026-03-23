@@ -92,8 +92,8 @@
 }
 
 /* ========================================
-   STEPPER PROGRESS - 9 ÉTAPES
-   Progression calculée: étape N = (N-1)/8 * 100%
+   STEPPER PROGRESS - 10 ÉTAPES
+   Progression calculée: étape N = (N-1)/9 * 100%
    ======================================== */
 
 /* Étape 1 - Projet (active ou loading) */
@@ -105,62 +105,62 @@
 
 /* Étape 2 - Concurrents */
 .step2-loading-stepper-progress {
-    width: 7.14%;
+    width: 5.56%;
 }
 .step2-validate-stepper-progress {
-    width: 14.29%;
+    width: 11.11%;
 }
 
 /* Étape 3 - Personas */
 .step3-loading-stepper-progress {
-    width: 21.43%;
+    width: 16.67%;
 }
 .step3-select-stepper-progress {
-    width: 28.57%;
+    width: 22.22%;
 }
 
 /* Étape 4 - Upload */
 .contact-upload-stepper-progress {
-    width: 42.86%;
+    width: 44.44%;
 }
 
 /* Étape 4 - Stratégie */
 .step4-loading-stepper-progress {
-    width: 35.71%;
+    width: 33.33%;
 }
 .step4-recap-stepper-progress {
-    width: 39.29%;
+    width: 38.89%;
 }
 .step4-result-stepper-progress {
-    width: 42.86%;
+    width: 44.44%;
 }
 
 /* Étape 5 - Canaux */
 .step5-select-stepper-progress {
-    width: 71.43%;
+    width: 55.56%;
 }
 
 /* Étape 6 - Upload (nouveau) */
 /* Pas de classes stepper-progress spécifiques pour Upload */
 
-/* Étape 7 - Assets (anciennement Étape 5) */
+/* Étape 7 - Assets */
 .step8-loading-stepper-progress {
-    width: 75%;
+    width: 66.67%;
 }
 .step8-config-stepper-progress {
-    width: 78.57%;
+    width: 72.22%;
 }
 .step8-validate-stepper-progress {
-    width: 85.71%;
+    width: 77.78%;
 }
 
 /* Étape 9 - Budget */
 .step9-budget-stepper-progress {
-    width: 87.5%;
+    width: 88.89%;
 }
 
 /* Étape 10 - Planning */
-.step9-schedule-stepper-progress {
+.step10-schedule-stepper-progress {
     width: 100%;
 }
 

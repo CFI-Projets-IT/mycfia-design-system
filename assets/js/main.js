@@ -32,6 +32,7 @@ import { initOnboardingDAPStep6Mapping } from "./components/onboarding-dap-step6
 import { initOnboardingDAPStep6Preview } from "./components/onboarding-dap-step6-preview.js";
 import { initOnboardingDAPStep8Validate } from "./components/onboarding-dap-step8-validate.js";
 import { initOnboardingDAPStep9Schedule } from "./components/onboarding-dap-step9-schedule.js";
+import { initOnboardingDAPStep9Budget } from "./components/onboarding-dap-step9-budget.js";
 import { initOnboardingDAPCampaignShow } from "./components/onboarding-dap-campaign-show.js";
 import { initVideoDemo } from "./components/video-demo.js";
 import { initStep9Budget } from "./components/step9-budget.js";
@@ -284,6 +285,15 @@ document.addEventListener("DOMContentLoaded", () => {
     if (document.getElementById("budget-page")) {
       console.log("[main] Initialisation de Step 9 Budget...");
       initStep9Budget();
+    }
+
+    // 31. Initialiser l'onboarding DAP Step 9 Budget (si step9_budget)
+    if (
+      window.location.pathname.includes("step9_budget") ||
+      document.getElementById("onboardingWelcomeModalStep9Budget")
+    ) {
+      console.log("[main] Initialisation de l'onboarding DAP Step 9 Budget...");
+      initOnboardingDAPStep9Budget();
     }
 
     console.log("===========================================");

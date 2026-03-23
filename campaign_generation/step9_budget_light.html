@@ -134,19 +134,24 @@
                         </ol>
                     </nav>
 
-                    <!-- Toggle parcours -->
-                    <div class="d-flex gap-2">
-                        <button class="btn btn-glass-primary header-btn" data-budget-toggle="standard">
-                            <i class="bi bi-upload"></i>
-                            <span class="header-btn-text">Standard</span>
-                        </button>
-                        <button class="btn btn-glass header-btn" data-budget-toggle="avanci">
-                            <i class="bi bi-stars"></i>
-                            <span class="header-btn-text">Avanci</span>
-                        </button>
-                        <button class="btn btn-glass header-btn" data-budget-toggle="both">
-                            <i class="bi bi-layers"></i>
-                            <span class="header-btn-text">Upload + Avanci</span>
+                    <!-- Toggle parcours + bouton DAP -->
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="d-flex gap-2" data-budget-parcours-nav>
+                            <button class="btn btn-glass-primary header-btn" data-budget-toggle="standard">
+                                <i class="bi bi-upload"></i>
+                                <span class="header-btn-text">Standard</span>
+                            </button>
+                            <button class="btn btn-glass header-btn" data-budget-toggle="avanci">
+                                <i class="bi bi-stars"></i>
+                                <span class="header-btn-text">Avanci</span>
+                            </button>
+                            <button class="btn btn-glass header-btn" data-budget-toggle="both">
+                                <i class="bi bi-layers"></i>
+                                <span class="header-btn-text">Upload + Avanci</span>
+                            </button>
+                        </div>
+                        <button class="onboarding-help-button-inline" id="restartOnboardingTourStep9Budget" type="button">
+                            <i class="bi bi-question-lg"></i>
                         </button>
                     </div>
                 </div>
@@ -471,7 +476,7 @@
                             <i class="bi bi-info-circle me-1"></i>
                             Le parcours Standard ne nécessite pas de paiement en ligne.
                         </div>
-                        <a href="step9_schedule_light.html" class="btn btn-primary">
+                        <a href="step10_schedule_light.html" class="btn btn-primary">
                             <i class="bi bi-calendar-event me-1"></i>
                             Continuer vers la planification
                         </a>
@@ -641,7 +646,7 @@
                                         Référence PayPal : <code>PP-REF-20260320-002</code>
                                     </div>
                                 </div>
-                                <a href="step9_schedule_light.html" class="btn btn-primary">
+                                <a href="step10_schedule_light.html" class="btn btn-primary">
                                     <i class="bi bi-calendar-event me-1"></i>
                                     Continuer vers la planification
                                 </a>
@@ -654,6 +659,32 @@
 
             </div>
         </main>
+    </div>
+
+    <!-- Onboarding DAP Step 9 Budget — Welcome Modal -->
+    <div class="modal fade" id="onboardingWelcomeModalStep9Budget" tabindex="-1" aria-labelledby="onboardingWelcomeModalStep9BudgetLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title" id="onboardingWelcomeModalStep9BudgetLabel">
+                        <i class="bi bi-wallet2 text-primary me-2"></i>
+                        Budget de la campagne
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Vous êtes à l'<strong>étape 9 sur 10</strong>. Cette page présente le <strong>récapitulatif budgétaire</strong> complet de votre campagne marketing.</p>
+                    <p class="mb-0">Consultez la grille tarifaire par catégorie, choisissez votre mode d'affranchissement et réglez la partie Avanci via PayPal si votre parcours l'inclut.</p>
+                </div>
+                <div class="modal-footer border-0">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Passer</button>
+                    <button type="button" class="btn btn-primary" id="startOnboardingTourStep9Budget">
+                        Faire le tour guidé
+                        <i class="bi bi-arrow-right ms-1"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- Speed Dial FAB -->

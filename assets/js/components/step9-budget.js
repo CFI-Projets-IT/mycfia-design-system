@@ -186,13 +186,13 @@ function _initSpeedDial() {
 
         // Standard : pas de paiement requis → accès direct à la planification
         if (parcours === 'standard') {
-            window.location.href = 'step9_schedule_light.html';
+            window.location.href = 'step10_schedule_light.html';
             return;
         }
 
         // Avanci ou Upload+Avanci : paiement Avanci obligatoire avant de continuer
         if (paymentState.avanci) {
-            window.location.href = 'step9_schedule_light.html';
+            window.location.href = 'step10_schedule_light.html';
         } else {
             const paySection = document.querySelector('.budget-paypal-section');
             if (paySection) {
